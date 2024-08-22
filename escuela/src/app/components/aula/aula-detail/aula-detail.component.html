@@ -1,0 +1,8 @@
+<h2>Detalles del Aula</h2>
+<div *ngIf="aula">
+  <p><strong>ID:</strong> {{ aula.id }}</p>
+  <p><strong>Nombre:</strong> {{ aula.nombre }}</p>
+  <p><strong>Capacidad:</strong> {{ aula.capacidad }}</p>
+  <p><strong>Ubicación:</strong> {{ aula.ubicacion }}</p>
+</div>
+<a mat-button [routerLink]="['/aulas']">Volver</a>

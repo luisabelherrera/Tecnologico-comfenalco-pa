@@ -1,0 +1,58 @@
+<div class="container wider-container">
+  
+  <a [routerLink]="['/create']" mat-raised-button color="primary" class="create-button rounded">Crear Nuevo Tutor</a>
+
+  <p></p>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Buscar</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar tutores" class="rounded-md">
+  </mat-form-field>
+
+
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width rounded-table">
+      
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+        <td mat-cell *matCellDef="let tutor"> {{ tutor.nombre }} </td>
+      </ng-container>
+
+ 
+      <ng-container matColumnDef="apellido">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Apellido </th>
+        <td mat-cell *matCellDef="let tutor"> {{ tutor.apellido }} </td>
+      </ng-container>
+
+ 
+      <ng-container matColumnDef="telefono">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Teléfono </th>
+        <td mat-cell *matCellDef="let tutor"> {{ tutor.telefono }} </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+        <td mat-cell *matCellDef="let tutor"> {{ tutor.email }} </td>
+      </ng-container>
+
+ 
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+        <td mat-cell *matCellDef="let tutor">
+          <a mat-button [routerLink]="['/edit', tutor.id]" class="rounded">Editar</a>
+          <button mat-button color="warn" (click)="deleteTutor(tutor.id)" class="rounded">Eliminar</button>
+          <a mat-button [routerLink]="['/detail', tutor.id]" class="rounded">Detalles</a>
+        </td>
+      </ng-container>
+      
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons class="rounded-md"></mat-paginator>
+ 
+</div>

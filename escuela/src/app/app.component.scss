@@ -1,0 +1,49 @@
+mat-toolbar {
+    background-color: rgb(92, 92, 92);
+    .logo img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .title {
+      margin-left: 16px;
+      font-weight: bold;
+      color: white;
+    }
+    .menu-button,
+    .logout-button {
+      background-color: black;
+      mat-icon {
+        color: white;
+      }
+    }
+  }
+  
+  .sidenav-container {
+    display: flex;
+  }
+  
+  .app-sidenav {
+    width: 250px;
+    background-color: rgb(245, 245, 245);
+    .nav-link {
+      display: flex;
+      align-items: center;
+      mat-icon {
+        margin-right: 8px;
+      }
+      span {
+        margin-left: 8px;
+      }
+    }
+    .active {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 16px;
+  }
+  

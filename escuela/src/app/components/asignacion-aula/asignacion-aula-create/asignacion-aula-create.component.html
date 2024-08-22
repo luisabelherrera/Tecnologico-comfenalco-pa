@@ -1,0 +1,30 @@
+<h2>Crear Asignación de Aula</h2>
+<form (ngSubmit)="createAsignacionAula()" class="form-container">
+  
+  <mat-form-field appearance="fill">
+    <mat-label>Curso ID</mat-label>
+    <input matInput type="number" [(ngModel)]="asignacionAula.curso.id" name="curso" required>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Aula ID</mat-label>
+    <input matInput type="number" [(ngModel)]="asignacionAula.aula.id" name="aula" required>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Día de la Semana</mat-label>
+    <input matInput type="text" [(ngModel)]="asignacionAula.diaSemana" name="diaSemana" required>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Hora Inicio</mat-label>
+    <input matInput type="time" [(ngModel)]="asignacionAula.horaInicio" name="horaInicio" required>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Hora Fin</mat-label>
+    <input matInput type="time" [(ngModel)]="asignacionAula.horaFin" name="horaFin" required>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit">Crear</button>
+</form>

@@ -1,0 +1,14 @@
+.table-container {
+  margin: 100px;
+  overflow: auto;
+}
+
+.mat-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

@@ -1,0 +1,65 @@
+<div class="container wider-container">
+  <a [routerLink]="['/asignaciones-aulas/create']" mat-raised-button color="primary" class="create-button rounded">Crear Nueva Asignación</a>
+
+  <p></p>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Buscar</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar asignaciones" class="rounded-md">
+  </mat-form-field>
+
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width rounded-table">
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+        <td mat-cell *matCellDef="let asignacion">{{ asignacion.id }}</td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="curso">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Curso</th>
+        <td mat-cell *matCellDef="let asignacion">{{ asignacion.curso.id }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="aula">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Aula</th>
+        <td mat-cell *matCellDef="let asignacion">{{ asignacion.aula.id }}</td>
+      </ng-container>
+
+  
+      <ng-container matColumnDef="diaSemana">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Día de la Semana</th>
+        <td mat-cell *matCellDef="let asignacion">{{ asignacion.diaSemana }}</td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="horaInicio">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora Inicio</th>
+        <td mat-cell *matCellDef="let asignacion">{{ asignacion.horaInicio }}</td>
+      </ng-container>
+
+     
+      <ng-container matColumnDef="horaFin">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora Fin</th>
+        <td mat-cell *matCellDef="let asignacion">{{ asignacion.horaFin }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let asignacion">
+          <a mat-button [routerLink]="['/asignaciones-aulas/edit', asignacion.id]" class="rounded">Editar</a>
+          <button mat-button color="warn" (click)="deleteAsignacionAula(asignacion.id)" class="rounded">Eliminar</button>
+          <a mat-button [routerLink]="['/asignaciones-aulas/detail', asignacion.id]" class="rounded">Detalles</a>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+
+  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons class="rounded-md"></mat-paginator>
+</div>

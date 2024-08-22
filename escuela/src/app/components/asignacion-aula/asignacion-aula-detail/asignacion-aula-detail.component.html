@@ -1,0 +1,11 @@
+
+<h2>Detalles de Asignación de Aula</h2>
+<div *ngIf="asignacionAula">
+  <p><strong>ID:</strong> {{ asignacionAula.id }}</p>
+  <p><strong>Curso ID:</strong> {{ asignacionAula.curso.id }}</p>
+  <p><strong>Aula ID:</strong> {{ asignacionAula.aula.id }}</p>
+  <p><strong>Día de la Semana:</strong> {{ asignacionAula.diaSemana }}</p>
+  <p><strong>Hora Inicio:</strong> {{ asignacionAula.horaInicio }}</p>
+  <p><strong>Hora Fin:</strong> {{ asignacionAula.horaFin }}</p>
+</div>
+<a [routerLink]="['/asignaciones-aulas']">Volver al Listado</a>
