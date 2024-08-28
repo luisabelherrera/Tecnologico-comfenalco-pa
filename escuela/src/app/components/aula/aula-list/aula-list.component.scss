@@ -1,14 +1,15 @@
-.table-container {
-  margin: 100px;
-  overflow: auto;
+.container {
+  padding: 20px;
 }
 
-.mat-toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+table {
+  width: 100%;
 }
 
-.spacer {
-  flex: 1 1 auto;
+.mat-elevation-z8 {
+  border-radius: 10px;
+}
+
+.mat-paginator {
+  margin-top: 10px;
 }

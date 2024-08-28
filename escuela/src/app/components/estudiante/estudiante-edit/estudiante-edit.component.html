@@ -1,0 +1,41 @@
+<div class="container">
+    <h2>Editar Estudiante</h2>
+    <form [formGroup]="estudianteForm" (ngSubmit)="onSubmit()">
+      <div>
+        <label>Nombre:</label>
+        <input formControlName="nombre" required>
+      </div>
+      <div>
+        <label>Apellido:</label>
+        <input formControlName="apellido" required>
+      </div>
+      <div>
+        <label>Fecha de Nacimiento:</label>
+        <input type="date" formControlName="fechaNacimiento" required>
+      </div>
+      <div>
+        <label>Grado:</label>
+        <input formControlName="grado" required>
+      </div>
+      <div>
+        <label>Dirección:</label>
+        <input formControlName="direccion" required>
+      </div>
+      <div>
+        <label>Teléfono:</label>
+        <input formControlName="telefono" required>
+      </div>
+      <div>
+        <label>Email:</label>
+        <input type="email" formControlName="email" required>
+      </div>
+      <div>
+        <label>Tutor:</label>
+        <select formControlName="tutor" required>
+          <option *ngFor="let tutor of tutors" [value]="tutor.id">{{ tutor.nombre }} {{ tutor.apellido }}</option>
+        </select>
+      </div>
+      <button type="submit" [disabled]="!estudianteForm.valid">Guardar</button>
+    </form>
+  </div>
+  

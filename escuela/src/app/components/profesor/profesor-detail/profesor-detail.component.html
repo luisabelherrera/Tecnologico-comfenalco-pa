@@ -1,0 +1,15 @@
+<div class="container" *ngIf="profesor">
+    <h1>Detalles del Profesor</h1>
+    <p><strong>ID:</strong> {{ profesor.id }}</p>
+    <p><strong>Nombre:</strong> {{ profesor.nombre }}</p>
+    <p><strong>Apellido:</strong> {{ profesor.apellido }}</p>
+    <p><strong>Especialidad:</strong> {{ profesor.especialidad }}</p>
+    <p><strong>Teléfono:</strong> {{ profesor.telefono }}</p>
+    <p><strong>Email:</strong> {{ profesor.email }}</p>
+    <p><strong>Departamento ID:</strong> {{ profesor.departamento.id }}</p>
+  
+    <button mat-raised-button color="primary" [routerLink]="['/profesores/edit', profesor.id]">Editar</button>
+    <button mat-raised-button color="warn" (click)="deleteProfesor()">Eliminar</button>
+    <a mat-raised-button [routerLink]="['/profesores']">Volver</a>
+  </div>
+  

@@ -24,6 +24,10 @@ Estructura base de dato Relacion o ERD
 
 ## Inicializacion
 
+### Link
+https://fonts.google.com/icons
+
+https://material.angular.io/
 
 cd
 npm i

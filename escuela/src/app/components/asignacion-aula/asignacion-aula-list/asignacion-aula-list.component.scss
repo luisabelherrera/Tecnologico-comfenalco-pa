@@ -1,15 +1,15 @@
-.table-container {
-    margin: 20px;
-    overflow: auto;
-  }
-  
-  .mat-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .spacer {
-    flex: 1 1 auto;
-  }
-  
+.container {
+  padding: 20px;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-elevation-z8 {
+  border-radius: 10px;
+}
+
+.mat-paginator {
+  margin-top: 10px;
+}

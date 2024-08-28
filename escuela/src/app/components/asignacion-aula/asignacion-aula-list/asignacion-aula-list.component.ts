@@ -14,8 +14,8 @@ export class AsignacionAulaListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['id', 'curso', 'aula', 'diaSemana', 'horaInicio', 'horaFin', 'acciones'];
   dataSource = new MatTableDataSource<AsignacionAula>();
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator; // Usar el operador `!`
-  @ViewChild(MatSort) sort!: MatSort; // Usar el operador `!`
+  @ViewChild(MatPaginator) paginator!: MatPaginator; 
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private asignacionAulaService: AsignacionAulaService) { }
 
@@ -31,7 +31,7 @@ export class AsignacionAulaListComponent implements OnInit, AfterViewInit {
   loadAsignacionesAulas(): void {
     this.asignacionAulaService.getAllAsignacionesAulas().subscribe(data => {
       this.dataSource.data = data;
-      // El paginator y sort se inicializan en ngAfterViewInit
+      
     });
   }
 

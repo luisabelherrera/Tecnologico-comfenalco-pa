@@ -1,0 +1,27 @@
+<div class="curso-create-container">
+    <h2>Crear Curso</h2>
+    <form (ngSubmit)="saveCurso()" #cursoForm="ngForm">
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="curso.nombre" name="nombre" required>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Descripción</mat-label>
+        <input matInput [(ngModel)]="curso.descripcion" name="descripcion">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Horario</mat-label>
+        <input matInput [(ngModel)]="curso.horario" name="horario">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Profesor</mat-label>
+        <input matInput [(ngModel)]="curso.profesor.id" name="profesorId">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Aula</mat-label>
+        <input matInput [(ngModel)]="curso.aula.id" name="aulaId">
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit">Guardar</button>
+    </form>
+  </div>
+  

@@ -9,22 +9,24 @@ import { AuthService } from './services/auth/auth.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = ' INSTITUCION EDUCATIVA EL HOBO';
+  title = 'INSTITUCIÓN EDUCATIVA EL HOBO';
 
-  links = [{ path: '/home', icon: 'home', title: 'Home' }];
+  links = [{ path: '/home', icon: 'home', title: 'Inicio' }];
 
-  Consult = [
-    // VENTANA PRINCIPAL
-    { path: '/tutor', icon: 'group', title: 'Tutor' },
-    { path: '/aulas', icon: 'person_search', title: 'Aula' },
-    { path: '/asignaciones-aulas', icon: 'person', title: 'Asignar Aula' },
+  Matricula = [
+    { path: '/tutor', icon: 'person', title: 'Tutores' },
+    { path: '/aulas', icon: 'school', title: 'Aulas' },
+    { path: '/asignaciones-aulas', icon: 'assignment', title: 'Asignar Aulas' },
+    { path: '/profesores', icon: 'school', title: 'Profesores' },
+    { path: '/departamentos', icon: 'business', title: 'Departamentos' },
+    { path: '/cursos', icon: 'book', title: 'Cursos' },
+    { path: '/estudiantes', icon: 'people', title: 'Estudiantes' },
+    { path: '/inscripciones', icon: 'event_note', title: 'Inscripciones' },
   ];
-  Chat = [
-    //VENTANA SECUNDARIA
-    { path: '/home', icon: 'person', title: 'Chat' },
-  ];
 
-  Exit = [{ path: '', icon: 'exit_to_app', title: 'Exit' }];
+  chat = [{ path: '/chat', icon: 'chat', title: 'Chat' }];
+
+ exit = [{ path: '', icon: 'exit_to_app', title: 'Cerrar Sesión' }];
 
   isAuthenticated$ = this.authService.isAuthenticated$.pipe(shareReplay(1));
 

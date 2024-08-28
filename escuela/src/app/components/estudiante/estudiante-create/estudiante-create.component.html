@@ -1,0 +1,53 @@
+<div class="container">
+    <h2>Crear Estudiante</h2>
+    <form (ngSubmit)="saveEstudiante()">
+      <div>
+        <label>Nombre:</label>
+        <input [(ngModel)]="estudiante.nombre" name="nombre" required>
+      </div>
+      <div>
+        <label>Apellido:</label>
+        <input [(ngModel)]="estudiante.apellido" name="apellido" required>
+      </div>
+      <div>
+        <label>Fecha de Nacimiento:</label>
+        <input type="date" [(ngModel)]="estudiante.fechaNacimiento" name="fechaNacimiento" required>
+      </div>
+      <div>
+        <label>Grado:</label>
+        <input [(ngModel)]="estudiante.grado" name="grado" required>
+      </div>
+      <div>
+        <label>Dirección:</label>
+        <input [(ngModel)]="estudiante.direccion" name="direccion" required>
+      </div>
+      <div>
+        <label>Teléfono:</label>
+        <input [(ngModel)]="estudiante.telefono" name="telefono" required>
+      </div>
+      <div>
+        <label>Email:</label>
+        <input type="email" [(ngModel)]="estudiante.email" name="email" required>
+      </div>
+      <div>
+        <label>genero:</label>
+        <input type="email" [(ngModel)]="estudiante.genero" name="email" required>
+      </div>
+      <div>
+        <label>documento:</label>
+        <input type="email" [(ngModel)]="estudiante.documento" name="email" required>
+      </div>
+      <div>
+        <label>estado:</label>
+        <input type="estado" [(ngModel)]="estudiante.estado" name="estado" required>
+      </div>
+      <div>
+        <label>Tutor:</label>
+        <select [(ngModel)]="estudiante.tutor.id" name="tutor" required>
+          <option *ngFor="let tutor of tutors" [value]="tutor.id">{{ tutor.nombre }} {{ tutor.apellido }}</option>
+        </select>
+      </div>
+      <button type="submit">Guardar</button>
+    </form>
+  </div>
+  

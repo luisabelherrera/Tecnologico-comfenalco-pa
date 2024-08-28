@@ -1,5 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Profesor } from 'src/app/models/profesor';
 
@@ -7,27 +8,27 @@ import { Profesor } from 'src/app/models/profesor';
   providedIn: 'root'
 })
 export class ProfesorService {
-  private apiUrl = 'http://localhost:8086/api/profesores';
+  private baseUrl = 'http://localhost:8086/api/profesores';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAllProfesores(): Observable<Profesor[]> {
-    return this.http.get<Profesor[]>(this.apiUrl);
+    return this.http.get<Profesor[]>(this.baseUrl);
   }
 
   getProfesorById(id: number): Observable<Profesor> {
-    return this.http.get<Profesor>(`${this.apiUrl}/${id}`);
+    return this.http.get<Profesor>(`${this.baseUrl}/${id}`);
   }
 
   createProfesor(profesor: Profesor): Observable<Profesor> {
-    return this.http.post<Profesor>(`${this.apiUrl}/create`, profesor);
+    return this.http.post<Profesor>(`${this.baseUrl}`, profesor);
   }
 
-  updateProfesor(profesor: Profesor): Observable<Profesor> {
-    return this.http.put<Profesor>(`${this.apiUrl}/${profesor.id}`, profesor);
+  updateProfesor(id: number, profesor: Profesor): Observable<Profesor> {
+    return this.http.put<Profesor>(`${this.baseUrl}/${id}`, profesor);
   }
 
   deleteProfesor(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

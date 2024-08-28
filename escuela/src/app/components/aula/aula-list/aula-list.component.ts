@@ -10,6 +10,8 @@ import { AulaService } from 'src/app/services/aula/aula.service';
 })
 export class AulaListComponent implements OnInit {
   aulas: Aula[] = [];
+   mensaje: String;
+
   displayedColumns: string[] = ['id', 'nombre', 'capacidad', 'ubicacion', 'actions'];
 
   constructor(private aulaService: AulaService, private router: Router) { }
@@ -22,6 +24,12 @@ export class AulaListComponent implements OnInit {
     this.aulaService.getAulas().subscribe(data => {
       this.aulas = data;
     });
+  }
+
+  Mensaje(): void {
+this.mensaje=  "hola";
+
+
   }
 
   deleteAula(id: number) {

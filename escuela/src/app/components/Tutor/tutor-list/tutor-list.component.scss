@@ -1,15 +1,15 @@
+.container {
+  padding: 20px;
+}
 
-.rounded-table {
-    border-radius: 8px; 
-    overflow: hidden;
-  }
-  
-  .rounded-table th, .rounded-table td {
-    padding: 8px; 
-  }
-  
-  
-  .table-container {
-    overflow-x: auto; 
-  }
-  
+table {
+  width: 100%;
+}
+
+.mat-elevation-z8 {
+  border-radius: 10px;
+}
+
+.mat-paginator {
+  margin-top: 10px;
+}

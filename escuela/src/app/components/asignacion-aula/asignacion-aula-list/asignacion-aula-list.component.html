@@ -19,12 +19,12 @@
 
       <ng-container matColumnDef="curso">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Curso</th>
-        <td mat-cell *matCellDef="let asignacion">{{ asignacion.curso.id }}</td>
+        <td mat-cell *matCellDef="let asignacion">{{ asignacion.curso.nombre }}</td>
       </ng-container>
 
       <ng-container matColumnDef="aula">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Aula</th>
-        <td mat-cell *matCellDef="let asignacion">{{ asignacion.aula.id }}</td>
+        <td mat-cell *matCellDef="let asignacion">{{ asignacion.aula.nombre }}</td>
       </ng-container>
 
   

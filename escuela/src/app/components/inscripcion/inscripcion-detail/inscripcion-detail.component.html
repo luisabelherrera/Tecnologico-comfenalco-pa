@@ -1,0 +1,32 @@
+<div class="container mx-auto px-4 py-6">
+    <div class="bg-white shadow-lg rounded-lg p-6 max-w-lg mx-auto">
+      <h2 class="text-2xl font-bold mb-4">Detalle de la Inscripción</h2>
+      <div class="space-y-4">
+        <div class="flex items-center">
+          <span class="font-semibold text-gray-700 w-32">ID:</span>
+          <span class="text-gray-900">{{ inscripcion?.id }}</span>
+        </div>
+        <div class="flex items-center">
+          <span class="font-semibold text-gray-700 w-32">Estudiante ID:</span>
+          <span class="text-gray-900">{{ inscripcion?.estudiante.id }}</span>
+        </div>
+        <div class="flex items-center">
+          <span class="font-semibold text-gray-700 w-32">Curso ID:</span>
+          <span class="text-gray-900">{{ inscripcion?.curso.id }}</span>
+        </div>
+        <div class="flex items-center">
+          <span class="font-semibold text-gray-700 w-32">Fecha Inscripción:</span>
+          <span class="text-gray-900">{{ inscripcion?.fechaInscripcion | date }}</span>
+        </div>
+        <div class="flex items-center">
+          <span class="font-semibold text-gray-700 w-32">Calificación:</span>
+          <span class="text-gray-900">{{ inscripcion?.calificacion }}</span>
+        </div>
+      </div>
+      <div class="mt-6 flex gap-4">
+        <a routerLink="/inscripciones" class="btn btn-back">Volver a la lista</a>
+        <button (click)="deleteInscripcion(inscripcion?.id)" class="btn btn-danger">Eliminar</button>
+      </div>
+    </div>
+  </div>
+      

@@ -46,14 +46,14 @@
       </a>
     </nav>
     <mat-divider></mat-divider>
-    <h4 mat-subheader>Consult</h4>
+    <h4 mat-subheader>Matricula</h4>
     <mat-divider></mat-divider>
     
     <nav>
       <a
         mat-button
         class="nav-link"
-        *ngFor="let link of Consult"
+        *ngFor="let link of Matricula"
         [routerLink]="link.path"
         routerLinkActive="active"
       >
@@ -72,7 +72,7 @@
       <a
         mat-button
         class="nav-link"
-        *ngFor="let link of Chat"
+        *ngFor="let link of chat"
         [routerLink]="link.path"
         routerLinkActive="active"
       >
@@ -92,7 +92,7 @@
       <a
         mat-button
         class="nav-link"
-        *ngFor="let link of Exit"
+        *ngFor="let link of exit"
         [routerLink]="link.path"
         routerLinkActive="active"
       >

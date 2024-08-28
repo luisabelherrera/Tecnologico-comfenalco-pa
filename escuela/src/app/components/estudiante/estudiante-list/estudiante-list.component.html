@@ -1,0 +1,77 @@
+<div class="container">
+    <h2 class="table-title">Lista de Estudiantes</h2>
+    <p></p>
+     <button mat-raised-button color="primary" [routerLink]="['/estudiantes/create']" class="add-student-button">Añadir Estudiante</button>
+     <p></p>
+    <div class="table-wrapper">
+      <table  style="width: 100%;" mat-table [dataSource]="dataSource" class="mat-elevation-z8 styled-table">
+      
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">ID</th>
+          <td mat-cell *matCellDef="let estudiante" class="data-cell">{{ estudiante.id }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">Nombre</th>
+          <td mat-cell *matCellDef="let estudiante" class="data-cell">{{ estudiante.nombre }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="apellido">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">Apellido</th>
+          <td mat-cell *matCellDef="let estudiante" class="data-cell">{{ estudiante.apellido }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="fechaNacimiento">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">Fecha de Nacimiento</th>
+          <td mat-cell *matCellDef="let estudiante" class="data-cell">{{ estudiante.fechaNacimiento | date:'dd/MM/yyyy' }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="grado">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">Grado</th>
+          <td mat-cell *matCellDef="let estudiante" class="data-cell">{{ estudiante.grado }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="direccion">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">Dirección</th>
+          <td mat-cell *matCellDef="let estudiante" class="data-cell">{{ estudiante.direccion }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="telefono">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">Teléfono</th>
+          <td mat-cell *matCellDef="let estudiante" class="data-cell">{{ estudiante.telefono }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="documento">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">Documento</th>
+          <td mat-cell *matCellDef="let estudiante" class="data-cell">{{ estudiante.documento }}</td>
+        </ng-container>
+  
+
+        <ng-container matColumnDef="tutor">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">Tutor</th>
+          <td mat-cell *matCellDef="let estudiante" class="data-cell">
+            <a *ngIf="estudiante.tutor" [routerLink]="['/tutores/detail', estudiante.tutor.id]" class="link-tutor">
+              {{ estudiante.tutor.nombre }} {{ estudiante.tutor.apellido }}
+            </a>
+          </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">Acciones</th>
+          <td mat-cell *matCellDef="let estudiante" class="data-cell actions-cell">
+            <a [routerLink]="['/estudiantes/detail', estudiante.id]" mat-button color="accent">Ver</a>
+            <button mat-button color="warn" (click)="deleteEstudiante(estudiante.id)">Eliminar</button>
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns" class="header-row"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="data-row"></tr>
+      </table>
+    </div>
+  
+ 
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  
+ 
+</div>
+  
