@@ -56,7 +56,7 @@ El proyecto utiliza una base de datos relacional con PostgreSQL para la mayoría
 1. **Clonar el repositorio**:
 
     ```bash
- [   git clone https://github.com/tu-usuario/tu-repositorio.git](https://github.com/luisabelherrera/Tecnologico-comfenalco-pa.git)
+ [git clone https://github.com/tu-usuario/tu-repositorio.git]
     cd tu-repositorio
     ```
 
