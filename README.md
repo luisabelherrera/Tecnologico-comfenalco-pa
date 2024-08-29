@@ -107,10 +107,3 @@ El proyecto utiliza una base de datos relacional con PostgreSQL para la mayoría
 ### Chat en Tiempo Real
 ![Interfaz del Chat](https://github.com/user-attachments/assets/de6b66ce-555c-4edf-a6d7-a002a5657a95)
 
-## Contribución
-
-Las contribuciones son bienvenidas. Por favor, sigue el [flujo de trabajo de GitHub Flow](https://guides.github.com/introduction/flow/) al enviar cambios.
-
-## Licencia
-
-Este proyecto está licenciado bajo los términos de la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
