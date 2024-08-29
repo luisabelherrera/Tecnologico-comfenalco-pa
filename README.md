@@ -14,7 +14,8 @@ Este proyecto está destinado a una institución educativa ubicada en El Carmen 
 
 A continuación se muestra el diagrama de relaciones de la base de datos (ERD):
 
-![Diagrama de Relaciones](![Untitled](https://github.com/user-attachments/assets/4f174ba8-f7a9-43c2-ab4b-51bdc508beec)
+![Diagrama de Relaciones](https://github.com/user-attachments/assets/3434e7ef-b768-42d8-bbb0-7be06b31a163)
+
 )
 
 ## Etapa 1 
