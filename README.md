@@ -88,7 +88,8 @@ El proyecto utiliza una base de datos relacional con PostgreSQL para la mayoría
 
 ### Diagrama de Relaciones
 
-![Diagrama de Relaciones](![Untitled](https://github.com/user-attachments/assets/906fdea7-a0da-4fcf-9db7-aa23e168ac12)
+![Diagrama de Relaciones](https://github.com/user-attachments/assets/9ced1ab7-5bcc-43a2-99ff-208691a9cc04)
+
 )
 
 ## Capturas de Pantalla
