@@ -86,6 +86,11 @@ El proyecto utiliza una base de datos relacional con PostgreSQL para la mayoría
 - [Google Fonts - Iconos](https://fonts.google.com/icons)
 - [Angular Material](https://material.angular.io/)
 
+### Extructura del proyecto
+
+![Árbol de decisiones (1)](https://github.com/user-attachments/assets/5bcf5327-8c8e-4fe9-aa10-994408246a06)
+
+
 ### Diagrama de Relaciones
 
 ![Diagrama de Relaciones](https://github.com/user-attachments/assets/9ced1ab7-5bcc-43a2-99ff-208691a9cc04)
