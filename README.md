@@ -13,31 +13,40 @@ Este proyecto está destinado a una institución educativa ubicada en El Carmen 
 
 ### Requerimiento Funcionales
 
-Gestión de Estudiantes:
+##Gestión de Estudiantes:
 Registrar Estudiantes: El sistema debe permitir la creación de registros de estudiantes con información como nombre, apellido, dirección, correo electrónico, fecha de nacimiento, grado y tutor asignado.
 Consultar, Modificar y Eliminar: Debe permitir consultar, modificar y eliminar registros de estudiantes.
 Gestión de Profesores:
-Registrar Profesores: El sistema debe permitir registrar profesores con datos como nombre, apellido, especialidad, correo electrónico, teléfono y departamento asignado.
+
+##Registrar Profesores:
+El sistema debe permitir registrar profesores con datos como nombre, apellido, especialidad, correo electrónico, teléfono y departamento asignado.
 Consultar, Modificar y Eliminar: Debe permitir consultar, modificar y eliminar registros de profesores.
-Gestión de Cursos:
-Crear Cursos: El sistema debe permitir la creación de cursos con nombre, descripción, horario, aula asignada y profesor asignado.
+
+##Gestión de Cursos:
+Crear Cursos:El sistema debe permitir la creación de cursos con nombre, descripción, horario, aula asignada y profesor asignado.
 Consultar, Modificar y Eliminar: Debe permitir consultar, modificar y eliminar registros de cursos.
-Gestión de Aulas:
+
+##Gestión de Aulas:
 Registrar Aulas: El sistema debe permitir registrar aulas con capacidad, nombre y ubicación.
 Consultar, Modificar y Eliminar: Debe permitir consultar, modificar y eliminar registros de aulas.
-Asignaciones de Aulas:
+
+##Asignaciones de Aulas:
 Registrar Asignaciones de Aulas: Debe permitir registrar asignaciones de aulas para cursos específicos, incluyendo el día de la semana, hora de inicio y hora de fin.
 Consultar y Modificar: Debe permitir consultar y modificar las asignaciones de aulas.
-Gestión de Inscripciones:
+
+##Gestión de Inscripciones:
 Registrar Inscripciones: El sistema debe permitir registrar la inscripción de estudiantes en cursos específicos, incluyendo calificación y fecha de inscripción.
 Consultar y Modificar: Debe permitir consultar y modificar registros de inscripciones.
-Gestión de Tutores:
+
+##Gestión de Tutores:
 Registrar Tutores: El sistema debe permitir registrar tutores con nombre, apellido, correo electrónico y teléfono.
 Consultar, Modificar y Eliminar: Debe permitir consultar, modificar y eliminar registros de tutores.
-Gestión de Departamentos:
+
+##Gestión de Departamentos:
 Registrar Departamentos: Debe permitir registrar departamentos con nombre y descripción.
 Consultar, Modificar y Eliminar: Debe permitir consultar, modificar y eliminar registros de departamentos.
-Chat en Tiempo Real:
+
+##Chat en Tiempo Real:
 Autenticación: El sistema debe permitir a los usuarios iniciar sesión para acceder al chat.
 Mensajería en Tiempo Real: Los usuarios deben poder enviar y recibir mensajes en tiempo real.
 Historial de Mensajes: El chat debe almacenar el historial de mensajes para que los usuarios puedan ver las conversaciones anteriores.
