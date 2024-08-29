@@ -24,11 +24,12 @@ Creacion de login
 
 creacion del header y columna 
 
-![Diagrama de Relaciones](![image](https://github.com/user-attachments/assets/12ac3855-d2ff-4f6f-b810-db5b31838ce1)
+![image](https://github.com/user-attachments/assets/1d577462-e3ef-487f-bc86-b4943ae4449a)
+
 )
-![Diagrama de Relaciones](![image-1](https://github.com/user-attachments/assets/bec81f0d-bfce-42c5-843d-5e576abf5bf3)
-      )
-![Diagrama de Relaciones](![image-2](https://github.com/user-attachments/assets/f55cb29c-1f8b-49be-81a5-347d7252bed9)
+![image-1](https://github.com/user-attachments/assets/f08e4402-1512-451a-8d6c-4e8eaf6950ea)
+)
+![image-2](https://github.com/user-attachments/assets/033efc0e-0cd8-47b5-b0e5-4c6833cf3258)
 )
 
 ## Etapa 2
@@ -39,12 +40,15 @@ Mejoramiento de las Rutas: Se han refinado las rutas y la navegación en la apli
 
 Chat en Tiempo Real: Se ha integrado un sistema de chat en tiempo real utilizando WebSockets y MongoDB como base de datos para almacenar los mensajes y gestionar la comunicación en tiempo real.
 
-![Diagrama de Relaciones](![image-3](https://github.com/user-attachments/assets/41558b83-f6ee-4b8e-9432-7f463de658f1)
+![image-3](https://github.com/user-attachments/assets/de6b66ce-555c-4edf-a6d7-a002a5657a95)
+
 )
 
 
-![Diagrama de Relaciones](image-4.png)
-![Diagrama de Relaciones](image-5.png)
+![image-4](https://github.com/user-attachments/assets/ec0a765b-160b-4be9-bd53-10b894311a2e)
+
+![image-5](https://github.com/user-attachments/assets/308422b3-a353-408b-a556-38e0096f7cb0)
+
 
 
 ## Inicialización del Proyecto
