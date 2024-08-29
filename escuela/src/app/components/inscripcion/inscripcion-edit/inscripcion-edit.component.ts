@@ -11,11 +11,12 @@ import { Inscripcion } from 'src/app/models/inscripcion.interface';
 export class InscripcionEditComponent implements OnInit {
   inscripcion: Inscripcion = {
     id: 0,
-    estudiante: { id: 0 },
-    curso: { id: 0 },
+    estudiante: { id: 0, nombre: '', apellido: '' },
+    curso: { id: 0, nombre: '' },
     fechaInscripcion: '',
     calificacion: 0
   };
+
 
   constructor(
     private inscripcionService: InscripcionService,

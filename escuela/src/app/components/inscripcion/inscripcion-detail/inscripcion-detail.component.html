@@ -1,32 +1,30 @@
-<div class="container mx-auto px-4 py-6">
-    <div class="bg-white shadow-lg rounded-lg p-6 max-w-lg mx-auto">
-      <h2 class="text-2xl font-bold mb-4">Detalle de la Inscripción</h2>
-      <div class="space-y-4">
-        <div class="flex items-center">
-          <span class="font-semibold text-gray-700 w-32">ID:</span>
-          <span class="text-gray-900">{{ inscripcion?.id }}</span>
+<div class="container">
+  <mat-card class="inscripcion-card">
+    <mat-card-header>
+      <mat-card-title>Detalle de la Inscripción</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="inscripcion-info">
+        <div class="info-item">
+          <strong>ID:</strong> {{ inscripcion?.id }}
         </div>
-        <div class="flex items-center">
-          <span class="font-semibold text-gray-700 w-32">Estudiante ID:</span>
-          <span class="text-gray-900">{{ inscripcion?.estudiante.id }}</span>
+        <div class="info-item">
+          <strong>Nombre del Estudiante:</strong> {{ inscripcion?.estudiante.nombre }} {{ inscripcion?.estudiante.apellido }}
         </div>
-        <div class="flex items-center">
-          <span class="font-semibold text-gray-700 w-32">Curso ID:</span>
-          <span class="text-gray-900">{{ inscripcion?.curso.id }}</span>
+        <div class="info-item">
+          <strong>Nombre del Curso:</strong> {{ inscripcion?.curso.nombre }}
         </div>
-        <div class="flex items-center">
-          <span class="font-semibold text-gray-700 w-32">Fecha Inscripción:</span>
-          <span class="text-gray-900">{{ inscripcion?.fechaInscripcion | date }}</span>
+        <div class="info-item">
+          <strong>Fecha Inscripción:</strong> {{ inscripcion?.fechaInscripcion | date }}
         </div>
-        <div class="flex items-center">
-          <span class="font-semibold text-gray-700 w-32">Calificación:</span>
-          <span class="text-gray-900">{{ inscripcion?.calificacion }}</span>
+        <div class="info-item">
+          <strong>Calificación:</strong> {{ inscripcion?.calificacion }}
         </div>
       </div>
-      <div class="mt-6 flex gap-4">
-        <a routerLink="/inscripciones" class="btn btn-back">Volver a la lista</a>
-        <button (click)="deleteInscripcion(inscripcion?.id)" class="btn btn-danger">Eliminar</button>
+      <div class="button-group">
+        <button mat-raised-button color="primary" routerLink="/inscripciones">Volver a la lista</button>
+        <button mat-raised-button color="warn" (click)="deleteInscripcion(inscripcion?.id)">Eliminar</button>
       </div>
-    </div>
-  </div>
-      
+    </mat-card-content>
+  </mat-card>
+</div>

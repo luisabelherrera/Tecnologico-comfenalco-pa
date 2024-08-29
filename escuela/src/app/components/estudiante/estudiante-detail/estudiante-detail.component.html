@@ -38,7 +38,14 @@
                     <strong>Genero:</strong> {{ estudiante.genero }}
                 </div>
                 <div class="info-item">
-                    <strong>Estado:</strong> {{ estudiante.estado }}
+                    <strong>Estado:</strong>
+                    <span [ngClass]="{
+                        'estado-activo': estudiante.estado === 'activo',
+                        'estado-inactivo': estudiante.estado === 'inactivo',
+                        'estado-suspendido': estudiante.estado === 'suspendido'
+                    }">
+                        {{ estudiante.estado }}
+                    </span>
                 </div>
             </div>
         </mat-card-content>
@@ -71,12 +78,10 @@
         </mat-card-content>
     </mat-card>
 
-
     <div class="chart-container" *ngIf="estudiante">
         <canvas id="edadChart"></canvas>
     </div>
 
- 
     <div class="button-group">
         <button mat-raised-button color="primary" (click)="deleteEstudiante()">Eliminar</button>
         <button mat-raised-button color="accent" [routerLink]="['/estudiantes/edit', estudiante.id]">Editar</button>

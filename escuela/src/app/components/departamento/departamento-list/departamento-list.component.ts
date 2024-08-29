@@ -1,4 +1,3 @@
-
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -33,8 +32,14 @@ export class DepartamentoListComponent implements OnInit {
 
   deleteDepartamento(id: number): void {
     if (confirm('¿Estás seguro de que quieres eliminar este departamento?')) {
-      this.departamentoService.deleteDepartamento(id).subscribe(() => {
-        this.loadDepartamentos();
+      this.departamentoService.deleteDepartamento(id).subscribe({
+        next: () => {
+          this.loadDepartamentos();
+        },
+        error: (error) => {
+ 
+          alert(error.message);
+        }
       });
     }
   }

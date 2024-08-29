@@ -27,6 +27,9 @@ public class Estudiante {
     private String direccion;
     private String telefono;
     private String email;
+    private String documento; 
+    private String genero;  
+    private String estado; 
 
     @ManyToOne
     @JoinColumn(name = "tutor_id")

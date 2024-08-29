@@ -36,7 +36,6 @@ import { InscripcionListComponent } from './components/inscripcion/inscripcion-l
 import { InscripcionCreateComponent } from './components/inscripcion/inscripcion-create/inscripcion-create.component';
 import { InscripcionDetailComponent } from './components/inscripcion/inscripcion-detail/inscripcion-detail.component';
 import { InscripcionEditComponent } from './components/inscripcion/inscripcion-edit/inscripcion-edit.component';
-import { PhoneStatsComponent } from './components/Tutor/phone-stats/phone-stats.component';
 import { ChatComponent } from './components/chat/chat.component';
 
 const routes: Routes = [
@@ -48,7 +47,7 @@ const routes: Routes = [
   { path: 'tutores/detail/:id', component: TutorDetailComponent },
   { path: 'create', component: TutorCreateComponent },
   { path: 'tutor', component: TutorComponent },
-  { path: 'phone-stats', component: PhoneStatsComponent },
+
   // asignacion de aula
   { path: 'asignaciones-aulas', component: AsignacionAulaListComponent },
   {
@@ -86,7 +85,7 @@ const routes: Routes = [
   { path: 'cursos', component: CursoListComponent },
   { path: 'cursos/create', component: CursoCreateComponent },
   { path: 'cursos/edit/:id', component: CursoEditComponent },
-  { path: 'cursos/:id', component: CursoDetailComponent },
+  { path: 'cursos/detail/:id', component: CursoDetailComponent },
 
   //estudiante
   { path: 'estudiantes', component: EstudianteListComponent },

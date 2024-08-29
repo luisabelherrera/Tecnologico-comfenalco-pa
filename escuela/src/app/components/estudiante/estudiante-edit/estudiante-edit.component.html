@@ -1,41 +1,58 @@
 <div class="container">
-    <h2>Editar Estudiante</h2>
-    <form [formGroup]="estudianteForm" (ngSubmit)="onSubmit()">
-      <div>
-        <label>Nombre:</label>
-        <input formControlName="nombre" required>
-      </div>
-      <div>
-        <label>Apellido:</label>
-        <input formControlName="apellido" required>
-      </div>
-      <div>
-        <label>Fecha de Nacimiento:</label>
-        <input type="date" formControlName="fechaNacimiento" required>
-      </div>
-      <div>
-        <label>Grado:</label>
-        <input formControlName="grado" required>
-      </div>
-      <div>
-        <label>Dirección:</label>
-        <input formControlName="direccion" required>
-      </div>
-      <div>
-        <label>Teléfono:</label>
-        <input formControlName="telefono" required>
-      </div>
-      <div>
-        <label>Email:</label>
-        <input type="email" formControlName="email" required>
-      </div>
-      <div>
-        <label>Tutor:</label>
-        <select formControlName="tutor" required>
-          <option *ngFor="let tutor of tutors" [value]="tutor.id">{{ tutor.nombre }} {{ tutor.apellido }}</option>
-        </select>
-      </div>
-      <button type="submit" [disabled]="!estudianteForm.valid">Guardar</button>
-    </form>
-  </div>
-  
+  <h2>Editar Estudiante</h2>
+  <form [formGroup]="estudianteForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label>Nombre:</label>
+      <input formControlName="nombre" required>
+    </div>
+    <div>
+      <label>Apellido:</label>
+      <input formControlName="apellido" required>
+    </div>
+    <div>
+      <label>Fecha de Nacimiento:</label>
+      <input type="date" formControlName="fechaNacimiento" required>
+    </div>
+    <div>
+      <label>Grado:</label>
+      <input formControlName="grado" required>
+    </div>
+    <div>
+      <label>Dirección:</label>
+      <input formControlName="direccion" required>
+    </div>
+    <div>
+      <label>Teléfono:</label>
+      <input formControlName="telefono" required>
+    </div>
+    <div>
+      <label>Email:</label>
+      <input type="email" formControlName="email" required>
+    </div>
+    <div>
+      <label>Documento:</label>
+      <input formControlName="documento" required>
+    </div>
+    <div>
+      <label>Género:</label>
+      <select formControlName="genero" required>
+        <option value="">Seleccione</option>
+        <option *ngFor="let genero of generos" [value]="genero.value">{{ genero.label }}</option>
+      </select>
+    </div>
+    <div>
+      <label>Estado:</label>
+      <select formControlName="estado" required>
+        <option value="">Seleccione</option>
+        <option *ngFor="let estado of estados" [value]="estado.value">{{ estado.label }}</option>
+      </select>
+    </div>
+    <div>
+      <label>Tutor:</label>
+      <select formControlName="tutor" required>
+        <option *ngFor="let tutor of tutors" [value]="tutor.id">{{ tutor.nombre }} {{ tutor.apellido }}</option>
+      </select>
+    </div>
+    <button type="submit" [disabled]="!estudianteForm.valid">Guardar</button>
+  </form>
+</div>

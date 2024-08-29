@@ -1,11 +1,23 @@
-
 <div class="container">
-    <h2>Detalles del Departamento</h2>
-  
-    <div *ngIf="departamento">
-      <p><strong>ID:</strong> {{ departamento.id }}</p>
-      <p><strong>Nombre:</strong> {{ departamento.nombre }}</p>
-      <p><strong>Descripción:</strong> {{ departamento.descripcion }}</p>
-    </div>
-  </div>
-  
+  <mat-card class="departamento-card">
+    <mat-card-header>
+      <mat-card-title>Detalles del Departamento</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="departamento-info">
+        <div class="info-item">
+          <strong>ID:</strong> {{ departamento.id }}
+        </div>
+        <div class="info-item">
+          <strong>Nombre:</strong> {{ departamento.nombre }}
+        </div>
+        <div class="info-item">
+          <strong>Descripción:</strong> {{ departamento.descripcion }}
+        </div>
+      </div>
+      <div class="button-group">
+        <button mat-raised-button color="primary" [routerLink]="['/departamentos']">Volver</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

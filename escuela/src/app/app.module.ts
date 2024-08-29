@@ -75,6 +75,7 @@ import { InscripcionEditComponent } from './components/inscripcion/inscripcion-e
 import { InscripcionDetailComponent } from './components/inscripcion/inscripcion-detail/inscripcion-detail.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ChatComponent } from './components/chat/chat.component';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
@@ -93,6 +94,11 @@ import { ChatComponent } from './components/chat/chat.component';
     HttpClientModule,
     MatPaginatorModule,
     ReactiveFormsModule,
+    
+
+    MatSelectModule,
+   
+
   ],
   declarations: [
     //tutor

@@ -1,8 +1,11 @@
     package com.example.demo.controller;
 
-    import com.example.demo.model.entities.Departamento;
+    import com.example.demo.Exception.DepartamentoInUseException;
+import com.example.demo.model.entities.Departamento;
     import com.example.demo.services.DepartamentoService;
-    import org.springframework.http.ResponseEntity;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
     import org.springframework.web.bind.annotation.*;
 
     import java.util.List;
@@ -24,7 +27,7 @@
             Departamento savedDepartamento = departamentoService.saveDepartamento(departamento);
             return ResponseEntity.ok(savedDepartamento);
         }
-
+        
         @GetMapping("/{id}")
         public ResponseEntity<Departamento> getDepartamentoById(@PathVariable Long id) {
             Optional<Departamento> departamento = departamentoService.getDepartamentoById(id);
@@ -46,7 +49,11 @@
 
         @DeleteMapping("/{id}")
         public ResponseEntity<Void> deleteDepartamento(@PathVariable Long id) {
-            departamentoService.deleteDepartamento(id);
-            return ResponseEntity.noContent().build();
+            try {
+                departamentoService.deleteDepartamento(id);
+                return ResponseEntity.noContent().build();
+            } catch (DepartamentoInUseException e) {
+               return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
         }
     }

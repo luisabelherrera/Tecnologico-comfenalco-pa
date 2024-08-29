@@ -35,3 +35,17 @@ h2 {
   gap: 10px;
   margin-top: 20px;
 }
+.estado-activo {
+  color: green;
+  font-weight: bold;
+}
+
+.estado-inactivo {
+  color: red;
+  font-weight: bold;
+}
+
+.estado-suspendido {
+  color: orange;
+  font-weight: bold;
+}

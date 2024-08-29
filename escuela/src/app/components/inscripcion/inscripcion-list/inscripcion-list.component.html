@@ -1,57 +1,59 @@
 <div class="container mx-auto px-4 py-6">
-    <h2 class="text-2xl font-bold mb-4">Lista de Inscripciones</h2>
-    <a [routerLink]="['/inscripciones/create']" mat-raised-button color="primary" class="mb-4">Agregar Inscripción</a>
-  
-    <div class="search-bar mb-4">
-      <mat-form-field appearance="outline">
-        <mat-label>Buscar inscripciones</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Buscar inscripciones">
-      </mat-form-field>
-    </div>
-  
-    <table style="width: 100%;"  mat-table [dataSource]="dataSource" matSort>
-  
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-        <td mat-cell *matCellDef="let inscripcion">{{ inscripcion.id }}</td>
-      </ng-container>
-  
-      <ng-container matColumnDef="estudiante">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Estudiante</th>
-        <td mat-cell *matCellDef="let inscripcion">{{ inscripcion.estudiante.nombre }}</td>
-      </ng-container>
-  
-   
-      <ng-container matColumnDef="curso">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Curso</th>
-        <td mat-cell *matCellDef="let inscripcion">{{ inscripcion.curso.nombre }}</td>
-      </ng-container>
-  
-   
-      <ng-container matColumnDef="fechaInscripcion">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Inscripción</th>
-        <td mat-cell *matCellDef="let inscripcion">{{ inscripcion.fechaInscripcion | date }}</td>
-      </ng-container>
- 
-      <ng-container matColumnDef="calificacion">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Calificación</th>
-        <td mat-cell *matCellDef="let inscripcion">{{ inscripcion.calificacion }}</td>
-      </ng-container>
-  
+  <h2 class="text-2xl font-bold mb-4">Lista de Inscripciones</h2>
+  <a [routerLink]="['/inscripciones/create']" mat-raised-button color="primary" class="mb-4">Agregar Inscripción</a>
 
-      <ng-container matColumnDef="acciones">
-        <th mat-header-cell *matHeaderCellDef>Acciones</th>
-        <td mat-cell *matCellDef="let inscripcion">
-          <button mat-button [routerLink]="['/inscripciones/detail', inscripcion.id]">Detalles</button>
-          <button mat-button [routerLink]="['/inscripciones/edit', inscripcion.id]">Editar</button>
-          <button mat-button (click)="deleteInscripcion(inscripcion.id)">Eliminar</button>
-        </td>
-      </ng-container>
-  
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  
-    <mat-paginator [pageSize]="10"></mat-paginator>
+  <div class="search-bar mb-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Buscar inscripciones</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Buscar inscripciones">
+    </mat-form-field>
   </div>
-  
+
+  <table mat-table [dataSource]="dataSource" matSort>
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+      <td mat-cell *matCellDef="let inscripcion">{{ inscripcion.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="estudiante">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Estudiante</th>
+      <td mat-cell *matCellDef="let inscripcion">
+        <a [routerLink]="['/estudiantes/detail', inscripcion.estudiante.id]">
+          {{ inscripcion.estudiante.nombre }}
+        </a>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="curso">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Curso</th>
+      <td mat-cell *matCellDef="let inscripcion">
+        <a [routerLink]="['/cursos/detail', inscripcion.curso.id]">{{ inscripcion.curso.nombre }}</a>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fechaInscripcion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Inscripción</th>
+      <td mat-cell *matCellDef="let inscripcion">{{ inscripcion.fechaInscripcion | date }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="calificacion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Calificación</th>
+      <td mat-cell *matCellDef="let inscripcion">{{ inscripcion.calificacion }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef>Acciones</th>
+      <td mat-cell *matCellDef="let inscripcion">
+        <button mat-button [routerLink]="['/inscripciones/detail', inscripcion.id]">Detalles</button>
+        <button mat-button [routerLink]="['/inscripciones/edit', inscripcion.id]">Editar</button>
+        <button mat-button (click)="deleteInscripcion(inscripcion.id)">Eliminar</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSize]="10"></mat-paginator>
+</div>

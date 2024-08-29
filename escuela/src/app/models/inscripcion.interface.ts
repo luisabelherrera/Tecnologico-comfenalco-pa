@@ -1,14 +1,14 @@
 export interface Inscripcion {
-  
+  id: number;
+  estudiante: {
     id: number;
-    estudiante: {
-      id: number;
-    };
-    curso: {
-      id: number;
-      
-    };
-    fechaInscripcion: string; 
-    calificacion: number;
-  }
-  
+    nombre: string;
+    apellido: string;
+  };
+  curso: {
+    id: number;
+    nombre: string;
+  };
+  fechaInscripcion: string;
+  calificacion: number;
+}

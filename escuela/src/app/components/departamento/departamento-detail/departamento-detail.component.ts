@@ -1,4 +1,3 @@
-// src/app/components/departamento-detail/departamento-detail.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Departamento } from 'src/app/models/departamento';

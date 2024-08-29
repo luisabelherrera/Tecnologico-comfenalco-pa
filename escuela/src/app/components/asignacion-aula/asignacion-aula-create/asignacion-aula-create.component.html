@@ -2,13 +2,21 @@
 <form (ngSubmit)="createAsignacionAula()" class="form-container">
   
   <mat-form-field appearance="fill">
-    <mat-label>Curso ID</mat-label>
-    <input matInput type="number" [(ngModel)]="asignacionAula.curso.id" name="curso" required>
+    <mat-label>Curso</mat-label>
+    <mat-select [(ngModel)]="asignacionAula.curso.id" name="curso" required>
+      <mat-option *ngFor="let curso of cursos" [value]="curso.id">
+        {{ curso.nombre }}
+      </mat-option>
+    </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="fill">
-    <mat-label>Aula ID</mat-label>
-    <input matInput type="number" [(ngModel)]="asignacionAula.aula.id" name="aula" required>
+    <mat-label>Aula</mat-label>
+    <mat-select [(ngModel)]="asignacionAula.aula.id" name="aula" required>
+      <mat-option *ngFor="let aula of aulas" [value]="aula.id">
+        {{ aula.nombre }}
+      </mat-option>
+    </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="fill">

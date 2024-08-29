@@ -7,8 +7,8 @@ export interface Estudiante {
     direccion: string;
     telefono: string;
     email: string;
-    genero: string;
     documento: string;
+    genero: string;
     estado: string;
     tutor: {
       id: number;
@@ -17,6 +17,6 @@ export interface Estudiante {
       telefono: string;
       email: string;
     };
-    imagen?: string; 
+ 
   }
   

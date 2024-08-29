@@ -20,7 +20,7 @@ export class EstudianteService {
   }
 
   createEstudiante(estudiante: Estudiante): Observable<Estudiante> {
-    return this.http.post<Estudiante>(`${this.apiUrl}/create`, estudiante);
+    return this.http.post<Estudiante>(this.apiUrl, estudiante);
   }
 
   updateEstudiante(id: number, estudiante: Estudiante): Observable<Estudiante> {

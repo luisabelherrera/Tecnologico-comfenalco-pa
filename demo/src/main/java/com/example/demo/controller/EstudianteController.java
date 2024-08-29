@@ -31,7 +31,7 @@ public class EstudianteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Estudiante>> getAllEstudiantes() {
+    public ResponseEntity<List<Estudiante>> getzAllEstudiantes() {
         List<Estudiante> estudiantes = estudianteService.getAllEstudiantes();
         return ResponseEntity.ok(estudiantes);
     }
@@ -42,6 +42,8 @@ public class EstudianteController {
         Estudiante updatedEstudiante = estudianteService.updateEstudiante(estudiante);
         return ResponseEntity.ok(updatedEstudiante);
     }
+    
+    
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEstudiante(@PathVariable Long id) {
