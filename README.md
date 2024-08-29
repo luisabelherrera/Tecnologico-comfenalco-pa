@@ -53,14 +53,8 @@ El proyecto utiliza una base de datos relacional con PostgreSQL para la mayoría
 
 ### Instalación
 
-1. **Clonar el repositorio**:
 
-    ```bash
- [git clone https://github.com/tu-usuario/tu-repositorio.git]
-    cd tu-repositorio
-    ```
-
-2. **Backend**:
+1. **Backend**:
     - Navegar al directorio `backend` y ejecutar el siguiente comando para construir el proyecto:
 
         ```bash
@@ -74,7 +68,7 @@ El proyecto utiliza una base de datos relacional con PostgreSQL para la mayoría
         ./mvnw spring-boot:run
         ```
 
-3. **Frontend**:
+2. **Frontend**:
     - Navegar al directorio `frontend` e instalar las dependencias:
 
         ```bash
