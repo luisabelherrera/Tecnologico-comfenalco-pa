@@ -16,10 +16,19 @@ public class AsignacionAulaController {
     private final AsignacionAulaService asignacionAulaService;
 
   
+  
     public AsignacionAulaController(AsignacionAulaService asignacionAulaService) {
         this.asignacionAulaService = asignacionAulaService;
     }
 
+
+    
+    /**
+     * @param asignacionAula
+     * 
+     * 1 Prueba
+     * @return
+     */
     @PostMapping
     public ResponseEntity<AsignacionAula> createAsignacionAula(@RequestBody AsignacionAula asignacionAula) {
         AsignacionAula savedAsignacionAula = asignacionAulaService.saveAsignacionAula(asignacionAula);
