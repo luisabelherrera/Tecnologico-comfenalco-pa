@@ -1,5 +1,11 @@
 # Proyecto de Aula: Institución Educativa El Hobo
 
+#Integrantes
+1. Luis Abel herrera
+2.Jhon Jairo Gambin
+3.Carlos Diaz
+4.Yelserp Barrios
+
 Este repositorio contiene el código fuente y la documentación del sistema de gestión educativa desarrollado para la **Institución Educativa El Hobo**. El proyecto forma parte del quinto semestre del programa tecnológico en Comfenalco.
 
 ## Tecnologías Utilizadas
