@@ -28,6 +28,7 @@ public class AsignacionAulaController {
      * 
      * 1 Prueba
      * @return
+ *cambios jhon
      */
     @PostMapping
     public ResponseEntity<AsignacionAula> createAsignacionAula(@RequestBody AsignacionAula asignacionAula) {
