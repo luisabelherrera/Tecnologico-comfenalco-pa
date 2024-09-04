@@ -27,6 +27,7 @@ public class AsignacionAulaController {
      * @param asignacionAula
      * 
      * 1 Prueba
+     * 2 rama abel
      * @return
  *cambios jhon
  *carlos
