@@ -1,37 +1,55 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, BehaviorSubject, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { JwtResponseDto, LoginDto } from 'src/app/models/models';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
-
-import { UserInfo } from '../../models/auth.interface';
-
-const AUTHENTICATION_KEY = 'workshop:authenticated';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticated = new BehaviorSubject(this.getIsAuthenticated() || false);
-  isAuthenticated$ = this.isAuthenticated.asObservable();
+  private apiUrl = 'http://localhost:8086/api';
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  private userEmailSubject = new BehaviorSubject<string | null>(null);
+  userEmail$ = this.userEmailSubject.asObservable();
 
-  constructor(private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) {
+    this.checkAuthenticationStatus();
+  }
 
-  login(userInfo: UserInfo) {
-    this.setIsAuthenticated(true);
-    this.isAuthenticated.next(true);
-    this.router.navigateByUrl('/home');
+  login(loginDto: LoginDto): Observable<JwtResponseDto> {
+    return this.http.post<JwtResponseDto>(`${this.apiUrl}/login`, loginDto).pipe(
+      map(response => {
+        localStorage.setItem('accessToken', response.accessToken);
+        this.isAuthenticatedSubject.next(true);
+        // Aquí se puede obtener el email del usuario de la respuesta si es proporcionado
+        const userEmail = loginDto.email; // Usar el email del loginDto, o extraerlo de la respuesta si es posible
+        this.userEmailSubject.next(userEmail);
+        return response;
+      }),
+      catchError(error => {
+        this.isAuthenticatedSubject.next(false);
+        return throwError(error);
+      })
+    );
   }
 
   logout() {
-    this.setIsAuthenticated(false);
-    this.isAuthenticated.next(false);
-    this.router.navigateByUrl('/login');
+    localStorage.removeItem('accessToken');
+    this.isAuthenticatedSubject.next(false);
+    this.userEmailSubject.next(null); // Limpiar el email del usuario
+    this.router.navigate(['/login']);
   }
 
-  private getIsAuthenticated(): boolean {
-    return JSON.parse(localStorage.getItem(AUTHENTICATION_KEY));
-  }
-
-  private setIsAuthenticated(isAuthenticated: boolean) {
-    localStorage.setItem(AUTHENTICATION_KEY, JSON.stringify(isAuthenticated));
+  private checkAuthenticationStatus() {
+    const token = localStorage.getItem('accessToken');
+    this.isAuthenticatedSubject.next(!!token);
+    if (token) {
+      // Si hay un token, se podría obtener el email del usuario aquí si se dispone de esa información
+      // Por ahora se mantiene el email desde el login
+      this.userEmailSubject.next(null); // Cambiar esto a obtener email si se tiene
+    }
   }
 }

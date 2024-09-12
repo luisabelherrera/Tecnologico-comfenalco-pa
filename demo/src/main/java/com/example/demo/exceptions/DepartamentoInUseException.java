@@ -1,4 +1,4 @@
-package com.example.demo.Exception;
+package com.example.demo.exceptions;
 
 public class DepartamentoInUseException extends RuntimeException {
     public DepartamentoInUseException(String message) {

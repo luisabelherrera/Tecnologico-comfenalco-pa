@@ -1,15 +1,14 @@
-import { Component } from '@angular/core';
-import { shareReplay } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from './services/auth/AuthService.service';
-
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Institucion Educativa El Hobo';
+  userEmail$ = this.authService.userEmail$; // Observable para el email del usuario
 
   links = [{ path: '/home', icon: 'home', title: 'Inicio' }];
 
@@ -25,12 +24,13 @@ export class AppComponent {
   ];
 
   chat = [{ path: '/chat', icon: 'chat', title: 'Chat' }];
+  exit = [{ path: '/login', icon: 'exit_to_app', title: 'Cerrar Sesión' }];
 
- exit = [{ path: '', icon: 'exit_to_app', title: 'Cerrar Sesión' }];
-
-  isAuthenticated$ = this.authService.isAuthenticated$.pipe(shareReplay(1));
+  isAuthenticated$ = this.authService.isAuthenticated$;
 
   constructor(private authService: AuthService) {}
+
+  ngOnInit() {}
 
   logout() {
     this.authService.logout();
