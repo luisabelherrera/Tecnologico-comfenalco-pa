@@ -1,0 +1,51 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h2 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.student-card, .tutor-card {
+  margin-bottom: 20px;
+}
+
+.student-info, .tutor-info {
+  margin: 10px 0;
+}
+
+.info-item {
+  margin-bottom: 10px;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  margin-bottom: 20px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+.estado-activo {
+  color: green;
+  font-weight: bold;
+}
+
+.estado-inactivo {
+  color: red;
+  font-weight: bold;
+}
+
+.estado-suspendido {
+  color: orange;
+  font-weight: bold;
+}

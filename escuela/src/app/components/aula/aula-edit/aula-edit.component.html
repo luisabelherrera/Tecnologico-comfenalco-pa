@@ -1,0 +1,19 @@
+<h2>Editar Aula</h2>
+<form (ngSubmit)="updateAula()">
+  <mat-form-field appearance="fill">
+    <mat-label>Nombre</mat-label>
+    <input matInput [(ngModel)]="aula.nombre" name="nombre" required>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Capacidad</mat-label>
+    <input matInput type="number" [(ngModel)]="aula.capacidad" name="capacidad" required>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Ubicación</mat-label>
+    <input matInput [(ngModel)]="aula.ubicacion" name="ubicacion" required>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit">Actualizar</button>
+</form>

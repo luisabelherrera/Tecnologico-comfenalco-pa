@@ -1,0 +1,23 @@
+<div class="container">
+  <mat-card class="departamento-card">
+    <mat-card-header>
+      <mat-card-title>Detalles del Departamento</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="departamento-info">
+        <div class="info-item">
+          <strong>ID:</strong> {{ departamento.id }}
+        </div>
+        <div class="info-item">
+          <strong>Nombre:</strong> {{ departamento.nombre }}
+        </div>
+        <div class="info-item">
+          <strong>Descripción:</strong> {{ departamento.descripcion }}
+        </div>
+      </div>
+      <div class="button-group">
+        <button mat-raised-button color="primary" [routerLink]="['/departamentos']">Volver</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

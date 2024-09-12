@@ -1,0 +1,21 @@
+
+
+<h2>Editar Asignación de Aula</h2>
+<form (ngSubmit)="updateAsignacionAula()">
+  <label for="curso">Curso ID:</label>
+  <input type="number" id="curso" [(ngModel)]="asignacionAula.curso.id" name="curso" required>
+
+  <label for="aula">Aula ID:</label>
+  <input type="number" id="aula" [(ngModel)]="asignacionAula.aula.id" name="aula" required>
+
+  <label for="diaSemana">Día de la Semana:</label>
+  <input type="text" id="diaSemana" [(ngModel)]="asignacionAula.diaSemana" name="diaSemana" required>
+
+  <label for="horaInicio">Hora Inicio:</label>
+  <input type="time" id="horaInicio" [(ngModel)]="asignacionAula.horaInicio" name="horaInicio" required>
+
+  <label for="horaFin">Hora Fin:</label>
+  <input type="time" id="horaFin" [(ngModel)]="asignacionAula.horaFin" name="horaFin" required>
+
+  <button type="submit">Actualizar</button>
+</form>

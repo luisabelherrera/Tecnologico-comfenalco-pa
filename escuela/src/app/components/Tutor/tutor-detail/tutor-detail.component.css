@@ -1,0 +1,145 @@
+
+.container {
+  max-width: 1000px; 
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+.shadow-lg {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.rounded-lg {
+  border-radius: 8px;
+}
+
+.p-6 {
+  padding: 1.5rem;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 1rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.text-gray-700 {
+  color: #4a5568;
+}
+
+.text-gray-900 {
+  color: #1a202c;
+}
+
+.w-32 {
+  width: 8rem;
+}
+
+.mt-6 {
+  margin-top: 1.5rem;
+}
+
+.bg-blue-500 {
+  background-color: #3b82f6;
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.rounded {
+  border-radius: 0.25rem;
+}
+
+.hover\:bg-blue-600:hover {
+  background-color: #2563eb;
+}
+
+.transition {
+  transition: background-color 0.2s;
+}
+
+.btn-back {
+  background-color: #007bff; 
+  color: #fff; 
+  padding: 10px 20px;
+   border: none; 
+  border-radius: 5px; 
+  cursor: pointer;
+  font-size: 16px;
+  text-decoration: none; 
+  transition: background-color 0.3s ease; 
+}
+
+.btn-back:hover {
+  background-color: #0056b3; 
+}
+
+.btn-print, .btn-word, .btn-excel {
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  margin-left: 5px;
+}
+
+.btn-print {
+  background-color: #28a745; 
+}
+
+.btn-print:hover {
+  background-color: #218838;    
+}
+
+.btn-word {
+  background-color: #f1c40f;
+}
+
+.btn-word:hover {
+  background-color: #e1b12c; 
+}
+
+.btn-excel {
+  background-color: #e74c3c; 
+}
+
+.btn-excel:hover {
+  background-color: #c0392b; 
+}

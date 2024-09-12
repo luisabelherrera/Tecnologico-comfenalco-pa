@@ -1,0 +1,40 @@
+<div class="container">
+  <h2>Crear Profesor</h2>
+  <form (ngSubmit)="saveProfesor()">
+    <mat-form-field appearance="fill">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="profesor.nombre" name="nombre" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Apellido</mat-label>
+      <input matInput [(ngModel)]="profesor.apellido" name="apellido" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Especialidad</mat-label>
+      <input matInput [(ngModel)]="profesor.especialidad" name="especialidad" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Teléfono</mat-label>
+      <input matInput [(ngModel)]="profesor.telefono" name="telefono" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput [(ngModel)]="profesor.email" name="email" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Departamento</mat-label>
+      <mat-select [(ngModel)]="profesor.departamento.id" name="departamentoId" required>
+        <mat-option *ngFor="let departamento of departamentos" [value]="departamento.id">
+          {{ departamento.nombre }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">Guardar</button>
+  </form>
+</div>

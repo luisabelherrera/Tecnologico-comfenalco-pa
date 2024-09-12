@@ -1,0 +1,30 @@
+<h2 class="form-title">Editar Tutor</h2>
+
+<div class="form-container">
+  <form (ngSubmit)="updateTutor()" class="form-content">
+    <mat-form-field class="form-field">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="tutor.nombre" name="nombre" required>
+    </mat-form-field>
+
+    <mat-form-field class="form-field">
+      <mat-label>Apellido</mat-label>
+      <input matInput [(ngModel)]="tutor.apellido" name="apellido" required>
+    </mat-form-field>
+
+    <mat-form-field class="form-field">
+      <mat-label>Teléfono</mat-label>
+      <input matInput [(ngModel)]="tutor.telefono" name="telefono" required>
+    </mat-form-field>
+
+    <mat-form-field class="form-field">
+      <mat-label>Email</mat-label>
+      <input matInput [(ngModel)]="tutor.email" name="email" required>
+    </mat-form-field>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit">Actualizar</button>
+      <a routerLink="/tutor" class="btn-back">Volver</a>
+    </div>
+  </form>
+</div>

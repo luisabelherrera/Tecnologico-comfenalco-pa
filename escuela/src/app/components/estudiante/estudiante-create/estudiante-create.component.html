@@ -1,0 +1,84 @@
+<div class="container">
+  <h2>Crear Estudiante</h2>
+  <form (ngSubmit)="saveEstudiante()">
+    <mat-form-field appearance="fill">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="estudiante.nombre" name="nombre" required>
+      <mat-error *ngIf="!estudiante.nombre">El nombre es requerido.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Apellido</mat-label>
+      <input matInput [(ngModel)]="estudiante.apellido" name="apellido" required>
+      <mat-error *ngIf="!estudiante.apellido">El apellido es requerido.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Fecha de Nacimiento</mat-label>
+      <input matInput type="date" [(ngModel)]="estudiante.fechaNacimiento" name="fechaNacimiento" required>
+      <mat-error *ngIf="!estudiante.fechaNacimiento">La fecha de nacimiento es requerida.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Grado</mat-label>
+      <input matInput [(ngModel)]="estudiante.grado" name="grado" required>
+      <mat-error *ngIf="!estudiante.grado">El grado es requerido.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Dirección</mat-label>
+      <input matInput [(ngModel)]="estudiante.direccion" name="direccion" required>
+      <mat-error *ngIf="!estudiante.direccion">La dirección es requerida.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Teléfono</mat-label>
+      <input matInput [(ngModel)]="estudiante.telefono" name="telefono" required>
+      <mat-error *ngIf="!estudiante.telefono">El teléfono es requerido.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" [(ngModel)]="estudiante.email" name="email" required>
+      <mat-error *ngIf="!estudiante.email">El email es requerido.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Género</mat-label>
+      <mat-select [(ngModel)]="estudiante.genero" name="genero" required>
+        <mat-option *ngFor="let item of generos" [value]="item.value">
+          {{ item.label }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="!estudiante.genero">El género es requerido.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Documento</mat-label>
+      <input matInput [(ngModel)]="estudiante.documento" name="documento" required>
+      <mat-error *ngIf="!estudiante.documento">El documento es requerido.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Estado</mat-label>
+      <mat-select [(ngModel)]="estudiante.estado" name="estado" required>
+        <mat-option *ngFor="let item of estados" [value]="item.value">
+          {{ item.label }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="!estudiante.estado">El estado es requerido.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Tutor</mat-label>
+      <mat-select [(ngModel)]="estudiante.tutor.id" name="tutor" required>
+        <mat-option *ngFor="let tutor of tutors" [value]="tutor.id">
+          {{ tutor.nombre }} {{ tutor.apellido }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="!estudiante.tutor.id">El tutor es requerido.</mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">Guardar</button>
+  </form>
+</div>

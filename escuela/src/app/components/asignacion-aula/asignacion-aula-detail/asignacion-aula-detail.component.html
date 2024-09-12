@@ -1,0 +1,32 @@
+<div class="container">
+  <mat-card class="asignacion-aula-card">
+    <mat-card-header>
+      <mat-card-title>Detalles de Asignación de Aula</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="asignacion-aula-info">
+        <div class="info-item">
+          <strong>ID:</strong> {{ asignacionAula.id }}
+        </div>
+        <div class="info-item">
+          <strong>Curso:</strong> {{ asignacionAula.curso?.nombre }}
+        </div>
+        <div class="info-item">
+          <strong>Aula:</strong> {{ asignacionAula.aula?.nombre }}
+        </div>
+        <div class="info-item">
+          <strong>Día de la Semana:</strong> {{ asignacionAula.diaSemana }}
+        </div>
+        <div class="info-item">
+          <strong>Hora Inicio:</strong> {{ asignacionAula.horaInicio }}
+        </div>
+        <div class="info-item">
+          <strong>Hora Fin:</strong> {{ asignacionAula.horaFin }}
+        </div>
+      </div>
+      <div class="button-group">
+        <button mat-raised-button color="primary" [routerLink]="['/asignaciones-aulas']">Volver al Listado</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
