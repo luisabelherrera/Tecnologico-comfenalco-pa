@@ -8,12 +8,9 @@ import org.springframework.stereotype.Service;
 import com.example.demo.model.control.dao.ChatRepository;
 import com.example.demo.model.control.documents.Mensaje;
 
-
-
-
 @Service
-public class ChatServiceImpl implements ChatService{
-	
+public class ChatServiceImpl implements ChatService {
+
 	@Autowired
 	private ChatRepository chatDao;
 

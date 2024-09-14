@@ -32,10 +32,12 @@ export class AulaService {
   }
 
   createAula(aula: Aula): Observable<Aula> {
+    console.log('Creating Aula:', aula); 
     return this.http.post<Aula>(this.apiUrl, aula, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
+  
 
   updateAula(aula: Aula): Observable<Aula> {
     return this.http.put<Aula>(`${this.apiUrl}/${aula.id}`, aula, { headers: this.getHeaders() }).pipe(

@@ -8,7 +8,7 @@ import { AuthService } from './services/auth/AuthService.service';
 })
 export class AppComponent implements OnInit {
   title = 'Institucion Educativa El Hobo';
-  userEmail$ = this.authService.userEmail$; // Observable para el email del usuario
+  userEmail$ = this.authService.userEmail$;
 
   links = [{ path: '/home', icon: 'home', title: 'Inicio' }];
 
@@ -23,6 +23,9 @@ export class AppComponent implements OnInit {
     { path: '/inscripciones', icon: 'event_note', title: 'Inscripciones' },
   ];
 
+  ia = [
+    { path: '/ia', icon: 'account_circle', title: 'IA GEMINIS' }
+  ];
   chat = [{ path: '/chat', icon: 'chat', title: 'Chat' }];
   exit = [{ path: '/login', icon: 'exit_to_app', title: 'Cerrar Sesión' }];
 

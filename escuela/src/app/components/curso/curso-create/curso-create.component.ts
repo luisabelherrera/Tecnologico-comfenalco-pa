@@ -1,10 +1,9 @@
-
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Curso } from 'src/app/models/curso';
-import { AulaService } from 'src/app/services/aula/aula.service';
 import { CursoService } from 'src/app/services/curso/curso.service';
 import { ProfesorService } from 'src/app/services/profesor/profesor.service'; // Asegúrate de importar el servicio de profesores
+import { AulaService } from 'src/app/services/aula/aula.service'; // Asegúrate de importar el servicio de aulas
 
 @Component({
   selector: 'app-curso-create',

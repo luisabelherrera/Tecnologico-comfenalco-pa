@@ -16,7 +16,6 @@ public class Mensaje implements Serializable {
     private String username;
     private String tipo;
     private String color;
-    private String imagen;
 
     public String getId() {
         return id;
@@ -66,13 +65,6 @@ public class Mensaje implements Serializable {
         this.color = color;
     }
 
-    public String getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
-    }
-
     private static final long serialVersionUID = -3777582564067492550L;
+
 }

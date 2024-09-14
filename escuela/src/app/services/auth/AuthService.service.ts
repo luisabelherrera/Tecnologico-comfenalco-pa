@@ -36,6 +36,11 @@ export class AuthService {
     );
   }
 
+
+  getToken(): string | null {
+    return localStorage.getItem('accessToken');
+  }
+
   logout() {
     localStorage.removeItem('accessToken');
     this.isAuthenticatedSubject.next(false);

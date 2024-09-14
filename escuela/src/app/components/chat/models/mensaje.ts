@@ -4,5 +4,4 @@ export class Mensaje {
   username: string;
   tipo: string;
   color: string;
-  imagen?: string;
 }

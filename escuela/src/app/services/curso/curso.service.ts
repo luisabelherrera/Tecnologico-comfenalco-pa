@@ -1,9 +1,7 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Curso } from 'src/app/models/curso';
-import { AuthService } from '../auth/AuthService.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +9,7 @@ import { AuthService } from '../auth/AuthService.service';
 export class CursoService {
   private apiUrl = 'http://localhost:8086/api/cursos';
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('accessToken');
@@ -29,7 +27,7 @@ export class CursoService {
   }
 
   createCurso(curso: Curso): Observable<Curso> {
-    return this.http.post<Curso>(`${this.apiUrl}`, curso, { headers: this.getHeaders() });
+    return this.http.post<Curso>(`${this.apiUrl}/create`, curso, { headers: this.getHeaders() });
   }
 
   updateCurso(curso: Curso): Observable<Curso> {
@@ -37,15 +35,6 @@ export class CursoService {
   }
 
   deleteCurso(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() }).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  private handleError(error: HttpErrorResponse) {
-    if (error.status === 409) {
-      return throwError(() => new Error('No se puede eliminar el curso porque está siendo usado.'));
-    }
-    return throwError(() => new Error('Error inesperado al eliminar el curso.'));
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
   }
 }

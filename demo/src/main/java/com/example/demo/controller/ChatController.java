@@ -48,4 +48,5 @@ public class ChatController {
     public void historial(String clienteId) {
         webSocket.convertAndSend("/chat/historial/" + clienteId, chatService.obtenerUltimos10Mensajes());
     }
+
 }

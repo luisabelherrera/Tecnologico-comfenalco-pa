@@ -18,13 +18,12 @@ public class CursoController {
 
     private final CursoService cursoService;
 
-    
     public CursoController(CursoService cursoService) {
         this.cursoService = cursoService;
     }
 
     @PostMapping(value = "/create")
-    public ResponseEntity<Curso> createCurso(@Valid  @RequestBody Curso curso) {
+    public ResponseEntity<Curso> createCurso(@Valid @RequestBody Curso curso) {
         Curso savedCurso = cursoService.saveCurso(curso);
         return ResponseEntity.ok(savedCurso);
     }

@@ -79,6 +79,7 @@ import { MatSelectModule } from '@angular/material/select';
 
 import {MatMenuModule} from '@angular/material/menu';
 import { AuthService } from './services/auth/AuthService.service';
+import { GenerateContentComponent } from './components/generate-ia/generate-ia.component';
 
 
 @NgModule({
@@ -153,7 +154,9 @@ import { AuthService } from './services/auth/AuthService.service';
     InscripcionEditComponent,
     InscripcionDetailComponent,
 
+    
 
+    GenerateContentComponent,
 
     //chat
     ChatComponent,

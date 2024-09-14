@@ -37,6 +37,7 @@ import { InscripcionCreateComponent } from './components/inscripcion/inscripcion
 import { InscripcionDetailComponent } from './components/inscripcion/inscripcion-detail/inscripcion-detail.component';
 import { InscripcionEditComponent } from './components/inscripcion/inscripcion-edit/inscripcion-edit.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { GenerateContentComponent } from './components/generate-ia/generate-ia.component';
 
 const routes: Routes = [
   //inicio
@@ -98,6 +99,9 @@ const routes: Routes = [
   { path: 'inscripciones/create', component: InscripcionCreateComponent },
   { path: 'inscripciones/detail/:id', component: InscripcionDetailComponent },
   { path: 'inscripciones/edit/:id', component: InscripcionEditComponent },
+
+//ia
+  { path: 'ia', component:  GenerateContentComponent},
 
   //chat
   { path: 'chat', component: ChatComponent },
