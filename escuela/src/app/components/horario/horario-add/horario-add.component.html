@@ -1,0 +1,51 @@
+<div class="container mat-elevation-z8">
+    <h2 class="title-with-icon">
+      <mat-icon>add_alarm</mat-icon> Agregar Horario
+    </h2>
+    
+    <form (ngSubmit)="agregarHorario()" #horarioForm="ngForm" class="form-container">
+      
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Día de la Semana</mat-label>
+        <input matInput [(ngModel)]="nuevoHorario.diaSemana" name="diaSemana" required>
+        <mat-error *ngIf="horarioForm.submitted && !nuevoHorario.diaSemana">
+          Este campo es obligatorio.
+        </mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Hora Inicio</mat-label>
+        <input matInput [(ngModel)]="nuevoHorario.horaInicio" name="horaInicio" required type="time">
+        <mat-error *ngIf="horarioForm.submitted && !nuevoHorario.horaInicio">
+          Este campo es obligatorio.
+        </mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Hora Fin</mat-label>
+        <input matInput [(ngModel)]="nuevoHorario.horaFin" name="horaFin" required type="time">
+        <mat-error *ngIf="horarioForm.submitted && !nuevoHorario.horaFin">
+          Este campo es obligatorio.
+        </mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Nivel Detalle Curso</mat-label>
+        <mat-select [(ngModel)]="nuevoHorario.nivelDetalleCurso" name="nivelDetalleCurso" required>
+          <mat-option *ngFor="let nivel of nivelesDetalleCurso" [value]="nivel">
+            {{ nivel.curso.descripcion }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="horarioForm.submitted && !nuevoHorario.nivelDetalleCurso">
+          Este campo es obligatorio.
+        </mat-error>
+      </mat-form-field>
+      
+      <div class="button-group">
+        <button mat-raised-button color="primary" type="submit" [disabled]="horarioForm.invalid">Agregar</button>
+        <button mat-raised-button color="warn" type="button" (click)="cancelar()">Cancelar</button>
+      </div>
+      
+    </form>
+  </div>
+  

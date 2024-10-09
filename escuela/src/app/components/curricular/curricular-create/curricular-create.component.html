@@ -1,0 +1,69 @@
+<div class="container my-5">
+  <h2 class="text-center">Crear Curricular</h2>
+  <form #curricularForm="ngForm" (ngSubmit)="saveCurricular()" class="mt-4">
+    <div class="mb-3">
+      <label for="descripcion" class="form-label">Descripción:</label>
+      <input 
+        id="descripcion" 
+        type="text" 
+        class="form-control" 
+        [(ngModel)]="curricular.descripcion" 
+        name="descripcion" 
+        required 
+      />
+    </div>
+    
+    <div class="mb-3">
+      <label for="docente" class="form-label">Docente:</label>
+      <select 
+        id="docente" 
+        class="form-select" 
+        [(ngModel)]="curricular.docenteNivelDetalleCurso" 
+        name="docente" 
+        required
+      >
+        <option value="" disabled selected>Seleccione un docente</option>
+        <option *ngFor="let docente of docentes" [ngValue]="docente">
+          {{ docente.docente.nombres }} {{ docente.docente.apellidos }}  {{ docente.nivelDetalleCurso.curso.descripcion }} 
+        </option>
+      </select>
+    </div>
+
+    <div class="mb-3 form-check">
+      <input 
+        type="checkbox" 
+        class="form-check-input" 
+        [(ngModel)]="curricular.activo" 
+        name="activo" 
+        id="activo" 
+      />
+      <label for="activo" class="form-check-label">Activo</label>
+    </div>
+
+    <button 
+      type="submit" 
+      class="btn btn-primary" 
+      [disabled]="isLoading"
+    >
+      Crear
+    </button>
+    
+    <button 
+      type="button" 
+      class="btn btn-secondary" 
+      (click)="cancelar()"
+      style="margin-left: 10px;"
+    >
+      Cancelar
+    </button>
+
+    <div *ngIf="isLoading" class="text-center mt-3">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+    
+    <div *ngIf="errorMessage" class="mt-3 text-danger text-center">{{ errorMessage }}</div>
+    <div *ngIf="successMessage" class="mt-3 text-success text-center">{{ successMessage }}</div>
+  </form>
+</div>

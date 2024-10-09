@@ -1,4 +1,3 @@
-
 package com.example.demo.model.login;
 
 import jakarta.persistence.Column;

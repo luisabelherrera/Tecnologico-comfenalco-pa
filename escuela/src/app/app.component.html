@@ -1,83 +1,173 @@
-<mat-toolbar style="background-color: rgb(0, 0, 0);" color="primary"
-  class="mat-elevation-z4">
+<mat-toolbar style="background-color: rgb(0, 0, 0);" color="primary" class="mat-elevation-z4">
   <span>
-    <button style="background-color: black;" *ngIf="isAuthenticated$ | async"
-      mat-mini-fab (click)="sidenav?.toggle()">
+    <button style="background-color: black;" *ngIf="isAuthenticated$ | async" mat-mini-fab (click)="sidenav?.toggle()">
       <mat-icon style="background-color: black;">menu</mat-icon>
     </button>
     <span class="logo">
-      <img src="assets/OIP.jpg" alt="Logo"
-        style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" />
+      <img src="assets/OIP.jpg" alt="Logo" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;" />
     </span>
-    <span class="title">{{title}}</span>
+    <span class="title">{{ title }}</span>
   </span>
   <span class="spacer"></span>
+  
   <span *ngIf="isAuthenticated$ | async" class="user-info">
-    <span>{{ userEmail$ | async }}</span>
+    <span *ngIf="userName$ | async as userName; else loading">
+      Bienvenido, {{ userName }}!
+    </span>
+    <ng-template #loading>
+      Cargando...
+    </ng-template>
   </span>
-  <button style="background-color: black;" *ngIf="isAuthenticated$ | async"
-    (click)="logout()" class="login" mat-mini-fab>
+
+  <button style="background-color: black;" *ngIf="isAuthenticated$ | async" (click)="logout()" class="login" mat-mini-fab>
     <mat-icon style="background-color: black;">person</mat-icon>
   </button>
 </mat-toolbar>
 
+
 <mat-sidenav-container>
-  <mat-sidenav #sidenav mode="side" [opened]="isAuthenticated$ | async"
-    class="app-sidenav">
+  <mat-sidenav #sidenav mode="side" [opened]="isAuthenticated$ | async" class="app-sidenav">
     <nav>
-      <a mat-button class="nav-link" *ngFor="let link of links"
-        [routerLink]="link.path" routerLinkActive="active">
+      <h4 mat-subheader (click)="islinksMenuOpen = !islinksMenuOpen" [attr.aria-expanded]="islinksMenuOpen">Menú Principal</h4>
+      <mat-divider></mat-divider>
+      <a mat-button class="nav-link" *ngFor="let link of links" [routerLink]="link.path" routerLinkActive="active">
         <mat-icon>{{ link.icon }}</mat-icon>
         {{ link.title }}
       </a>
     </nav>
-    <mat-divider></mat-divider>
-    <h4 mat-subheader>Matricula</h4>
-    <mat-divider></mat-divider>
-    <nav>
-      <a mat-button class="nav-link" *ngFor="let link of Matricula"
-        [routerLink]="link.path" routerLinkActive="active">
-        <mat-icon>{{ link.icon }}</mat-icon>
-        {{ link.title }}
-      </a>
-    </nav>
-    <mat-divider></mat-divider>
-    <h4 mat-subheader>Chat</h4>
-    <mat-divider></mat-divider>
-    <nav>
-      <a mat-button class="nav-link" *ngFor="let link of chat"
-        [routerLink]="link.path" routerLinkActive="active">
-        <mat-icon>{{ link.icon }}</mat-icon>
-        {{ link.title }}
-      </a>
-    </nav>
-    <mat-divider></mat-divider>
 
 
-    <mat-divider></mat-divider>
-    <h4 mat-subheader>IA</h4>
-    <mat-divider></mat-divider>
-    <nav>
-      <a mat-button class="nav-link" *ngFor="let link of ia"
-        [routerLink]="link.path" routerLinkActive="active">
-        <mat-icon>{{ link.icon }}</mat-icon>
-        {{ link.title }}
-      </a>
-    </nav>
-    <mat-divider></mat-divider>
+    <ng-container *ngIf="isAdmin$ | async">
+      <h4 mat-subheader class="sidenav-subheader" (click)="isConfigMenuOpen = !isConfigMenuOpen" [attr.aria-expanded]="isConfigMenuOpen">
+        Configuraciones
+      </h4>
 
-    <h4 mat-subheader>Exit</h4>
-    <mat-divider></mat-divider>
-    <nav>
-      <a mat-button class="nav-link" *ngFor="let link of exit"
-        [routerLink]="link.path" routerLinkActive="active">
-        <mat-icon>{{ link.icon }}</mat-icon>
-        {{ link.title }}
-      </a>
-    </nav>
+      <div *ngIf="isConfigMenuOpen">
+        <nav>
+          <a mat-button class="nav-link" *ngFor="let link of configuraciones" [routerLink]="link.path" routerLinkActive="active">
+            <mat-icon>{{ link.icon }}</mat-icon>
+            {{ link.title }}
+          </a>
+        </nav>
+      </div>
+    </ng-container>
+
+  <ng-container *ngIf="isManager$ | async">
+    <h4 mat-subheader class="sidenav-subheader" (click)="isVentana3MenuOpen = !isVentana3MenuOpen" [attr.aria-expanded]="isVentana3MenuOpen">
+      Ventana3
+    </h4>
+
+    <div *ngIf="isVentana3MenuOpen">
+      <nav>
+        <a mat-button class="nav-link" *ngFor="let link of Ventana3Links" [routerLink]="link.path" routerLinkActive="active">
+          <mat-icon>{{ link.icon }}</mat-icon>
+          {{ link.title }}
+        </a>
+      </nav>
+    </div>
+  </ng-container>
+  
+
+  
+  <ng-container *ngIf="isAdmin$ | async">
+      <h4 mat-subheader class="sidenav-header" (click)="isAdministrarUsuarioMenuOpen = !isAdministrarUsuarioMenuOpen" [attr.aria-expanded]="isAdministrarUsuarioMenuOpen">
+        Usuario
+      </h4>
+
+      <div *ngIf="isAdministrarUsuarioMenuOpen">
+        <nav>
+          <a mat-button class="nav-link" *ngFor="let link of AdministrarUsuario" [routerLink]="link.path" routerLinkActive="active">
+            <mat-icon>{{ link.icon }}</mat-icon>
+            {{ link.title }}
+          </a>
+        </nav>
+      </div>
+
+    </ng-container>
+
+      <ng-container *ngIf="isAdmin$ | async">
+      <h4 mat-subheader class="sidenav-subheader" (click)="isAlumnoMenuOpen = !isAlumnoMenuOpen" [attr.aria-expanded]="isAlumnoMenuOpen">
+        Alumnos
+      </h4>
+
+      <div *ngIf="isAlumnoMenuOpen">
+        <nav>
+          <a mat-button class="nav-link" *ngFor="let link of Alumno" [routerLink]="link.path" routerLinkActive="active">
+            <mat-icon>{{ link.icon }}</mat-icon>
+            {{ link.title }}
+          </a>
+        </nav>
+      </div>
+
+      
+    </ng-container>
+
+
+   <ng-container *ngIf="isAdmin$ | async">
+      <h4 mat-subheader class="sidenav-subheader" (click)="isDocenteMenuOpen = !isDocenteMenuOpen" [attr.aria-expanded]="isDocenteMenuOpen">
+        Docentes
+      </h4>
+
+      <div *ngIf="isDocenteMenuOpen">
+        <nav>
+          <a mat-button class="nav-link" *ngFor="let link of Docente" [routerLink]="link.path" routerLinkActive="active">
+            <mat-icon>{{ link.icon }}</mat-icon>
+            {{ link.title }}
+          </a>
+        </nav>
+      </div>
+
+      <h4 mat-subheader class="sidenav-subheader" (click)="isCursoMenuOpen = !isCursoMenuOpen" [attr.aria-expanded]="isCursoMenuOpen">
+        Cursos
+      </h4>
+    
+      <div *ngIf="isCursoMenuOpen">
+        <nav>
+          <a mat-button class="nav-link" *ngFor="let link of Curso" [routerLink]="link.path" routerLinkActive="active">
+            <mat-icon>{{ link.icon }}</mat-icon>
+            {{ link.title }}
+          </a>
+        </nav>
+      </div>
+    </ng-container>
+
+
+    <ng-container *ngIf="isAdmin$ | async">
+      <h4 mat-subheader class="sidenav-subheader" (click)="isMatriculaMenuOpen = !isMatriculaMenuOpen" [attr.aria-expanded]="isMatriculaMenuOpen">
+        Matrícula
+      </h4>
+   
+      <div *ngIf="isMatriculaMenuOpen">
+        <nav>
+          <a mat-button class="nav-link" *ngFor="let link of Matricula" [routerLink]="link.path" routerLinkActive="active">
+            <mat-icon>{{ link.icon }}</mat-icon>
+            {{ link.title }}
+          </a>
+        </nav>
+      </div>
+
+    </ng-container>
+      
+
+    <ng-container *ngIf="!(isAdmin$ | async) && !(isManager$ | async)">
+      <h4 mat-subheader class="sidenav-subheader" (click)="isUserMenuOpen = !isUserMenuOpen" [attr.aria-expanded]="isUserMenuOpen">
+        Mis Información 
+      </h4>
+     
+      <div *ngIf="isUserMenuOpen">
+        <nav>
+          <a mat-button class="nav-link" *ngFor="let link of userLinks" [routerLink]="link.path" routerLinkActive="active">
+            <mat-icon>{{ link.icon }}</mat-icon>
+            {{ link.title }}
+          </a>
+        </nav>
+      </div>
+    </ng-container>
+ 
+   
   </mat-sidenav>
 
-  <div class="container">
+  <mat-sidenav-content>
     <router-outlet></router-outlet>
-  </div>
+  </mat-sidenav-content>
 </mat-sidenav-container>

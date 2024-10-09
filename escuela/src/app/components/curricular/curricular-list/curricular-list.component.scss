@@ -1,0 +1,11 @@
+.full-width-table {
+  width: 100%; /* La tabla ocupará todo el ancho del contenedor */
+  border-collapse: collapse; /* Colapsar bordes */
+}
+
+.full-width-table th, 
+.full-width-table td {
+  padding: 10px; /* Espaciado interno en celdas */
+  text-align: left; /* Alinear texto a la izquierda */
+  border-bottom: 1px solid #ddd; /* Línea inferior en las celdas */
+}

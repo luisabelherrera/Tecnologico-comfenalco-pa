@@ -1,0 +1,19 @@
+.table-container {
+  width: 100%; /* Ocupa el 100% del ancho del contenedor padre */
+}
+.full-width-table {
+  width: 100%; /* La tabla ocupará todo el ancho del contenedor */
+}
+.button-group {
+  display: flex;
+  gap: 5px; /* Separa los botones con un espacio de 10px (ajusta según prefieras) */
+}
+
+.button-group button {
+  margin-right: 5px; /* Agrega margen derecho entre los botones */
+}
+.container {
+
+  align-items: center;  /* Centrar horizontalmente */
+  justify-content: center;  /* Centrar verticalmente si es necesario */
+}

@@ -1,0 +1,52 @@
+  <div class="container mat-elevation-z8">
+    <h2 class="title-with-icon">
+      <mat-icon>edit</mat-icon> Editar Curricular
+    </h2>
+    
+    <form (ngSubmit)="saveCurricular()" #curricularForm="ngForm" class="form-container">
+      
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Descripción:</mat-label>
+        <input 
+          matInput 
+          [(ngModel)]="curricular.descripcion" 
+          name="descripcion" 
+          required 
+        />
+        <mat-error *ngIf="curricularForm.submitted && !curricular.descripcion">
+          Este campo es obligatorio.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>id Docente y curso:</mat-label>
+        <mat-select 
+          [(ngModel)]="curricular.docenteNivelDetalleCurso" 
+          name="docente" 
+          required
+        >
+          <mat-option *ngFor="let docente of docentes" [value]="docente">
+            {{ docente.idDocenteNivelDetalleCurso }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="curricularForm.submitted && !curricular.docenteNivelDetalleCurso">
+          Este campo es obligatorio.
+        </mat-error>
+      </mat-form-field>
+
+      <div class="mb-3 form-check">
+        <mat-checkbox 
+          [(ngModel)]="curricular.activo" 
+          name="activo" 
+          id="activo">
+          Activo
+        </mat-checkbox>
+      </div>
+
+      <div class="button-group">
+        <button mat-raised-button color="primary" type="submit" [disabled]="curricularForm.invalid">Guardar</button>
+        <button mat-raised-button color="warn" type="button" (click)="cancelar()">Cancelar</button>
+      </div>
+
+    </form>
+  </div>

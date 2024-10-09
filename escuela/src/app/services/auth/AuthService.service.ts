@@ -2,59 +2,147 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { JwtResponseDto, LoginDto } from 'src/app/models/models';
+import { JwtResponseDto, LoginDto, RegisterDto, RoleDto } from 'src/app/models/models';
 import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8086/api';
+  private apiUrl = 'http://localhost:8086/api'; // URL de tu API
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+
+  private userNameSubject = new BehaviorSubject<string | null>(null);
+  userName$ = this.userNameSubject.asObservable();
+
   private userEmailSubject = new BehaviorSubject<string | null>(null);
   userEmail$ = this.userEmailSubject.asObservable();
+
+  private isAdminSubject = new BehaviorSubject<boolean>(false);
+  isAdmin$ = this.isAdminSubject.asObservable();
+
+  private isManagerSubject = new BehaviorSubject<boolean>(false);
+  isManager$ = this.isManagerSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {
     this.checkAuthenticationStatus();
   }
 
-  login(loginDto: LoginDto): Observable<JwtResponseDto> {
-    return this.http.post<JwtResponseDto>(`${this.apiUrl}/login`, loginDto).pipe(
-      map(response => {
-        localStorage.setItem('accessToken', response.accessToken);
-        this.isAuthenticatedSubject.next(true);
-        // Aquí se puede obtener el email del usuario de la respuesta si es proporcionado
-        const userEmail = loginDto.email; // Usar el email del loginDto, o extraerlo de la respuesta si es posible
-        this.userEmailSubject.next(userEmail);
-        return response;
-      }),
-      catchError(error => {
-        this.isAuthenticatedSubject.next(false);
-        return throwError(error);
+  // Registro de usuarios
+  register(registerDto: RegisterDto): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/register`, registerDto).pipe(
+      catchError((error) => {
+        console.error('Error al registrar:', error);
+        return throwError('El registro falló. Por favor, inténtalo de nuevo.');
       })
     );
   }
 
-
-  getToken(): string | null {
-    return localStorage.getItem('accessToken');
+  // Obtener todos los roles desde el backend
+  getAllRoles(): Observable<RoleDto[]> {
+    return this.http.get<RoleDto[]>(`${this.apiUrl}/roles`).pipe(
+      catchError((error) => {
+        console.error('Error al obtener roles:', error);
+        return throwError('No se pudieron obtener los roles. Por favor, inténtalo de nuevo.');
+      })
+    );
   }
 
+  // Inicio de sesión
+  login(loginDto: LoginDto): Observable<JwtResponseDto> {
+    return this.http.post<JwtResponseDto>(`${this.apiUrl}/login`, loginDto).pipe(
+      map((response) => {
+        this.handleLoginSuccess(response);
+        return response;
+      }),
+      catchError((error) => {
+        console.error('Error al iniciar sesión:', error);
+        this.isAuthenticatedSubject.next(false);
+        return throwError('Error en el inicio de sesión. Verifica tus credenciales e inténtalo de nuevo.');
+      })
+    );
+  }
+
+  // Cerrar sesión
   logout() {
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('username');
+    localStorage.removeItem('roles');
+    localStorage.removeItem('email');
     this.isAuthenticatedSubject.next(false);
-    this.userEmailSubject.next(null); // Limpiar el email del usuario
+    this.userNameSubject.next(null);
+    this.userEmailSubject.next(null);
+    this.isAdminSubject.next(false);
+    this.isManagerSubject.next(false);
     this.router.navigate(['/login']);
   }
 
+  // Manejo exitoso de login
+  private handleLoginSuccess(response: JwtResponseDto) {
+    const token = response.accessToken;
+    localStorage.setItem('accessToken', token);
+    
+    // Store username directly from JwtResponseDto
+    localStorage.setItem('username', response.username); // Store username
+    
+    localStorage.setItem('roles', JSON.stringify(response.roles)); // Store roles
+    localStorage.setItem('email', response.email); // Store email
+    
+    // Update observables
+    this.isAuthenticatedSubject.next(true);
+    this.userNameSubject.next(response.username); // Update username
+    this.userEmailSubject.next(response.email); // Update email
+    
+    // Role-based status updates
+    this.updateAdminStatus(response.roles); // Update admin status
+    this.updateManagerStatus(response.roles); // Update manager status
+    
+    // Redirect the user based on their roles
+    this.redirectUser(response.roles); // Redirect based on roles
+  }
+  
+  // Verificar estado de autenticación al iniciar la app
   private checkAuthenticationStatus() {
     const token = localStorage.getItem('accessToken');
     this.isAuthenticatedSubject.next(!!token);
     if (token) {
-      // Si hay un token, se podría obtener el email del usuario aquí si se dispone de esa información
-      // Por ahora se mantiene el email desde el login
-      this.userEmailSubject.next(null); // Cambiar esto a obtener email si se tiene
+      this.userNameSubject.next(localStorage.getItem('username'));
+      this.userEmailSubject.next(localStorage.getItem('email'));
+      const roles = JSON.parse(localStorage.getItem('roles') || '[]');
+      this.updateAdminStatus(roles);
+      this.updateManagerStatus(roles);
     }
+  }
+
+  // Actualizar el estado de Admin basado en roles
+  private updateAdminStatus(roles: string[] = []) {
+    const isAdmin = roles.includes('Administracion');
+    this.isAdminSubject.next(isAdmin);
+  }
+
+  // Actualizar el estado de Manager basado en roles
+  private updateManagerStatus(roles: string[] = []) {
+    const isManager = roles.includes('Estudiante');
+    this.isManagerSubject.next(isManager);
+  }
+
+  // Redirigir al usuario basado en su rol
+  private redirectUser(roles: string[]) {
+    if (roles.includes('Administracion')) {
+      this.router.navigate(['/home']);
+    } else if (roles.includes('Estudiante')) {
+      this.router.navigate(['/ventana3']); 
+    } else if (roles.includes('Docente')) {
+      this.router.navigate(['/ventana2']);
+    } else {
+      this.router.navigate(['/login']);
+    }
+  }
+
+  // Obtener roles del usuario almacenados en el localStorage
+  getUserRole(): string[] {
+    const roles = JSON.parse(localStorage.getItem('roles') || '[]');
+    return roles;
   }
 }

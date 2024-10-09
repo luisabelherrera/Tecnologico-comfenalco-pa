@@ -1,0 +1,39 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Crear Curso</h2>
+
+  <form (ngSubmit)="saveCurso()" class="needs-validation" novalidate>
+    <div class="mb-3">
+      <label for="descripcion" class="form-label">Descripción:</label>
+      <input 
+        type="text" 
+        id="descripcion" 
+        class="form-control" 
+        [(ngModel)]="curso.descripcion" 
+        name="descripcion" 
+        required>
+      <div class="invalid-feedback">
+        Por favor ingresa una descripción.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="activo" class="form-label">Activo:</label>
+      <select 
+        id="activo" 
+        class="form-select" 
+        [(ngModel)]="curso.activo" 
+        name="activo" 
+        required>
+        <option value="" disabled selected>Seleccione una opción</option>
+        <option [value]="true">Sí</option>
+        <option [value]="false">No</option>
+      </select>
+      <div class="invalid-feedback">
+        Por favor selecciona una opción.
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crear Curso</button>
+    <a [routerLink]="['/cursos']" class="btn btn-secondary ms-2">Cancelar</a>
+  </form>
+</div>

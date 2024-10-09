@@ -32,6 +32,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(WebSocketAuthenticationException.class)
+    public ResponseEntity<String> handleWebSocketAuthenticationException(WebSocketAuthenticationException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+
     @ExceptionHandler(JwtAuthenticationException.class)
     public ResponseEntity<ErrorObject> handlerAuthenticationCredentialsNotFoundException(
             JwtAuthenticationException ex) {
@@ -46,15 +51,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorObject> handlerInternalServer(Exception ex) {
-
-        ErrorObject errorObject = new ErrorObject();
-
-        errorObject.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        errorObject.setMessage(ex.getMessage());
-        errorObject.setTimestamp(new Date());
-
-        return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<String> handleGeneralException(Exception ex) {
+        return new ResponseEntity<>("Ha ocurrido un error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(DocenteNullException.class)
+    public ResponseEntity<String> handleDocenteNullException(DocenteNullException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(InscripcionException.class)
+    public ResponseEntity<String> handleInscripcionException(InscripcionException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

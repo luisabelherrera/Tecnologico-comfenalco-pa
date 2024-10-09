@@ -1,0 +1,95 @@
+<div class="matricula-container">
+  <h2>Registro de Matrículas</h2>
+  
+  <form [formGroup]="matriculaForm" (ngSubmit)="onSubmit()" class="matricula-form">
+    <label for="valorCodigo">Código Valor</label>
+    <input id="valorCodigo" formControlName="valorCodigo" />
+    <div *ngIf="matriculaForm.get('valorCodigo')?.hasError('required')">
+      Este campo es obligatorio.
+    </div>
+
+    <label for="codigo">Código</label>
+    <input id="codigo" formControlName="codigo" />
+    <div *ngIf="matriculaForm.get('codigo')?.hasError('required')">
+      Este campo es obligatorio.
+    </div>
+
+    <label for="situacion">Situación</label>
+    <input id="situacion" formControlName="situacion" />
+
+    <label for="nivelDetalle">Nivel Detalle</label>
+    <select id="nivelDetalle" formControlName="nivelDetalle">
+      <option *ngFor="let nivel of nivelesDetalles" [value]="nivel.idNivelDetalle">
+        {{ nivel.idNivelDetalle }}
+      </option>
+    </select>
+    <div *ngIf="matriculaForm.get('nivelDetalle')?.hasError('required')">
+      Este campo es obligatorio.
+    </div>
+
+    <label for="estudiante">Estudiante</label>
+    <select id="estudiante" formControlName="estudiante">
+      <option *ngFor="let estudiante of estudiantes" [value]="estudiante.id">
+        {{ estudiante.nombres }}
+      </option>
+    </select>
+    <div *ngIf="matriculaForm.get('estudiante')?.hasError('required')">
+      Este campo es obligatorio.
+    </div>
+
+    <label for="acudiente">Acudiente</label>
+    <select id="acudiente" formControlName="acudiente">
+      <option *ngFor="let acudiente of acudientes" [value]="acudiente.idAcudiente">
+        {{ acudiente.nombres }}
+      </option>
+    </select>
+    <div *ngIf="matriculaForm.get('acudiente')?.hasError('required')">
+      Este campo es obligatorio.
+    </div>
+
+    <label for="institucionProcedencia">Institución de Procedencia</label>
+    <input id="institucionProcedencia" formControlName="institucionProcedencia" />
+
+    <label>
+      <input type="checkbox" formControlName="esRepitente" /> Es Repitente
+    </label>
+
+    <label for="activo">Activo</label>
+    <input type="checkbox" formControlName="activo" />
+
+    <label for="fechaRegistro">Fecha de Registro</label>
+    <input type="date" id="fechaRegistro" formControlName="fechaRegistro" />
+
+    <button type="submit">
+      {{ isEditing ? 'Actualizar Matrícula' : 'Registrar Matrícula' }}
+    </button>
+    <button type="button" (click)="resetForm()">Cancelar</button>
+  </form>
+
+  <h2>Lista de Matrículas</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Código Valor</th>
+        <th>Código</th>
+        <th>acudiente</th>
+ <th>estudiante</th>
+        <th>niveldetalle</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let matricula of matriculas">
+        <td>{{ matricula.valorCodigo }}</td>
+        <td>{{ matricula.codigo }}</td>
+        <td>{{ matricula.acudiente.nombres }}</td>
+        <td>{{ matricula.estudiante.nombres}}</td>
+        <td>{{ matricula.nivelDetalle.idNivelDetalle}}</td>
+        <td>
+          <button (click)="editMatricula(matricula)">Editar</button>
+          <button (click)="deleteMatricula(matricula.idInscripcion)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

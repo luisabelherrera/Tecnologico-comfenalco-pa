@@ -1,0 +1,70 @@
+<div class="container mat-elevation-z8" style="margin-top: 11px;">
+  <p></p>
+  <div class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 11px;">
+    <a [routerLink]="['/curriculares/create']" class="btn-create" mat-raised-button color="primary" style="margin-top: 20px;">
+      Crear Curricular
+    </a>
+    
+  </div>
+
+  <mat-form-field appearance="outline" class="search-box" style="width: 100%; margin-bottom: 20px;">
+    <mat-label>Buscar</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" class="input-search" />
+  </mat-form-field>
+
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource" matSort class="custom-table mat-elevation-z8 full-width-table">
+
+      <!-- Definición de columnas -->
+      <ng-container matColumnDef="idCurricular">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let curricular">{{ curricular.idCurricular }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="descripcion">
+        <th mat-header-cell *matHeaderCellDef>Descripción</th>
+        <td mat-cell *matCellDef="let curricular">{{ curricular.descripcion }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="activo">
+        <th mat-header-cell *matHeaderCellDef>Activo</th>
+        <td mat-cell *matCellDef="let curricular">{{ curricular.activo ? 'Sí' : 'No' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="fechaRegistro">
+        <th mat-header-cell *matHeaderCellDef>Fecha de Registro</th>
+        <td mat-cell *matCellDef="let curricular">{{ curricular.fechaRegistro | date: 'short' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="docente">
+        <th mat-header-cell *matHeaderCellDef>id Docente y curso</th>
+        <td mat-cell *matCellDef="let curricular">{{ curricular.docenteNivelDetalleCurso.idDocenteNivelDetalleCurso }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let curricular" class="actions">
+          <button [routerLink]="['/curriculares/edit', curricular.idCurricular]" class="btn-edit" mat-icon-button color="accent">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button (click)="deleteCurricular(curricular.idCurricular)" class="btn-delete" mat-icon-button color="warn">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Filas de la tabla -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+  <!-- Paginador -->
+  <div class="paginator" style="margin-top: 20px;">
+    <mat-paginator 
+      [pageSize]="5" 
+      [pageSizeOptions]="[5, 10, 25, 100]" 
+      showFirstLastButtons>
+    </mat-paginator>
+  </div>
+</div>

@@ -11,8 +11,7 @@
             placeholder="Email"
             [(ngModel)]="loginDto.email"
             name="email"
-            required
-          />
+            required />
         </mat-form-field>
         <mat-form-field class="full-width">
           <input
@@ -21,15 +20,19 @@
             [(ngModel)]="loginDto.password"
             name="password"
             type="password"
-            required
-          />
+            required />
         </mat-form-field>
+
+        <!-- Contenedor para mostrar el mensaje de error -->
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+
       </mat-card-content>
       <mat-card-actions>
-        <button type="submit" mat-button color="primary">Login</button>
+        <button type="submit" mat-button color="primary"
+          class="login">Login</button>
       </mat-card-actions>
     </form>
   </mat-card>
 </div>
-
-

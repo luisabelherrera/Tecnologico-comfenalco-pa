@@ -1,0 +1,58 @@
+<div class="container">
+  <!-- Botón para crear un nuevo curso -->
+  <div class="header">
+    <a [routerLink]="['/cursos/create']" class="btn-create">
+      Crear Nuevo Curso
+    </a>
+    <div class="search-box">
+      <input
+        matInput
+        (keyup)="applyFilter($event)"
+        placeholder="Buscar cursos"
+        class="input-search"
+      />
+    </div>
+  </div>
+
+  <div class="table-container">
+    <!-- Tabla para mostrar los cursos -->
+    <table mat-table [dataSource]="dataSource" matSort class="custom-table mat-elevation-z8 full-width rounded-table">
+
+      <!-- Definición de columnas -->
+      <ng-container matColumnDef="idCurso">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID Curso </th>
+        <td mat-cell *matCellDef="let curso"> {{ curso.idCurso }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="descripcion">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+        <td mat-cell *matCellDef="let curso"> {{ curso.descripcion }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="activo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Activo </th>
+        <td mat-cell *matCellDef="let curso"> {{ curso.activo ? 'Sí' : 'No' }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+        <td mat-cell *matCellDef="let curso">
+          <a mat-button [routerLink]="['/cursos/edit', curso.idCurso]" class="btn-edit rounded">Editar</a>
+          <button mat-button color="warn" (click)="deleteCurso(curso.idCurso)" class="btn-delete rounded">Eliminar</button>
+        </td>
+      </ng-container>
+
+      <!-- Filas de la tabla -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+  <!-- Paginador -->
+  <mat-paginator 
+    [pageSize]="5" 
+    [pageSizeOptions]="[5, 10, 25, 100]" 
+    showFirstLastButtons 
+    class="paginator rounded-md">
+  </mat-paginator>
+</div>

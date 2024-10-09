@@ -1,0 +1,38 @@
+.container {
+    align-items: center; /* Centrar horizontalmente */
+    justify-content: center; /* Centrar verticalmente si es necesario */
+  }
+  
+  .form-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .header {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .table-container {
+    width: 100%; /* Ocupa el 100% del ancho del contenedor padre */
+  }
+  
+  .full-width-table {
+    width: 100%; /* La tabla ocupará todo el ancho del contenedor */
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 5px; /* Espacio entre botones */
+  }
+  
+  .button-group button {
+    margin-right: 5px; /* Margen derecho entre botones */
+  }
+  
+  .pagination {
+    display: flex;
+    justify-content: space-between; /* Espacio entre elementos */
+    margin-top: 20px;
+  }
+  

@@ -4,110 +4,137 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 
-import { TutorEditComponent } from './components/Tutor/tutor-edit/tutor-edit.component';
-import { TutorDetailComponent } from './components/Tutor/tutor-detail/tutor-detail.component';
-import { TutorCreateComponent } from './components/Tutor/tutor-create/tutor-create.component';
-import { TutorComponent } from './components/Tutor/tutor.component';
-import { AsignacionAulaListComponent } from './components/asignacion-aula/asignacion-aula-list/asignacion-aula-list.component';
-import { AsignacionAulaCreateComponent } from './components/asignacion-aula/asignacion-aula-create/asignacion-aula-create.component';
-import { AsignacionAulaEditComponent } from './components/asignacion-aula/asignacion-aula-edit/asignacion-aula-edit.component';
-import { AsignacionAulaDetailComponent } from './components/asignacion-aula/asignacion-aula-detail/asignacion-aula-detail.component';
-import { AulaListComponent } from './components/aula/aula-list/aula-list.component';
-import { AulaCreateComponent } from './components/aula/aula-create/aula-create.component';
-import { AulaDetailComponent } from './components/aula/aula-detail/aula-detail.component';
-import { AulaEditComponent } from './components/aula/aula-edit/aula-edit.component';
-import { ProfesorListComponent } from './components/profesor/profesor-list/profesor-list.component';
-import { CursoListComponent } from './components/curso/curso-list/curso-list.component';
-import { CursoCreateComponent } from './components/curso/curso-create/curso-create.component';
-import { CursoEditComponent } from './components/curso/curso-edit/curso-edit.component';
-import { CursoDetailComponent } from './components/curso/curso-detail/curso-detail.component';
-import { ProfesorCreateComponent } from './components/profesor/profesor-create/profesor-create.component';
-import { ProfesorEditComponent } from './components/profesor/profesor-edit/profesor-edit.component';
-import { ProfesorDetailComponent } from './components/profesor/profesor-detail/profesor-detail.component';
-import { DepartamentoCreateComponent } from './components/departamento/departamento-create/departamento-create.component';
-import { DepartamentoEditComponent } from './components/departamento/departamento-edit/departamento-edit.component';
-import { DepartamentoDetailComponent } from './components/departamento/departamento-detail/departamento-detail.component';
-import { DepartamentoListComponent } from './components/departamento/departamento-list/departamento-list.component';
-import { EstudianteListComponent } from './components/estudiante/estudiante-list/estudiante-list.component';
-import { EstudianteCreateComponent } from './components/estudiante/estudiante-create/estudiante-create.component';
-import { EstudianteEditComponent } from './components/estudiante/estudiante-edit/estudiante-edit.component';
-import { EstudianteDetailComponent } from './components/estudiante/estudiante-detail/estudiante-detail.component';
-import { InscripcionListComponent } from './components/inscripcion/inscripcion-list/inscripcion-list.component';
-import { InscripcionCreateComponent } from './components/inscripcion/inscripcion-create/inscripcion-create.component';
-import { InscripcionDetailComponent } from './components/inscripcion/inscripcion-detail/inscripcion-detail.component';
-import { InscripcionEditComponent } from './components/inscripcion/inscripcion-edit/inscripcion-edit.component';
-import { ChatComponent } from './components/chat/chat.component';
+
 import { GenerateContentComponent } from './components/generate-ia/generate-ia.component';
+import { RegisterComponent } from './components/registro/register.component';
+import { Ventana2Component } from './components/ventana2/ventana2.component';
+import { AuthGuard } from './guards/auth.guard';
+
+   // acudiente
+import { AcudienteListComponent } from './components/acudiente/acudiente-list/acudiente-list.component';
+import { AcudienteFormComponent } from './components/acudiente/acudiente-form/acudiente-form.component';
+import { AcudienteDetailComponent } from './components/acudiente/acudiente-detail/acudiente-detail.component';
+
+   // calificacion
+import { CalificacionListComponent } from './components/calificacion/calificacion-list/calificacion-list.component';
+import { CalificacionCreateComponent } from './components/calificacion/calificacion-create/calificacion-create.component';
+import { CalificacionEditComponent } from './components/calificacion/calificacion-edit/calificacion-edit.component';
+
+
+   // curricular
+import { CurricularListComponent } from './components/curricular/curricular-list/curricular-list.component';
+import { CurricularCreateComponent } from './components/curricular/curricular-create/curricular-create.component';
+import { CurricularEditComponent } from './components/curricular/curricular-edit/curricular-edit.component';
+
+  // curso
+import { CursosListComponent } from './components/cursos/cursos-list/cursos-list.component';
+import { CursosCreateComponent } from './components/cursos/cursos-create/cursos-create.component';
+import { CursosEditComponent } from './components/cursos/cursos-edit/cursos-edit.component';
+  //DOcenteNiveldetalle
+import { DocenteNivelDetalleCursoComponent } from './components/docente-nivel-detalle-curso/docente-nivel-detalle-curso.component';
+  //Estudiante
+import { ListarEstudiantesComponent } from './components/estudiante/listar/listar.component';
+import { CrearEstudianteComponent } from './components/estudiante/crear/crear.component';
+import { EditarEstudianteComponent } from './components/estudiante/editar/editar.component';
+  //GradoSeccion
+import { GradoSeccionComponent } from './components/grado-seccion/grado-seccion.component';
+  //Horario
+import { HorarioListComponent } from './components/horario/horario-list/horario-list.component';
+import { HorarioAddComponent } from './components/horario/horario-add/horario-add.component';
+import { HorarioUpdateComponent } from './components/horario/horario-update/horario-update.component';
+
+import { NivelComponent } from './components/nivel/nivel.component';
+import { NivelDetalleComponent } from './components/niveldetalle/niveldetalle.component';
+import { NivelDetalleCursoComponent } from './components/niveldetallecurso/niveldetallecurso.component';
+import { PeriodoComponent } from './components/periodo/periodo.component';
+
+import { DocenteComponent } from './components/docente/docente.component';
+import { CalificacionDetailComponent } from './components/calificacion/calificacion-detail/calificacion-detail.component';
+import { Ventana3Component } from './components/ventana3/ventana3.component';
+import { MatriculaComponent } from './components/matricula/matricula.component';
 
 const routes: Routes = [
-  //inicio
+  // User routes
+  { path: 'ventana2', component: Ventana2Component ,   canActivate: [AuthGuard], 
+    data: { roles: ['Docente'] }  },
+
+
+    { path: 'ventana3', component: Ventana3Component ,   canActivate: [AuthGuard], 
+      data: { roles: ['Estudiante'] }  },
+   
+  // Home route
   { path: 'home', component: HomeComponent },
 
-  // tutor
-  { path: 'edit/:id', component: TutorEditComponent },
-  { path: 'tutores/detail/:id', component: TutorDetailComponent },
-  { path: 'create', component: TutorCreateComponent },
-  { path: 'tutor', component: TutorComponent },
+  // Registration route
+  { path: 'registro', component: RegisterComponent },
 
-  // asignacion de aula
-  { path: 'asignaciones-aulas', component: AsignacionAulaListComponent },
-  {
-    path: 'asignaciones-aulas/create',
-    component: AsignacionAulaCreateComponent,
-  },
-  {
-    path: 'asignaciones-aulas/edit/:id',
-    component: AsignacionAulaEditComponent,
-  },
-  {
-    path: 'asignaciones-aulas/detail/:id',
-    component: AsignacionAulaDetailComponent,
-  },
+  // acudiente routes
+  { path: 'acudientes', component: AcudienteListComponent,   canActivate: [AuthGuard], 
+    data: { roles: ['Administracion'] }  },
+  { path: 'acudientes/create', component: AcudienteFormComponent },
+  { path: 'acudientes/edit/:id', component: AcudienteFormComponent },
+  { path: 'acudientes/details/:id', component: AcudienteDetailComponent },
+ 
+   //curriculares
+  { path: 'curriculares', component: CurricularListComponent },
+  { path: 'curriculares/create', component: CurricularCreateComponent },
+  { path: 'curriculares/edit/:id', component: CurricularEditComponent },
 
-  //aula
-  { path: 'aulas', component: AulaListComponent },
-  { path: 'aulas/create', component: AulaCreateComponent },
-  { path: 'aulas/edit/:id', component: AulaEditComponent },
-  { path: 'aulas/detail/:id', component: AulaDetailComponent },
+ //curso
+  { path: 'cursos', component: CursosListComponent },
+  { path: 'cursos/create', component: CursosCreateComponent },
+  { path: 'cursos/edit/:id', component: CursosEditComponent },
+   //estudiante
+  { path: 'listar', component: ListarEstudiantesComponent },
+  { path: 'crear', component: CrearEstudianteComponent },
+  { path: 'editar/:id', component: EditarEstudianteComponent },
+ 
+   //estudiante
+  { path: 'grado-seccion', component: GradoSeccionComponent },
+ 
+   //horario
+  { path: 'horario', component: HorarioListComponent ,  canActivate: [AuthGuard], 
+    data: { roles: ['Administracion'] }  },
+  { path: 'horario/add', component: HorarioAddComponent },
+  { path: 'horario/update/:id', component: HorarioUpdateComponent },
 
-  //Profesor
-  { path: 'profesores', component: ProfesorListComponent },
-  { path: 'profesores/create', component: ProfesorCreateComponent },
-  { path: 'profesores/edit/:id', component: ProfesorEditComponent },
-  { path: 'profesores/detail/:id', component: ProfesorDetailComponent },
 
-  //departamento
-  { path: 'departamentos', component: DepartamentoListComponent },
-  { path: 'departamentos/create', component: DepartamentoCreateComponent },
-  { path: 'departamentos/edit/:id', component: DepartamentoEditComponent },
-  { path: 'departamentos/detail/:id', component: DepartamentoDetailComponent },
 
-  //curso
-  { path: 'cursos', component: CursoListComponent },
-  { path: 'cursos/create', component: CursoCreateComponent },
-  { path: 'cursos/edit/:id', component: CursoEditComponent },
-  { path: 'cursos/detail/:id', component: CursoDetailComponent },
 
-  //estudiante
-  { path: 'estudiantes', component: EstudianteListComponent },
-  { path: 'estudiantes/create', component: EstudianteCreateComponent },
-  { path: 'estudiantes/detail/:id', component: EstudianteDetailComponent },
-  { path: 'estudiantes/edit/:id', component: EstudianteEditComponent },
+  { path: 'niveldetalle', component: NivelDetalleComponent },
 
-  //inscripciones
-  { path: 'inscripciones', component: InscripcionListComponent },
-  { path: 'inscripciones/create', component: InscripcionCreateComponent },
-  { path: 'inscripciones/detail/:id', component: InscripcionDetailComponent },
-  { path: 'inscripciones/edit/:id', component: InscripcionEditComponent },
+  { path: 'niveldetallecurso', component: NivelDetalleCursoComponent },
 
-//ia
-  { path: 'ia', component:  GenerateContentComponent},
+  { path: 'nivel', component: NivelComponent },
 
-  //chat
-  { path: 'chat', component: ChatComponent },
 
-  //login
+  { path: 'periodo', component: PeriodoComponent },
+
+
+  //docente
+  { path: 'docentes', component: DocenteComponent ,  canActivate: [AuthGuard], 
+    data: { roles: ['Administracion'] }},
+
+  { path: 'docentes/detalle', component: DocenteNivelDetalleCursoComponent },
+
+   // calificacion
+  { path: 'calificaciones', component: CalificacionListComponent },
+  { path: 'calificaciones/create', component: CalificacionCreateComponent },
+  { path: 'calificaciones/edit/:id', component: CalificacionEditComponent },
+  { path: 'calificaciones/detail/:id', component: CalificacionDetailComponent }, // New route
+
+ {path: "matricula" , component:  MatriculaComponent  ,  canActivate: [AuthGuard], 
+  data: { roles: ['Administracion'] }},
+
+  // AI Generation route
+  { path: 'ia', component: GenerateContentComponent },
+
+
+
+  // Login route
   { path: 'login', component: LoginComponent },
+
+  // Wildcard route for a 404 page redirecting to login
   { path: '**', redirectTo: '/login' },
 ];
 

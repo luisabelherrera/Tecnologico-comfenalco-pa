@@ -1,0 +1,167 @@
+<div class="container mat-elevation-z8">
+    <h2 class="title-with-icon">
+      <mat-icon>school</mat-icon> {{ editing ? 'Editar Nivel' : 'Crear Nivel' }}
+    </h2>
+  
+    <form (ngSubmit)="saveNivel()" #nivelForm="ngForm" class="form-container">
+      <div class="form-grid">
+        <mat-form-field appearance="outline" class="form-group">
+          <mat-label>Descripción del Nivel</mat-label>
+          <input
+            matInput
+            [(ngModel)]="nivel.descripcionNivel"
+            name="descripcionNivel"
+            required
+            #descripcionNivel="ngModel"
+            placeholder="Ej. Primer Grado"
+          />
+          <mat-error *ngIf="descripcionNivel.invalid && (descripcionNivel.dirty || descripcionNivel.touched)">
+            La descripción del nivel es obligatoria.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="form-group">
+          <mat-label>Descripción del Turno</mat-label>
+          <input
+            matInput
+            [(ngModel)]="nivel.descripcionTurno"
+            name="descripcionTurno"
+            required
+            #descripcionTurno="ngModel"
+            placeholder="Ej. Mañana"
+          />
+          <mat-error *ngIf="descripcionTurno.invalid && (descripcionTurno.dirty || descripcionTurno.touched)">
+            La descripción del turno es obligatoria.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="form-group">
+          <mat-label>Periodo</mat-label>
+          <mat-select [(ngModel)]="nivel.periodo" name="periodo" required #periodo="ngModel">
+            <mat-option value="" disabled selected>Selecciona un periodo</mat-option>
+            <mat-option *ngFor="let p of periodos" [value]="p">{{ p?.descripcion }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="periodo.invalid && (periodo.dirty || periodo.touched)">
+            El periodo es obligatorio.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="form-group">
+          <mat-label>Hora Inicio</mat-label>
+          <input
+            matInput
+            type="time"
+            [(ngModel)]="nivel.horaInicio"
+            name="horaInicio"
+            required
+            #horaInicio="ngModel"
+          />
+          <mat-error *ngIf="horaInicio.invalid && (horaInicio.dirty || horaInicio.touched)">
+            La hora de inicio es obligatoria.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="form-group">
+          <mat-label>Hora Fin</mat-label>
+          <input
+            matInput
+            type="time"
+            [(ngModel)]="nivel.horaFin"
+            name="horaFin"
+            required
+            #horaFin="ngModel"
+          />
+          <mat-error *ngIf="horaFin.invalid && (horaFin.dirty || horaFin.touched)">
+            La hora de fin es obligatoria.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-checkbox [(ngModel)]="nivel.activo" name="activo">Activo</mat-checkbox>
+      </div>
+  
+      <div class="button-group">
+        <button mat-raised-button color="primary" type="submit" [disabled]="nivelForm.invalid || isLoading">
+          {{ editing ? 'Actualizar Nivel' : 'Crear Nivel' }}
+        </button>
+        <button mat-raised-button color="warn" type="button" (click)="resetForm()" *ngIf="editing">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  
+    <div *ngIf="isLoading" class="loading">Cargando...</div>
+    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+    <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
+  
+    <p></p> 
+  
+    <div class="header">
+      <mat-form-field class="search-box">
+        <mat-label>Buscar por Descripción del Nivel</mat-label>
+        <input matInput [(ngModel)]="filtro" (input)="filterNiveles()" placeholder="Buscar niveles" />
+      </mat-form-field>
+    </div>
+  
+    <div class="table-container">
+      <table mat-table [dataSource]="paginatedNiveles" matSort class="full-width-table nivel-table mat-elevation-z8">
+        <ng-container matColumnDef="idNivel">
+          <th mat-header-cell *matHeaderCellDef> ID </th>
+          <td mat-cell *matCellDef="let nivel"> {{ nivel.idNivel }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="descripcionNivel">
+          <th mat-header-cell *matHeaderCellDef> Descripción del Nivel </th>
+          <td mat-cell *matCellDef="let nivel"> {{ nivel.descripcionNivel }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="descripcionTurno">
+          <th mat-header-cell *matHeaderCellDef> Descripción del Turno </th>
+          <td mat-cell *matCellDef="let nivel"> {{ nivel.descripcionTurno }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="periodo">
+          <th mat-header-cell *matHeaderCellDef> Periodo </th>
+          <td mat-cell *matCellDef="let nivel"> {{ nivel.periodo?.descripcion }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="horaInicio">
+          <th mat-header-cell *matHeaderCellDef> Hora Inicio </th>
+          <td mat-cell *matCellDef="let nivel"> {{ nivel.horaInicio }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="horaFin">
+          <th mat-header-cell *matHeaderCellDef> Hora Fin </th>
+          <td mat-cell *matCellDef="let nivel"> {{ nivel.horaFin }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="activo">
+          <th mat-header-cell *matHeaderCellDef> Activo </th>
+          <td mat-cell *matCellDef="let nivel">
+            <mat-checkbox [checked]="nivel.activo" disabled></mat-checkbox>
+          </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef> Acciones </th>
+          <td mat-cell *matCellDef="let nivel">
+            <button mat-icon-button (click)="editNivel(nivel)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteNivel(nivel.idNivel)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="['idNivel', 'descripcionNivel', 'descripcionTurno', 'periodo', 'horaInicio', 'horaFin', 'activo', 'acciones']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['idNivel', 'descripcionNivel', 'descripcionTurno', 'periodo', 'horaInicio', 'horaFin', 'activo', 'acciones'];"></tr>
+      </table>
+    </div>
+  
+    <div class="pagination">
+      <button (click)="previousPage()" [disabled]="currentPage === 1" class="btn btn-light">Anterior</button>
+      <span>Página {{ currentPage }} de {{ totalPages }}</span>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-light">Siguiente</button>
+    </div>
+  </div>
+  

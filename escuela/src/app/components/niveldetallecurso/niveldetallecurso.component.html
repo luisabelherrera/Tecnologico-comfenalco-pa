@@ -1,0 +1,54 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Nivel Detalle Curso Management</h2>
+
+    <form (ngSubmit)="createOrUpdate()" #cursoForm="ngForm" class="mb-4">
+        <div class="form-group">
+            <label for="nivelDetalle">Nivel Detalle:</label>
+            <select [(ngModel)]="selectedCurso.nivelDetalle.idNivelDetalle" name="nivelDetalle" required class="form-control">
+                <option value="" disabled>Select a Nivel Detalle</option>
+                <option *ngFor="let nivel of nivelesDetalles" [value]="nivel.idNivelDetalle">{{ nivel.nivel.descripcionNivel }}</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="curso">Curso:</label>
+            <select [(ngModel)]="selectedCurso.curso.idCurso" name="curso" required class="form-control">
+                <option value="" disabled>Select a Curso</option>
+                <option *ngFor="let curso of cursos" [value]="curso.idCurso">{{ curso.descripcion }}</option>
+            </select>
+        </div>
+
+        <div class="form-group form-check">
+            <input type="checkbox" [(ngModel)]="selectedCurso.activo" name="activo" class="form-check-input">
+            <label for="activo" class="form-check-label">Activo</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">{{ isEditing ? 'Update' : 'Create' }}</button>
+        <button type="button" class="btn btn-secondary" (click)="resetForm()">Cancel</button>
+    </form>
+
+    <h3>Lista de Nivel Detalle Cursos</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nivel Detalle</th>
+                <th>Curso</th>
+               <th>Activo</th> 
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let curso of nivelDetalleCursos">
+                <td>{{ curso.idNivelDetalleCurso }}</td>
+                <td>{{ curso.nivelDetalle.nivel.descripcionNivel }}</td>
+                <td>{{ curso.curso.descripcion }}</td>
+                <td>{{ curso.curso.activo }}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" (click)="editCurso(curso)">Edit</button>
+                    <button class="btn btn-danger btn-sm" (click)="deleteCurso(curso.idNivelDetalleCurso)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

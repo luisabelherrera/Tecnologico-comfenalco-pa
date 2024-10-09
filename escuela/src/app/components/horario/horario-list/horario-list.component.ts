@@ -1,0 +1,44 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Horario } from 'src/app/models/entity/horario.model';
+import { HorarioService } from 'src/app/services/horario/Horario.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort'; 
+import { MatTableDataSource } from '@angular/material/table';
+
+@Component({
+  selector: 'app-horario-list',
+  templateUrl: './horario-list.component.html',
+  styleUrls: ['./horario-list.component.scss']
+})
+export class HorarioListComponent implements OnInit {
+  dataSource = new MatTableDataSource<Horario>(); 
+  displayedColumns: string[] = ['diaSemana', 'horaInicio', 'horaFin', 'nivelDetalleCurso', 'acciones']; // Agregar nivelDetalleCurso
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort; 
+
+  constructor(private horarioService: HorarioService) {}
+
+  ngOnInit(): void {
+    this.loadHorarios(); 
+  }
+
+  loadHorarios() {
+    this.horarioService.getAllHorarios().subscribe(horarios => {
+      this.dataSource.data = horarios; 
+      this.dataSource.paginator = this.paginator; 
+      this.dataSource.sort = this.sort; 
+    });
+  }
+
+  deleteHorario(id: number) {
+    this.horarioService.deleteHorario(id).subscribe(() => {
+      this.loadHorarios(); 
+    });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase(); 
+  }
+}

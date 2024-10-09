@@ -1,0 +1,13 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra horizontalmente */
+    justify-content: center; /* Centra verticalmente si es necesario */
+    margin: 20px; /* Espaciado alrededor del contenedor */
+}
+
+.form-title {
+    margin-bottom: 16px; /* Espacio entre el título y el formulario */
+    font-size: 24px; /* Ajusta el tamaño del texto según sea necesario */
+    text-align: center; /* Asegura que el título esté centrado */
+}

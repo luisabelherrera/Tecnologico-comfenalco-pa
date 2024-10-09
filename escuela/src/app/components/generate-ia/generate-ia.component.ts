@@ -12,6 +12,8 @@ interface GenerateContentResponse {
   }>;
 }
 
+
+
 @Component({
   selector: 'app-generate-content',
   templateUrl: './generate-ia.component.html',

@@ -1,13 +1,14 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Curso } from 'src/app/models/curso';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Curso } from 'src/app/models/entity/curso.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CursoService {
-  private apiUrl = 'http://localhost:8086/api/cursos';
+export class CursosService {
+  private apiUrl = 'http://localhost:8086/api/cursos'; 
 
   constructor(private http: HttpClient) {}
 
@@ -18,23 +19,43 @@ export class CursoService {
     });
   }
 
-  getAllCursos(): Observable<Curso[]> {
-    return this.http.get<Curso[]>(this.apiUrl, { headers: this.getHeaders() });
+  // Get all courses
+  getCursos(): Observable<Curso[]> {
+    return this.http.get<Curso[]>(this.apiUrl, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
   }
 
+  // Get a course by ID
   getCursoById(id: number): Observable<Curso> {
-    return this.http.get<Curso>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
+    return this.http.get<Curso>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
   }
 
+  // Create a new course
   createCurso(curso: Curso): Observable<Curso> {
-    return this.http.post<Curso>(`${this.apiUrl}/create`, curso, { headers: this.getHeaders() });
+    return this.http.post<Curso>(this.apiUrl, curso, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
   }
 
-  updateCurso(curso: Curso): Observable<Curso> {
-    return this.http.put<Curso>(`${this.apiUrl}/${curso.id}`, curso, { headers: this.getHeaders() });
+  // Update an existing course
+  updateCurso(id: number, curso: Curso): Observable<Curso> {
+    return this.http.put<Curso>(`${this.apiUrl}/${id}`, curso, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
   }
 
+  // Delete a course by ID
   deleteCurso(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  private handleError(error: any) {
+    console.error('Error occurred:', error);
+    return throwError(() => new Error('Error en la operación. Inténtalo de nuevo más tarde.'));
   }
 }

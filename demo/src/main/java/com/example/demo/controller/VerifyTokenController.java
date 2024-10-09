@@ -16,8 +16,13 @@ public class VerifyTokenController {
         return "Hola bienvenido Admin!";
     }
 
-    @RequestMapping("/user")
-    public String user() {
-        return "Hola bienvenido User!";
+    @RequestMapping("/estudiante")
+    public String estudiante() {
+        return "Hola bienvenido estudiante!";
+    }
+
+    @RequestMapping("/docente")
+    public String docente() {
+        return "Hola bienvenido docente!";
     }
 }

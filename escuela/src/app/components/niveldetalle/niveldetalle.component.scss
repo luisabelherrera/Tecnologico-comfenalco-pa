@@ -1,0 +1,40 @@
+.container {
+  align-items: center;  /* Centrar horizontalmente */
+  justify-content: center;  /* Centrar verticalmente si es necesario */
+}
+
+
+.input-field {
+  width: 100%; /* Hacer que los campos ocupen todo el ancho */
+}
+
+.button-group {
+  display: flex;
+  gap: 10px; /* Espacio entre los botones */
+  margin-top: 20px; /* Espacio superior para separación */
+}
+
+.table-container {
+  width: 100%; /* Asegurarse de que la tabla ocupe todo el ancho */
+  margin-top: 20px; /* Espacio superior para separación */
+}
+
+.full-width-table {
+  width: 100%; /* La tabla ocupará todo el ancho del contenedor */
+}
+
+.search-box {
+  margin: 20px 0; /* Espacio superior e inferior para el buscador */
+}
+
+.mat-form-field {
+  margin-bottom: 16px; /* Espacio inferior entre campos */
+}
+
+.mat-error {
+  font-size: 12px; /* Tamaño de fuente más pequeño para los mensajes de error */
+}
+
+.mat-icon {
+  margin-right: 8px; /* Espacio entre icono y texto */
+}

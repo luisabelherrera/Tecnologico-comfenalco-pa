@@ -28,8 +28,8 @@ export class TutorService {
   }
 
   createTutor(tutor: tutor): Observable<tutor> {
-    return this.http.post<tutor>(`${this.apiUrl}/create`, tutor, { headers: this.getHeaders() });
-  }
+    return this.http.post<tutor>(this.apiUrl, tutor, { headers: this.getHeaders() });
+}
 
   updateTutor(tutor: tutor): Observable<tutor> {
     return this.http.put<tutor>(`${this.apiUrl}/${tutor.id}`, tutor, { headers: this.getHeaders() });

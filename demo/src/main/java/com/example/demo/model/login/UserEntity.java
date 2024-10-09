@@ -1,11 +1,19 @@
-
 package com.example.demo.model.login;
-
-import jakarta.persistence.*;
 
 import java.util.Set;
 
-import com.example.demo.model.login.Rol;
+import com.example.demo.model.entity.Docente;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
@@ -25,6 +33,11 @@ public class UserEntity {
     @JoinTable(name = "user_rol", joinColumns = @JoinColumn(name = "id_user"), inverseJoinColumns = @JoinColumn(name = "id_rol"))
     private Set<Rol> roles;
 
+    @OneToOne
+    @JoinColumn(name = "docente_id")
+    private Docente docente;
+
+    // Constructor with all fields
     public UserEntity(Long id, String username, String password, String email, Set<Rol> roles) {
         this.id = id;
         this.username = username;
@@ -33,10 +46,11 @@ public class UserEntity {
         this.roles = roles;
     }
 
+    // Default constructor
     public UserEntity() {
-
     }
 
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -75,5 +89,14 @@ public class UserEntity {
 
     public void setRoles(Set<Rol> roles) {
         this.roles = roles;
+    }
+
+    // Add the missing setDocente method
+    public Docente getDocente() {
+        return docente;
+    }
+
+    public void setDocente(Docente docente) {
+        this.docente = docente;
     }
 }

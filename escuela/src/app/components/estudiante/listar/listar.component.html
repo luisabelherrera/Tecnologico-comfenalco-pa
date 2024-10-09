@@ -1,0 +1,95 @@
+<div class="container mat-elevation-z8" style="margin-top: 11px;">
+  <h2 style="margin-bottom: 20px;">Lista de Estudiantes</h2>
+
+  <div class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 11px;">
+    <a [routerLink]="['/crear']" class="btn-create" mat-raised-button color="primary" style="margin-top: 20px;">
+      Crear Estudiante
+    </a>
+  </div>
+
+  <mat-form-field appearance="outline" class="search-box" style="width: 100%; margin-bottom: 20px;">
+    <mat-label>Buscar</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar Estudiante" class="input-search" />
+  </mat-form-field>
+
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource" matSort class="custom-table mat-elevation-z8" style="width: 100%;">
+
+      <!-- Definición de columnas -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let estudiante">{{ estudiante.idEstudiante }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="codigo">
+        <th mat-header-cell *matHeaderCellDef>Código</th>
+        <td mat-cell *matCellDef="let estudiante">{{ estudiante.codigo }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="nombres">
+        <th mat-header-cell *matHeaderCellDef>Nombres</th>
+        <td mat-cell *matCellDef="let estudiante">{{ estudiante.nombres }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="apellidos">
+        <th mat-header-cell *matHeaderCellDef>Apellidos</th>
+        <td mat-cell *matCellDef="let estudiante">{{ estudiante.apellidos }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="documentoIdentidad">
+        <th mat-header-cell *matHeaderCellDef>Documento de Identidad</th>
+        <td mat-cell *matCellDef="let estudiante">{{ estudiante.documentoIdentidad }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="fechaNacimiento">
+        <th mat-header-cell *matHeaderCellDef>Fecha de Nacimiento</th>
+        <td mat-cell *matCellDef="let estudiante">{{ estudiante.fechaNacimiento | date: 'dd/MM/yyyy' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="sexo">
+        <th mat-header-cell *matHeaderCellDef>Sexo</th>
+        <td mat-cell *matCellDef="let estudiante">{{ estudiante.sexo }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="ciudad">
+        <th mat-header-cell *matHeaderCellDef>Ciudad</th>
+        <td mat-cell *matCellDef="let estudiante">{{ estudiante.ciudad }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="direccion">
+        <th mat-header-cell *matHeaderCellDef>Dirección</th>
+        <td mat-cell *matCellDef="let estudiante">{{ estudiante.direccion }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="activo">
+        <th mat-header-cell *matHeaderCellDef>Activo</th>
+        <td mat-cell *matCellDef="let estudiante">{{ estudiante.activo ? 'Sí' : 'No' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let estudiante" class="actions">
+          <button [routerLink]="['/editar', estudiante.idEstudiante]" class="btn-edit" mat-icon-button color="accent">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button (click)="deleteEstudiante(estudiante.idEstudiante)" class="btn-delete" mat-icon-button color="warn">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Filas de la tabla -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+  <!-- Paginador -->
+  <div class="paginator" style="margin-top: 20px;">
+    <mat-paginator 
+      [pageSize]="5" 
+      [pageSizeOptions]="[5, 10, 25, 100]" 
+      showFirstLastButtons>
+    </mat-paginator>
+  </div>
+</div>

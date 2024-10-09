@@ -1,0 +1,55 @@
+.nivel-container {
+  padding: 20px; /* Espacio interno para el contenedor */
+  background-color: #f9f9f9; /* Fondo más claro para destacar */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  max-width: 1200px;
+}
+
+.form-container {
+  padding: 20px; /* Espacio interno para el contenedor del formulario */
+  background-color: #ffffff; /* Fondo blanco para mayor claridad */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  margin-bottom: 20px; /* Espacio inferior */
+  max-width: 1200px;
+}
+
+.title-with-icon {
+  display: flex;
+  align-items: center; /* Centra verticalmente el ícono y el texto */
+  margin-bottom: 20px; /* Espacio inferior */
+  font-size: 24px; /* Tamaño del texto */
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Columnas automáticas */
+  gap: 20px; /* Espacio entre los campos */
+}
+
+.button-group {
+  margin-top: 20px; /* Espacio superior para los botones */
+  display: flex;
+  gap: 10px; /* Espacio entre botones */
+}
+
+.table-container {
+  margin-top: 20px; /* Espacio superior para la tabla */
+  padding: 20px; /* Espacio interno */
+  background-color: #ffffff; /* Fondo blanco para mayor claridad */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  max-width: 1200px; /* Max width, you can remove this to allow it to expand */
+  width: 100%; /* Hacer que la tabla ocupe el 100% del contenedor */
+  overflow-x: auto; /* Permitir desplazamiento horizontal si es necesario */
+}
+
+.custom-table {
+  width: 100%; /* La tabla ocupará todo el ancho del contenedor */
+  table-layout: auto; /* Permitir que las columnas se ajusten automáticamente */
+}
+
+.full-width-table {
+  width: 100%; /* La tabla ocupará todo el ancho del contenedor */
+}

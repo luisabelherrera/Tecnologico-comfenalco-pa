@@ -1,0 +1,55 @@
+<h2>Editar Estudiante</h2>
+<form *ngIf="estudiante" (ngSubmit)="actualizarEstudiante()">
+  <mat-form-field appearance="fill">
+    <mat-label>Código</mat-label>
+    <input matInput [(ngModel)]="estudiante.codigo" name="codigo" required />
+    <mat-error *ngIf="!estudiante.codigo">Este campo es requerido.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Nombres</mat-label>
+    <input matInput [(ngModel)]="estudiante.nombres" name="nombres" required />
+    <mat-error *ngIf="!estudiante.nombres">Este campo es requerido.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Apellidos</mat-label>
+    <input matInput [(ngModel)]="estudiante.apellidos" name="apellidos" required />
+    <mat-error *ngIf="!estudiante.apellidos">Este campo es requerido.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Documento de Identidad</mat-label>
+    <input matInput [(ngModel)]="estudiante.documentoIdentidad" name="documentoIdentidad" required />
+    <mat-error *ngIf="!estudiante.documentoIdentidad">Este campo es requerido.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Fecha de Nacimiento</mat-label>
+    <input matInput [(ngModel)]="estudiante.fechaNacimiento" name="fechaNacimiento" type="date" required />
+    <mat-error *ngIf="!estudiante.fechaNacimiento">Este campo es requerido.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Sexo</mat-label>
+    <input matInput [(ngModel)]="estudiante.sexo" name="sexo" required />
+    <mat-error *ngIf="!estudiante.sexo">Este campo es requerido.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Ciudad</mat-label>
+    <input matInput [(ngModel)]="estudiante.ciudad" name="ciudad" required />
+    <mat-error *ngIf="!estudiante.ciudad">Este campo es requerido.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Dirección</mat-label>
+    <input matInput [(ngModel)]="estudiante.direccion" name="direccion" required />
+    <mat-error *ngIf="!estudiante.direccion">Este campo es requerido.</mat-error>
+  </mat-form-field>
+
+  <mat-checkbox [(ngModel)]="estudiante.activo" name="activo">Activo</mat-checkbox>
+
+  <button mat-raised-button color="primary" type="submit">Actualizar Estudiante</button>
+</form>
+<a mat-button routerLink="/listar">Volver a la lista</a>

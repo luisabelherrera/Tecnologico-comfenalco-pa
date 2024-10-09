@@ -1,0 +1,8 @@
+<h2>Crear Producto</h2>
+<form (ngSubmit)="saveProduct()">
+  <mat-form-field>
+    <mat-label>Nombre del Producto</mat-label>
+    <input matInput [(ngModel)]="productData.name" name="name" required>
+  </mat-form-field>
+  <button mat-raised-button type="submit">Guardar Producto</button>
+</form>

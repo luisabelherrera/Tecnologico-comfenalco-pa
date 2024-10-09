@@ -1,0 +1,28 @@
+<div class="acudiente-detail">
+  <h2>Detalles del Acudiente</h2>
+
+  <div class="acudiente-card" *ngIf="acudiente">
+    <div class="acudiente-row">
+      <p><strong>Nombres:</strong> {{ acudiente.nombres }}</p>
+      <p><strong>Apellidos:</strong> {{ acudiente.apellidos }}</p>
+    </div>
+    <div class="acudiente-row">
+      <p><strong>Documento de Identidad:</strong> {{ acudiente.documentoIdentidad }}</p>
+      <p><strong>Ciudad:</strong> {{ acudiente.ciudad }}</p>
+    </div>
+    <div class="acudiente-row">
+      <p><strong>Dirección:</strong> {{ acudiente.direccion }}</p>
+      <p><strong>Estado Civil:</strong> {{ acudiente.estadoCivil }}</p>
+    </div>
+    <div class="acudiente-row">
+      <p><strong>Sexo:</strong> {{ acudiente.sexo }}</p>
+      <p><strong>Fecha de Nacimiento:</strong> {{ acudiente.fechaNacimiento | date }}</p>
+    </div>
+    <div class="acudiente-row">
+      <p><strong>Activo:</strong> <span [class.active]="acudiente.activo">{{ acudiente.activo ? 'Sí' : 'No' }}</span></p>
+      <p><strong>Parentesco:</strong> {{ acudiente.parentesco }}</p>
+    </div>
+  </div>
+
+  <button mat-raised-button color="primary" routerLink="/acudientes" class="back-button">Volver a la lista</button>
+</div>

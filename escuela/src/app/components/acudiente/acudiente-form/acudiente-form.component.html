@@ -1,0 +1,75 @@
+<div class="form-container">
+    <h2 class="form-title">{{ isEditMode ? 'Actualizar' : 'Crear' }} Acudiente</h2>
+  
+    <form (ngSubmit)="saveAcudiente()">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Nombres</mat-label>
+        <input matInput [(ngModel)]="acudiente.nombres" name="nombres" required>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Apellidos</mat-label>
+        <input matInput [(ngModel)]="acudiente.apellidos" name="apellidos" required>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Documento de Identidad</mat-label>
+        <input matInput [(ngModel)]="acudiente.documentoIdentidad" name="documentoIdentidad" required>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Ciudad</mat-label>
+        <input matInput [(ngModel)]="acudiente.ciudad" name="ciudad" required>
+      </mat-form-field>
+  
+      <!-- Campo Dirección -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Dirección</mat-label>
+        <input matInput [(ngModel)]="acudiente.direccion" name="direccion" required>
+      </mat-form-field>
+  
+      <!-- Campo Estado Civil -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Estado Civil</mat-label>
+        <mat-select [(ngModel)]="acudiente.estadoCivil" name="estadoCivil" required>
+          <mat-option value="soltero">Soltero</mat-option>
+          <mat-option value="casado">Casado</mat-option>
+          <mat-option value="divorciado">Divorciado</mat-option>
+          <mat-option value="viudo">Viudo</mat-option>
+        </mat-select>
+      </mat-form-field>
+  
+      <!-- Campo Sexo -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Sexo</mat-label>
+        <mat-select [(ngModel)]="acudiente.sexo" name="sexo" required>
+          <mat-option value="masculino">Masculino</mat-option>
+          <mat-option value="femenino">Femenino</mat-option>
+        </mat-select>
+      </mat-form-field>
+  
+      <!-- Campo Fecha de Nacimiento -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Fecha de Nacimiento</mat-label>
+        <input matInput [(ngModel)]="acudiente.fechaNacimiento" name="fechaNacimiento" [matDatepicker]="picker" required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+  
+      <!-- Campo Activo -->
+      <mat-checkbox [(ngModel)]="acudiente.activo" name="activo">Activo</mat-checkbox>
+  
+      <!-- Campo Parentesco -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Parentesco</mat-label>
+        <input matInput [(ngModel)]="acudiente.parentesco" name="parentesco">
+      </mat-form-field>
+  
+      <button mat-raised-button type="submit" color="primary">{{ isEditMode ? 'Actualizar' : 'Crear' }} Acudiente</button>
+    </form>
+  
+    <button mat-stroked-button color="accent" routerLink="/acudientes" style="margin-top: 20px;">
+      Volver a la lista
+    </button>
+  </div>
+  

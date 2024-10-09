@@ -1,0 +1,90 @@
+<div class="container">
+  <!-- Botón para crear un nuevo acudiente -->
+  <div class="header">
+    <a [routerLink]="['/acudientes/create']" class="btn-create">
+      Crear Nuevo Acudiente
+    </a>
+    <div class="search-box">
+      <input
+        matInput
+        (keyup)="applyFilter($event)"
+        placeholder="Buscar acudiente"
+        class="input-search"
+      />
+    </div>
+  </div>
+
+  <!-- Tabla para mostrar los acudientes -->
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource" matSort class="custom-table">
+      <!-- Nombres Column -->
+      <ng-container matColumnDef="nombres">
+        <th mat-header-cell *matHeaderCellDef>Nombres</th>
+        <td mat-cell *matCellDef="let acudiente">{{ acudiente.nombres }}</td>
+      </ng-container>
+
+      <!-- Apellidos Column -->
+      <ng-container matColumnDef="apellidos">
+        <th mat-header-cell *matHeaderCellDef>Apellidos</th>
+        <td mat-cell *matCellDef="let acudiente">{{ acudiente.apellidos }}</td>
+      </ng-container>
+
+      <!-- Documento Identidad Column -->
+      <ng-container matColumnDef="documentoIdentidad">
+        <th mat-header-cell *matHeaderCellDef>Documento de Identidad</th>
+        <td mat-cell *matCellDef="let acudiente">
+          {{ acudiente.documentoIdentidad }}
+        </td>
+      </ng-container>
+
+      <!-- Ciudad Column -->
+      <ng-container matColumnDef="ciudad">
+        <th mat-header-cell *matHeaderCellDef>Ciudad</th>
+        <td mat-cell *matCellDef="let acudiente">{{ acudiente.ciudad }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="activo">
+        <th mat-header-cell *matHeaderCellDef>Activo</th>
+        <td mat-cell *matCellDef="let acudiente">
+          {{ acudiente.activo ? 'Sí' : 'No' }}
+        </td>
+      </ng-container>
+      
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let acudiente">
+          <a [routerLink]="['/acudientes/details', acudiente.idAcudiente]" class="btn-details">
+            Ver Detalles
+          </a>
+          
+          <a
+            [routerLink]="['/acudientes/edit', acudiente.idAcudiente]"
+            class="btn-edit"
+          >
+            Editar
+          </a>
+          <button
+            (click)="deleteAcudiente(acudiente.idAcudiente)"
+            class="btn-delete"
+          >
+            Eliminar
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Table Rows -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+
+  <!-- Paginador -->
+  <div class="paginator">
+    <mat-paginator
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      showFirstLastButtons
+    ></mat-paginator>
+  </div>
+</div>

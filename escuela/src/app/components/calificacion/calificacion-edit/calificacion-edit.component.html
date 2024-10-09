@@ -1,0 +1,61 @@
+<div class="container">
+  <h2>Editar Calificación</h2>
+  
+  <form (ngSubmit)="saveCalificacion()" #form="ngForm">
+    <mat-form-field appearance="fill">
+      <mat-label>Nota:</mat-label>
+      <input 
+        matInput 
+        type="number" 
+        [(ngModel)]="calificacion.nota" 
+        name="nota" 
+        required 
+        min="0" 
+        max="100" />
+      <mat-error *ngIf="(calificacion.nota < 0 || calificacion.nota > 100) && form.submitted">
+        La nota debe estar entre 0 y 100.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Estudiante:</mat-label>
+      <mat-select [(ngModel)]="calificacion.estudiante" name="estudiante" required>
+        <mat-option value="" disabled>Seleccione un estudiante</mat-option>
+        <mat-option *ngFor="let estudiante of estudiantes" [value]="estudiante">
+          {{ estudiante.nombres }} {{ estudiante.apellidos }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="!calificacion.estudiante && form.submitted">
+        Debe seleccionar un estudiante.
+      </mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="fill">
+      <mat-label>Curricular:</mat-label>
+      <mat-select [(ngModel)]="calificacion.curricular" name="curricular" required>
+        <mat-option value="" disabled>Seleccione un curricular</mat-option>
+        <mat-option *ngFor="let curricular of curriculares" [value]="curricular">
+          {{ curricular.descripcion }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="!calificacion.curricular && form.submitted">
+        Debe seleccionar un curricular.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Fecha de Registro:</mat-label>
+      <input 
+        matInput 
+        type="date" 
+        [(ngModel)]="calificacion.fechaRegistro" 
+        name="fechaRegistro" 
+        required />
+    </mat-form-field>
+
+    <mat-checkbox [(ngModel)]="calificacion.activo" name="activo">Activo</mat-checkbox>
+
+    <button type="submit" mat-raised-button color="primary" [disabled]="!form.valid">Actualizar</button>
+    <a [routerLink]="['/calificaciones']" mat-button color="warn">Cancelar</a>
+  </form>
+</div>

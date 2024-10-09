@@ -1,0 +1,24 @@
+<!-- src/app/components/horario-update/horario-update.component.html -->
+
+<div *ngIf="horario">
+    <h2>Actualizar Horario</h2>
+    <form (ngSubmit)="actualizarHorario()">
+      <mat-form-field>
+        <mat-label>Día de la Semana</mat-label>
+        <input matInput [(ngModel)]="horario.diaSemana" name="diaSemana" required>
+      </mat-form-field>
+      
+      <mat-form-field>
+        <mat-label>Hora Inicio</mat-label>
+        <input matInput [(ngModel)]="horario.horaInicio" name="horaInicio" required>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Hora Fin</mat-label>
+        <input matInput [(ngModel)]="horario.horaFin" name="horaFin" required>
+      </mat-form-field>
+  
+      <button mat-raised-button type="submit">Actualizar</button>
+    </form>
+  </div>
+  
