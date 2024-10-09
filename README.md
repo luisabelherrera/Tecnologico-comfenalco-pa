@@ -39,6 +39,8 @@ Chat en Tiempo Real: Se ha integrado un sistema de chat en tiempo real utilizand
 
 ![Diagrama de Relaciones](image-4.png)
 ![Diagrama de Relaciones](image-5.png)
+cambios nuevos
+![image](https://github.com/user-attachments/assets/539aa2b3-a116-48e7-93fa-420d3c9f6033)
 
 
 ## Inicialización del Proyecto
