@@ -1,4 +1,3 @@
-// src/app/services/curricular/curricular.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -9,7 +8,7 @@ import { Curricular } from 'src/app/models/entity/curricular.model';
   providedIn: 'root'
 })
 export class CurricularService {
-  private apiUrl = 'http://localhost:8086/api/curriculares'; // Update based on your API
+  private apiUrl = 'http://localhost:8086/api/curriculares';
 
   constructor(private http: HttpClient) {}
 

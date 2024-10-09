@@ -36,7 +36,7 @@ export class DocenteNivelDetalleCursoService {
   create(docenteNivelDetalleCurso: DocenteNivelDetalleCurso): Observable<DocenteNivelDetalleCurso> {
     return this.http.post<DocenteNivelDetalleCurso>(this.apiUrl, docenteNivelDetalleCurso, { headers: this.getHeaders() })
         .pipe(catchError((error: HttpErrorResponse) => {
-            console.error('Error en la creación:', error); // Imprimir error en consola
+            console.error('Error en la creación:', error); 
             return this.handleError(error);
         }));
 }
@@ -55,12 +55,9 @@ export class DocenteNivelDetalleCursoService {
       let errorMessage = 'Error inesperado.';
 
       if (error.error instanceof ErrorEvent) {
-          // Client-side error
           errorMessage = `Error: ${error.error.message}`;
       } else {
-          // Server-side error
           errorMessage = `Código de error: ${error.status}, Mensaje: ${error.message}`;
-          // Log error details here (e.g., to an external logging service)
       }
 
       return throwError(() => new Error(errorMessage));

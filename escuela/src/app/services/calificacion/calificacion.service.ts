@@ -8,7 +8,7 @@ import { Calificacion } from 'src/app/models/entity/Calificacion.interface';
   providedIn: 'root'
 })
 export class CalificacionService {
-  private apiUrl = 'http://localhost:8086/api/calificaciones'; // Cambia esta URL según tu configuración
+  private apiUrl = 'http://localhost:8086/api/calificaciones'; 
 
   constructor(private http: HttpClient) { }
 
@@ -38,7 +38,7 @@ export class CalificacionService {
   }
 
   updateCalificacion(id: number, calificacion: Calificacion): Observable<Calificacion> {
-    console.log('Actualizando calificación:', calificacion); // Agrega esto
+    console.log('Actualizando calificación:', calificacion);
     return this.http.put<Calificacion>(`${this.apiUrl}/${id}`, calificacion, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );

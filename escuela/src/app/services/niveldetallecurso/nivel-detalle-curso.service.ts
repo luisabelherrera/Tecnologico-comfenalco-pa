@@ -8,7 +8,7 @@ import { NivelDetalleCurso } from 'src/app/models/entity/NivelDetalleCurso.inter
     providedIn: 'root'
 })
 export class NivelDetalleCursoService {
-    private apiUrl = 'http://localhost:8086/api/nivel-detalle-curso'; // Consider moving this to an environment file
+    private apiUrl = 'http://localhost:8086/api/nivel-detalle-curso';
 
     constructor(private http: HttpClient) {}
 
@@ -45,7 +45,7 @@ export class NivelDetalleCursoService {
     }
 
     private handleError(error: any) {
-        console.error('An error occurred', error); // More detailed logging
+        console.error('An error occurred', error);
         return throwError(() => new Error('Error inesperado: ' + error.message || 'Error desconocido'));
     }
 }

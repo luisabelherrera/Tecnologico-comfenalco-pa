@@ -8,7 +8,7 @@ import { SubMenu } from 'src/app/models/entity/SubMenu.interface';
   providedIn: 'root'
 })
 export class SubMenuService {
-  private apiUrl = 'http://localhost:8086/api/submenu'; // Cambia esto a la URL de tu API
+  private apiUrl = 'http://localhost:8086/api/submenu';
 
   constructor(private http: HttpClient) {}
 

@@ -15,12 +15,12 @@ export class AuthGuard implements CanActivate {
       map(isAuthenticated => {
         if (isAuthenticated) {
           const userRoles = this.authService.getUserRole();
-          const allowedRoles = route.data['roles'] as string[]; // Obtener los roles permitidos de las rutas
+          const allowedRoles = route.data['roles'] as string[];
 
           if (allowedRoles.some(role => userRoles.includes(role))) {
-            return true; // Permitir el acceso si el usuario tiene un rol permitido
+            return true;
           } else {
-            this.router.navigate(['/not-authorized']); // Redirigir si no tiene el rol adecuado
+            this.router.navigate(['/not-authorized']); 
             return false;
           }
         } else {

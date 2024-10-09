@@ -1,4 +1,3 @@
-// src/app/services/menu.service.ts
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -11,7 +10,7 @@ import { Menu } from 'src/app/models/entity/Menu.interface';
     providedIn: 'root'
 })
 export class MenuService {
-    private apiUrl = 'http://localhost:8086/api/menu'; // Cambia esto a la URL de tu API
+    private apiUrl = 'http://localhost:8086/api/menu'; 
 
     constructor(private http: HttpClient) {}
 
@@ -48,7 +47,6 @@ export class MenuService {
     }
 
     private handleError(error: any) {
-        // Manejo de errores
         return throwError(() => new Error('Error inesperado: ' + error));
     }
 }

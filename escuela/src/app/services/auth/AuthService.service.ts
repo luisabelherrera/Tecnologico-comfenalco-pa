@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8086/api'; // URL de tu API
+  private apiUrl = 'http://localhost:8086/api';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
@@ -29,7 +29,7 @@ export class AuthService {
     this.checkAuthenticationStatus();
   }
 
-  // Registro de usuarios
+
   register(registerDto: RegisterDto): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/register`, registerDto).pipe(
       catchError((error) => {
@@ -39,7 +39,6 @@ export class AuthService {
     );
   }
 
-  // Obtener todos los roles desde el backend
   getAllRoles(): Observable<RoleDto[]> {
     return this.http.get<RoleDto[]>(`${this.apiUrl}/roles`).pipe(
       catchError((error) => {
@@ -49,7 +48,6 @@ export class AuthService {
     );
   }
 
-  // Inicio de sesión
   login(loginDto: LoginDto): Observable<JwtResponseDto> {
     return this.http.post<JwtResponseDto>(`${this.apiUrl}/login`, loginDto).pipe(
       map((response) => {
@@ -63,8 +61,7 @@ export class AuthService {
       })
     );
   }
-
-  // Cerrar sesión
+  
   logout() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('username');
@@ -78,31 +75,27 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  // Manejo exitoso de login
+
   private handleLoginSuccess(response: JwtResponseDto) {
     const token = response.accessToken;
     localStorage.setItem('accessToken', token);
     
-    // Store username directly from JwtResponseDto
-    localStorage.setItem('username', response.username); // Store username
+    localStorage.setItem('username', response.username); 
     
-    localStorage.setItem('roles', JSON.stringify(response.roles)); // Store roles
-    localStorage.setItem('email', response.email); // Store email
+    localStorage.setItem('roles', JSON.stringify(response.roles)); 
+    localStorage.setItem('email', response.email); 
     
-    // Update observables
+
     this.isAuthenticatedSubject.next(true);
-    this.userNameSubject.next(response.username); // Update username
-    this.userEmailSubject.next(response.email); // Update email
+    this.userNameSubject.next(response.username); 
+    this.userEmailSubject.next(response.email);
     
-    // Role-based status updates
-    this.updateAdminStatus(response.roles); // Update admin status
-    this.updateManagerStatus(response.roles); // Update manager status
+    this.updateAdminStatus(response.roles);
+    this.updateManagerStatus(response.roles);
     
-    // Redirect the user based on their roles
-    this.redirectUser(response.roles); // Redirect based on roles
+    this.redirectUser(response.roles); 
   }
-  
-  // Verificar estado de autenticación al iniciar la app
+
   private checkAuthenticationStatus() {
     const token = localStorage.getItem('accessToken');
     this.isAuthenticatedSubject.next(!!token);
@@ -115,19 +108,16 @@ export class AuthService {
     }
   }
 
-  // Actualizar el estado de Admin basado en roles
   private updateAdminStatus(roles: string[] = []) {
     const isAdmin = roles.includes('Administracion');
     this.isAdminSubject.next(isAdmin);
   }
 
-  // Actualizar el estado de Manager basado en roles
   private updateManagerStatus(roles: string[] = []) {
     const isManager = roles.includes('Estudiante');
     this.isManagerSubject.next(isManager);
   }
 
-  // Redirigir al usuario basado en su rol
   private redirectUser(roles: string[]) {
     if (roles.includes('Administracion')) {
       this.router.navigate(['/home']);
@@ -140,7 +130,6 @@ export class AuthService {
     }
   }
 
-  // Obtener roles del usuario almacenados en el localStorage
   getUserRole(): string[] {
     const roles = JSON.parse(localStorage.getItem('roles') || '[]');
     return roles;

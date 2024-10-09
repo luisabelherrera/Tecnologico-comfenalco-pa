@@ -19,35 +19,30 @@ export class CursosService {
     });
   }
 
-  // Get all courses
   getCursos(): Observable<Curso[]> {
     return this.http.get<Curso[]>(this.apiUrl, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
-  // Get a course by ID
   getCursoById(id: number): Observable<Curso> {
     return this.http.get<Curso>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
-  // Create a new course
   createCurso(curso: Curso): Observable<Curso> {
     return this.http.post<Curso>(this.apiUrl, curso, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
-  // Update an existing course
   updateCurso(id: number, curso: Curso): Observable<Curso> {
     return this.http.put<Curso>(`${this.apiUrl}/${id}`, curso, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
-  // Delete a course by ID
   deleteCurso(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)

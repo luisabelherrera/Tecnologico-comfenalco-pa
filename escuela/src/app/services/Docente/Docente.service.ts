@@ -9,7 +9,7 @@ import { Docente } from 'src/app/models/entity/docente.model';
     providedIn: 'root'
 })
 export class DocenteService {
-    private apiUrl = 'http://localhost:8086/api/docentes'; // Cambia la URL según tu configuración
+    private apiUrl = 'http://localhost:8086/api/docentes'; 
 
     constructor(private http: HttpClient) {}
 

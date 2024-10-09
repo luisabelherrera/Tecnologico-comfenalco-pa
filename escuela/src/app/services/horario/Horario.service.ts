@@ -1,4 +1,3 @@
-// src/app/services/horario.service.ts
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -10,7 +9,7 @@ import { Horario } from 'src/app/models/entity/horario.model';
   providedIn: 'root'
 })
 export class HorarioService {
-  private apiUrl = 'http://localhost:8086/api/horario'; // Cambia esto según tu configuración
+  private apiUrl = 'http://localhost:8086/api/horario'; 
 
   constructor(private http: HttpClient) { }
 
