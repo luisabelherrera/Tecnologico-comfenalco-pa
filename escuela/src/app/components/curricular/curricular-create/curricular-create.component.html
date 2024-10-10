@@ -24,8 +24,11 @@
       >
         <option value="" disabled selected>Seleccione un docente</option>
         <option *ngFor="let docente of docentes" [ngValue]="docente">
-          {{ docente.docente.nombres }} {{ docente.docente.apellidos }}  {{ docente.nivelDetalleCurso.curso.descripcion }} 
-        </option>
+          {{ docente.docente.documentoIdentidad }}    {{ docente.docente.nombres }} {{ docente.docente.apellidos }}
+            {{ docente.nivelDetalleCurso.curso.descripcion }} 
+           {{ docente.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionGrado }} 
+           {{ docente.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionSeccion }} 
+          </option>
       </select>
     </div>
 

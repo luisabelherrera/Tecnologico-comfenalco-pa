@@ -1,5 +1,8 @@
 package com.example.demo.initializer;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -9,10 +12,6 @@ import com.example.demo.model.login.Rol;
 import com.example.demo.model.login.UserEntity;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -28,32 +27,34 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
+        // Check and create roles if they don't exist
         if (roleRepository.count() == 0) {
             Rol docente = new Rol();
             docente.setName("Docente");
+            roleRepository.save(docente);
 
             Rol estudiante = new Rol();
             estudiante.setName("Estudiante");
+            roleRepository.save(estudiante);
 
             Rol administracion = new Rol();
             administracion.setName("Administracion");
-
-            List<Rol> defaultRoles = Arrays.asList(docente, estudiante, administracion);
-            roleRepository.saveAll(defaultRoles);
+            roleRepository.save(administracion);
         }
 
+        // Save user with existing role
         if (userRepository.count() == 0) {
             Rol adminRole = roleRepository.findByName("Administracion")
                     .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
             UserEntity adminUser = new UserEntity();
-            adminUser.setUsername("admin");
-            adminUser.setEmail("admin");
-            adminUser.setPassword(passwordEncoder.encode("admin"));
-            adminUser.setRoles(new HashSet<>(Arrays.asList(adminRole)));
+            adminUser.setUsername("abel");
+            adminUser.setEmail("abel");
+            adminUser.setPassword(passwordEncoder.encode("abel"));
+            adminUser.setRoles(new HashSet<>(Arrays.asList(adminRole))); // Use existing role
 
             userRepository.save(adminUser);
         }
     }
+
 }

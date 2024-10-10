@@ -3,12 +3,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Curricular } from 'src/app/models/entity/curricular.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CurricularService {
-  private apiUrl = 'http://localhost:8086/api/curriculares';
+    private apiUrl = `${environment.apiUrl}api/curriculares`;
+
 
   constructor(private http: HttpClient) {}
 

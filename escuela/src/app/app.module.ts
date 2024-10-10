@@ -1,5 +1,5 @@
 //import
-import {  HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -32,8 +32,6 @@ import { HomeComponent } from './components/home/home.component';
 import { AuthService } from './services/auth/AuthService.service';
 import { GenerateContentComponent } from './components/generate-ia/generate-ia.component';
 import { RegisterComponent } from './components/registro/register.component';
-import { Ventana2Component } from './components/ventana2/ventana2.component';
-
 //acudiente
 import { AcudienteDetailComponent } from './components/acudiente/acudiente-detail/acudiente-detail.component';
 import { AcudienteFormComponent } from './components/acudiente/acudiente-form/acudiente-form.component';
@@ -78,6 +76,12 @@ import { PeriodoComponent } from './components/periodo/periodo.component';
 import { DocenteComponent } from './components/docente/docente.component';
 
 import { CalificacionDetailComponent } from './components/calificacion/calificacion-detail/calificacion-detail.component';
+import { Ventana2Component } from './components/vista-docente/ventana2/ventana2.component';
+import { CurricularComponent } from './components/vista-docente/curricular/curricular.component';
+import { HorarioComponent } from './components/vista-docente/horario/horario.component';
+import { Ventana3Component } from './components/vista-estudiante/ventana3/ventana3.component';
+import { CurricularEstudianteComponent } from './components/vista-estudiante/curricular-estudiante/curricular-estudiante.component';
+import { HorarioEstudianteComponent } from './components/vista-estudiante/horario-estudiante/horario-estudiante.component';
 
 
 @NgModule({
@@ -105,8 +109,16 @@ import { CalificacionDetailComponent } from './components/calificacion/calificac
     MatCheckboxModule,
   ],
   declarations: [
-    
+
     Ventana2Component,
+    CurricularComponent,
+    HorarioComponent,
+
+
+
+    Ventana3Component,
+    CurricularEstudianteComponent,
+    HorarioEstudianteComponent,
 
     //cursi
     CursosListComponent,
@@ -163,4 +175,4 @@ import { CalificacionDetailComponent } from './components/calificacion/calificac
   providers: [AuthService],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

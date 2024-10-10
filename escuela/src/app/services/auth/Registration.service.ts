@@ -5,12 +5,13 @@ import { catchError } from 'rxjs/operators';
 import { RegisterDto, RoleDto, UserDto } from 'src/app/models/models';
 import { Router } from '@angular/router';
 import { Docente } from 'src/app/models/entity/docente.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RegistrationService {
-  private apiUrl = 'http://localhost:8086/api';
+  private apiUrl = `${environment.apiUrl}api`;
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -50,10 +51,11 @@ export class RegistrationService {
       .pipe(catchError(this.handleError));
   }
 
-  deleteUser(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/register/users/${id}`, { headers: this.getHeaders() })
-      .pipe(catchError(this.handleError));
+  deleteUser(userId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/register/users/${userId}`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));  
   }
+  
   
   createRole(roleDto: RoleDto): Observable<RoleDto> {
     return this.http.post<RoleDto>(`${this.apiUrl}/register/roles`, roleDto, { headers: this.getHeaders() })

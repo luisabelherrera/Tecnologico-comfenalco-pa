@@ -3,16 +3,27 @@ package com.example.demo.dto;
 import java.util.Set;
 
 import com.example.demo.model.entity.dto.DocenteDto;
+import com.example.demo.model.entity.dto.EstudianteDto;
 import com.example.demo.model.login.Rol;
 
 public class RegisterDto {
+    private Long id;
     private String username;
     private String email;
     private String password;
     private Set<Rol> roles; // Asegúrate de usar Set<Rol>
-    private DocenteDto docente;
+    private DocenteDto docente; // Field for Docente details
+    private EstudianteDto estudiante; // Field for Estudiante details
 
     // Getters y Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -51,5 +62,13 @@ public class RegisterDto {
 
     public void setDocente(DocenteDto docente) {
         this.docente = docente;
+    }
+
+    public EstudianteDto getEstudiante() {
+        return estudiante; // Getter for Estudiante
+    }
+
+    public void setEstudiante(EstudianteDto estudiante) {
+        this.estudiante = estudiante; // Setter for Estudiante
     }
 }

@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { GradoSeccion } from 'src/app/models/entity/GradoSeccion.interface';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class GradoSeccionService {
-  private apiUrl = 'http://localhost:8086/api/grado-seccion'; 
+  private apiUrl = `${environment.apiUrl}api/grado-seccion`; 
 
   constructor(private http: HttpClient) {}
 

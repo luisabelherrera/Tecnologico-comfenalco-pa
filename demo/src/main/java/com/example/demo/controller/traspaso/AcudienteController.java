@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,14 +24,12 @@ public class AcudienteController {
     @Autowired
     private AcudienteService acudienteService;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public ResponseEntity<List<Acudiente>> getAllAcudientes() {
         List<Acudiente> acudientes = acudienteService.findAll();
         return ResponseEntity.ok(acudientes);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<Acudiente> getAcudienteById(@PathVariable Integer id) {
         Optional<Acudiente> acudiente = acudienteService.findById(id);
@@ -40,14 +37,12 @@ public class AcudienteController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<Acudiente> createAcudiente(@RequestBody Acudiente acudiente) {
         Acudiente savedAcudiente = acudienteService.save(acudiente);
         return ResponseEntity.ok(savedAcudiente);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Acudiente> updateAcudiente(@PathVariable Integer id,
             @RequestBody Acudiente acudiente) {
@@ -61,7 +56,6 @@ public class AcudienteController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAcudiente(@PathVariable Integer id) {
         Optional<Acudiente> acudiente = acudienteService.findById(id);

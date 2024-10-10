@@ -1,18 +1,27 @@
 package com.example.demo.controller.traspaso;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.entity.Horario;
 import com.example.demo.services.service.HorarioService;
 
-import java.util.List;
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/horario")
 public class HorarioController {
+
+    
 
     @Autowired
     private HorarioService horarioService;
@@ -20,6 +29,7 @@ public class HorarioController {
     @GetMapping
     public ResponseEntity<List<Horario>> getAllHorarios() {
         List<Horario> horarios = horarioService.findAll();
+        
         return ResponseEntity.ok(horarios);
     }
 

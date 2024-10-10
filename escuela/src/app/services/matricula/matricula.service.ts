@@ -4,12 +4,13 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from '../auth/AuthService.service';
 import { Inscripcion } from 'src/app/models/entity/Inscripcion.interface';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InscripcionService {
-  private apiUrl = 'http://localhost:8086/api/inscripciones'; 
+  private apiUrl = `${environment.apiUrl}api/inscripciones`; 
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 

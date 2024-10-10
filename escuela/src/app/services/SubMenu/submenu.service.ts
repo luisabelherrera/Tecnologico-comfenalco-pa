@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { SubMenu } from 'src/app/models/entity/SubMenu.interface';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SubMenuService {
-  private apiUrl = 'http://localhost:8086/api/submenu';
+   private apiUrl = `${environment.apiUrl}api/submenu`;
 
   constructor(private http: HttpClient) {}
 

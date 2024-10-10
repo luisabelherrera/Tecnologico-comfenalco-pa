@@ -24,11 +24,16 @@ public class DocenteController {
     @Autowired
     private DocenteService docenteService;
 
+
+
+
     @GetMapping
     public ResponseEntity<List<Docente>> getAllDocentes() {
         List<Docente> docentes = docenteService.findAll();
         return ResponseEntity.ok(docentes);
     }
+
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Docente> getDocenteById(@PathVariable Integer id) {
@@ -40,11 +45,15 @@ public class DocenteController {
         }
     }
 
+    
     @PostMapping
     public ResponseEntity<Docente> createDocente(@RequestBody Docente docente) {
         Docente nuevoDocente = docenteService.save(docente);
         return ResponseEntity.ok(nuevoDocente);
     }
+
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Docente> updateDocente(@PathVariable Integer id, @RequestBody Docente docenteDetalles) {

@@ -20,11 +20,13 @@
 
     <dependencies>
 
-	<dependency>
+
+
+	     <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-   <!-- Spring Boot Starter for MongoDB -->
+          <!-- Spring Boot Starter for MongoDB -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -33,16 +35,13 @@
 
 
 
-    <dependency>
+      <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-        <!-- Spring Boot Starter for WebSocket -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
-        </dependency>
+
+
 
         <!-- Spring Boot Starter for Web -->
         <dependency>

@@ -5,20 +5,29 @@ import java.util.Set;
 import com.example.demo.model.login.Rol;
 
 public class UserDto {
-
+    private Long id;
     private String username;
-    private String password;
     private String email;
     private Set<Rol> roles;
 
     public UserDto() {
     }
 
-    public UserDto(String username, String password, String email, Set<Rol> roles) {
+    // Constructor with all fields except password
+    public UserDto(Long id, String username, String email, Set<Rol> roles) {
+        this.id = id;
         this.username = username;
-        this.password = password;
         this.email = email;
         this.roles = roles;
+    }
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -27,14 +36,6 @@ public class UserDto {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {
@@ -51,5 +52,15 @@ public class UserDto {
 
     public void setRoles(Set<Rol> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDto{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }

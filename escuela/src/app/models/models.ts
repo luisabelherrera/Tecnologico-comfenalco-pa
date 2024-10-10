@@ -18,6 +18,7 @@ export interface LoginDto {
 
 // Interfaz para el registro, que ahora incluye un campo opcional para docente
 export interface RegisterDto {
+  id: number;
   username: string;
   email: string;
   password: string;

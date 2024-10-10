@@ -4,11 +4,12 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Acudiente } from 'src/app/models/entity/Acudiente.interface';
 import { AuthService } from '../auth/AuthService.service'; 
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class AcudienteService {
-  private apiUrl = 'http://localhost:8086/api/acudientes';  
+  private apiUrl = `${environment.apiUrl}api/acudientes`;
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 

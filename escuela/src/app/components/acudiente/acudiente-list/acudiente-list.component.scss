@@ -1,15 +1,13 @@
-/* Estilos generales del contenedor */
+
 .container {
-  max-width: 1200px; /* Establece un ancho máximo según sea necesario */
+  max-width: 1200px;
   width: 100%;
-  margin: 0 auto; /* Centra el contenedor */
+  margin: 0 auto; 
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
-/* Contenedor de la cabecera */
 .header {
   display: flex;
   justify-content: flex-start; /* Alinear elementos a la izquierda */
@@ -118,7 +116,6 @@
   background-color: #f1f1f1;
 }
 
-/* Paginador */
 .paginator {
   margin-top: 20px;
   display: flex;

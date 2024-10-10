@@ -15,7 +15,6 @@ import { GenerateContentComponent } from './components/generate-ia/generate-ia.c
 import { RegisterComponent } from './components/registro/register.component';
 
 // ventana 2 para el Docente
-import { Ventana2Component } from './components/ventana2/ventana2.component';
 // El authGuard 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -63,18 +62,38 @@ import { DocenteComponent } from './components/docente/docente.component';
 //calificacion
 import { CalificacionDetailComponent } from './components/calificacion/calificacion-detail/calificacion-detail.component';
 //ventana del estudiante
-import { Ventana3Component } from './components/ventana3/ventana3.component';
+import { Ventana3Component } from './components/vista-estudiante/ventana3/ventana3.component';
 //matricula
 import { MatriculaComponent } from './components/matricula/matricula.component';
+import { Ventana2Component } from './components/vista-docente/ventana2/ventana2.component';
+import { CurricularComponent } from './components/vista-docente/curricular/curricular.component';
+import { HorarioComponent } from './components/vista-docente/horario/horario.component';
+import { CurricularEstudianteComponent } from './components/vista-estudiante/curricular-estudiante/curricular-estudiante.component';
+import { HorarioEstudianteComponent } from './components/vista-estudiante/horario-estudiante/horario-estudiante.component';
 
 const routes: Routes = [
-  // User routes
+  // vista docente 
   {
     path: 'ventana2',
     component: Ventana2Component,
     canActivate: [AuthGuard],
     data: { roles: ['Docente'] },
   },
+  {
+    path: 'curricularDocente',
+    component: CurricularComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Docente'] },
+  },
+  {
+    path: 'horarioDocente',
+    component: HorarioComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Docente'] },
+  },
+
+
+
 
   {
     path: 'ventana3',
@@ -82,6 +101,21 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Estudiante'] },
   },
+
+  {
+    path: 'curricularEstudiante',
+    component: CurricularEstudianteComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Estudiante'] },
+  },
+
+  {
+    path: 'horarioEstudiante',
+    component: HorarioEstudianteComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Estudiante'] },
+  },
+
 
   // Home route
   { path: 'home', component: HomeComponent },

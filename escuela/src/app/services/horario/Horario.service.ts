@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Horario } from 'src/app/models/entity/horario.model';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class HorarioService {
-  private apiUrl = 'http://localhost:8086/api/horario'; 
+ private apiUrl = `${environment.apiUrl}api/horario`;
 
   constructor(private http: HttpClient) { }
 

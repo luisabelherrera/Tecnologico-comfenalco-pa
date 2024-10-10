@@ -46,6 +46,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/controller/**").permitAll()
                         .requestMatchers("/api/login").permitAll()
+                        .requestMatchers("/api/register/**").permitAll()
                         .requestMatchers("/chat-websocket/**").permitAll()
                         .requestMatchers("/admin").hasAuthority("Administracion")
                         .requestMatchers("/docente").hasAuthority("Docente")

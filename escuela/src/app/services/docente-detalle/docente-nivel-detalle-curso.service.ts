@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { DocenteNivelDetalleCurso } from 'src/app/models/entity/docente-nivel-detalle-curso.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class DocenteNivelDetalleCursoService {
-  private apiUrl = 'http://localhost:8086/api/docente-nivel-detalle-curso';
+      private apiUrl = `${environment.apiUrl}api/docente-nivel-detalle-curso`;
 
   
   constructor(private http: HttpClient) {}

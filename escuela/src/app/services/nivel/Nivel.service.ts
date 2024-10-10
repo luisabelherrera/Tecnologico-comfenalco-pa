@@ -4,12 +4,13 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Nivel } from 'src/app/models/entity/nivel.interface';
 import { Periodo } from 'src/app/models/entity/Periodo.interface';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NivelService {
-    private apiUrl = 'http://localhost:8086/api/nivel'; 
+       private apiUrl = `${environment.apiUrl}api/nivel`; 
     constructor(private http: HttpClient) {}
 
     private getHeaders(): HttpHeaders {

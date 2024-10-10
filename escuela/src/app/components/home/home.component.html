@@ -20,3 +20,64 @@
     </mat-card>
   </div>
   
+  <!-- src/app/generate-content/generate-content.component.html -->
+<div class="generate-content-container">
+  <h2 class="title">IA GEMINIS</h2>
+  
+  <textarea
+    [(ngModel)]="text"
+    rows="4"
+    cols="50"
+    placeholder="Enter text to generate content..."
+    class="textarea"
+  ></textarea>
+  
+  <br>
+  
+  <button
+    (click)="generateContent()"
+    class="generate-button"
+    [disabled]="isLoading"
+  >
+    Generate
+  </button>
+  
+  <div *ngIf="isLoading" class="loading-container">
+    <p>Loading...</p>
+  </div>
+  
+  <div *ngIf="response" class="response-container">
+    <h3 class="response-title">Response:</h3>
+    <pre class="response-content">{{ response }}</pre>
+  </div>
+</div>
+
+
+<div class="chat-container">
+  <div class="chat-header">
+    <h2>Chat</h2>
+  </div>
+
+  <!-- Contenedor de mensajes -->
+  <div class="messages-container">
+    <div
+      *ngFor="let message of messages"
+      [ngClass]="{'message-sent': message.sentByUser, 'message-received': !message.sentByUser}"
+      class="message"
+    >
+      <p>{{ message.content }}</p>
+      <span class="timestamp">{{ message.timestamp | date:'shortTime' }}</span>
+    </div>
+  </div>
+
+  <!-- Input de nuevo mensaje -->
+  <div class="input-container">
+    <input
+      type="text"
+      [(ngModel)]="newMessage"
+      placeholder="Escribe un mensaje..."
+      (keyup.enter)="sendMessage()"
+    />
+    <button (click)="sendMessage()">Enviar</button>
+  </div>
+</div>

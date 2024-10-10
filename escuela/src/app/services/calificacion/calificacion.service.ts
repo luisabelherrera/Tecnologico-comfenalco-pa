@@ -3,12 +3,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Calificacion } from 'src/app/models/entity/Calificacion.interface';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CalificacionService {
-  private apiUrl = 'http://localhost:8086/api/calificaciones'; 
+  private apiUrl = `${environment.apiUrl}api/calificaciones`;
+
 
   constructor(private http: HttpClient) { }
 

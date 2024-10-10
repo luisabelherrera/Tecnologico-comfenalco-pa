@@ -4,12 +4,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { NivelDetalle } from 'src/app/models/entity/NivelDetalle.interface';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NivelDetalleService {
-    private apiUrl = 'http://localhost:8086/api/nivel-detalle'; 
+      private apiUrl = `${environment.apiUrl}api/nivel-detalle`; 
 
     constructor(private http: HttpClient) {}
 

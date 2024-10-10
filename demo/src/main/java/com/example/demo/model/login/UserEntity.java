@@ -3,6 +3,7 @@ package com.example.demo.model.login;
 import java.util.Set;
 
 import com.example.demo.model.entity.Docente;
+import com.example.demo.model.entity.Estudiante;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,16 +35,23 @@ public class UserEntity {
     private Set<Rol> roles;
 
     @OneToOne
-    @JoinColumn(name = "docente_id")
+    @JoinColumn(name = "docente_id", referencedColumnName = "idDocente")
     private Docente docente;
 
+    @OneToOne
+    @JoinColumn(name = "estudiante_id", referencedColumnName = "idEstudiante")
+    private Estudiante estudiante; // Add this line
+
     // Constructor with all fields
-    public UserEntity(Long id, String username, String password, String email, Set<Rol> roles) {
+    public UserEntity(Long id, String username, String password, String email, Set<Rol> roles, Docente docente,
+            Estudiante estudiante) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.roles = roles;
+        this.docente = docente; // Here the docente is set
+        this.estudiante = estudiante; // Here the estudiante is set
     }
 
     // Default constructor
@@ -91,12 +99,19 @@ public class UserEntity {
         this.roles = roles;
     }
 
-    // Add the missing setDocente method
     public Docente getDocente() {
         return docente;
     }
 
     public void setDocente(Docente docente) {
         this.docente = docente;
+    }
+
+    public Estudiante getEstudiante() {
+        return estudiante; // Getter for Estudiante
+    }
+
+    public void setEstudiante(Estudiante estudiante) {
+        this.estudiante = estudiante; // Setter for Estudiante
     }
 }

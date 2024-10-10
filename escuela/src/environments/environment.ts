@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  setupEndpoint: './setup',
-  apiEndpoint: './api'
+  apiUrl: 'http://localhost:8086/'
 };
+
 
 /*
  * For easier debugging in development mode, you can import the following file

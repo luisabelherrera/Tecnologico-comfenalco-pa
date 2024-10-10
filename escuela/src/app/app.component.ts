@@ -65,12 +65,15 @@ export class AppComponent implements OnInit, OnDestroy {
   ];
 
   userLinks = [
-    { path: '/ventana2', icon: 'book', title: 'Mis calificaciones' },
-
+    { path: '/ventana2', icon: 'book', title: 'calificaciones' },
+    { path: '/curricularDocente', icon: 'book', title: 'curricular' },
+    { path: '/horarioDocente', icon: 'book', title: 'horario' },
   ];
 
   Ventana3Links = [ 
     { path: '/ventana3', icon: 'book', title: 'Calificación' },
+    { path: '/curricularEstudiante', icon: 'book', title: 'contenido curricular' },
+    { path: '/horarioEstudiante', icon: 'book', title: 'Mi horario' },
   ];
 
   isAuthenticated$ = this.authService.isAuthenticated$;

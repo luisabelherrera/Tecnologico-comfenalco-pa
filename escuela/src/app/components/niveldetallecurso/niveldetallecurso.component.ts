@@ -73,7 +73,7 @@ export class NivelDetalleCursoComponent implements OnInit {
     }
 
     deleteCurso(id: number): void {
-        if (confirm('Are you sure you want to delete this item?')) {
+        if (confirm('quiere eliminarlo?')) {
             this.nivelDetalleCursoService.delete(id).subscribe({
                 next: () => this.fetchNivelDetalleCursos(),
                 error: (err) => console.error(err)
@@ -83,7 +83,7 @@ export class NivelDetalleCursoComponent implements OnInit {
 
     resetForm(): void {
         this.selectedCurso = this.createEmptyNivelDetalleCurso();
-        this.isEditing = false; // Reiniciar el estado de edición
+        this.isEditing = false;
     }
 
     private createEmptyNivelDetalleCurso(): NivelDetalleCurso {

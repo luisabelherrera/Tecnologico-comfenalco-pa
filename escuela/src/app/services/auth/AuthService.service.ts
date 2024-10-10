@@ -4,12 +4,16 @@ import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { JwtResponseDto, LoginDto, RegisterDto, RoleDto } from 'src/app/models/models';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8086/api';
+  private apiUrl = `${environment.apiUrl}api`;
+
+
+  
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 

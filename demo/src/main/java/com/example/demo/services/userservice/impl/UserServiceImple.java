@@ -25,6 +25,7 @@ import com.example.demo.exceptions.ConflictException;
 import com.example.demo.exceptions.JwtAuthenticationException;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.model.entity.Docente;
+import com.example.demo.model.entity.Estudiante; // Import Estudiante entity
 import com.example.demo.model.login.Rol;
 import com.example.demo.model.login.UserEntity;
 import com.example.demo.repositories.UserRepository;
@@ -65,12 +66,14 @@ public class UserServiceImple implements UserService {
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         user.setEmail(registerDto.getEmail());
 
+        // Set roles
         Set<Rol> roles = registerDto.getRoles().stream()
                 .map(rol -> rolService.findByname(rol.getName())
                         .orElseThrow(() -> new NotFoundException("Rol no encontrado: " + rol.getName())))
                 .collect(Collectors.toSet());
         user.setRoles(roles);
 
+        // Set docente if provided
         if (registerDto.getDocente() != null) {
             Docente docente = new Docente();
             docente.setCodigo(registerDto.getDocente().getCodigo());
@@ -80,14 +83,21 @@ public class UserServiceImple implements UserService {
             user.setDocente(docente);
         }
 
+        // Set estudiante if provided
+        if (registerDto.getEstudiante() != null) {
+            Estudiante estudiante = new Estudiante();
+            estudiante.setCodigo(registerDto.getEstudiante().getCodigo());
+            estudiante.setDocumentoIdentidad(registerDto.getEstudiante().getDocumentoIdentidad());
+            estudiante.setNombres(registerDto.getEstudiante().getNombres());
+            estudiante.setApellidos(registerDto.getEstudiante().getApellidos());
+            user.setEstudiante(estudiante);
+        }
+
         userRepository.save(user);
         logger.info("User registered: {}", user.getEmail());
 
-        UserDto userDto = new UserDto();
-        userDto.setUsername(user.getUsername());
-        userDto.setEmail(user.getEmail());
-        userDto.setRoles(user.getRoles());
-        return userDto;
+        // Create and return DTO
+        return new UserDto(user.getId(), user.getUsername(), user.getEmail(), user.getRoles());
     }
 
     @Override
@@ -95,6 +105,7 @@ public class UserServiceImple implements UserService {
         List<UserEntity> users = userRepository.findAll();
         List<UserDto> userDtos = users.stream().map(user -> {
             UserDto userDto = new UserDto();
+            userDto.setId(user.getId());
             userDto.setUsername(user.getUsername());
             userDto.setEmail(user.getEmail());
             userDto.setRoles(user.getRoles());
@@ -106,12 +117,13 @@ public class UserServiceImple implements UserService {
 
     @Override
     public void deleteUserById(Long id) throws NotFoundException {
-        if (!userRepository.existsById(id)) {
-            logger.warn("Attempted to delete non-existing user with ID: {}", id);
-            throw new NotFoundException("User not found");
-        }
         logger.info("Deleting user with ID: {}", id);
-        userRepository.deleteById(id);
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        // Directly delete the user
+        userRepository.delete(user);
+        logger.info("Deleted user with ID: {}", id);
     }
 
     @Override
