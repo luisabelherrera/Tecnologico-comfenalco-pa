@@ -82,6 +82,8 @@ import { HorarioComponent } from './components/vista-docente/horario/horario.com
 import { Ventana3Component } from './components/vista-estudiante/ventana3/ventana3.component';
 import { CurricularEstudianteComponent } from './components/vista-estudiante/curricular-estudiante/curricular-estudiante.component';
 import { HorarioEstudianteComponent } from './components/vista-estudiante/horario-estudiante/horario-estudiante.component';
+import { ErrorComponent } from './components/error/error.component';
+import { SuggestionsDialogComponent } from './components/generate-ia/suggestions-dialog/suggestions-dialog.component';
 
 
 @NgModule({
@@ -114,7 +116,7 @@ import { HorarioEstudianteComponent } from './components/vista-estudiante/horari
     CurricularComponent,
     HorarioComponent,
 
-
+    GenerateContentComponent,
 
     Ventana3Component,
     CurricularEstudianteComponent,
@@ -165,9 +167,8 @@ import { HorarioEstudianteComponent } from './components/vista-estudiante/horari
     //registro
     RegisterComponent,
 
-    GenerateContentComponent,
-
-    //componentes para el inicio
+    SuggestionsDialogComponent,
+    ErrorComponent,
     AppComponent,
     HomeComponent,
     LoginComponent,

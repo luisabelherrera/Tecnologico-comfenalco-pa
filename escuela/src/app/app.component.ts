@@ -14,8 +14,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
   isMatriculaMenuOpen = false; 
-  isConfigMenuOpen = false; 
-  isIaMenuOpen = false; 
+  isConfigMenuOpen = false;
   isChatMenuOpen = false; 
   isUserMenuOpen = false; 
   isConfiguracionesMenuOpen = false; 
@@ -30,6 +29,9 @@ export class AppComponent implements OnInit, OnDestroy {
  
   links = [{ path: '/home', icon: 'home', title: 'Inicio' }];
 
+  ia = [{ path: '/ia', icon: 'home', title: 'ia' }];
+
+  Material = [{ path: '/ia', icon: 'book', title: 'Material' }];
 
   Alumno = [
     { path: '/listar', icon: 'list', title: 'Estudiante' },

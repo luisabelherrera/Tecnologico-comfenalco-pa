@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Sugerencias</h2>
+<mat-dialog-content>
+  <pre>{{ data.suggestions }}</pre>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="speak(data.suggestions)">Leer</button>
+  <button mat-button (click)="stop()">Detener</button>
+  <button mat-button (click)="close()">Cerrar</button>
+</mat-dialog-actions>

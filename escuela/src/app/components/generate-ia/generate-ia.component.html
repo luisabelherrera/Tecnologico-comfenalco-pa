@@ -1,32 +1,37 @@
-<!-- src/app/generate-content/generate-content.component.html -->
 <div class="generate-content-container">
-    <h2 class="title">IA GEMINIS</h2>
-    
-    <textarea
-      [(ngModel)]="text"
-      rows="4"
-      cols="50"
-      placeholder="Enter text to generate content..."
-      class="textarea"
-    ></textarea>
-    
-    <br>
-    
-    <button
-      (click)="generateContent()"
-      class="generate-button"
-      [disabled]="isLoading"
-    >
-      Generate
-    </button>
-    
-    <div *ngIf="isLoading" class="loading-container">
-      <p>Loading...</p>
-    </div>
-    
-    <div *ngIf="response" class="response-container">
-      <h3 class="response-title">Response:</h3>
-      <pre class="response-content">{{ response }}</pre>
-    </div>
-  </div>
+  <h2 class="title">IA GEMINIS</h2>
+
+  <textarea
+    [(ngModel)]="text"
+    rows="4"
+    cols="50"
+    placeholder="Enter text to generate content..."
+    class="textarea"
+  ></textarea>
   
+  <input
+    type="number"
+    [(ngModel)]="grade"
+    placeholder="Enter your current grade"
+    class="input-grade"
+  />
+  
+  <br>
+
+  <button
+    (click)="generateContent()"
+    class="generate-button"
+    [disabled]="isLoading"
+  >
+    Generate
+  </button>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <p>Loading...</p>
+  </div>
+
+  <div *ngIf="response" class="response-container">
+    <h3 class="response-title">Response:</h3>
+    <pre class="response-content">{{ response }}</pre>
+  </div>
+</div>

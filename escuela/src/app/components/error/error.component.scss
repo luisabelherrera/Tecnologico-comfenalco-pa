@@ -1,0 +1,50 @@
+$error-bg: #ffffff;
+$error-border: #000000;
+$error-color: #721c24;
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 20px;
+  background-color: $error-bg;
+  border: 1px solid $error-border;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.error-icon {
+  font-size: 3em;
+  color: $error-color;
+  margin-bottom: 20px;
+}
+
+.error-title {
+  font-size: 2.5em;
+  color: $error-color;
+  margin-bottom: 10px;
+}
+
+.error-message {
+  font-size: 1.2em;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.error-button {
+  padding: 10px 20px;
+  background-color: $error-border;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: darken($error-border, 10%);
+  }
+}

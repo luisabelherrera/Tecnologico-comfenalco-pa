@@ -70,6 +70,7 @@ import { CurricularComponent } from './components/vista-docente/curricular/curri
 import { HorarioComponent } from './components/vista-docente/horario/horario.component';
 import { CurricularEstudianteComponent } from './components/vista-estudiante/curricular-estudiante/curricular-estudiante.component';
 import { HorarioEstudianteComponent } from './components/vista-estudiante/horario-estudiante/horario-estudiante.component';
+import { ErrorComponent } from './components/error/error.component';
 
 const routes: Routes = [
   // vista docente 
@@ -92,7 +93,11 @@ const routes: Routes = [
     data: { roles: ['Docente'] },
   },
 
-
+  {
+    path: 'error',
+    component: ErrorComponent,
+    
+  },
 
 
   {

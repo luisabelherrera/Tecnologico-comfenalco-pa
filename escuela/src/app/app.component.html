@@ -9,7 +9,7 @@
     <span class="title">{{ title }}</span>
   </span>
   <span class="spacer"></span>
-  
+
   <span *ngIf="isAuthenticated$ | async" class="user-info">
     <span *ngIf="userName$ | async as userName; else loading">
       Bienvenido, {{ userName }}!
@@ -19,7 +19,8 @@
     </ng-template>
   </span>
 
-  <button style="background-color: black;" *ngIf="isAuthenticated$ | async" (click)="logout()" class="login" mat-mini-fab>
+  <button style="background-color: black;" *ngIf="isAuthenticated$ | async" (click)="logout()" class="login"
+    mat-mini-fab>
     <mat-icon style="background-color: black;">person</mat-icon>
   </button>
 </mat-toolbar>
@@ -28,23 +29,37 @@
 <mat-sidenav-container>
   <mat-sidenav #sidenav mode="side" [opened]="isAuthenticated$ | async" class="app-sidenav">
     <nav>
-      <h4 mat-subheader (click)="islinksMenuOpen = !islinksMenuOpen" [attr.aria-expanded]="islinksMenuOpen">Menú Principal</h4>
+      <h4 mat-subheader (click)="islinksMenuOpen = !islinksMenuOpen" [attr.aria-expanded]="islinksMenuOpen">
+        Menú Principal
+      </h4>
       <mat-divider></mat-divider>
-      <a mat-button class="nav-link" *ngFor="let link of links" [routerLink]="link.path" routerLinkActive="active">
-        <mat-icon>{{ link.icon }}</mat-icon>
-        {{ link.title }}
-      </a>
+      <div *ngIf="islinksMenuOpen">
+        <!-- Enlaces del menú principal -->
+        <a mat-button class="nav-link" *ngFor="let link of links" [routerLink]="link.path" routerLinkActive="active">
+          <mat-icon>{{ link.icon }}</mat-icon>
+          {{ link.title }}
+        </a>
+        <a mat-button class="nav-link" *ngFor="let ia of ia" [routerLink]="ia.path" routerLinkActive="active">
+          <mat-icon>{{ ia.icon }}</mat-icon>
+          {{ ia.title }}
+        </a>
+        <a mat-button class="nav-link" *ngFor="let Material of Material" [routerLink]="Material.path" routerLinkActive="active">
+          <mat-icon>{{ Material.icon }}</mat-icon>
+          {{ Material.title }}
+        </a>
+      </div>
     </nav>
 
-
     <ng-container *ngIf="isAdmin$ | async">
-      <h4 mat-subheader class="sidenav-subheader" (click)="isConfigMenuOpen = !isConfigMenuOpen" [attr.aria-expanded]="isConfigMenuOpen">
+      <h4 mat-subheader class="sidenav-subheader" (click)="isConfigMenuOpen = !isConfigMenuOpen"
+        [attr.aria-expanded]="isConfigMenuOpen">
         Configuraciones
       </h4>
 
       <div *ngIf="isConfigMenuOpen">
         <nav>
-          <a mat-button class="nav-link" *ngFor="let link of configuraciones" [routerLink]="link.path" routerLinkActive="active">
+          <a mat-button class="nav-link" *ngFor="let link of configuraciones" [routerLink]="link.path"
+            routerLinkActive="active">
             <mat-icon>{{ link.icon }}</mat-icon>
             {{ link.title }}
           </a>
@@ -52,31 +67,35 @@
       </div>
     </ng-container>
 
-  <ng-container *ngIf="isManager$ | async">
-    <h4 mat-subheader class="sidenav-subheader" (click)="isVentana3MenuOpen = !isVentana3MenuOpen" [attr.aria-expanded]="isVentana3MenuOpen">
-      Ventana3
-    </h4>
+    <ng-container *ngIf="isManager$ | async">
+      <h4 mat-subheader class="sidenav-subheader" (click)="isVentana3MenuOpen = !isVentana3MenuOpen"
+        [attr.aria-expanded]="isVentana3MenuOpen">
+        Ventana3
+      </h4>
 
-    <div *ngIf="isVentana3MenuOpen">
-      <nav>
-        <a mat-button class="nav-link" *ngFor="let link of Ventana3Links" [routerLink]="link.path" routerLinkActive="active">
-          <mat-icon>{{ link.icon }}</mat-icon>
-          {{ link.title }}
-        </a>
-      </nav>
-    </div>
-  </ng-container>
-  
+      <div *ngIf="isVentana3MenuOpen">
+        <nav>
+          <a mat-button class="nav-link" *ngFor="let link of Ventana3Links" [routerLink]="link.path"
+            routerLinkActive="active">
+            <mat-icon>{{ link.icon }}</mat-icon>
+            {{ link.title }}
+          </a>
+        </nav>
+      </div>
+    </ng-container>
 
-  
-  <ng-container *ngIf="isAdmin$ | async">
-      <h4 mat-subheader class="sidenav-header" (click)="isAdministrarUsuarioMenuOpen = !isAdministrarUsuarioMenuOpen" [attr.aria-expanded]="isAdministrarUsuarioMenuOpen">
+
+
+    <ng-container *ngIf="isAdmin$ | async">
+      <h4 mat-subheader class="sidenav-header" (click)="isAdministrarUsuarioMenuOpen = !isAdministrarUsuarioMenuOpen"
+        [attr.aria-expanded]="isAdministrarUsuarioMenuOpen">
         Usuario
       </h4>
 
       <div *ngIf="isAdministrarUsuarioMenuOpen">
         <nav>
-          <a mat-button class="nav-link" *ngFor="let link of AdministrarUsuario" [routerLink]="link.path" routerLinkActive="active">
+          <a mat-button class="nav-link" *ngFor="let link of AdministrarUsuario" [routerLink]="link.path"
+            routerLinkActive="active">
             <mat-icon>{{ link.icon }}</mat-icon>
             {{ link.title }}
           </a>
@@ -85,8 +104,9 @@
 
     </ng-container>
 
-      <ng-container *ngIf="isAdmin$ | async">
-      <h4 mat-subheader class="sidenav-subheader" (click)="isAlumnoMenuOpen = !isAlumnoMenuOpen" [attr.aria-expanded]="isAlumnoMenuOpen">
+    <ng-container *ngIf="isAdmin$ | async">
+      <h4 mat-subheader class="sidenav-subheader" (click)="isAlumnoMenuOpen = !isAlumnoMenuOpen"
+        [attr.aria-expanded]="isAlumnoMenuOpen">
         Alumnos
       </h4>
 
@@ -99,28 +119,31 @@
         </nav>
       </div>
 
-      
+
     </ng-container>
 
 
-   <ng-container *ngIf="isAdmin$ | async">
-      <h4 mat-subheader class="sidenav-subheader" (click)="isDocenteMenuOpen = !isDocenteMenuOpen" [attr.aria-expanded]="isDocenteMenuOpen">
+    <ng-container *ngIf="isAdmin$ | async">
+      <h4 mat-subheader class="sidenav-subheader" (click)="isDocenteMenuOpen = !isDocenteMenuOpen"
+        [attr.aria-expanded]="isDocenteMenuOpen">
         Docentes
       </h4>
 
       <div *ngIf="isDocenteMenuOpen">
         <nav>
-          <a mat-button class="nav-link" *ngFor="let link of Docente" [routerLink]="link.path" routerLinkActive="active">
+          <a mat-button class="nav-link" *ngFor="let link of Docente" [routerLink]="link.path"
+            routerLinkActive="active">
             <mat-icon>{{ link.icon }}</mat-icon>
             {{ link.title }}
           </a>
         </nav>
       </div>
 
-      <h4 mat-subheader class="sidenav-subheader" (click)="isCursoMenuOpen = !isCursoMenuOpen" [attr.aria-expanded]="isCursoMenuOpen">
+      <h4 mat-subheader class="sidenav-subheader" (click)="isCursoMenuOpen = !isCursoMenuOpen"
+        [attr.aria-expanded]="isCursoMenuOpen">
         Cursos
       </h4>
-    
+
       <div *ngIf="isCursoMenuOpen">
         <nav>
           <a mat-button class="nav-link" *ngFor="let link of Curso" [routerLink]="link.path" routerLinkActive="active">
@@ -133,13 +156,15 @@
 
 
     <ng-container *ngIf="isAdmin$ | async">
-      <h4 mat-subheader class="sidenav-subheader" (click)="isMatriculaMenuOpen = !isMatriculaMenuOpen" [attr.aria-expanded]="isMatriculaMenuOpen">
+      <h4 mat-subheader class="sidenav-subheader" (click)="isMatriculaMenuOpen = !isMatriculaMenuOpen"
+        [attr.aria-expanded]="isMatriculaMenuOpen">
         Matrícula
       </h4>
-   
+
       <div *ngIf="isMatriculaMenuOpen">
         <nav>
-          <a mat-button class="nav-link" *ngFor="let link of Matricula" [routerLink]="link.path" routerLinkActive="active">
+          <a mat-button class="nav-link" *ngFor="let link of Matricula" [routerLink]="link.path"
+            routerLinkActive="active">
             <mat-icon>{{ link.icon }}</mat-icon>
             {{ link.title }}
           </a>
@@ -147,24 +172,26 @@
       </div>
 
     </ng-container>
-      
+
 
     <ng-container *ngIf="!(isAdmin$ | async) && !(isManager$ | async)">
-      <h4 mat-subheader class="sidenav-subheader" (click)="isUserMenuOpen = !isUserMenuOpen" [attr.aria-expanded]="isUserMenuOpen">
-        Mis Información 
+      <h4 mat-subheader class="sidenav-subheader" (click)="isUserMenuOpen = !isUserMenuOpen"
+        [attr.aria-expanded]="isUserMenuOpen">
+        Mis Información
       </h4>
-     
+
       <div *ngIf="isUserMenuOpen">
         <nav>
-          <a mat-button class="nav-link" *ngFor="let link of userLinks" [routerLink]="link.path" routerLinkActive="active">
+          <a mat-button class="nav-link" *ngFor="let link of userLinks" [routerLink]="link.path"
+            routerLinkActive="active">
             <mat-icon>{{ link.icon }}</mat-icon>
             {{ link.title }}
           </a>
         </nav>
       </div>
     </ng-container>
- 
-   
+
+
   </mat-sidenav>
 
   <mat-sidenav-content>
