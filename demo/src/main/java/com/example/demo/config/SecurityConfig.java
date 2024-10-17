@@ -44,9 +44,10 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers("/controller/**").permitAll()
                         .requestMatchers("/api/login").permitAll()
-                        .requestMatchers("/api/register/**").permitAll()
+                        .requestMatchers("/api/register/**").hasAuthority("Administracion")
                         .requestMatchers("/chat-websocket/**").permitAll()
                         .requestMatchers("/admin").hasAuthority("Administracion")
                         .requestMatchers("/docente").hasAuthority("Docente")

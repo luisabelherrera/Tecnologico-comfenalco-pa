@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.model.entity.Docente;
 import com.example.demo.model.login.Rol;
 import com.example.demo.model.login.UserEntity;
 import com.example.demo.repositories.RoleRepository;
@@ -25,36 +26,62 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    @Override
     public void run(String... args) throws Exception {
-        // Check and create roles if they don't exist
+
         if (roleRepository.count() == 0) {
-            Rol docente = new Rol();
-            docente.setName("Docente");
-            roleRepository.save(docente);
+            Rol docenteRole = new Rol();
+            docenteRole.setName("Docente");
+            roleRepository.save(docenteRole);
 
-            Rol estudiante = new Rol();
-            estudiante.setName("Estudiante");
-            roleRepository.save(estudiante);
+            Rol estudianteRole = new Rol();
+            estudianteRole.setName("Estudiante");
+            roleRepository.save(estudianteRole);
 
-            Rol administracion = new Rol();
-            administracion.setName("Administracion");
-            roleRepository.save(administracion);
+            Rol adminRole = new Rol();
+            adminRole.setName("Administracion");
+            roleRepository.save(adminRole);
         }
 
-        // Save user with existing role
         if (userRepository.count() == 0) {
             Rol adminRole = roleRepository.findByName("Administracion")
                     .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
             UserEntity adminUser = new UserEntity();
             adminUser.setUsername("abel");
-            adminUser.setEmail("abel");
+            adminUser.setEmail("abel@example.com");
             adminUser.setPassword(passwordEncoder.encode("abel"));
-            adminUser.setRoles(new HashSet<>(Arrays.asList(adminRole))); // Use existing role
+            adminUser.setRoles(new HashSet<>(Arrays.asList(adminRole)));
 
             userRepository.save(adminUser);
         }
-    }
 
+        if (userRepository.count() == 1) {
+            Rol docenteRole = roleRepository.findByName("Docente")
+                    .orElseThrow(() -> new RuntimeException("Rol Docente no encontrado"));
+
+            UserEntity docenteUser1 = new UserEntity();
+            docenteUser1.setUsername("docente1");
+            docenteUser1.setEmail("docente1@example.com");
+            docenteUser1.setPassword(passwordEncoder.encode("docente1"));
+            docenteUser1.setRoles(new HashSet<>(Arrays.asList(docenteRole)));
+
+            Docente docente1 = new Docente();
+            docente1.setNombres("NombreDocente1");
+            docente1.setApellidos("ApellidoDocente1");
+
+            userRepository.save(docenteUser1);      }
+
+        if (userRepository.count() == 2) {
+            Rol docenteRole = roleRepository.findByName("Docente")
+                    .orElseThrow(() -> new RuntimeException("Rol Docente no encontrado"));
+
+            UserEntity docenteUser2 = new UserEntity();
+            docenteUser2.setUsername("docente2");
+            docenteUser2.setEmail("docente2@example.com");
+            docenteUser2.setPassword(passwordEncoder.encode("docente2"));
+            docenteUser2.setRoles(new HashSet<>(Arrays.asList(docenteRole)));
+
+            userRepository.save(docenteUser2);
+        }
+    }
 }

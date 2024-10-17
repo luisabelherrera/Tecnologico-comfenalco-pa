@@ -13,17 +13,17 @@ export class SuggestionsDialogComponent {
   ) {}
 
   close(): void {
-    this.stop(); // Detiene la lectura antes de cerrar el diálogo
-    this.dialogRef.close(); // Cierra el diálogo
+    this.stop(); 
+    this.dialogRef.close();  
   }
   stop(): void {
-    // Detiene la lectura
+    
     if ('speechSynthesis' in window) {
       speechSynthesis.cancel();
     }
   }
   speak(text: string): void {
-    // Verifica si la API de síntesis de voz está disponible
+  
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
       speechSynthesis.speak(utterance);

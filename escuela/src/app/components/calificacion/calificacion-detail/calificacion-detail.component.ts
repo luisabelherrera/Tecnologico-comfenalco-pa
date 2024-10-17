@@ -14,7 +14,7 @@ export class CalificacionDetailComponent implements OnInit {
     idCalificacion: 0,
     curricular: { idCurricular: 0, descripcion: '', activo: true, fechaRegistro: new Date() },
     estudiante: {
-      id: 0,
+      idEstudiante: 0,
       valorCodigo: '',
       codigo: '',
       nombres: '',
@@ -44,9 +44,9 @@ export class CalificacionDetailComponent implements OnInit {
     if (id) {
       this.calificacionService.getCalificacionById(+id).subscribe(
         data => {
-          console.log('Datos recibidos:', data); // Para verificar la estructura de datos
+          console.log('Datos recibidos:', data); 
   
-          // Convierte las fechas de cadena a objeto Date si es necesario
+       
           if (typeof data.fechaRegistro === 'string') {
             data.fechaRegistro = new Date(data.fechaRegistro);
           }
@@ -71,7 +71,7 @@ export class CalificacionDetailComponent implements OnInit {
 
   printPDF(): void {
     const doc = new jsPDF();
-    const logoPath = 'assets/nit.jpeg'; // Relative path to your logo
+    const logoPath = 'assets/nit.jpeg'; 
     const logo = new Image();
     logo.src = logoPath;
 
@@ -79,39 +79,34 @@ export class CalificacionDetailComponent implements OnInit {
     const marginY = 10;
     const logoWidth = 50;
     const logoHeight = 20;
-
-    // Load logo and generate PDF
+ 
     logo.onload = () => {
-        try {
-            // Add logo
+        try { 
             doc.addImage(logo, 'JPEG', marginX, marginY, logoWidth, logoHeight);
 
-            // Institution information
+           
             doc.setFontSize(12);
             doc.text('NIT: 123456789', 70, marginY + 5); // Adjusted position
             doc.text('Nombre de la Institución: INSTITUCION EDUCATIVA EL HOBO', 70, marginY + 15);
             doc.text('Dirección de la Institución: CARMEN DE BOLIVAR', 70, marginY + 25);
 
-            // Document title
+            
             doc.setFontSize(22);
             doc.text('Boletín de Calificacion', marginX, 60);
-            doc.line(marginX, 63, 200, 63); // Horizontal line
-
-            // Grades details
+            doc.line(marginX, 63, 200, 63);  
+ 
             doc.setFontSize(16);
             doc.text('Detalles de la Calificación:', marginX, 75);
             doc.setFontSize(14);
             doc.text(`1. ID de Calificación: ${this.calificacion.idCalificacion}`, marginX, 85);
             doc.text(`2. Nota: ${this.calificacion.nota.toString()}`, marginX, 95);
-
-            // Student details
+ 
             doc.setFontSize(16);
             doc.text('Detalles del Estudiante:', marginX, 115);
             doc.setFontSize(14);
             doc.text(`1. Nombre: ${this.calificacion.estudiante.nombres} ${this.calificacion.estudiante.apellidos}`, marginX, 125);
             doc.text(`2. Documento de Identidad: ${this.calificacion.estudiante.documentoIdentidad}`, marginX, 135);
-
-            // Handle birth date
+ 
             const birthDate = this.calificacion.estudiante.fechaNacimiento instanceof Date 
                 ? this.calificacion.estudiante.fechaNacimiento.toLocaleDateString() 
                 : this.calificacion.estudiante.fechaNacimiento;
@@ -119,34 +114,31 @@ export class CalificacionDetailComponent implements OnInit {
             doc.text(`4. Sexo: ${this.calificacion.estudiante.sexo}`, marginX, 155);
             doc.text(`5. Ciudad: ${this.calificacion.estudiante.ciudad}`, marginX, 165);
 
-            // Curricular details
+             
             doc.setFontSize(16);
             doc.text('Detalles Curriculares:', marginX, 185);
             doc.setFontSize(14);
             doc.text(`1. Descripción: ${this.calificacion.curricular.descripcion}`, marginX, 195);
             doc.text(`2. Activo: ${this.calificacion.curricular.activo ? 'Sí' : 'No'}`, marginX, 205);
 
-            // Teacher details
+          
             doc.setFontSize(16);
             doc.text('Detalles del Docente:', marginX, 225);
             doc.setFontSize(14);
             doc.text(`1. Nombre: ${this.calificacion.curricular.docenteNivelDetalleCurso.docente.nombres}`, marginX, 235);
             doc.text(`2. Apellido: ${this.calificacion.curricular.docenteNivelDetalleCurso.docente.apellidos}`, marginX, 245);
-
-            // Course details
+ 
             doc.setFontSize(16);
             doc.text('Detalles del Curso:', marginX, 265);
             doc.setFontSize(14);
             doc.text(`1. Nombre del Curso: ${this.calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.descripcion}`, marginX, 275);
             doc.text(`2. Descripción del Curso: ${this.calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.activo}`, marginX, 285);
             doc.text(`3. Fecha de Registro: ${this.calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.fechaRegistro}`, marginX, 295);
-
-            // Important dates
+ 
             doc.setFontSize(16);
             doc.text('Fechas Importantes:', marginX, 305);
             doc.setFontSize(14);
-
-            // Registration dates
+ 
             const regDate = this.calificacion.curricular.fechaRegistro instanceof Date 
                 ? this.calificacion.curricular.fechaRegistro.toLocaleDateString() 
                 : this.calificacion.curricular.fechaRegistro;
@@ -156,11 +148,10 @@ export class CalificacionDetailComponent implements OnInit {
                 ? this.calificacion.fechaRegistro.toLocaleDateString() 
                 : this.calificacion.fechaRegistro;
             doc.text(`2. Fecha de Registro de Calificación: ${califRegDate}`, marginX, 325);
-
-            // Closing line
+ 
             doc.line(marginX, 340, 200, 340);
 
-            // Save PDF
+          
             doc.save('boletin_calificaciones.pdf');
         } catch (error) {
             console.error('Error generating PDF:', error);
@@ -169,7 +160,7 @@ export class CalificacionDetailComponent implements OnInit {
         }
     };
 
-    // Error handling for logo loading
+ 
     logo.onerror = () => {
         console.error('Error loading the image');
         doc.text('Error al cargar el logo.', marginX, marginY);

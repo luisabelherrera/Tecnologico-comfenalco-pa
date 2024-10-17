@@ -10,10 +10,10 @@ import { Curso } from 'src/app/models/entity/curso.model';
 })
 export class CursosCreateComponent implements OnInit {
   curso: Curso = {
-    idCurso: 0,                      // Adjust as needed based on your backend logic
+    idCurso: 0,                      
     descripcion: '',
-    activo: true,                    // Default value, adjust based on your needs
-    fechaRegistro: new Date()        // Set current date as registration date
+    activo: true,                  
+    fechaRegistro: new Date()       
   };
 
   constructor(private cursosService: CursosService, private router: Router) {}
@@ -24,7 +24,7 @@ export class CursosCreateComponent implements OnInit {
     this.cursosService.createCurso(this.curso).subscribe(
       () => {
         alert('Curso creado con éxito');
-        this.router.navigate(['/cursos']); // Redirect to the list of courses
+        this.router.navigate(['/cursos']); 
       },
       (error) => {
         console.error('Error al crear el curso', error);

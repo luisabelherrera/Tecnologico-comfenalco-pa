@@ -10,15 +10,15 @@ import { Acudiente } from 'src/app/models/entity/Acudiente.interface';
   styleUrls: ['./acudiente-detail.component.scss']
 })
 export class AcudienteDetailComponent implements OnInit {
-  acudiente: Acudiente | null = null;  // Inicializa como nulo hasta que se cargue
-  acudienteForm: FormGroup;  // Definición del FormGroup
+  acudiente: Acudiente | null = null; 
+  acudienteForm: FormGroup;  
 
   constructor(
     private acudienteService: AcudienteService,
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder // Inyección del FormBuilder
+    private formBuilder: FormBuilder 
   ) {
-    // Inicialización del formulario
+    
     this.acudienteForm = this.formBuilder.group({
       nombres: ['', Validators.required],
       apellidos: ['', Validators.required],
@@ -28,7 +28,7 @@ export class AcudienteDetailComponent implements OnInit {
       estadoCivil: ['', Validators.required],
       sexo: ['', Validators.required],
       fechaNacimiento: ['', Validators.required],
-      activo: [true],  // Por defecto, activo es verdadero
+      activo: [true],  
       parentesco: ['', Validators.required]
     });
   }
@@ -38,12 +38,11 @@ export class AcudienteDetailComponent implements OnInit {
   }
 
   loadAcudienteDetails(): void {
-    const id = this.route.snapshot.paramMap.get('id');  // Obtener el ID de la URL
+    const id = this.route.snapshot.paramMap.get('id');  
     if (id) {
       this.acudienteService.getAcudienteById(Number(id)).subscribe(
         (data: Acudiente) => {
-          this.acudiente = data;  // Asignar los datos del acudiente
-          // Asignar los datos al formulario
+          this.acudiente = data; 
           this.acudienteForm.patchValue(data);
         },
         (error) => {
@@ -55,9 +54,7 @@ export class AcudienteDetailComponent implements OnInit {
 
   onSubmit(): void {
     if (this.acudienteForm.valid) {
-      // Aquí puedes manejar el envío del formulario
       console.log('Formulario enviado:', this.acudienteForm.value);
-      // Lógica para guardar el acudiente puede ir aquí
     }
   }
 }

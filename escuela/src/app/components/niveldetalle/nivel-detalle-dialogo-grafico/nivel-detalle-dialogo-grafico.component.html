@@ -1,0 +1,22 @@
+<div class="dialog-container">
+    <h2 class="dialog-title">Detalles de Vacantes</h2>
+    <div class="chart-container">
+      <canvas id="vacantesChart"></canvas>
+    </div>
+    <div class="vacant-info">
+      <div class="vacant-item">
+        <span class="vacant-label">Vacantes Disponibles:</span>
+        <span class="vacant-value">{{ vacantesDisponibles }}</span>
+      </div>
+      <div class="vacant-item">
+        <span class="vacant-label">Vacantes Ocupadas:</span>
+        <span class="vacant-value">{{ vacantesOcupadas }}</span>
+      </div>
+      <div class="vacant-item">
+        <span class="vacant-label">Total de Vacantes:</span>
+        <span class="vacant-value">{{ totalVacantes }}</span>
+      </div>
+    </div>
+    <button class="close-button" (click)="close()">Cerrar</button>
+  </div>
+  

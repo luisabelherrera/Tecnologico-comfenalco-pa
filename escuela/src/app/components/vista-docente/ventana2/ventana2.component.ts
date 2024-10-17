@@ -28,7 +28,7 @@ export class Ventana2Component implements OnInit {
   calificaciones: Calificacion[] = [];
   dataSource = new MatTableDataSource<Calificacion>();
   displayedColumns: string[] = ['idCalificacion', 'nota', 'estudiante', 'curricular', 'fechaRegistro', 'actions'];
-  aiSuggestions: string | null = null; // Propiedad para las sugerencias de AI
+  aiSuggestions: string | null = null;  
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -37,7 +37,7 @@ export class Ventana2Component implements OnInit {
     private calificacionService: CalificacionService,
     private router: Router,
     private http: HttpClient,
-    private dialog: MatDialog // Inyectar MatDialog
+    private dialog: MatDialog  
   ) {}
   
   ngOnInit(): void {
@@ -49,8 +49,8 @@ export class Ventana2Component implements OnInit {
       (data) => {
         this.calificaciones = data;
         this.dataSource.data = this.calificaciones;
-        this.dataSource.paginator = this.paginator; // Configurar paginador
-        this.dataSource.sort = this.sort; // Configurar ordenación
+        this.dataSource.paginator = this.paginator; 
+        this.dataSource.sort = this.sort;  
       },
       (error) => {
         console.error('Error loading grades', error);
@@ -73,18 +73,26 @@ export class Ventana2Component implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-// En el template, puedes tener un botón o una acción que llame a este método
+ 
 requestSuggestionsForCalificacion(calificacion: Calificacion): void {
-  const grade = calificacion.nota; // Obtiene la nota de la calificación seleccionada
-  const curricularDescription = calificacion.curricular.descripcion; // Obtiene la descripción curricular de la calificación
-  this.requestSuggestions(grade, curricularDescription); // Llama al método con ambos parámetros
+  const grade = calificacion.nota;  
+  const curricularDescription = calificacion.curricular.descripcion; 
+  
+  if (grade < 0 || grade > 5) {
+    console.error('La nota debe estar entre 0 y 5.');
+    this.openSuggestionsDialog('La nota debe estar entre 0 y 5.');
+    return;
+  }
+  
+  this.requestSuggestions(grade, curricularDescription);  
 }
 
 requestSuggestions(grade: number, curricularDescription: string): void {
   const apiKey = 'AIzaSyAQm3Xcp6dIoFtmnKXmUEsKOoKlbH91I4c'; // Reemplaza con tu API key
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
-  const prompt = `Con base en la nota actual de ${grade} y la descripción curricular: "${curricularDescription}", por favor proporciona sugerencias en español para mejorar el rendimiento.`;
+  const prompt = `Con base en la nota actual de ${grade}  mi escala de nota es de 0 a 5  0 es bajo la nota minima para pasar es 2.97 y la nota mxima es 5  y la descripción curricular: "${curricularDescription}", la descripcion son curricular de ese tema muestrame sugerencia acerca de eso por favor proporciona sugerencias en español para mejorar el rendimiento.
+   y muestrame algunas bibliografia relacionadas con ese temas  buscala en internet quiero que el contenido sea corto y preciso y muestrame video en youtuber`;
 
   this.http.post<GenerateContentResponse>(url, {
     contents: [
@@ -102,15 +110,12 @@ requestSuggestions(grade: number, curricularDescription: string): void {
       const suggestions = result.candidates[0]?.content?.parts[0]?.text || 'No se recibió respuesta';
       this.openSuggestionsDialog(suggestions);
     },
-    
     error: (error) => {
       console.error('Error al generar sugerencias:', error);
       this.openSuggestionsDialog('Ocurrió un error al generar las sugerencias.'); // Abre el diálogo con el error
     }
   });
-}
-
-// Método para abrir el diálogo
+} 
 openSuggestionsDialog(suggestions: string): void {
   this.dialog.open(SuggestionsDialogComponent, {
     data: { suggestions },

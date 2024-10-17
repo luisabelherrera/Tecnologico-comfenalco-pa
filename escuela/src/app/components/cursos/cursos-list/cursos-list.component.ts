@@ -15,7 +15,7 @@ export class CursosListComponent implements OnInit {
   dataSource = new MatTableDataSource<Curso>();
   displayedColumns: string[] = ['idCurso', 'descripcion', 'activo', 'actions'];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator; // Add this line
+  @ViewChild(MatPaginator) paginator!: MatPaginator;  
 
   constructor(private cursosService: CursosService, private router: Router) {}
 
@@ -27,8 +27,8 @@ export class CursosListComponent implements OnInit {
     this.cursosService.getCursos().subscribe(
       (data) => {
         this.cursos = data;
-        this.dataSource.data = this.cursos; // Assign the data to dataSource
-        this.dataSource.paginator = this.paginator; // Connect paginator to dataSource
+        this.dataSource.data = this.cursos; 
+        this.dataSource.paginator = this.paginator;  
       },
       (error) => {
         console.error('Error al cargar los cursos', error);
@@ -39,7 +39,7 @@ export class CursosListComponent implements OnInit {
   deleteCurso(idCurso: number): void {
     if (confirm('¿Estás seguro de que quieres eliminar este curso?')) {
       this.cursosService.deleteCurso(idCurso).subscribe(() => {
-        this.loadCursos(); // Reload the list after deletion
+        this.loadCursos(); 
       },
       (error) => {
         console.error('Error al eliminar el curso', error);

@@ -1,5 +1,8 @@
 <h2>Editar Estudiante</h2>
-<form *ngIf="estudiante" (ngSubmit)="actualizarEstudiante()">
+
+<mat-progress-spinner *ngIf="loading" mode="indeterminate"></mat-progress-spinner>
+
+<form *ngIf="!loading && estudiante" (ngSubmit)="actualizarEstudiante()">
   <mat-form-field appearance="fill">
     <mat-label>Código</mat-label>
     <input matInput [(ngModel)]="estudiante.codigo" name="codigo" required />
@@ -52,4 +55,5 @@
 
   <button mat-raised-button color="primary" type="submit">Actualizar Estudiante</button>
 </form>
-<a mat-button routerLink="/listar">Volver a la lista</a>
+
+<mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>

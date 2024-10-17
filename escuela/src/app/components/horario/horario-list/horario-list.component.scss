@@ -1,33 +1,31 @@
 .horarios-container {
-
-  align-items: stretch; /* Alinear al ancho completo */
-  padding: 20px; /* Espaciado interno */
-  border-radius: 8px; /* Bordes redondeados */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
+  align-items: stretch;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-
 .filter-field {
-  margin-bottom: 20px; /* Espacio inferior entre el filtro y la tabla */
+  margin-bottom: 20px;
 }
 
 .table-container {
-  width: 100%; /* Asegurarse de que la tabla ocupe todo el ancho */
-  margin-top: 20px; /* Espacio superior para separación */
+  width: 100%;
+  margin-top: 20px;
 }
 
 .full-width-table {
-  width: 100%; /* La tabla ocupará todo el ancho del contenedor */
+  width: 100%;
 }
 
 .mat-form-field {
-  width: 100%; /* Asegurar que el campo de filtro ocupe todo el ancho */
+  width: 100%;
 }
 
 .mat-icon-button {
-  padding: 8px; /* Ajuste de espacio alrededor del botón de icono */
+  padding: 8px;
 }
 
 .mat-icon {
-  margin: 0; /* Remover márgenes para iconos */
+  margin: 0;
 }

@@ -2,15 +2,16 @@ package com.example.demo.services.service;
 
 import java.util.List;
 import java.util.Optional;
+import com.example.demo.model.entity.dto.AcudienteDTO;
 
-import com.example.demo.model.entity.Acudiente;
 
 public interface AcudienteService {
-    List<Acudiente> findAll();
 
-    Optional<Acudiente> findById(Integer id);
+    List<AcudienteDTO> findAll();
 
-    Acudiente save(Acudiente acudiente);
+    Optional<AcudienteDTO> findById(long id);
 
-    void deleteById(Integer id);
+    AcudienteDTO save(AcudienteDTO acudienteDTO);
+
+    void deleteById(long id);
 }

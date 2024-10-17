@@ -13,11 +13,11 @@ import { EstudianteService } from 'src/app/services/estudiante/estudiante.servic
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  selectedDomain: string = '@gmail.com'; // Valor por defecto
+  selectedDomain: string = '@gmail.com';  
   registerDto = {
     id: 0,
     username: '',
-    email: '', // Inicializa vacío
+    email: '', 
     password: '',
     roles: [],
     userType: '', 
@@ -26,7 +26,7 @@ export class RegisterComponent implements OnInit {
   };
   roles: RoleDto[] = [];
   docentes: Docente[] = [];
-  estudiantes: Estudiante[] = []; // Add an array for estudiantes
+  estudiantes: Estudiante[] = [];  
   registeredUsers: UserDto[] = [];
   filteredUsers: UserDto[] = [];
   paginatedUsers: UserDto[] = [];
@@ -38,13 +38,13 @@ export class RegisterComponent implements OnInit {
   constructor(
     private registrationService: RegistrationService, 
     private docenteService: DocenteService,
-    private estudianteService: EstudianteService // Inject EstudianteService
+    private estudianteService: EstudianteService 
   ) {}
 
   ngOnInit(): void {
     this.loadRoles();
     this.loadDocentes();
-    this.loadEstudiantes(); // Load estudiantes
+    this.loadEstudiantes(); 
     this.loadRegisteredUsers();
   }
 
@@ -85,7 +85,7 @@ export class RegisterComponent implements OnInit {
     this.registrationService.getAllUsers().subscribe(
       (data) => {
         this.registeredUsers = data;
-        console.log('Registered Users:', this.registeredUsers); // Verifica la salida aquí
+        console.log('Registered Users:', this.registeredUsers); 
         this.filteredUsers = [...this.registeredUsers];
         this.updatePaginatedUsers();
       },
@@ -105,8 +105,8 @@ export class RegisterComponent implements OnInit {
             console.log('User registered successfully!', response);
             this.loadRegisteredUsers();
             this.resetForm();
-            // Display success message
-            alert('User registered successfully!'); // or use a snackbar/toast
+            
+            alert('User registered successfully!'); 
         },
         (error) => {
             console.error('Error during registration', error);
@@ -125,17 +125,17 @@ export class RegisterComponent implements OnInit {
       email: '',
       password: '',
       roles: [],
-      userType: '', // Reset user type
+      userType: '', 
       docenteInfo: null,
-      estudianteInfo: null // Reset estudiante info
+      estudianteInfo: null 
     };
   }
   deleteUser(userId: number): void {
-    console.log('Attempting to delete user with ID:', userId); // Log the ID
+    console.log('Attempting to delete user with ID:', userId);  
     this.registrationService.deleteUser(userId).subscribe(
         response => {
             console.log(response.message);
-            this.loadRegisteredUsers(); // Reload users after deletion
+            this.loadRegisteredUsers();  
         },
         error => {
             console.error('Error deleting user:', error);
@@ -181,14 +181,13 @@ export class RegisterComponent implements OnInit {
   }
   
 
-
-  // Handle user type change
+ 
   onUserTypeChange(userType: string): void {
     this.registerDto.userType = userType;
     if (userType === 'docente') {
-      this.registerDto.estudianteInfo = null; // Clear estudiante info
+      this.registerDto.estudianteInfo = null; 
     } else {
-      this.registerDto.docenteInfo = null; // Clear docente info
+      this.registerDto.docenteInfo = null;  
     }
   }
 }

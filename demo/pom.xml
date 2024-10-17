@@ -18,105 +18,129 @@
         <java.version>22</java.version>
     </properties>
 
+
+    <!--
+    Este archivo pom.xml configura un proyecto Spring Boot con las siguientes dependencias:
+
+    - spring-boot-starter-security: Proporciona las capacidades de seguridad para la aplicación, permitiendo la autenticación y autorización de usuarios.
+
+    - lombok: Reduce el código boilerplate en Java mediante anotaciones para generar automáticamente métodos como getters y setters.
+
+    - spring-boot-starter-web: Incluye las dependencias necesarias para crear aplicaciones web, soportando controladores y servicios RESTful.
+
+    - spring-boot-starter-validation: Permite la validación de datos en la aplicación utilizando la API de validación de Java Bean.
+
+    - postgresql: Controlador JDBC para conectarse y realizar operaciones en bases de datos PostgreSQL.
+
+    - jjwt-api, jjwt-impl, jjwt-jackson: Proporcionan soporte para crear y validar JSON Web Tokens (JWT) para la autenticación en la aplicación.
+
+    - jackson-databind: Facilita la serialización y deserialización de objetos Java a y desde JSON.
+
+    - h2: Base de datos en memoria utilizada para pruebas y desarrollo, permitiendo la ejecución de pruebas sin necesidad de una base de datos real.
+
+    - spring-boot-starter-thymeleaf: Integra Thymeleaf como motor de plantillas para la generación de vistas en HTML.
+
+    - spring-boot-starter-data-jpa: Proporciona soporte para la integración de Spring Data JPA, facilitando el acceso a bases de datos mediante repositorios y entidades.
+
+    - spring-boot-starter-test: Incluye las bibliotecas necesarias para realizar pruebas unitarias e integración en aplicaciones Spring Boot.
+
+    - spring-boot-starter-data-redis: Proporciona soporte para trabajar con Redis, un sistema de almacenamiento de datos en memoria.
+
+    - spring-boot-starter-cache: Añade la capacidad de implementar caching en la aplicación, mejorando el rendimiento.
+
+    - jedis: Cliente Java para Redis que permite interactuar con el servidor Redis desde la aplicación Java.
+
+    - mockito-core: Biblioteca para realizar pruebas unitarias, permitiendo crear objetos simulados para verificar el comportamiento de las dependencias en pruebas.
+-->
+
+
+
+
+
     <dependencies>
 
-
-
-	     <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-          <!-- Spring Boot Starter for MongoDB -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-
-
-
-
-      <dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-
-
-
-        <!-- Spring Boot Starter for Web -->
-        <dependency>
+      <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- Spring Boot Starter for Validation -->
-        <dependency>
+       <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- PostgreSQL Driver -->
-      	<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
-<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-api</artifactId>
-			<version>0.12.5</version>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-impl</artifactId>
-			<version>0.12.5</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-jackson</artifactId>
-			<version>0.12.5</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-		</dependency>
-
-
-        <!-- H2 Database for Testing -->
+       <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
         <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.12.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.12.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.12.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+       <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
-
-        <!-- Spring Boot Starter for Thymeleaf -->
-        <dependency>
+       <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
-        <!-- Lombok for reducing boilerplate code -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- Spring Boot Starter for JPA -->
-        <dependency>
+       <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-
-        <!-- Spring Boot Starter Test for unit and integration testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

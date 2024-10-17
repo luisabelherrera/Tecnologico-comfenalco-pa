@@ -2,6 +2,7 @@
   <h2>Crear Calificación</h2>
 
   <form #form="ngForm" (ngSubmit)="saveCalificacion()">
+    
     <mat-form-field appearance="fill">
       <mat-label>Nota:</mat-label>
       <input 
@@ -11,12 +12,14 @@
         name="nota"
         required 
         min="0" 
-        max="100" />
-      <mat-error *ngIf="calificacion.nota < 0 || calificacion.nota > 100">
-        La nota debe estar entre 0 y 100.
+        max="5" 
+        step="0.1" />  
+      <mat-error *ngIf="calificacion.nota < 0 || calificacion.nota > 5">
+        La nota debe estar entre 0 y 5.
       </mat-error>
     </mat-form-field>
 
+    
     <mat-form-field appearance="fill">
       <mat-label>Estudiante:</mat-label>
       <mat-select [(ngModel)]="calificacion.estudiante" name="estudiante" required>
@@ -24,7 +27,6 @@
           {{ estudiante.nombres }} {{ estudiante.apellidos }}
         </mat-option>
       </mat-select>
-      
       <mat-error *ngIf="!estudiantes.length">
         No hay estudiantes disponibles. Por favor, añade un estudiante primero.
       </mat-error>
@@ -37,7 +39,6 @@
         <mat-option *ngFor="let curricular of curriculares" [value]="curricular">
           {{ curricular.descripcion }}
         </mat-option>
-        
       </mat-select>
       <mat-error *ngIf="!curriculares.length">
         No hay descripciones curriculares disponibles. Por favor, añade una descripción curricular primero.

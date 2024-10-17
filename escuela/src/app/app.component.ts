@@ -31,7 +31,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ia = [{ path: '/ia', icon: 'home', title: 'ia' }];
 
-  Material = [{ path: '/ia', icon: 'book', title: 'Material' }];
 
   Alumno = [
     { path: '/listar', icon: 'list', title: 'Estudiante' },

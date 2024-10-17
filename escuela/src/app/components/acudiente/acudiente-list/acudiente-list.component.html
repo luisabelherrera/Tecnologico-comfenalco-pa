@@ -1,5 +1,4 @@
 <div class="container">
-  <!-- Botón para crear un nuevo acudiente -->
   <div class="header">
     <a [routerLink]="['/acudientes/create']" class="btn-create">
       Crear Nuevo Acudiente
@@ -14,22 +13,19 @@
     </div>
   </div>
 
-  <!-- Tabla para mostrar los acudientes -->
   <div class="table-container">
     <table mat-table [dataSource]="dataSource" matSort class="custom-table">
-      <!-- Nombres Column -->
+   
       <ng-container matColumnDef="nombres">
         <th mat-header-cell *matHeaderCellDef>Nombres</th>
         <td mat-cell *matCellDef="let acudiente">{{ acudiente.nombres }}</td>
       </ng-container>
 
-      <!-- Apellidos Column -->
       <ng-container matColumnDef="apellidos">
         <th mat-header-cell *matHeaderCellDef>Apellidos</th>
         <td mat-cell *matCellDef="let acudiente">{{ acudiente.apellidos }}</td>
       </ng-container>
 
-      <!-- Documento Identidad Column -->
       <ng-container matColumnDef="documentoIdentidad">
         <th mat-header-cell *matHeaderCellDef>Documento de Identidad</th>
         <td mat-cell *matCellDef="let acudiente">
@@ -37,7 +33,6 @@
         </td>
       </ng-container>
 
-      <!-- Ciudad Column -->
       <ng-container matColumnDef="ciudad">
         <th mat-header-cell *matHeaderCellDef>Ciudad</th>
         <td mat-cell *matCellDef="let acudiente">{{ acudiente.ciudad }}</td>
@@ -50,7 +45,6 @@
         </td>
       </ng-container>
       
-      <!-- Actions Column -->
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Acciones</th>
         <td mat-cell *matCellDef="let acudiente">
@@ -73,13 +67,11 @@
         </td>
       </ng-container>
 
-      <!-- Table Rows -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
   </div>
 
-  <!-- Paginador -->
   <div class="paginator">
     <mat-paginator
       [pageSize]="5"

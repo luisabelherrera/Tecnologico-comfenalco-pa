@@ -8,16 +8,14 @@
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
-  
-  /* Contenedor de la cabecera */
+   
   .header {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     margin-bottom: 20px;
   }
-  
-  /* Botón para crear un nuevo curso */
+   
   .btn-create {
     background-color: #4caf50;
     color: black;
@@ -32,8 +30,7 @@
   .btn-create:hover {
     background-color: #45a049;
   }
-  
-  /* Botones de detalles, editar y eliminar */
+   
   .btn-details {
     background-color: #ff9800;
     color: white;
@@ -74,8 +71,7 @@
   .btn-delete:hover {
     background-color: #e31b0c;
   }
-  
-  /* Campo de búsqueda */
+   
   .search-box {
     margin-left: -10px;
   }
@@ -86,9 +82,7 @@
     max-width: 660px;
     border: 1px solid #ccc;
     border-radius: 5px;
-  }
-  
-  /* Tabla personalizada */
+  } 
   .table-container {
     overflow-x: auto;
     width: 100%;
@@ -115,8 +109,7 @@
   .custom-table tr:hover {
     background-color: #f1f1f1;
   }
-  
-  /* Paginador */
+   
   .paginator {
     margin-top: 20px;
     display: flex;

@@ -21,8 +21,8 @@ export class DocenteNivelDetalleCursoComponent implements OnInit, OnDestroy {
   docentes: Docente[] = [];
   nivelesDetalle: any[] = [];
   loading: boolean = false;
-  pageSize: number = 5; // Default page size
-  pageIndex: number = 0; // Default page index
+  pageSize: number = 5; 
+  pageIndex: number = 0; 
 
   private subscriptions: Subscription = new Subscription();
 
@@ -34,7 +34,7 @@ export class DocenteNivelDetalleCursoComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadData(); // Make sure this is the only place it is called.
+    this.loadData(); 
     this.resetForm();
   }
   
@@ -52,12 +52,12 @@ export class DocenteNivelDetalleCursoComponent implements OnInit, OnDestroy {
   loadAll(): void {
     const loadSub = this.docenteNivelDetalleCursoService.getAll().subscribe(
       (data: DocenteNivelDetalleCurso[]) => {
-        // Clear the current array to prevent duplicates
+       
         this.docenteNivelDetalleCursos = [];
         this.filteredData = [];
-        this.docenteNivelDetalleCursos = data; // Load new data
-        this.filteredData = data; // Initialize filtered data
-        this.updatePaginatedData(); // Update paginated data initially
+        this.docenteNivelDetalleCursos = data;  
+        this.filteredData = data;  
+        this.updatePaginatedData(); 
         this.loading = false;
       },
       (error) => {
@@ -71,14 +71,12 @@ export class DocenteNivelDetalleCursoComponent implements OnInit, OnDestroy {
     this.subscriptions.add(loadSub);
   }
   
-
-  // Method to update paginated data based on current page
+ 
   updatePaginatedData(): void {
     const startIndex = this.pageIndex * this.pageSize;
     this.paginatedData = this.filteredData.slice(startIndex, startIndex + this.pageSize);
   }
-
-  // Filter the list based on user input
+ 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase(); // Cast to HTMLInputElement
     this.filteredData = this.docenteNivelDetalleCursos.filter(docenteNivelCurso =>
@@ -86,17 +84,16 @@ export class DocenteNivelDetalleCursoComponent implements OnInit, OnDestroy {
       docenteNivelCurso.docente.apellidos.toLowerCase().includes(filterValue) ||
       docenteNivelCurso.nivelDetalleCurso.curso.descripcion.toLowerCase().includes(filterValue)
     );
-    this.pageIndex = 0; // Reset to first page on filter
-    this.updatePaginatedData(); // Update paginated data after filtering
+    this.pageIndex = 0; 
+    this.updatePaginatedData();  
   }
   
   
-
-  // Handle pagination change
+ 
   changePage(event: any): void {
-    this.pageIndex = event.pageIndex; // Update current page index
-    this.pageSize = event.pageSize; // Update page size if changed
-    this.updatePaginatedData(); // Update paginated data on page change
+    this.pageIndex = event.pageIndex;  
+    this.pageSize = event.pageSize; 
+    this.updatePaginatedData(); 
   }
 
   loadDocentes(): void {
@@ -173,8 +170,8 @@ export class DocenteNivelDetalleCursoComponent implements OnInit, OnDestroy {
           const index = this.docenteNivelDetalleCursos.findIndex(d => d.idDocenteNivelDetalleCurso === this.editingDocenteNivelCurso!.idDocenteNivelDetalleCurso);
           if (index !== -1) {
             this.docenteNivelDetalleCursos[index] = updatedDocente;
-            this.filteredData[index] = updatedDocente; // Update filtered data
-            this.updatePaginatedData(); // Update paginated data
+            this.filteredData[index] = updatedDocente; 
+            this.updatePaginatedData();  
           }
           this.resetForm();
           this.snackBar.open('Docente actualizado exitosamente', 'Cerrar', {
@@ -196,8 +193,8 @@ export class DocenteNivelDetalleCursoComponent implements OnInit, OnDestroy {
     const deleteSub = this.docenteNivelDetalleCursoService.delete(id).subscribe(
       () => {
         this.docenteNivelDetalleCursos = this.docenteNivelDetalleCursos.filter(docente => docente.idDocenteNivelDetalleCurso !== id);
-        this.filteredData = this.filteredData.filter(docente => docente.idDocenteNivelDetalleCurso !== id); // Update filtered data
-        this.updatePaginatedData(); // Update paginated data after deletion
+        this.filteredData = this.filteredData.filter(docente => docente.idDocenteNivelDetalleCurso !== id);  
+        this.updatePaginatedData(); 
       },
       (error) => {
         console.error('Error al eliminar docente:', error);

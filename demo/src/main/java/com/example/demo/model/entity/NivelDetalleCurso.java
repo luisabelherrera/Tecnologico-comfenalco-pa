@@ -10,9 +10,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "NIVEL_DETALLE_CURSO")
 public class NivelDetalleCurso {
@@ -33,5 +39,4 @@ public class NivelDetalleCurso {
     @Column(name = "FechaRegistro")
     private LocalDate fechaRegistro = LocalDate.now();
 
-    // Getters y Setters
 }

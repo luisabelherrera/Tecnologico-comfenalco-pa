@@ -16,7 +16,6 @@ export class CalificacionListComponent implements OnInit {
   dataSource = new MatTableDataSource<Calificacion>();
   displayedColumns: string[] = ['idCalificacion', 'nota', 'estudiante', 'curricular', 'fechaRegistro', 'actions'];
 
-  // ViewChild para acceder a MatPaginator y MatSort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -31,8 +30,8 @@ export class CalificacionListComponent implements OnInit {
       (data) => {
         this.calificaciones = data;
         this.dataSource.data = this.calificaciones;
-        this.dataSource.paginator = this.paginator; // Configurar el paginador
-        this.dataSource.sort = this.sort; // Configurar el ordenamiento
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       (error) => {
         console.error('Error al cargar las calificaciones', error);

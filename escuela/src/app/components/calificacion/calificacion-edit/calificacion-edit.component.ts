@@ -16,7 +16,7 @@ export class CalificacionEditComponent implements OnInit {
   calificacion: Calificacion = {
     idCalificacion: 0,
     curricular: { idCurricular: 0, descripcion: '', activo: true, fechaRegistro: new Date() },
-    estudiante: { id: 0, valorCodigo: '', codigo: '', nombres: '', apellidos: '', documentoIdentidad: '', fechaNacimiento: new Date(), sexo: '', ciudad: '', direccion: '', activo: true },
+    estudiante: { idEstudiante: 0, valorCodigo: '', codigo: '', nombres: '', apellidos: '', documentoIdentidad: '', fechaNacimiento: new Date(), sexo: '', ciudad: '', direccion: '', activo: true },
     nota: 0,
     activo: true,
     fechaRegistro: new Date()
@@ -25,7 +25,7 @@ export class CalificacionEditComponent implements OnInit {
   estudiantes: Estudiante[] = [];
   curriculares: Curricular[] = []; 
   idCalificacion!: number;
-  loading: boolean = false; // To track loading state
+  loading: boolean = false;  
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -43,15 +43,15 @@ export class CalificacionEditComponent implements OnInit {
   }
 
   loadCalificacion(): void {
-    this.loading = true; // Start loading
+    this.loading = true;  
     this.calificacionService.getCalificacionById(this.idCalificacion).subscribe(
       (data) => {
         this.calificacion = data;
-        this.loading = false; // End loading
+        this.loading = false;  
       },
       (error) => {
         console.error('Error loading calificación', error);
-        this.loading = false; // End loading
+        this.loading = false; 
       }
     );
   }

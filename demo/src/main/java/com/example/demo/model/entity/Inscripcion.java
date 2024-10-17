@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,27 +13,27 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "INSCRIPCION") // Cambia el nombre de la tabla si es necesario
+@Table(name = "INSCRIPCION")
 public class Inscripcion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idInscripcion; // Cambia el nombre del ID si es necesario
+    private int idInscripcion;
 
     private int valorCodigo;
     private String codigo;
     private String situacion;
 
-    @ManyToOne
-    @JoinColumn(name = "id_estudiante", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_estudiante")
     private Estudiante estudiante;
 
-    @ManyToOne
-    @JoinColumn(name = "id_acudiente", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "acudiente_id")
     private Acudiente acudiente;
 
-    @ManyToOne
-    @JoinColumn(name = "id_nivel_detalle", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_nivel_detalle")
     private NivelDetalle nivelDetalle;
 
     private String institucionProcedencia;
@@ -130,5 +131,5 @@ public class Inscripcion {
         this.fechaRegistro = fechaRegistro;
     }
 
-    // Getters and Setters
+
 }

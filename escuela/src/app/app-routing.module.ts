@@ -8,9 +8,6 @@ import { HomeComponent } from './components/home/home.component';
 // login inicio de seccion
 import { LoginComponent } from './components/login/login.component';
 
-// ia para todos los usuario
-import { GenerateContentComponent } from './components/generate-ia/generate-ia.component';
-
 // acudiente
 import { RegisterComponent } from './components/registro/register.component';
 
@@ -73,13 +70,17 @@ import { HorarioEstudianteComponent } from './components/vista-estudiante/horari
 import { ErrorComponent } from './components/error/error.component';
 
 const routes: Routes = [
-  // vista docente 
+
+
+  // vista docente  ventana2
   {
     path: 'ventana2',
     component: Ventana2Component,
     canActivate: [AuthGuard],
     data: { roles: ['Docente'] },
   },
+
+    // vista Docente curricularDocente
   {
     path: 'curricularDocente',
     component: CurricularComponent,
@@ -126,8 +127,10 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
 
   // Registrar  Usuario
-  { path: 'registro', component: RegisterComponent },
-
+  { path: 'registro', component: RegisterComponent,
+      canActivate: [AuthGuard],
+    data: { roles: ['Administracion'] },
+  },
   // acudiente routes
   {
     path: 'acudientes',
@@ -268,13 +271,10 @@ const routes: Routes = [
     data: { roles: ['Administracion'] },
   },
 
-  // AI Generation route
-  { path: 'ia', component: GenerateContentComponent },
 
   // Login route
   { path: 'login', component: LoginComponent },
 
-  // Wildcard route for a 404 page redirecting to login
   { path: '**', redirectTo: '/login' },
 ];
 

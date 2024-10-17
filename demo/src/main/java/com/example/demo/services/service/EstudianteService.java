@@ -3,14 +3,14 @@ package com.example.demo.services.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.demo.model.entity.Estudiante;
+import com.example.demo.model.entity.dto.EstudianteDTO;
 
 public interface EstudianteService {
-    List<Estudiante> findAll();
+    List<EstudianteDTO> findAll();
 
-    Optional<Estudiante> findById(Integer id);
+    Optional<EstudianteDTO> findById(Integer id);
 
-    Estudiante save(Estudiante estudiante);
+    EstudianteDTO save(EstudianteDTO estudianteDTO);
 
     void deleteById(Integer id);
 }

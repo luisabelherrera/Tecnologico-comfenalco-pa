@@ -1,1 +1,54 @@
-<p>horario-estudiante works!</p>
+<div class="horarios-container mat-elevation-z8">
+    <h2 class="title-with-icon">
+      <mat-icon>access_time</mat-icon> Lista de Horarios
+    </h2>
+    
+
+    <mat-form-field class="filter-field">
+      <mat-label>Filtrar</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ejemplo: Lunes" />
+    </mat-form-field>
+  
+    <div class="table-container">
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width-table">
+  
+        <ng-container matColumnDef="diaSemana">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Día de la Semana </th>
+          <td mat-cell *matCellDef="let horario"> {{horario.diaSemana}} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="horaInicio">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Hora Inicio </th>
+          <td mat-cell *matCellDef="let horario"> {{horario.horaInicio}} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="horaFin">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Hora Fin </th>
+          <td mat-cell *matCellDef="let horario"> {{horario.horaFin}} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="nivelDetalleCurso">
+          <th mat-header-cell *matHeaderCellDef> Nivel Detalle Curso </th>
+          <td mat-cell *matCellDef="let horario"> {{horario.nivelDetalleCurso.curso.descripcion}} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef> Acciones </th>
+          <td mat-cell *matCellDef="let horario">
+            <button mat-icon-button color="warn" (click)="deleteHorario(horario.idHorario)">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-icon-button [routerLink]="['/horario/update', horario.idHorario]">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  
+    <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+  </div>
+  

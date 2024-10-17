@@ -27,7 +27,7 @@ export class PeriodoComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private periodoService: PeriodoService, private fb: FormBuilder) {
-    // Inicializar el formulario reactivo
+     
     this.periodoForm = this.fb.group({
       descripcion: ['', Validators.required],
       fechaInicio: ['', Validators.required],
@@ -41,8 +41,7 @@ export class PeriodoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Completa el observable al destruir el componente para evitar fugas de memoria
-    this.destroy$.next();
+     this.destroy$.next();
     this.destroy$.complete();
   }
 
@@ -57,7 +56,7 @@ export class PeriodoComponent implements OnInit, OnDestroy {
   loadPeriodos(): void {
     this.loading = true;
     this.periodoService.getAll()
-      .pipe(takeUntil(this.destroy$))  // Manejo de suscripciones
+      .pipe(takeUntil(this.destroy$))   
       .subscribe({
         next: (data) => {
           this.periodos = data;
@@ -75,7 +74,7 @@ export class PeriodoComponent implements OnInit, OnDestroy {
 
   createPeriodo(): void {
     if (this.editingId !== null) {
-      // Si editingId no es nulo, significa que estamos actualizando
+     
       this.updatePeriodo();
     } else if (this.periodoForm.valid) {
       const nuevoPeriodo: Periodo = this.periodoForm.value;
@@ -100,15 +99,15 @@ export class PeriodoComponent implements OnInit, OnDestroy {
 
   updatePeriodo(): void {
     if (this.editingId !== null && this.periodoForm.valid) {
-      const updatedPeriodo: Periodo = { ...this.periodoForm.value, idPeriodo: this.editingId }; // Asegúrate de incluir el idPeriodo
+      const updatedPeriodo: Periodo = { ...this.periodoForm.value, idPeriodo: this.editingId }; 
       this.periodoService.update(this.editingId, updatedPeriodo)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (data) => {
             const index = this.periodos.findIndex(p => p.idPeriodo === this.editingId);
             if (index !== -1) {
-              this.periodos[index] = data; // Actualiza el período existente en el array
-              this.dataSource.data = this.periodos; // Actualiza la fuente de datos de la tabla
+              this.periodos[index] = data;  
+              this.dataSource.data = this.periodos; 
             }
             this.resetPeriodo();
           },

@@ -36,8 +36,8 @@ export class ListarEstudiantesComponent implements OnInit {
   loadEstudiantes(): void {
     this.estudianteService.getAllEstudiantes().subscribe(
       (data) => {
-        this.dataSource.data = data; // Set data to data source
-        this.dataSource.paginator = this.paginator; // Assign paginator to data source
+        this.dataSource.data = data;  
+        this.dataSource.paginator = this.paginator;  
       },
       (error) => console.error(error)
     );
@@ -50,7 +50,7 @@ export class ListarEstudiantesComponent implements OnInit {
   
   deleteEstudiante(id: number): void {
     this.estudianteService.deleteEstudiante(id).subscribe(() => {
-      this.loadEstudiantes(); // Recargar la lista después de eliminar
+      this.loadEstudiantes();  
     });
   }
 }

@@ -1,5 +1,6 @@
 package com.example.demo.model.entity;
 
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -9,8 +10,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "ACUDIENTE")
 public class Acudiente {
 
@@ -34,6 +41,8 @@ public class Acudiente {
 
     @Column(name = "FechaRegistro")
     private LocalDateTime fechaRegistro = LocalDateTime.now();
+
+
 
     public long getIdAcudiente() {
         return idAcudiente;

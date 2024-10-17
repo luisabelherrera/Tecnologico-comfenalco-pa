@@ -15,7 +15,7 @@ export class AcudienteListComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<Acudiente>();
   displayedColumns: string[] = ['nombres', 'apellidos', 'documentoIdentidad', 'ciudad', 'activo', 'actions'];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator; // Agrega esta línea
+  @ViewChild(MatPaginator) paginator!: MatPaginator; 
 
   constructor(private acudienteService: AcudienteService, private router: Router) {}
 
@@ -24,14 +24,14 @@ export class AcudienteListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator; // Conecta el paginador al dataSource
+    this.dataSource.paginator = this.paginator; 
   }
 
   loadAcudientes(): void {
     this.acudienteService.getAcudientes().subscribe(
       (data) => {
         this.acudientes = data;
-        this.dataSource.data = this.acudientes; // Asigna los datos a dataSource
+        this.dataSource.data = this.acudientes; 
       },
       (error) => {
         console.error('Error al cargar los acudientes', error);
@@ -42,7 +42,7 @@ export class AcudienteListComponent implements OnInit, AfterViewInit {
   deleteAcudiente(id: number): void {
     if (confirm('¿Estás seguro de que quieres eliminar este acudiente?')) {
       this.acudienteService.deleteAcudiente(id).subscribe(() => {
-        this.loadAcudientes(); // Recargar la lista después de eliminar
+        this.loadAcudientes(); 
       },
       (error) => {
         console.error('Error al eliminar el acudiente', error);

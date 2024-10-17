@@ -1,19 +1,21 @@
 .table-container {
-  width: 100%; /* Ocupa el 100% del ancho del contenedor padre */
+  width: 100%;
 }
+
 .full-width-table {
-  width: 100%; /* La tabla ocupará todo el ancho del contenedor */
+  width: 100%;
 }
+
 .button-group {
   display: flex;
-  gap: 5px; /* Separa los botones con un espacio de 10px (ajusta según prefieras) */
+  gap: 5px;
 }
 
 .button-group button {
-  margin-right: 5px; /* Agrega margen derecho entre los botones */
+  margin-right: 5px;
 }
-.container {
 
-  align-items: center;  /* Centrar horizontalmente */
-  justify-content: center;  /* Centrar verticalmente si es necesario */
+.container {
+  align-items: center;
+  justify-content: center;
 }

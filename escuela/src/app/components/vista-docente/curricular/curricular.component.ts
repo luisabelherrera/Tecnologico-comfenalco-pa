@@ -28,11 +28,11 @@ export class CurricularComponent implements OnInit {
       (data) => {
         this.curriculares = data;
         this.dataSource.data = this.curriculares;
-        this.dataSource.paginator = this.paginator;  // Vincula el paginador al dataSource
+        this.dataSource.paginator = this.paginator;   
       },
       (error) => {
         console.error('Error al cargar los curriculares', error);
-        alert('Ocurrió un error al cargar los curriculares.'); // Mensaje de error para el usuario
+        alert('Ocurrió un error al cargar los curriculares.');  
       }
     );
   }
@@ -44,7 +44,7 @@ export class CurricularComponent implements OnInit {
       },
       (error) => {
         console.error('Error al eliminar el curricular', error);
-        alert('Ocurrió un error al eliminar el curricular.'); // Mensaje de error para el usuario
+        alert('Ocurrió un error al eliminar el curricular.'); 
       });
     }
   }

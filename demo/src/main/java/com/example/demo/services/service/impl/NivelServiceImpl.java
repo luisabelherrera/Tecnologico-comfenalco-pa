@@ -19,7 +19,7 @@ public class NivelServiceImpl implements NivelService {
     private NivelRepository nivelRepository;
 
     @Autowired
-    private PeriodoService periodoService; // Inyección del servicio PeriodoService
+    private PeriodoService periodoService;
 
     @Override
     public List<Nivel> findAll() {
@@ -35,21 +35,18 @@ public class NivelServiceImpl implements NivelService {
     public Nivel save(Nivel nivel) {
         try {
             if (nivel.getPeriodo() != null) {
-                // Comprobar si el periodo ya existe
-                Optional<Periodo> periodoExistente = periodoService.findById(nivel.getPeriodo().getIdPeriodo());
+               Optional<Periodo> periodoExistente = periodoService.findById(nivel.getPeriodo().getIdPeriodo());
 
                 if (!periodoExistente.isPresent()) {
                     Periodo periodoGuardado = periodoService.save(nivel.getPeriodo());
                     nivel.setPeriodo(periodoGuardado);
                 } else {
-                    nivel.setPeriodo(periodoExistente.get()); // Asignar el periodo existente
+                    nivel.setPeriodo(periodoExistente.get());
                 }
             }
 
-            // Validaciones adicionales (puedes agregar más según tus requerimientos)
-            return nivelRepository.save(nivel); // Guarda el nivel
+          return nivelRepository.save(nivel);
         } catch (Exception e) {
-            // Manejo de excepciones más específico
             throw new RuntimeException("Error al guardar el nivel: " + e.getMessage(), e);
         }
     }

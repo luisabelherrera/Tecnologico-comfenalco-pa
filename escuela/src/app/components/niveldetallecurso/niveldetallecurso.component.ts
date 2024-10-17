@@ -14,10 +14,10 @@ import { NivelDetalleCurso } from 'src/app/models/entity/NivelDetalleCurso.inter
 })
 export class NivelDetalleCursoComponent implements OnInit {
     nivelDetalleCursos: NivelDetalleCurso[] = [];
-    selectedCurso: NivelDetalleCurso = this.createEmptyNivelDetalleCurso(); // Inicializar en la creación
-    isEditing = false; // Bandera para modo edición
-    nivelesDetalles: NivelDetalle[] = []; // Almacena los niveles de detalle
-    cursos: Curso[] = []; // Almacena los cursos
+    selectedCurso: NivelDetalleCurso = this.createEmptyNivelDetalleCurso(); 
+    isEditing = false;  
+    nivelesDetalles: NivelDetalle[] = []; 
+    cursos: Curso[] = [];  
 
     constructor(
         private nivelDetalleCursoService: NivelDetalleCursoService, 
@@ -27,9 +27,9 @@ export class NivelDetalleCursoComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.fetchNivelDetalleCursos(); // Obtiene los cursos de nivel detalle
-        this.fetchNivelesDetalles(); // Obtiene los niveles de detalle
-        this.fetchCursos(); // Obtiene los cursos
+        this.fetchNivelDetalleCursos(); 
+        this.fetchNivelesDetalles();  
+        this.fetchCursos();  
     }
 
     fetchNivelDetalleCursos(): void {
@@ -68,8 +68,8 @@ export class NivelDetalleCursoComponent implements OnInit {
     }
 
     editCurso(curso: NivelDetalleCurso): void {
-        this.selectedCurso = { ...curso }; // Clonar el objeto
-        this.isEditing = true; // Cambiar a modo edición
+        this.selectedCurso = { ...curso };  
+        this.isEditing = true;  
     }
 
     deleteCurso(id: number): void {

@@ -23,7 +23,7 @@
       nivelDetalleCurso: {
           idNivelDetalleCurso: 0,
           nivelDetalle: null,
-          curso: { // Inicializa el curso de forma vacía
+          curso: {  
               idCurso: 0,
               descripcion: '',
               activo: true,
@@ -34,11 +34,11 @@
       },
   };
 
-    nivelesDetalleCurso: NivelDetalleCurso[] = []; // Asegúrate de declarar esta propiedad
+    nivelesDetalleCurso: NivelDetalleCurso[] = [];  
 
     constructor(
       private horarioService: HorarioService,
-      private nivelDetalleCursoService: NivelDetalleCursoService, // Servicio para cargar niveles
+      private nivelDetalleCursoService: NivelDetalleCursoService,  
       private router: Router
     ) {}
 
@@ -46,7 +46,7 @@
       this.nivelDetalleCursoService.getAll().subscribe(
           (niveles) => {
               this.nivelesDetalleCurso = niveles;
-              console.log(this.nivelesDetalleCurso); // Verifica que los niveles contienen la descripción del curso
+              console.log(this.nivelesDetalleCurso);  
           },
           (error) => {
               console.error('Error al cargar niveles de detalle de curso:', error);

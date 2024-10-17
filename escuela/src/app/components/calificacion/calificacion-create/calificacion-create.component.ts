@@ -17,7 +17,7 @@ export class CalificacionCreateComponent implements OnInit {
     idCalificacion: 0,
     curricular: { idCurricular: 0, descripcion: '', activo: true, fechaRegistro: new Date() },
     estudiante: {
-      id: 0,
+      idEstudiante: 0,
       valorCodigo: '',
       codigo: '',
       nombres: '',
@@ -31,7 +31,7 @@ export class CalificacionCreateComponent implements OnInit {
     },
     nota: 0,
     activo: true,
-    fechaRegistro: new Date()  // Asignar fecha actual por defecto
+    fechaRegistro: new Date()   
   };
 
   estudiantes: Estudiante[] = [];
@@ -63,8 +63,7 @@ export class CalificacionCreateComponent implements OnInit {
     });
   }
 
-  saveCalificacion(): void {
-    // Asignar la fecha actual antes de enviar el formulario
+  saveCalificacion(): void { 
     this.calificacion.fechaRegistro = new Date();
 
     this.calificacionService.createCalificacion(this.calificacion).subscribe(

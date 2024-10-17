@@ -1,27 +1,23 @@
-/* Estilos generales del contenedor */
-/* Estilos generales del contenedor */
+
 .container {
-  max-width: 1200px; /* O el ancho máximo que desees */
+  max-width: 1200px; 
   width: 100%;
-  margin: 0 auto; /* Centrar el contenedor */
+  margin: 0 auto; 
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Contenedor de la cabecera */
 .header {
   display: flex;
-  justify-content: flex-start; /* Alinear elementos a la izquierda */
+  justify-content: flex-start; 
   align-items: center;
   margin-bottom: 20px;
 }
 
-/* Resto de tu CSS aquí... */
 
 
-/* Botón de crear nueva calificación */
 .btn-create {
   background-color: #4caf50;
   color: rgb(0, 0, 0);
@@ -30,16 +26,15 @@
   border-radius: 5px;
   text-decoration: none;
   transition: background-color 0.3s ease;
-  margin-right: 20px; /* Espacio entre botón y campo de búsqueda */
+  margin-right: 20px;
 }
 
 .btn-create:hover {
   background-color: #45a049;
 }
 
-/* Estilo para los botones de ver detalles, editar y eliminar */
 .btn-details {
-  background-color: #ff9800; /* Color naranja */
+  background-color: #ff9800;
   color: white;
   padding: 5px 10px;
   border: none;
@@ -50,7 +45,7 @@
 }
 
 .btn-details:hover {
-  background-color: #e68a00; /* Color más oscuro al pasar el cursor */
+  background-color: #e68a00;
 }
 
 .btn-edit {
@@ -80,10 +75,8 @@
 .btn-delete:hover {
   background-color: #e31b0c;
 }
-
-/* Estilo para el campo de búsqueda */
 .search-box {
-  margin-left: -10px; /* Ajustar el campo de búsqueda más cerca del botón */
+  margin-left: -10px;
 }
 
 .input-search {
@@ -94,10 +87,10 @@
   border-radius: 5px;
 }
 
-/* Tabla personalizada */
+
 .table-container {
   overflow-x: auto;
-  width: 100%; /* Asegúrate de que el contenedor de la tabla ocupe el 100% */
+  width: 100%;
 }
 
 .custom-table {
@@ -122,7 +115,6 @@
   background-color: #f1f1f1;
 }
 
-/* Paginador */
 .paginator {
   margin-top: 20px;
   display: flex;

@@ -6,6 +6,8 @@ import { NivelDetalleService } from 'src/app/services/niveldetalle/NivelDetalle.
 import { GradoSeccionService } from 'src/app/services/grado-seccion/grado-seccion.service';
 import { NivelService } from 'src/app/services/nivel/Nivel.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { NivelDetalleDialogoGraficoComponent } from './nivel-detalle-dialogo-grafico/nivel-detalle-dialogo-grafico.component';
 
 @Component({
     selector: 'app-nivel-detalle',
@@ -32,19 +34,22 @@ export class NivelDetalleComponent implements OnInit {
         'actions'
       ];
       
-    // Initialize dataSource with MatTableDataSource
     dataSource = new MatTableDataSource<NivelDetalle>(this.nivelDetalles);
+
 
     constructor(
         private nivelDetalleService: NivelDetalleService,
         private gradoSeccionService: GradoSeccionService,
-        private nivelService: NivelService
+        private nivelService: NivelService,
+        private dialog: MatDialog
+   
     ) {}
 
     ngOnInit(): void {
         this.loadNivelDetalles();
         this.loadGradosSecciones();
         this.loadNiveles();
+        
     }
 
     loadNivelDetalles(): void {
@@ -52,7 +57,7 @@ export class NivelDetalleComponent implements OnInit {
         this.nivelDetalleService.getAll().subscribe(
             data => {
                 this.nivelDetalles = data;
-                this.dataSource.data = this.nivelDetalles; // Update the data of MatTableDataSource
+                this.dataSource.data = this.nivelDetalles; 
                 this.setLoadingState(false);
             },
             error => this.handleError('Error al cargar los niveles de detalle', error)
@@ -63,7 +68,7 @@ export class NivelDetalleComponent implements OnInit {
         this.setLoadingState(true);
         this.gradoSeccionService.getAllGradoSecciones().subscribe(
             data => {
-                console.log('Grados y Secciones:', data); // Agrega este log
+                console.log('Grados y Secciones:', data); 
                 this.gradosSecciones = data;
                 this.setLoadingState(false);
             },
@@ -75,7 +80,7 @@ export class NivelDetalleComponent implements OnInit {
         this.setLoadingState(true);
         this.nivelService.getAll().subscribe(
             data => {
-                console.log('Niveles:', data); // Agrega este log
+                console.log('Niveles:', data);
                 this.niveles = data;
                 this.setLoadingState(false);
             },
@@ -112,7 +117,7 @@ export class NivelDetalleComponent implements OnInit {
 
     setEditingNivelDetalle(nivelDetalle: NivelDetalle): void {
         this.editingNivelDetalle = nivelDetalle;
-        this.nuevoNivelDetalle = { ...nivelDetalle }; // Crea una copia para editar
+        this.nuevoNivelDetalle = { ...nivelDetalle };
     }
 
     deleteNivelDetalle(id: number): void {
@@ -180,8 +185,22 @@ export class NivelDetalleComponent implements OnInit {
         return nivelDetalle.nivel && nivelDetalle.gradoSeccion && nivelDetalle.nivel.descripcionNivel && nivelDetalle.totalVacantes != null;
     }
 
+    openDialogGrafico(nivelDetalle: NivelDetalle): void {
+        console.log('Datos del nivel detalle a pasar al gráfico:', nivelDetalle);
+        const dialogRef = this.dialog.open(NivelDetalleDialogoGraficoComponent, {
+            width: '600px',
+            height: '500px',
+            data: nivelDetalle  
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+            
+        });
+    }
+    
+      
     applyFilter(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;
-        this.dataSource.filter = filterValue.trim().toLowerCase(); // Use the filter property of MatTableDataSource
+        this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 }

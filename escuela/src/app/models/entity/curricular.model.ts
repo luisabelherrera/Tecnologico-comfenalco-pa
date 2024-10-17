@@ -1,23 +1,23 @@
 import { DocenteNivelDetalleCurso } from "./docente-nivel-detalle-curso.model";
 
 export class Curricular {
-  idCurricular?: number;  // Opcional para nuevos registros
+  idCurricular?: number; 
   descripcion: string;
   activo: boolean;
   fechaRegistro: Date;
-  docenteNivelDetalleCurso?: DocenteNivelDetalleCurso; // Agregado para la relación
+  docenteNivelDetalleCurso?: DocenteNivelDetalleCurso; 
 
   constructor(
     descripcion: string = '', 
     activo: boolean = true, 
     fechaRegistro: Date = new Date(),
-    docenteNivelDetalleCurso?: DocenteNivelDetalleCurso, // Opcional
-    idCurricular?: number // Opcional
+    docenteNivelDetalleCurso?: DocenteNivelDetalleCurso, 
+    idCurricular?: number 
   ) {
     this.descripcion = descripcion;
     this.activo = activo;
     this.fechaRegistro = fechaRegistro;
-    this.docenteNivelDetalleCurso = docenteNivelDetalleCurso; // Inicializa la relación
+    this.docenteNivelDetalleCurso = docenteNivelDetalleCurso; 
     if (idCurricular) {
       this.idCurricular = idCurricular;
     }

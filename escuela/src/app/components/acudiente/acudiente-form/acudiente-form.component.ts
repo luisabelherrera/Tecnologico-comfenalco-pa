@@ -45,7 +45,7 @@ export class AcudienteFormComponent implements OnInit {
       this.acudiente = data;
     }, (error) => {
       console.error('Error al obtener el acudiente:', error);
-      // Puedes redirigir o mostrar un mensaje de error
+    
     });
   }
 
@@ -55,14 +55,14 @@ export class AcudienteFormComponent implements OnInit {
         this.router.navigate(['/acudientes']);
       }, (error) => {
         console.error('Error al actualizar el acudiente:', error);
-        // Manejo de errores: muestra un mensaje al usuario
+   
       });
     } else {
       this.acudienteService.createAcudiente(this.acudiente).subscribe(() => {
         this.router.navigate(['/acudientes']);
       }, (error) => {
         console.error('Error al crear el acudiente:', error);
-        // Manejo de errores: muestra un mensaje al usuario
+      
       });
     }
   }

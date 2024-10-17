@@ -44,11 +44,9 @@
 
     <mat-form-field class="input-field" appearance="outline">
       <mat-label>Vacantes Ocupadas</mat-label>
-      <input matInput type="number" [(ngModel)]="nuevoNivelDetalle.vacantesOcupadas" name="vacantesOcupadas" required />
-      <mat-error *ngIf="!nuevoNivelDetalle.vacantesOcupadas">
-        Las vacantes ocupadas son obligatorias
-      </mat-error>
+      <input matInput type="number" [value]="nuevoNivelDetalle.vacantesOcupadas" name="vacantesOcupadas" disabled />
     </mat-form-field>
+    
 
     <mat-checkbox [(ngModel)]="nuevoNivelDetalle.activo" name="activo">Activo</mat-checkbox>
 
@@ -117,6 +115,9 @@
           </button>
           <button mat-icon-button color="warn" (click)="deleteNivelDetalle(nivelDetalle.idNivelDetalle)">
             <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button (click)="openDialogGrafico(nivelDetalle)">
+            <mat-icon>assessment</mat-icon>
           </button>
         </td>
       </ng-container>

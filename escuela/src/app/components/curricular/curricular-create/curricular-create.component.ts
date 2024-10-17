@@ -19,7 +19,7 @@ export class CurricularCreateComponent implements OnInit {
         activo: true, 
         fechaRegistro: new Date() 
     };
-    docentes: DocenteNivelDetalleCurso[] = []; // Cambiado a DocenteNivelDetalleCurso
+    docentes: DocenteNivelDetalleCurso[] = [];  
     isLoading: boolean = false;
     errorMessage: string | null = null;
     successMessage: string | null = null;
@@ -39,7 +39,7 @@ export class CurricularCreateComponent implements OnInit {
     loadDocentes(): void {
         this.docenteService.getAll().subscribe(
             (data: DocenteNivelDetalleCurso[]) => { 
-                this.docentes = data; // Almacena directamente los docentes y sus detalles
+                this.docentes = data; 
             },
             (error) => {
                 console.error('Error al cargar docentes', error);
@@ -48,7 +48,7 @@ export class CurricularCreateComponent implements OnInit {
         );
     }
     cancelar(): void {
-        this.router.navigate(['/curriculares']); // Redirige a la lista de curriculares
+        this.router.navigate(['/curriculares']);  
       }
     saveCurricular(): void {
         this.isLoading = true;

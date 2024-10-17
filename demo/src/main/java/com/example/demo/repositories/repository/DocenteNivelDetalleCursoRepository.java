@@ -6,5 +6,5 @@ import com.example.demo.model.entity.DocenteNivelDetalleCurso;
 
 @Repository
 public interface DocenteNivelDetalleCursoRepository extends JpaRepository<DocenteNivelDetalleCurso, Integer> {
-    // Puedes añadir métodos de consulta personalizados si es necesario
+
 }

@@ -1,197 +1,215 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Inscripcion } from 'src/app/models/entity/Inscripcion.interface';
-
-import { EstudianteService } from 'src/app/services/estudiante/estudiante.service';
-import { AcudienteService } from 'src/app/services/acudiente/acudiente.service';
-import { Estudiante } from 'src/app/models/entity/Estudiante.interface';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { Acudiente } from 'src/app/models/entity/Acudiente.interface';
-import { NivelDetalle } from 'src/app/models/entity/NivelDetalle.interface';
-import { NivelDetalleService } from 'src/app/services/niveldetalle/NivelDetalle.service';
+import { Estudiante } from 'src/app/models/entity/Estudiante.interface';
+import { Inscripcion } from 'src/app/models/entity/Inscripcion.interface';
+import { AcudienteService } from 'src/app/services/acudiente/acudiente.service';
+import { EstudianteService } from 'src/app/services/estudiante/estudiante.service';
 import { InscripcionService } from 'src/app/services/matricula/matricula.service';
+import { NivelDetalleService } from 'src/app/services/niveldetalle/NivelDetalle.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { IncripciondetalleComponent } from './ventana/incripciondetalle/incripciondetalle.component';
+import { ExportDialogComponent } from './ventana/export-dialog/export-dialog.component';
 
 @Component({
   selector: 'app-matricula',
   templateUrl: './matricula.component.html',
-  styleUrls: ['./matricula.component.scss'],
+  styleUrls: ['./matricula.component.scss']
 })
-export class MatriculaComponent implements OnInit {
-  matriculaForm: FormGroup;
+export class MatriculaComponent implements OnInit, OnDestroy {
+  inscripciones: MatTableDataSource<Inscripcion> = new MatTableDataSource();
+  nuevoInscripcion: Partial<Inscripcion> = {};
   estudiantes: Estudiante[] = [];
   acudientes: Acudiente[] = [];
-  nivelesDetalles: NivelDetalle[] = [];
-  matriculas: Inscripcion[] = [];
-
-  currentMatriculaId?: number;
+  nivelesDetalle: any[] = [];
+  loading: boolean = false;
   isEditing: boolean = false;
+  private subscriptions: Subscription = new Subscription();
+
+  @ViewChild(MatPaginator) paginator: MatPaginator; 
 
   constructor(
-    private formBuilder: FormBuilder,
-    private matriculaService: InscripcionService,
+    private inscripcionService: InscripcionService,
     private estudianteService: EstudianteService,
     private acudienteService: AcudienteService,
-    private nivelDetalleService: NivelDetalleService
-  ) {
-    this.matriculaForm = this.createForm();
-  }
+    private nivelDetalleService: NivelDetalleService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-    this.loadEstudiantes();
-    this.loadAcudientes();
-    this.loadNivelesDetalles();
-    this.loadMatriculas();
-  }
-
-  createForm(): FormGroup {
-    return this.formBuilder.group({
-      valorCodigo: ['', Validators.required],
-      codigo: ['', Validators.required],
-      situacion: [''],
-      nivelDetalle: [null, Validators.required],
-      estudiante: [null, Validators.required],
-      acudiente: [null, Validators.required],
-      institucionProcedencia: [''],
-      esRepitente: [false],
-      activo: [true],
-      fechaRegistro: [new Date()],
-    });
-  }
-
-  loadEstudiantes(): void {
-    this.estudianteService.getAllEstudiantes().subscribe((data) => {
-      this.estudiantes = data;
-    });
-  }
-
-  loadAcudientes(): void {
-    this.acudienteService.getAcudientes().subscribe((data) => {
-      this.acudientes = data;
-    });
-  }
-
-  loadNivelesDetalles(): void {
-    this.nivelDetalleService.getAll().subscribe((data) => {
-      this.nivelesDetalles = data;
-    });
-  }
-
-  loadMatriculas(): void {
-    this.matriculaService.getAllInscripciones().subscribe((data) => {
-      this.matriculas = data;
-    });
-  }
-  onSubmit(): void {
-    if (this.matriculaForm.valid) {
-      const matricula: Inscripcion = this.createMatriculaFromForm();
-      console.log('Datos a enviar:', matricula); // Log de los datos que se envían
-    
-      this.matriculaService.createInscripcion(matricula).subscribe(
-        (response) => {
-          alert('Inscripción registrada exitosamente');
-          this.loadMatriculas();
-          this.resetForm();
-        },
-        (error) => {
-          // Manejo detallado de errores
-          console.error('Error al registrar la inscripción:', error);
-          const errorMessage = error.error?.message || 'Error desconocido';
-          alert(`Ocurrió un error al registrar la inscripción: ${errorMessage}`);
-        }
-      );
-    } else {
-      alert('Por favor, complete todos los campos requeridos.');
-    }
-  }
+    this.loadData();
+    this.resetForm();
   
-  
-
-  createMatriculaFromForm(): Inscripcion {
-    const selectedEstudiante = this.estudiantes.find(est => est.id === this.matriculaForm.value.estudiante);
-    const selectedAcudiente = this.acudientes.find(acud => acud.idAcudiente === this.matriculaForm.value.acudiente);
-    const selectedNivelDetalle = this.nivelesDetalles.find(nivel => nivel.idNivelDetalle === this.matriculaForm.value.nivelDetalle);
-
-    return {
-      idInscripcion: this.isEditing ? this.currentMatriculaId! : 0,
-      valorCodigo: this.matriculaForm.value.valorCodigo,
-      codigo: this.matriculaForm.value.codigo,
-      situacion: this.matriculaForm.value.situacion,
-      institucionProcedencia: this.matriculaForm.value.institucionProcedencia,
-      esRepitente: this.matriculaForm.value.esRepitente,
-      activo: this.matriculaForm.value.activo,
-      fechaRegistro: this.matriculaForm.value.fechaRegistro,
-      estudiante: {
-        id: selectedEstudiante?.id || null,
-        valorCodigo: selectedEstudiante?.valorCodigo || '',
-        codigo: selectedEstudiante?.codigo || '',
-        nombres: selectedEstudiante?.nombres || '',
-        apellidos: selectedEstudiante?.apellidos || '',
-        documentoIdentidad: selectedEstudiante?.documentoIdentidad || '',
-        fechaNacimiento: selectedEstudiante?.fechaNacimiento || new Date(),
-        sexo: selectedEstudiante?.sexo || '',
-        ciudad: selectedEstudiante?.ciudad || '',
-        direccion: selectedEstudiante?.direccion || '',
-        activo: selectedEstudiante?.activo || true,
-      },
-      acudiente: {
-        idAcudiente: selectedAcudiente?.idAcudiente || null,
-        nombres: selectedAcudiente?.nombres || '',
-        apellidos: selectedAcudiente?.apellidos || '',
-        documentoIdentidad: selectedAcudiente?.documentoIdentidad || '',
-        ciudad: selectedAcudiente?.ciudad || '',
-        direccion: selectedAcudiente?.direccion || '',
-        estadoCivil: selectedAcudiente?.estadoCivil || '',
-        sexo: selectedAcudiente?.sexo || '',
-        fechaNacimiento: selectedAcudiente?.fechaNacimiento || new Date(),
-        activo: selectedAcudiente?.activo || true,
-        parentesco: selectedAcudiente?.parentesco || '',
-      },
-      nivelDetalle: {
-        idNivelDetalle: selectedNivelDetalle?.idNivelDetalle || null,
-        nivel: selectedNivelDetalle?.nivel || null,
-        gradoSeccion: selectedNivelDetalle?.gradoSeccion || null,
-        totalVacantes: selectedNivelDetalle?.totalVacantes || 0,
-        vacantesDisponibles: selectedNivelDetalle?.vacantesDisponibles || 0,
-        vacantesOcupadas: selectedNivelDetalle?.vacantesOcupadas || 0,
-        activo: selectedNivelDetalle?.activo || true,
-      },
+    this.inscripciones.filterPredicate = (data: Inscripcion, filter: string) => {
+      return data.codigo.toLowerCase().includes(filter) || 
+             (data.estudiante?.nombres + ' ' + data.estudiante?.apellidos).toLowerCase().includes(filter);
     };
   }
 
-  deleteMatricula(id: number): void {
-    if (confirm('¿Estás seguro de que deseas eliminar esta inscripción?')) {
-      this.matriculaService.deleteInscripcion(id).subscribe(
-        (response) => {
-          alert('Inscripción eliminada exitosamente');
-          this.loadMatriculas();
-        },
-        (error) => {
-          console.error('Error al eliminar la inscripción:', error);
-          alert('Ocurrió un error al eliminar la inscripción');
-        }
-      );
-    }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
-  editMatricula(matricula: Inscripcion): void {
-    this.currentMatriculaId = matricula.idInscripcion;
-    this.isEditing = true;
-    this.matriculaForm.patchValue({
-      valorCodigo: matricula.valorCodigo,
-      codigo: matricula.codigo,
-      situacion: matricula.situacion,
-      nivelDetalle: matricula.nivelDetalle?.idNivelDetalle,
-      estudiante: matricula.estudiante?.id,
-      acudiente: matricula.acudiente?.idAcudiente,
-      institucionProcedencia: matricula.institucionProcedencia,
-      esRepitente: matricula.esRepitente,
-      activo: matricula.activo,
-      fechaRegistro: matricula.fechaRegistro,
+  loadData(): void {
+    this.loading = true;
+    this.loadInscripciones();
+    this.loadEstudiantes();
+    this.loadAcudientes();
+    this.loadNivelesDetalle();
+  }
+
+  loadInscripciones(): void {
+    const loadSub = this.inscripcionService.getAllInscripciones().subscribe(
+      (data: Inscripcion[]) => {
+        this.inscripciones.data = data; 
+        this.loading = false;
+        this.inscripciones.paginator = this.paginator; 
+      },
+      (error) => {
+        this.handleError('Error cargando inscripciones:', error);
+        this.loading = false;
+      }
+    );
+    this.subscriptions.add(loadSub);
+  }
+
+  openExportDialog(): void {
+    const dialogRef = this.dialog.open(ExportDialogComponent, {
+      data: { inscripciones: this.inscripciones.data } 
+    });
+    
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'excel') {
+        dialogRef.componentInstance.downloadExcel(); 
+      }
+    });
+  }
+  
+
+  loadEstudiantes(): void {
+    const estudiantesSub = this.estudianteService.getAllEstudiantes().subscribe(
+      (data: Estudiante[]) => {
+        this.estudiantes = data;
+      },
+      (error) => {
+        this.handleError('Error cargando estudiantes:', error);
+      }
+    );
+    this.subscriptions.add(estudiantesSub);
+  }
+
+  loadAcudientes(): void {
+    const acudientesSub = this.acudienteService.getAcudientes().subscribe(
+      (data: Acudiente[]) => {
+        this.acudientes = data;
+      },
+      (error) => {
+        this.handleError('Error cargando acudientes:', error);
+      }
+    );
+    this.subscriptions.add(acudientesSub);
+  }
+
+  loadNivelesDetalle(): void {
+    const nivelesSub = this.nivelDetalleService.getAll().subscribe(
+      (data: any[]) => {
+        this.nivelesDetalle = data;
+      },
+      (error) => {
+        this.handleError('Error cargando niveles de detalle:', error);
+      }
+    );
+    this.subscriptions.add(nivelesSub);
+  }
+
+  editInscripcion(inscripcion: Inscripcion): void {
+    this.nuevoInscripcion = { ...inscripcion };
+    this.isEditing = true; 
+  }
+
+  update(): void {
+    const updateSub = this.inscripcionService.updateInscripcion(this.nuevoInscripcion.idInscripcion, this.nuevoInscripcion as Inscripcion).subscribe(
+      (updatedInscripcion) => {
+        const index = this.inscripciones.data.findIndex(ins => ins.idInscripcion === updatedInscripcion.idInscripcion);
+        if (index !== -1) {
+          this.inscripciones.data[index] = updatedInscripcion;
+          this.inscripciones.data = [...this.inscripciones.data]; 
+          this.inscripciones.paginator = this.paginator;
+          this.snackBar.open('Inscripción actualizada exitosamente', 'Cerrar', { duration: 3000 });
+        }
+        this.resetForm();
+      },
+      (error) => {
+        this.handleError('Error al actualizar inscripción:', error);
+      }
+    );
+    this.subscriptions.add(updateSub);
+  }
+
+  openDetail(inscripcion: Inscripcion): void {
+    const dialogRef = this.dialog.open(IncripciondetalleComponent, {
+      width: '400px',
+      data: inscripcion
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
     });
   }
 
+  create(): void {
+    const createSub = this.inscripcionService.createInscripcion(this.nuevoInscripcion as Inscripcion).subscribe(
+      (inscripcion) => {
+        this.inscripciones.data = [...this.inscripciones.data, inscripcion];
+        this.snackBar.open('Inscripción agregada exitosamente', 'Cerrar', { duration: 3000 });
+        this.resetForm();
+      },
+      (error) => {
+        this.handleError('Error al agregar inscripción:', error);
+      }
+    );
+    this.subscriptions.add(createSub);
+  }
+
+  delete(inscripcionId: number): void {
+    const deleteSub = this.inscripcionService.deleteInscripcion(inscripcionId).subscribe(
+      () => {
+        this.inscripciones.data = this.inscripciones.data.filter(inscripcion => inscripcion.idInscripcion !== inscripcionId);
+        this.snackBar.open('Inscripción eliminada exitosamente', 'Cerrar', { duration: 3000 });
+      },
+      (error) => {
+        this.handleError('Error al eliminar inscripción:', error);
+      }
+    );
+    this.subscriptions.add(deleteSub);
+  }
+
   resetForm(): void {
-    this.isEditing = false;
-    this.currentMatriculaId = undefined;
-    this.matriculaForm.reset();
+    this.nuevoInscripcion = {
+      valorCodigo: 0,
+      codigo: '',
+      situacion: '',
+      nivelDetalle: this.nivelesDetalle[0] || null,
+      estudiante: this.estudiantes[0] || null,
+      acudiente: this.acudientes[0] || null,
+      institucionProcedencia: '',
+      esRepitente: false,
+      activo: true,
+      fechaRegistro: new Date(),
+    };
+    this.isEditing = false; 
+  }
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.inscripciones.filter = filterValue.trim().toLowerCase();
+  }
+  
+  private handleError(message: string, error: any): void {
+    console.error(message, error);
+    this.snackBar.open(message, 'Cerrar', { duration: 3000 });
   }
 }

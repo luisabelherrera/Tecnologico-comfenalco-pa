@@ -1,3 +1,80 @@
-<p>ventana3 works!</p>
-
-AQUI IRAN MIS CALIFICACIONES ALUMNO
+<div class="container">
+    
+    <div class="header">
+      <h2>Notas del Estudiante</h2> 
+      
+      <div class="search-box">
+        <input
+          matInput
+          (keyup)="applyFilter($event)"
+          placeholder="Buscar calificaciones"
+          class="input-search"
+        />
+      </div>
+    </div>
+   
+    <div class="table-container">
+      <table mat-table [dataSource]="dataSource" matSort class="custom-table">
+    
+        <ng-container matColumnDef="idCalificacion">
+          <th mat-header-cell *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let calificacion">{{ calificacion.idCalificacion }}</td>
+        </ng-container>
+  
+ 
+        <ng-container matColumnDef="nota">
+          <th mat-header-cell *matHeaderCellDef>Nota</th>
+          <td mat-cell *matCellDef="let calificacion">{{ calificacion.nota }}</td>
+        </ng-container>
+   
+        <ng-container matColumnDef="estudiante">
+          <th mat-header-cell *matHeaderCellDef>Estudiante</th>
+          <td mat-cell *matCellDef="let calificacion">
+            {{ calificacion.estudiante.nombres }} {{ calificacion.estudiante.apellidos }}
+          </td>
+        </ng-container>
+   
+        <ng-container matColumnDef="curricular">
+          <th mat-header-cell *matHeaderCellDef>Curricular</th>
+          <td mat-cell *matCellDef="let calificacion">{{ calificacion.curricular.descripcion }}</td>
+        </ng-container>
+   
+        <ng-container matColumnDef="fechaRegistro">
+          <th mat-header-cell *matHeaderCellDef>Fecha Registro</th>
+          <td mat-cell *matCellDef="let calificacion">
+            {{ calificacion.fechaRegistro | date: 'short' }} 
+          </td>
+        </ng-container>
+   
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let calificacion" class="actions">
+            <a [routerLink]="['/calificaciones/detail', calificacion.idCalificacion]" class="btn-details">
+              Ver Detalles
+            </a>
+            <a [routerLink]="['/calificaciones/edit', calificacion.idCalificacion]" class="btn-edit">
+              Editar
+            </a>
+            <button (click)="deleteCalificacion(calificacion.idCalificacion)" class="btn-delete">
+              Eliminar
+            </button>
+            <button (click)="requestSuggestionsForCalificacion(calificacion)" class="btn-IA">
+              Sugerencias
+            </button>
+          </td>
+        </ng-container>
+   
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+   
+    <div class="paginator">
+      <mat-paginator
+        [pageSize]="5"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        showFirstLastButtons
+      ></mat-paginator>
+    </div>
+  </div>
+  

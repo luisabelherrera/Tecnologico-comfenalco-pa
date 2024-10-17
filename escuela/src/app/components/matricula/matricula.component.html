@@ -1,95 +1,151 @@
-<div class="matricula-container">
-  <h2>Registro de Matrículas</h2>
-  
-  <form [formGroup]="matriculaForm" (ngSubmit)="onSubmit()" class="matricula-form">
-    <label for="valorCodigo">Código Valor</label>
-    <input id="valorCodigo" formControlName="valorCodigo" />
-    <div *ngIf="matriculaForm.get('valorCodigo')?.hasError('required')">
-      Este campo es obligatorio.
-    </div>
+<div class="inscripcion-container" style="max-width: 1000px; margin: auto;">
+  <h2>Gestión de Inscripciones</h2>
 
-    <label for="codigo">Código</label>
-    <input id="codigo" formControlName="codigo" />
-    <div *ngIf="matriculaForm.get('codigo')?.hasError('required')">
-      Este campo es obligatorio.
-    </div>
+  <form (ngSubmit)="isEditing ? update() : create()" #inscripcionForm="ngForm">
+    <mat-card>
+      <mat-card-content>
+         
+        <mat-form-field appearance="fill">
+          <mat-label>Valor Código</mat-label>
+          <input matInput [(ngModel)]="nuevoInscripcion.valorCodigo" name="valorCodigo" required #valorCodigo="ngModel">
+          <mat-error *ngIf="valorCodigo.invalid && (valorCodigo.dirty || valorCodigo.touched)">
+            El valor es obligatorio.
+          </mat-error>
+        </mat-form-field>
+ 
+        <mat-form-field appearance="fill">
+          <mat-label>Código</mat-label>
+          <input matInput [(ngModel)]="nuevoInscripcion.codigo" name="codigo" required #codigo="ngModel">
+          <mat-error *ngIf="codigo.invalid && (codigo.dirty || codigo.touched)">
+            El código es obligatorio.
+          </mat-error>
+        </mat-form-field>
+ 
+        <mat-form-field appearance="fill">
+          <mat-label>Situación</mat-label>
+          <input matInput [(ngModel)]="nuevoInscripcion.situacion" name="situacion" required #situacion="ngModel">
+          <mat-error *ngIf="situacion.invalid && (situacion.dirty || situacion.touched)">
+            La situación es obligatoria.
+          </mat-error>
+        </mat-form-field>
+ 
+        <mat-form-field appearance="fill">
+          <mat-label>Nivel Detalle</mat-label>
+          <mat-select [(ngModel)]="nuevoInscripcion.nivelDetalle" name="nivelDetalle" required #nivelDetalle="ngModel">
+            <mat-option *ngFor="let nivel of nivelesDetalle" [value]="nivel">
+              <span class="nivel-info">
+                <span class="nivel-descripcion">{{ nivel.nivel.descripcionNivel }}</span>
+                <span class="grado-descripcion">{{ nivel.gradoSeccion.descripcionGrado }}</span>
+                <span class="seccion-descripcion">{{ nivel.gradoSeccion.descripcionSeccion }}</span>
+              </span>
+            </mat-option>
+            
+               </mat-select>
+          <mat-error *ngIf="nivelDetalle.invalid && (nivelDetalle.dirty || nivelDetalle.touched)">
+            El nivel es obligatorio.
+          </mat-error>
+        </mat-form-field>
+ 
+        <mat-form-field appearance="fill">
+          <mat-label>Estudiante</mat-label>
+          <mat-select [(ngModel)]="nuevoInscripcion.estudiante" name="estudiante" required #estudiante="ngModel">
+            <mat-option *ngFor="let estudiante of estudiantes" [value]="estudiante">{{ estudiante.nombres }} {{ estudiante.apellidos }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="estudiante.invalid && (estudiante.dirty || estudiante.touched)">
+            El estudiante es obligatorio.
+          </mat-error>
+        </mat-form-field>
+ 
+        <mat-form-field appearance="fill">
+          <mat-label>Acudiente</mat-label>
+          <mat-select [(ngModel)]="nuevoInscripcion.acudiente" name="acudiente" required #acudiente="ngModel">
+            <mat-option *ngFor="let acudiente of acudientes" [value]="acudiente">{{ acudiente.nombres }} {{ acudiente.apellidos }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="acudiente.invalid && (acudiente.dirty || acudiente.touched)">
+            El acudiente es obligatorio.
+          </mat-error>
+        </mat-form-field>
+ 
+        <mat-form-field appearance="fill">
+          <mat-label>Institución de Procedencia</mat-label>
+          <input matInput [(ngModel)]="nuevoInscripcion.institucionProcedencia" name="institucionProcedencia" required #institucionProcedencia="ngModel">
+          <mat-error *ngIf="institucionProcedencia.invalid && (institucionProcedencia.dirty || institucionProcedencia.touched)">
+            La institución de procedencia es obligatoria.
+          </mat-error>
+        </mat-form-field>
+ 
+        <mat-checkbox [(ngModel)]="nuevoInscripcion.esRepitente" name="esRepitente">Es Repitente</mat-checkbox>
+ 
+        <mat-checkbox [(ngModel)]="nuevoInscripcion.activo" name="activo">Activo</mat-checkbox>
+ 
+        <mat-form-field appearance="fill">
+          <mat-label>Fecha Registro</mat-label>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="nuevoInscripcion.fechaRegistro" name="fechaRegistro" required #fechaRegistro="ngModel">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="fechaRegistro.invalid && (fechaRegistro.dirty || fechaRegistro.touched)">
+            La fecha de registro es obligatoria.
+          </mat-error>
+        </mat-form-field>
 
-    <label for="situacion">Situación</label>
-    <input id="situacion" formControlName="situacion" />
-
-    <label for="nivelDetalle">Nivel Detalle</label>
-    <select id="nivelDetalle" formControlName="nivelDetalle">
-      <option *ngFor="let nivel of nivelesDetalles" [value]="nivel.idNivelDetalle">
-        {{ nivel.idNivelDetalle }}
-      </option>
-    </select>
-    <div *ngIf="matriculaForm.get('nivelDetalle')?.hasError('required')">
-      Este campo es obligatorio.
-    </div>
-
-    <label for="estudiante">Estudiante</label>
-    <select id="estudiante" formControlName="estudiante">
-      <option *ngFor="let estudiante of estudiantes" [value]="estudiante.id">
-        {{ estudiante.nombres }}
-      </option>
-    </select>
-    <div *ngIf="matriculaForm.get('estudiante')?.hasError('required')">
-      Este campo es obligatorio.
-    </div>
-
-    <label for="acudiente">Acudiente</label>
-    <select id="acudiente" formControlName="acudiente">
-      <option *ngFor="let acudiente of acudientes" [value]="acudiente.idAcudiente">
-        {{ acudiente.nombres }}
-      </option>
-    </select>
-    <div *ngIf="matriculaForm.get('acudiente')?.hasError('required')">
-      Este campo es obligatorio.
-    </div>
-
-    <label for="institucionProcedencia">Institución de Procedencia</label>
-    <input id="institucionProcedencia" formControlName="institucionProcedencia" />
-
-    <label>
-      <input type="checkbox" formControlName="esRepitente" /> Es Repitente
-    </label>
-
-    <label for="activo">Activo</label>
-    <input type="checkbox" formControlName="activo" />
-
-    <label for="fechaRegistro">Fecha de Registro</label>
-    <input type="date" id="fechaRegistro" formControlName="fechaRegistro" />
-
-    <button type="submit">
-      {{ isEditing ? 'Actualizar Matrícula' : 'Registrar Matrícula' }}
-    </button>
-    <button type="button" (click)="resetForm()">Cancelar</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="inscripcionForm.invalid">
+          {{ isEditing ? 'Actualizar Inscripción' : 'Agregar Inscripción' }}
+        </button>
+      </mat-card-content>
+    </mat-card>
   </form>
 
-  <h2>Lista de Matrículas</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Código Valor</th>
-        <th>Código</th>
-        <th>acudiente</th>
- <th>estudiante</th>
-        <th>niveldetalle</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let matricula of matriculas">
-        <td>{{ matricula.valorCodigo }}</td>
-        <td>{{ matricula.codigo }}</td>
-        <td>{{ matricula.acudiente.nombres }}</td>
-        <td>{{ matricula.estudiante.nombres}}</td>
-        <td>{{ matricula.nivelDetalle.idNivelDetalle}}</td>
-        <td>
-          <button (click)="editMatricula(matricula)">Editar</button>
-          <button (click)="deleteMatricula(matricula.idInscripcion)">Eliminar</button>
+  <mat-divider></mat-divider>
+
+  <div class="inscripcion-actions" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <mat-form-field appearance="outline" class="search-box" style="flex: 1; margin-right: 20px;">
+      <mat-label>Buscar Estudiante</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Buscar Estudiante" class="input-search" />
+    </mat-form-field>
+
+    <button class="button-85" (click)="openExportDialog()" role="button">
+      <i class="fas fa-download" style="margin-right: 8px;"></i> Exportaciones
+    </button>
+  </div>
+
+  <div style="max-width: 1200px; width: 100%; overflow-x: auto;">
+    <table mat-table [dataSource]="inscripciones" class="mat-elevation-z8" style="width: 100%;">
+      <ng-container matColumnDef="valorCodigo">
+        <th mat-header-cell *matHeaderCellDef> Valor Código </th>
+        <td mat-cell *matCellDef="let inscripcion">{{ inscripcion.valorCodigo }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="codigo">
+        <th mat-header-cell *matHeaderCellDef> Código </th>
+        <td mat-cell *matCellDef="let inscripcion">{{ inscripcion.codigo }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="estudiante">
+        <th mat-header-cell *matHeaderCellDef> Estudiante </th>
+        <td mat-cell *matCellDef="let inscripcion">{{ inscripcion.estudiante.nombres }} {{ inscripcion.estudiante.apellidos }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="fechaRegistro">
+        <th mat-header-cell *matHeaderCellDef> Fecha Registro </th>
+        <td mat-cell *matCellDef="let inscripcion">{{ inscripcion.fechaRegistro | date }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+        <td mat-cell *matCellDef="let inscripcion">
+          <button mat-button (click)="editInscripcion(inscripcion)">Editar</button>
+          <button mat-button color="warn" (click)="delete(inscripcion.idInscripcion)">Eliminar</button>
+          <button mat-button (click)="openDetail(inscripcion)">Detalle</button>
         </td>
-      </tr>
-    </tbody>
-  </table>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['valorCodigo', 'codigo', 'estudiante', 'fechaRegistro', 'acciones']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['valorCodigo', 'codigo', 'estudiante', 'fechaRegistro', 'acciones'];"></tr>
+    </table>
+
+    <!-- Paginator -->
+    <mat-paginator [length]="inscripciones.data.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" 
+                   (page)="inscripciones.paginator.pageIndex = $event.pageIndex; inscripciones.paginator.pageSize = $event.pageSize">
+    </mat-paginator>
+  </div>
 </div>

@@ -1,6 +1,6 @@
 .container {
-    align-items: center; /* Centrar horizontalmente */
-    justify-content: center; /* Centrar verticalmente si es necesario */
+    align-items: center; 
+    justify-content: center; 
   }
   
   .form-container {
@@ -14,25 +14,25 @@
   }
   
   .table-container {
-    width: 100%; /* Ocupa el 100% del ancho del contenedor padre */
+    width: 100%; 
   }
   
   .full-width-table {
-    width: 100%; /* La tabla ocupará todo el ancho del contenedor */
+    width: 100%;  
   }
   
   .button-group {
     display: flex;
-    gap: 5px; /* Espacio entre botones */
+    gap: 5px;  
   }
   
   .button-group button {
-    margin-right: 5px; /* Margen derecho entre botones */
+    margin-right: 5px;  
   }
   
   .pagination {
     display: flex;
-    justify-content: space-between; /* Espacio entre elementos */
+    justify-content: space-between; 
     margin-top: 20px;
   }
   

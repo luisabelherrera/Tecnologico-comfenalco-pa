@@ -33,7 +33,7 @@
         <mat-label>Nivel Detalle Curso</mat-label>
         <mat-select [(ngModel)]="nuevoHorario.nivelDetalleCurso" name="nivelDetalleCurso" required>
           <mat-option *ngFor="let nivel of nivelesDetalleCurso" [value]="nivel">
-            {{ nivel.curso.descripcion }}
+            {{ nivel.curso.descripcion }}  {{ nivel.nivelDetalle.gradoSeccion.descripcionGrado }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="horarioForm.submitted && !nuevoHorario.nivelDetalleCurso">

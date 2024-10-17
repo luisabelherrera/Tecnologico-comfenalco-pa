@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Exportar Inscripciones</h2>
+<mat-dialog-content>
+  <p>¿Estás seguro de que deseas exportar los datos de inscripciones a Excel?</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button color="primary" (click)="downloadExcel()">Exportar a Excel</button>
+</mat-dialog-actions>

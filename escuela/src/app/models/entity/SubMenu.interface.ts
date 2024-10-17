@@ -2,7 +2,7 @@ import { Menu } from "./Menu.interface";
 
 export interface SubMenu {
     idSubMenu: number;
-    menu: Menu; // Relación con Menu
+    menu: Menu; 
     nombre: string;
     nombreFormulario: string;
     accion: string;

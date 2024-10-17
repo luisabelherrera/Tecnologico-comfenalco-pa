@@ -13,7 +13,7 @@ import { HorarioService } from 'src/app/services/horario/Horario.service';
 export class HorarioComponent implements OnInit {
 
   dataSource = new MatTableDataSource<Horario>(); 
-  displayedColumns: string[] = ['diaSemana', 'horaInicio', 'horaFin', 'nivelDetalleCurso', 'acciones']; // Agregar nivelDetalleCurso
+  displayedColumns: string[] = ['diaSemana', 'horaInicio', 'horaFin', 'nivelDetalleCurso', 'acciones']; 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort; 

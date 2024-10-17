@@ -22,13 +22,11 @@
         <input matInput [(ngModel)]="acudiente.ciudad" name="ciudad" required>
       </mat-form-field>
   
-      <!-- Campo Dirección -->
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Dirección</mat-label>
         <input matInput [(ngModel)]="acudiente.direccion" name="direccion" required>
       </mat-form-field>
   
-      <!-- Campo Estado Civil -->
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Estado Civil</mat-label>
         <mat-select [(ngModel)]="acudiente.estadoCivil" name="estadoCivil" required>
@@ -39,16 +37,14 @@
         </mat-select>
       </mat-form-field>
   
-      <!-- Campo Sexo -->
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Sexo</mat-label>
         <mat-select [(ngModel)]="acudiente.sexo" name="sexo" required>
           <mat-option value="masculino">Masculino</mat-option>
           <mat-option value="femenino">Femenino</mat-option>
         </mat-select>
+      
       </mat-form-field>
-  
-      <!-- Campo Fecha de Nacimiento -->
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Fecha de Nacimiento</mat-label>
         <input matInput [(ngModel)]="acudiente.fechaNacimiento" name="fechaNacimiento" [matDatepicker]="picker" required>
@@ -56,10 +52,8 @@
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
   
-      <!-- Campo Activo -->
       <mat-checkbox [(ngModel)]="acudiente.activo" name="activo">Activo</mat-checkbox>
   
-      <!-- Campo Parentesco -->
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Parentesco</mat-label>
         <input matInput [(ngModel)]="acudiente.parentesco" name="parentesco">

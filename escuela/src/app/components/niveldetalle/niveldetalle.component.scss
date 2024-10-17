@@ -1,40 +1,39 @@
 .container {
-  align-items: center;  /* Centrar horizontalmente */
-  justify-content: center;  /* Centrar verticalmente si es necesario */
+  align-items: center;
+  justify-content: center;
 }
 
-
 .input-field {
-  width: 100%; /* Hacer que los campos ocupen todo el ancho */
+  width: 100%;
 }
 
 .button-group {
   display: flex;
-  gap: 10px; /* Espacio entre los botones */
-  margin-top: 20px; /* Espacio superior para separación */
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .table-container {
-  width: 100%; /* Asegurarse de que la tabla ocupe todo el ancho */
-  margin-top: 20px; /* Espacio superior para separación */
+  width: 100%;
+  margin-top: 20px;
 }
 
 .full-width-table {
-  width: 100%; /* La tabla ocupará todo el ancho del contenedor */
+  width: 100%;
 }
 
 .search-box {
-  margin: 20px 0; /* Espacio superior e inferior para el buscador */
+  margin: 20px 0;
 }
 
 .mat-form-field {
-  margin-bottom: 16px; /* Espacio inferior entre campos */
+  margin-bottom: 16px;
 }
 
 .mat-error {
-  font-size: 12px; /* Tamaño de fuente más pequeño para los mensajes de error */
+  font-size: 12px;
 }
 
 .mat-icon {
-  margin-right: 8px; /* Espacio entre icono y texto */
+  margin-right: 8px;
 }

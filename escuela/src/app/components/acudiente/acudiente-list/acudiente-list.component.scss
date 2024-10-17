@@ -10,14 +10,13 @@
 }
 .header {
   display: flex;
-  justify-content: flex-start; /* Alinear elementos a la izquierda */
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: 20px;
 }
 
-/* Botón de ver detalles */
 .btn-details {
-  background-color: #ff9800; /* Color naranja */
+  background-color: #ff9800; 
   color: white;
   padding: 5px 10px;
   border: none;
@@ -28,10 +27,9 @@
 }
 
 .btn-details:hover {
-  background-color: #e68a00; /* Color más oscuro al pasar el cursor */
+  background-color: #e68a00; 
 }
 
-/* Botón de crear nuevo acudiente */
 .btn-create {
   background-color: #4caf50;
   color: rgb(0, 0, 0);
@@ -40,14 +38,13 @@
   border-radius: 5px;
   text-decoration: none;
   transition: background-color 0.3s ease;
-  margin-right: 20px; /* Espacio entre botón y campo de búsqueda */
+  margin-right: 20px; 
 }
 
 .btn-create:hover {
   background-color: #45a049;
 }
 
-/* Estilo para los botones de editar y eliminar */
 .btn-edit {
   background-color: #2196f3;
   color: white;
@@ -76,9 +73,8 @@
   background-color: #e31b0c;
 }
 
-/* Estilo para el campo de búsqueda */
 .search-box {
-  margin-left: -10px; /* Ajustar el campo de búsqueda más cerca del botón */
+  margin-left: -10px; 
 }
 
 .input-search {
@@ -89,7 +85,6 @@
   border-radius: 5px;
 }
 
-/* Tabla personalizada */
 .table-container {
   overflow-x: auto;
 }

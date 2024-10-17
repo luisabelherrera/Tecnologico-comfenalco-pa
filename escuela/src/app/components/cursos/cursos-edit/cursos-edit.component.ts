@@ -22,7 +22,7 @@ export class CursosEditComponent implements OnInit {
   }
 
   loadCurso(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id')); // Get the course ID from the route
+    const id = Number(this.route.snapshot.paramMap.get('id'));  
     this.cursosService.getCursoById(id).subscribe(
       (data) => {
         this.curso = data;
@@ -38,7 +38,7 @@ export class CursosEditComponent implements OnInit {
       this.cursosService.updateCurso(this.curso.idCurso, this.curso).subscribe(
         () => {
           alert('Curso actualizado con éxito');
-          this.router.navigate(['/cursos']); // Redirect to the list of courses
+          this.router.navigate(['/cursos']);  
         },
         (error) => {
           console.error('Error al actualizar el curso', error);

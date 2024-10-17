@@ -17,14 +17,14 @@ export class DocenteComponent implements OnInit {
   selectedDocente: Docente | null = null;
   docenteForm: FormGroup;
   
-  pageSize: number = 5; // Number of items per page
-  pageIndex: number = 0; // Current page index
-  filterValue: string = ''; // Filter value
+  pageSize: number = 5; 
+  pageIndex: number = 0; 
+  filterValue: string = ''; 
   displayedColumns: string[] = ['codigo', 'nombres', 'apellidos', 'documentoIdentidad', 'fechaNacimiento', 'email', 'numeroTelefono', 'ciudad', 'activo', 'acciones'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private docenteService: DocenteService, private fb: FormBuilder, private snackBar: MatSnackBar) { // Inyecta MatSnackBar
+  constructor(private docenteService: DocenteService, private fb: FormBuilder, private snackBar: MatSnackBar) {
     this.docenteForm = this.fb.group({
       idDocente: [null],
       valorCodigo: [null],
@@ -40,9 +40,12 @@ export class DocenteComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       numeroTelefono: [''],
       activo: [true],
-      fechaRegistro: [new Date()]
+      fechaRegistro: [new Date()],
+      username: ['', Validators.required], 
+      password: ['', Validators.required]   
     });
-  }
+}
+
 
   ngOnInit(): void {
     this.loadDocentes();
@@ -97,17 +100,17 @@ export class DocenteComponent implements OnInit {
       this.docenteService.update(this.selectedDocente.idDocente, this.docenteForm.value).subscribe(() => {
         this.loadDocentes();
         this.resetForm();
-        this.snackBar.open('Docente actualizado con éxito', 'Cerrar', { duration: 2000 }); // Mensaje de éxito
+        this.snackBar.open('Docente actualizado con éxito', 'Cerrar', { duration: 2000 }); 
       }, error => {
-        this.snackBar.open(`No se pudo actualizar el docente: ${error}`, 'Cerrar', { duration: 5000 }); // Mensaje de error
+        this.snackBar.open(`No se pudo actualizar el docente: ${error}`, 'Cerrar', { duration: 5000 });  
       });
     } else {
       this.docenteService.create(this.docenteForm.value).subscribe(() => {
         this.loadDocentes();
         this.resetForm();
-        this.snackBar.open('Docente creado con éxito', 'Cerrar', { duration: 2000 }); // Mensaje de éxito
+        this.snackBar.open('Docente creado con éxito', 'Cerrar', { duration: 2000 }); 
       }, error => {
-        this.snackBar.open(`No se pudo crear el docente: ${error}`, 'Cerrar', { duration: 5000 }); // Mensaje de error
+        this.snackBar.open(`No se pudo crear el docente: ${error}`, 'Cerrar', { duration: 5000 }); 
       });
     }
   }

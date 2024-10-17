@@ -21,10 +21,10 @@ export class InscripcionService {
     });
 }
 
-  getAllInscripciones(): Observable<Inscripcion[]> { 
-    return this.http.get<Inscripcion[]>(this.apiUrl, { headers: this.getHeaders() })
-      .pipe(catchError(this.handleError));
-  }
+getAllInscripciones(): Observable<Inscripcion[]> {
+  return this.http.get<Inscripcion[]>(this.apiUrl, { headers: this.getHeaders() })
+    .pipe(catchError(this.handleError));
+}
 
   getInscripcionById(id: number): Observable<Inscripcion> {
     return this.http.get<Inscripcion>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() })
@@ -33,10 +33,10 @@ export class InscripcionService {
 
   createInscripcion(inscripcion: Inscripcion): Observable<Inscripcion> {
     return this.http.post<Inscripcion>(this.apiUrl, inscripcion, { headers: this.getHeaders() })
-      .pipe(catchError(this.handleError));
-  }
+        .pipe(catchError(this.handleError));
+}
 
-  updateInscripcion(id: number, inscripcion: Inscripcion): Observable<Inscripcion> { // Cambia el nombre aquí
+  updateInscripcion(id: number, inscripcion: Inscripcion): Observable<Inscripcion> { 
     return this.http.put<Inscripcion>(`${this.apiUrl}/${id}`, inscripcion, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }

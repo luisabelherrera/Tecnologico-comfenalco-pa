@@ -1,24 +1,29 @@
 package com.example.demo.model.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.example.demo.model.login.UserEntity;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@AllArgsConstructor
+@Builder
+@NoArgsConstructor
 @Table(name = "ESTUDIANTE")
-public class Estudiante {
+public class Estudiante implements Serializable {
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,8 +45,5 @@ public class Estudiante {
 
     @Column(name = "FechaRegistro")
     private LocalDateTime fechaRegistro = LocalDateTime.now();
-
-    @OneToOne(mappedBy = "estudiante", cascade = CascadeType.ALL)
-    private UserEntity user; // Add this line
 
 }

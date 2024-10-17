@@ -1,5 +1,5 @@
 <div class="container">
-  <!-- Botón para crear una nueva calificación -->
+ 
   <div class="header">
     <a [routerLink]="['/calificaciones/create']" class="btn-create">
       Crear Nueva Calificación
@@ -13,45 +13,39 @@
       />
     </div>
   </div>
-
-  <!-- Tabla para mostrar las calificaciones -->
+ 
   <div class="table-container">
     <table mat-table [dataSource]="dataSource" matSort class="custom-table">
-      <!-- ID Calificación Column -->
+     
       <ng-container matColumnDef="idCalificacion">
         <th mat-header-cell *matHeaderCellDef>ID</th>
         <td mat-cell *matCellDef="let calificacion">{{ calificacion.idCalificacion }}</td>
       </ng-container>
-
-      <!-- Nota Column -->
+ 
       <ng-container matColumnDef="nota">
         <th mat-header-cell *matHeaderCellDef>Nota</th>
         <td mat-cell *matCellDef="let calificacion">{{ calificacion.nota }}</td>
       </ng-container>
-
-      <!-- Estudiante Column -->
+ 
       <ng-container matColumnDef="estudiante">
         <th mat-header-cell *matHeaderCellDef>Estudiante</th>
         <td mat-cell *matCellDef="let calificacion">
           {{ calificacion.estudiante.nombres }} {{ calificacion.estudiante.apellidos }}
         </td>
       </ng-container>
-
-      <!-- Curricular Column -->
+ 
       <ng-container matColumnDef="curricular">
         <th mat-header-cell *matHeaderCellDef>Curricular</th>
         <td mat-cell *matCellDef="let calificacion">{{ calificacion.curricular.descripcion }}</td>
-      </ng-container>
-
-      <!-- Fecha Registro Column -->
+      </ng-container>   
       <ng-container matColumnDef="fechaRegistro">
         <th mat-header-cell *matHeaderCellDef>Fecha Registro</th>
         <td mat-cell *matCellDef="let calificacion">
-          {{ calificacion.fechaRegistro | date: 'short' }} <!-- Formato de fecha -->
+          {{ calificacion.fechaRegistro | date: 'short' }}  
         </td>
       </ng-container>
 
-      <!-- Actions Column -->
+       
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Acciones</th>
         <td mat-cell *matCellDef="let calificacion" class="actions">
@@ -66,8 +60,7 @@
           </button>
         </td>
       </ng-container>
-
-      <!-- Table Rows -->
+ 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>

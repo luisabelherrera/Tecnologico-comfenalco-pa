@@ -12,7 +12,7 @@
       </mat-card-header>
 
       <mat-card-content>
-        <!-- User Type Selection -->
+ 
         <div class="form-group">
           <mat-form-field appearance="outline" class="input-field">
             <mat-label>Tipo de Usuario</mat-label>
@@ -84,8 +84,7 @@
             </mat-select>
           </mat-form-field>
         </div>
-
-        <!-- Conditional Docente or Estudiante Selection -->
+ 
         <div *ngIf="registerDto.userType === 'docente'" class="form-group">
           <mat-form-field appearance="outline" class="input-field">
             <mat-label>Docente</mat-label>
@@ -136,8 +135,7 @@
       </mat-form-field>
   
       <table mat-table [dataSource]="paginatedUsers" matSort class="mat-elevation-z8 full-width-table">
-        
-        <!-- Nueva columna para ID -->
+         
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
           <td mat-cell *matCellDef="let user">{{ user.id }}</td>
@@ -158,16 +156,7 @@
           <td mat-cell *matCellDef="let user">{{ getRoles(user.roles) }}</td>
         </ng-container>
   
-        <ng-container matColumnDef="docente">
-          <th mat-header-cell *matHeaderCellDef>Docente</th>
-          <td mat-cell *matCellDef="let user">{{ user.docenteInfo?.nombres }} {{ user.docenteInfo?.apellidos }}</td>
-        </ng-container>
-  
-        <ng-container matColumnDef="estudiante">
-          <th mat-header-cell *matHeaderCellDef>Estudiante</th>
-          <td mat-cell *matCellDef="let user">{{ user.estudianteInfo?.nombres }} {{ user.estudianteInfo?.apellidos }}</td>
-        </ng-container>
-  
+    
         <ng-container matColumnDef="acciones">
           <th mat-header-cell *matHeaderCellDef>Acciones</th>
           <td mat-cell *matCellDef="let user">
@@ -175,8 +164,8 @@
           </td>
         </ng-container>
   
-        <tr mat-header-row *matHeaderRowDef="['id', 'username', 'email', 'roles', 'docente', 'estudiante', 'acciones']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['id', 'username', 'email', 'roles', 'docente', 'estudiante', 'acciones'];"></tr>
+        <tr mat-header-row *matHeaderRowDef="['id', 'username', 'email', 'roles',  'acciones']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['id', 'username', 'email', 'roles', 'acciones'];"></tr>
       </table>
   
       <mat-paginator

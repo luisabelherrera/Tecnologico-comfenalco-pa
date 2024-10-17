@@ -30,7 +30,7 @@ import { HomeComponent } from './components/home/home.component';
 
 
 import { AuthService } from './services/auth/AuthService.service';
-import { GenerateContentComponent } from './components/generate-ia/generate-ia.component';
+
 import { RegisterComponent } from './components/registro/register.component';
 //acudiente
 import { AcudienteDetailComponent } from './components/acudiente/acudiente-detail/acudiente-detail.component';
@@ -84,6 +84,10 @@ import { CurricularEstudianteComponent } from './components/vista-estudiante/cur
 import { HorarioEstudianteComponent } from './components/vista-estudiante/horario-estudiante/horario-estudiante.component';
 import { ErrorComponent } from './components/error/error.component';
 import { SuggestionsDialogComponent } from './components/generate-ia/suggestions-dialog/suggestions-dialog.component';
+import { MatIconModule } from '@angular/material/icon';
+import { IncripciondetalleComponent } from './components/matricula/ventana/incripciondetalle/incripciondetalle.component';
+import { ExportDialogComponent } from './components/matricula/ventana/export-dialog/export-dialog.component';
+import { NivelDetalleDialogoGraficoComponent } from './components/niveldetalle/nivel-detalle-dialogo-grafico/nivel-detalle-dialogo-grafico.component';
 
 
 @NgModule({
@@ -109,6 +113,7 @@ import { SuggestionsDialogComponent } from './components/generate-ia/suggestions
     MatNativeDateModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
+    MatIconModule,
   ],
   declarations: [
 
@@ -116,7 +121,6 @@ import { SuggestionsDialogComponent } from './components/generate-ia/suggestions
     CurricularComponent,
     HorarioComponent,
 
-    GenerateContentComponent,
 
     Ventana3Component,
     CurricularEstudianteComponent,
@@ -165,8 +169,10 @@ import { SuggestionsDialogComponent } from './components/generate-ia/suggestions
     NivelDetalleComponent,
 
     //registro
+    NivelDetalleDialogoGraficoComponent,
+    ExportDialogComponent,
     RegisterComponent,
-
+    IncripciondetalleComponent,
     SuggestionsDialogComponent,
     ErrorComponent,
     AppComponent,

@@ -1,14 +1,13 @@
-// src/app/models/horario.model.ts
 
 import { NivelDetalleCurso } from "./NivelDetalleCurso.interface";
 
 export interface Horario {
     idHorario: number;
     diaSemana: string;
-    horaInicio: string; // Puedes usar string o LocalTime según tu manejo de tiempo
-    horaFin: string;    // Lo mismo que arriba
+    horaInicio: string; 
+    horaFin: string;    
     activo: boolean;
-    fechaRegistro: Date;// Esto puede ser opcional dependiendo de tu uso
+    fechaRegistro: Date;
     nivelDetalleCurso: NivelDetalleCurso;
   }
   
