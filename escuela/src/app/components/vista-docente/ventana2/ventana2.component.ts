@@ -91,7 +91,7 @@ requestSuggestions(grade: number, curricularDescription: string): void {
   const apiKey = 'AIzaSyAQm3Xcp6dIoFtmnKXmUEsKOoKlbH91I4c'; // Reemplaza con tu API key
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
-  const prompt = `Con base en la nota actual de ${grade}  mi escala de nota es de 0 a 5  0 es bajo la nota minima para pasar es 2.97 y la nota mxima es 5  y la descripción curricular: "${curricularDescription}", la descripcion son curricular de ese tema muestrame sugerencia acerca de eso por favor proporciona sugerencias en español para mejorar el rendimiento.
+  const prompt = `quiero el texto un poco mas reducido por ejemplo mucho lo siento por tu nota dependiendo si es buena o mala // quiero que siempre tomes la nota osea me des de primeor la nota y  Con base en la nota actual de ${grade}  mi escala de nota es de 0 a 5  0 es bajo la nota minima para pasar es 2.97 y la nota mxima es 5  y la descripción curricular: "${curricularDescription}", la descripcion son curricular de ese tema muestrame sugerencia acerca de eso por favor proporciona sugerencias en español para mejorar el rendimiento.
    y muestrame algunas bibliografia relacionadas con ese temas  buscala en internet quiero que el contenido sea corto y preciso y muestrame video en youtuber`;
 
   this.http.post<GenerateContentResponse>(url, {

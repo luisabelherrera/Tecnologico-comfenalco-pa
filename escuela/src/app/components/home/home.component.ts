@@ -35,7 +35,6 @@ export class HomeComponent {
   constructor(private http: HttpClient) {}
 
 
-
   receiveMessage(content: string) {
     this.messages.push({
       content: content,
