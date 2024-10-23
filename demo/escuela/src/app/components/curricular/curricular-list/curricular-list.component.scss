@@ -1,0 +1,24 @@
+.full-width-table {
+  width: 100%; 
+  border-collapse: collapse; 
+}
+
+.full-width-table th, 
+.full-width-table td {
+  padding: 10px; 
+  text-align: left;  
+  border-bottom: 1px solid #ddd;  
+}
+.mat-header-cell {
+  background-color: #3f51b5; 
+  color: white; 
+}
+.container {
+  max-width: 1200px; 
+  width: 100%;
+  margin: 0 auto; 
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,100 @@
+<div class="container mat-elevation-z8">
+  <h1 class="title-with-icon">
+    <mat-icon>school</mat-icon> Agregar docente a cursos
+  </h1>
+
+  <mat-spinner *ngIf="loading" class="loading-spinner"></mat-spinner>
+
+  <mat-card *ngIf="!loading">
+    <form (ngSubmit)="editingDocenteNivelCurso ? update() : create()" #docenteNivelCursoForm="ngForm" class="form-container">
+      <mat-card-header>
+        <mat-card-title>{{ editingDocenteNivelCurso ? 'Editar Docente Nivel Detalle Curso' : 'Agregar Docente Nivel Detalle Curso' }}</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Docente</mat-label>
+            <mat-select [(ngModel)]="nuevoDocenteNivelCurso.docente.idDocente" name="docente" required>
+              <mat-option *ngFor="let docente of docentes" [value]="docente.idDocente">
+              CC  {{ docente.documentoIdentidad }}  nombre  {{ docente.nombres }} apellido {{ docente.apellidos }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="docenteNivelCursoForm.controls['docente']?.errors?.['required']">El docente es obligatorio</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Nivel Detalle Curso</mat-label>
+            <mat-select [(ngModel)]="nuevoDocenteNivelCurso.nivelDetalleCurso.idNivelDetalleCurso" name="nivelDetalleCurso" required>
+              <mat-option *ngFor="let nivel of nivelesDetalle" [value]="nivel.idNivelDetalleCurso">
+             Nivel   {{ nivel.nivelDetalle.nivel.descripcionNivel }}  Materia   {{ nivel.curso.descripcion }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="docenteNivelCursoForm.controls['nivelDetalleCurso']?.errors?.['required']">El nivel detalle curso es obligatorio</mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-checkbox [(ngModel)]="nuevoDocenteNivelCurso.activo" name="activo">Activo</mat-checkbox>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-raised-button color="primary" type="submit">
+          {{ editingDocenteNivelCurso ? 'Actualizar' : 'Crear' }}
+        </button>
+        <button mat-button type="button" (click)="resetForm()">Cancelar</button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+
+  <mat-card *ngIf="!loading">
+    <mat-card-header>
+      <mat-card-title>Lista de Docente Nivel Detalle Curso</mat-card-title>
+    </mat-card-header>
+  
+    <mat-card-content> 
+      <mat-form-field appearance="outline" class="search-box">
+        <mat-label>Filtrar</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Buscar...">
+      </mat-form-field>
+  
+      <table mat-table [dataSource]="paginatedData" matSort class="mat-elevation-z8 full-width-table">
+         
+        <ng-container matColumnDef="docente">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Docente</th>
+          <td mat-cell *matCellDef="let docenteNivelCurso">{{ docenteNivelCurso.docente.nombres }} {{ docenteNivelCurso.docente.apellidos }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="nivelDetalleCurso">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nivel Detalle Curso</th>
+          <td mat-cell *matCellDef="let docenteNivelCurso">{{ docenteNivelCurso.nivelDetalleCurso.curso.descripcion }}</td>
+       
+        </ng-container>
+  
+        <ng-container matColumnDef="activo">
+          <th mat-header-cell *matHeaderCellDef>Activo</th>
+          <td mat-cell *matCellDef="let docenteNivelCurso">{{ docenteNivelCurso.activo ? 'Sí' : 'No' }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let docenteNivelCurso">
+            <button mat-icon-button (click)="edit(docenteNivelCurso)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="delete(docenteNivelCurso.idDocenteNivelDetalleCurso)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="['docente', 'nivelDetalleCurso', 'activo', 'acciones']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['docente', 'nivelDetalleCurso', 'activo', 'acciones'];"></tr>
+      </table>
+  
+    </mat-card-content>
+  
+    <mat-paginator [length]="filteredData.length" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 25]" (page)="changePage($event)"></mat-paginator>
+  </mat-card>
+  

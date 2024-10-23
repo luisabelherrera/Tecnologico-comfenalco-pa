@@ -1,0 +1,39 @@
+<h1 mat-dialog-title>Seleccionar Acudiente</h1>
+<div mat-dialog-content>
+  <mat-form-field appearance="fill" style="width: 100%;">
+    <mat-label>Buscar Acudiente</mat-label>
+    <input matInput [(ngModel)]="searchTerm" placeholder="Escribe el nombre o apellido">
+  </mat-form-field>
+
+  <mat-list>
+    <mat-list-item *ngFor="let acudiente of filteredAcudientes" (click)="selectAcudiente(acudiente)">
+      <mat-icon *ngIf="selectedAcudiente === acudiente" color="primary">check_circle</mat-icon>
+      <div style="flex-grow: 1; margin-left: 8px;">
+        <strong>{{ acudiente.nombres }} {{ acudiente.apellidos }}</strong>
+        <div style="font-size: 0.9em; color: gray;">
+          <span>Documento: {{ acudiente.documentoIdentidad }}</span>
+        </div>
+      </div>
+    </mat-list-item>
+  </mat-list>
+
+  <div *ngIf="selectedAcudiente">
+    <mat-divider></mat-divider>
+    <h3>Detalles del Acudiente Seleccionado</h3>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <mat-form-field appearance="fill" style="width: 100%;">
+        <mat-label>Nombres</mat-label>
+        <input matInput [(ngModel)]="selectedAcudiente.nombres" placeholder="Nombres" readonly>
+      </mat-form-field>
+      <mat-form-field appearance="fill" style="width: 100%;">
+        <mat-label>Apellidos</mat-label>
+        <input matInput [(ngModel)]="selectedAcudiente.apellidos" placeholder="Apellidos" readonly>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button (click)="confirmSelection()" [disabled]="!selectedAcudiente">Seleccionar</button>
+</div>

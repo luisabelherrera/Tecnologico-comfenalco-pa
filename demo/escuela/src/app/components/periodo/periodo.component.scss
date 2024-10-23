@@ -1,0 +1,35 @@
+.table-container {
+  width: 100%;
+}
+
+.full-width-table {
+  width: 100%;
+}
+
+.button-group {
+  display: flex;
+  gap: 5px;
+}
+
+.button-group button {
+  margin-right: 5px;
+}
+
+.container {
+  align-items: center;
+  justify-content: center;
+}
+.mat-header-cell {
+  background-color: #3f51b5; 
+  color: white; 
+}
+
+.container {
+  max-width: 1200px; 
+  width: 100%;
+  margin: 0 auto; 
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

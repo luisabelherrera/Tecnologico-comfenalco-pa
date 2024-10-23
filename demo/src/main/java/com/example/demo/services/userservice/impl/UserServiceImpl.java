@@ -82,6 +82,39 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto updateUser(Long id, @Valid RegisterDto updateDto) throws NotFoundException, ConflictException {
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado con el ID: " + id));
+
+        if (userRepository.existsByEmail(updateDto.getEmail()) && !user.getEmail().equals(updateDto.getEmail())) {
+            throw new ConflictException("El correo ya está en uso por otro usuario.");
+        }
+
+        user.setUsername(updateDto.getUsername());
+        user.setEmail(updateDto.getEmail());
+
+        if (updateDto.getPassword() != null && !updateDto.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(updateDto.getPassword()));
+        }
+
+        Set<Rol> roles = updateDto.getRoles().stream()
+                .map(rol -> rolService.findByname(rol.getName())
+                        .orElseThrow(() -> new NotFoundException("Rol no encontrado: " + rol.getName())))
+                .collect(Collectors.toSet());
+        user.setRoles(roles);
+
+        userRepository.save(user);
+        logger.info("Usuario actualizado: {}", user.getEmail());
+
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setUsername(user.getUsername());
+        userDto.setEmail(user.getEmail());
+        userDto.setRoles(user.getRoles());
+        return userDto;
+    }
+
+    @Override
     public List<UserDto> getAllUsers() {
         List<UserEntity> users = userRepository.findAll();
         List<UserDto> userDtos = users.stream().map(user -> {
@@ -90,11 +123,13 @@ public class UserServiceImpl implements UserService {
             userDto.setUsername(user.getUsername());
             userDto.setEmail(user.getEmail());
             userDto.setRoles(user.getRoles());
+            userDto.setPassword(user.getPassword()); // Agregar la contraseña aquí
             return userDto;
         }).collect(Collectors.toList());
 
         return userDtos;
     }
+
 
     @Override
     public void deleteUserById(Long id) throws NotFoundException {

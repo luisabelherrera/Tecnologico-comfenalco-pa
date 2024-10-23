@@ -1,0 +1,21 @@
+.mat-dialog-content {
+    min-width: 900px; 
+  }
+mat-list-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    &:hover {
+      background-color: #f5f5f5; 
+    }
+  }
+  
+  h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  
+  mat-divider {
+    margin: 10px 0; 
+  }
+  

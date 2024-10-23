@@ -1,0 +1,46 @@
+<h2 mat-dialog-title>Detalles de Inscripción</h2>
+<mat-dialog-content class="dialog-content">
+  <div class="info-container">
+    <div class="info-item">
+      <strong>Valor Código:</strong> <span>{{ data.valorCodigo }}</span>
+    </div>
+    <div class="info-item">
+      <strong>Código:</strong> <span>{{ data.codigo }}</span>
+    </div>
+    <div class="info-item">
+      <strong>Situación:</strong> <span>{{ data.situacion }}</span>
+    </div>
+    <div class="info-item">
+      <strong>Nivel Detalle:</strong> <span>{{ data.nivelDetalle.nivel.descripcionNivel }} {{ data.nivelDetalle.nivel.periodo.descripcion }}</span>
+    </div>
+    <div class="info-item">
+      <strong>Estudiante:</strong> <span>{{ data.estudiante.nombres }} {{ data.estudiante.apellidos }}</span>
+    </div> 
+    <div class="info-item">
+      <strong>Acudiente:</strong> <span>{{ data.acudiente.nombres }} {{ data.acudiente.apellidos }}</span>
+    </div>
+    <div class="info-item">
+      <strong>Institución de Procedencia:</strong> <span>{{ data.institucionProcedencia }}</span>
+    </div>
+    <div class="info-item">
+      <strong>Es Repitente:</strong> <span>{{ data.esRepitente ? 'Sí' : 'No' }}</span>
+    </div>
+    <div class="info-item">
+      <strong>Activo:</strong> <span>{{ data.activo ? 'Sí' : 'No' }}</span>
+    </div>
+    <div class="info-item">
+      <strong>Fecha Registro:</strong> <span>{{ data.fechaRegistro | date }}</span>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+  <button mat-button (click)="onClose()" class="action-button full-width-button">Cerrar</button>
+  <button mat-button (click)="downloadPDF()" class="action-button full-width-button">
+    <img src="assets/iconos/adobe_pdf_document_14979.png" alt="Descargar PDF" class="icon"> 
+    Descargar PDF
+  </button>
+  <button mat-button (click)="downloadExcel()" class="action-button full-width-button">
+    <img src="assets/iconos/microsoft_office_excel_logo_icon_145720.png" alt="Descargar Excel" class="icon"> 
+    Descargar Excel
+  </button>
+</mat-dialog-actions>

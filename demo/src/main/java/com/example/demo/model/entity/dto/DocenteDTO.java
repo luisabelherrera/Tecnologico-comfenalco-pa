@@ -29,4 +29,6 @@ public class DocenteDTO {
     private String numeroTelefono;
     private boolean activo;
     private LocalDateTime fechaRegistro;
+
+
 }

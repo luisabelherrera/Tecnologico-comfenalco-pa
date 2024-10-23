@@ -1,0 +1,62 @@
+.nivel-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+}
+
+.form-container {
+  max-width: 1200px; 
+  width: 100%;
+  margin: 0 auto; 
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}
+.mat-header-cell {
+  background-color: #3f51b5; 
+  color: white; 
+}
+
+
+.title-with-icon {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.button-group {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.table-container {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.custom-table {
+  width: 100%;
+  table-layout: auto;
+}
+
+.full-width-table {
+  width: 100%;
+}

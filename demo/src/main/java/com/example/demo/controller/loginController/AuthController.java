@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import com.example.demo.model.login.dto.JwtResponseDto;
 import com.example.demo.model.login.dto.LoginDto;
 import com.example.demo.model.login.dto.UserDto;
@@ -22,6 +22,7 @@ import com.example.demo.security.JwtGenerator;
 import com.example.demo.services.userservice.RolService;
 import com.example.demo.services.userservice.UserService;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class AuthController {

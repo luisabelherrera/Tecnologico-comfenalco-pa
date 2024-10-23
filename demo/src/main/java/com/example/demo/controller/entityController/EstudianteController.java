@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.example.demo.model.entity.dto.EstudianteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.services.service.EstudianteService;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/estudiantes")
 public class EstudianteController {
@@ -43,7 +45,8 @@ public class EstudianteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EstudianteDTO> updateEstudiante(@PathVariable Integer id, @RequestBody EstudianteDTO estudianteDetalles) {
+    public ResponseEntity<EstudianteDTO> updateEstudiante(@PathVariable Integer id,
+            @RequestBody EstudianteDTO estudianteDetalles) {
         Optional<EstudianteDTO> estudianteExistente = estudianteService.findById(id);
         if (estudianteExistente.isPresent()) {
             EstudianteDTO estudianteActualizado = estudianteService.save(estudianteDetalles);

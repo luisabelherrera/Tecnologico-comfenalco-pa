@@ -1,0 +1,21 @@
+<h2 mat-dialog-title style="text-align: center;">Contenido de Matricula</h2>
+
+<mat-dialog-actions style="flex-direction: column; align-items: center; width: 100%;">
+  <div style="width: 100%; margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+    <button mat-raised-button color="primary" (click)="downloadExcel()" style="display: flex; align-items: center; justify-content: flex-start; width: 100%; max-width: 300px; padding: 10px;">
+      <img src="assets/iconos/microsoft_office_excel_logo_icon_145720.png" alt="Excel" style="width: 24px; margin-right: 8px;">
+      <span>Exportar Matrícula a Excel</span>
+    </button>
+<p></p>
+    <button mat-raised-button color="accent" (click)="openPowerBI()" style="display: flex; align-items: center; justify-content: flex-start; width: 100%; max-width: 400px; padding: 10px;">
+      <img src="assets/iconos/icons8-power-bi-2021-48.png" alt="Power BI" style="width: 24px; margin-right: 8px;">
+      <span>Ver Vacantes Ocupada por Año en Power BI</span>
+    </button>
+  </div>
+
+  <p style="margin-top: 15px; font-size: 14px; color: red; text-align: center;">
+    **Aviso:** La exportación de datos puede estar sujeta a regulaciones de privacidad.
+  </p>
+
+  <button mat-button (click)="onNoClick()" color="warn" style="width: 100%; max-width: 300px; margin-top: 20px;">Cancelar</button>
+</mat-dialog-actions>

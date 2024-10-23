@@ -18,6 +18,7 @@ public class AcudienteServiceImpl implements AcudienteService {
     @Autowired
     private AcudienteRepository acudienteRepository;
 
+    
     @Override
     public List<AcudienteDTO> findAll() {
         return acudienteRepository.findAll().stream()

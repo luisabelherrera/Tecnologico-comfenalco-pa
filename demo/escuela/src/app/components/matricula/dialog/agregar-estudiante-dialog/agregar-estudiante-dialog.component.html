@@ -1,0 +1,48 @@
+<h1 mat-dialog-title>Seleccionar Estudiante</h1>
+<div mat-dialog-content>
+  <mat-form-field appearance="fill" style="width: 100%;">
+    <mat-label>Buscar Estudiante</mat-label>
+    <input matInput [(ngModel)]="searchTerm" placeholder="Escribe el nombre, apellido, código o documento">
+  </mat-form-field>
+
+  <mat-list>
+    <mat-list-item *ngFor="let estudiante of filteredEstudiantes" (click)="selectEstudiante(estudiante)">
+      <mat-icon *ngIf="selectedEstudiante === estudiante" color="primary">check_circle</mat-icon>
+      <div style="flex-grow: 1; margin-left: 8px;">
+        <strong>{{ estudiante.nombres }} {{ estudiante.apellidos }}</strong>
+        <div style="font-size: 0.9em; color: gray;">
+          <span>Código: {{ estudiante.codigo }}</span> | 
+          <span>Documento: {{ estudiante.documentoIdentidad }}</span>
+        </div>
+      </div>
+    </mat-list-item>
+  </mat-list>
+
+  <div *ngIf="selectedEstudiante">
+    <mat-divider></mat-divider>
+    <h3>Detalles del Estudiante Seleccionado</h3>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <mat-form-field appearance="fill" style="width: 100%;">
+        <mat-label>Código</mat-label>
+        <input matInput [(ngModel)]="selectedEstudiante.codigo" placeholder="Código" readonly>
+      </mat-form-field>
+      <mat-form-field appearance="fill" style="width: 100%;">
+        <mat-label>Documento de Identidad</mat-label>
+        <input matInput [(ngModel)]="selectedEstudiante.documentoIdentidad" placeholder="Documento de Identidad" readonly>
+      </mat-form-field>
+      <mat-form-field appearance="fill" style="width: 100%;">
+        <mat-label>Nombres</mat-label>
+        <input matInput [(ngModel)]="selectedEstudiante.nombres" placeholder="Nombres" readonly>
+      </mat-form-field>
+      <mat-form-field appearance="fill" style="width: 100%;">
+        <mat-label>Apellidos</mat-label>
+        <input matInput [(ngModel)]="selectedEstudiante.apellidos" placeholder="Apellidos" readonly>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button (click)="confirmSelection()" [disabled]="!selectedEstudiante">Seleccionar</button>
+</div>

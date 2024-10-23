@@ -1,7 +1,6 @@
 package com.example.demo.model.login.dto;
 
 import java.util.Set;
-
 import com.example.demo.model.login.Rol;
 
 public class UserDto {
@@ -9,19 +8,19 @@ public class UserDto {
     private String username;
     private String email;
     private Set<Rol> roles;
+    private String password;  // Agregar la contraseña aquí
 
     public UserDto() {
     }
 
-    // Constructor with all fields except password
-    public UserDto(Long id, String username, String email, Set<Rol> roles) {
+    public UserDto(Long id, String username, String email, Set<Rol> roles, String password) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.roles = roles;
+        this.password = password;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -54,6 +53,14 @@ public class UserDto {
         this.roles = roles;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "UserDto{" +
@@ -61,6 +68,7 @@ public class UserDto {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", roles=" + roles +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

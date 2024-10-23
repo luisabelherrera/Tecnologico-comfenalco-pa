@@ -7,14 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import com.example.demo.exceptions.ConflictException;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.model.login.Rol;
@@ -25,6 +18,7 @@ import com.example.demo.services.userservice.UserService;
 
 import jakarta.validation.Valid;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/register")
 public class RegisterController {
@@ -90,6 +84,25 @@ public class RegisterController {
     public ResponseEntity<List<Rol>> getAllRoles() {
         List<Rol> roles = rolService.findAll();
         return ResponseEntity.ok(roles);
+    }
+    @PutMapping("/users/{id}")
+    public ResponseEntity<ApiResponse> updateUser(@PathVariable Long id, @Valid @RequestBody RegisterDto updateDto) {
+        try {
+            userService.updateUser(id, updateDto);
+            return ResponseEntity.ok(new ApiResponse(true, "¡Usuario actualizado exitosamente!"));
+        } catch (NotFoundException e) {
+            logger.error("Usuario no encontrado al intentar actualizar: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse(false, e.getMessage()));
+        } catch (ConflictException e) {
+            logger.error("Conflicto al actualizar usuario: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new ApiResponse(false, e.getMessage()));
+        } catch (Exception e) {
+            logger.error("Error interno del servidor al actualizar usuario: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(false, "Error interno del servidor"));
+        }
     }
 
     @PostMapping("/roles")

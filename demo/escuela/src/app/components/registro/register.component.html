@@ -1,0 +1,183 @@
+<div class="container mat-elevation-z8">
+  <h1 class="title-with-icon">
+    <mat-icon>person_add</mat-icon> Registrar usuario
+  </h1>
+
+  <mat-spinner *ngIf="isSubmitting" class="loading-spinner"></mat-spinner>
+
+  <mat-card *ngIf="!isSubmitting">
+    <form (ngSubmit)="register()" #registerForm="ngForm" class="form-container">
+      <mat-card-header>
+        <mat-card-title>Registrar Nuevo Usuario</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+ 
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Tipo de Usuario</mat-label>
+            <mat-select [(ngModel)]="registerDto.userType" name="userType" required (selectionChange)="onUserTypeChange($event.value)">
+              <mat-option value="administrador">Administrador</mat-option>
+              <mat-option value="docente">Docente</mat-option>
+              <mat-option value="estudiante">Estudiante</mat-option>
+            </mat-select>
+            <mat-error *ngIf="registerForm.controls['userType']?.errors?.['required']">
+              El tipo de usuario es obligatorio
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Nombre de Usuario</mat-label>
+            <input
+              matInput
+              type="text"
+              [(ngModel)]="registerDto.username"
+              name="username"
+              required
+              (input)="updateEmail()"
+              placeholder="Ejemplo: usuario123"
+            />
+            <mat-error *ngIf="registerForm.controls['username']?.errors?.['required']">
+              El nombre de usuario es obligatorio
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              type="email"
+              [(ngModel)]="registerDto.email"
+              name="email"
+              required
+              readonly
+            />
+            <mat-error *ngIf="registerForm.controls['email']?.errors?.['required']">
+              El email es obligatorio
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Contraseña</mat-label>
+            <input
+              matInput
+              type="password"
+              [(ngModel)]="registerDto.password"
+              name="password"
+              required
+              [ngClass]="{'error': registerForm.controls['password']?.invalid && registerForm.controls['password']?.touched}"
+            />
+            <mat-error *ngIf="registerForm.controls['password']?.errors?.['required']">
+              La contraseña es obligatoria
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Roles</mat-label>
+            <mat-select multiple [(ngModel)]="registerDto.roles" name="roles">
+              <mat-option *ngFor="let role of roles" [value]="role">{{ role.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+ 
+        <div *ngIf="registerDto.userType === 'docente'" class="form-group">
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Docente</mat-label>
+            <mat-select [(ngModel)]="registerDto.docenteInfo" name="docente" required>
+              <mat-option *ngFor="let docente of docentes" [value]="docente">
+                {{ docente.nombres }} {{ docente.apellidos }} {{ docente.documentoIdentidad }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="registerForm.controls['docente']?.errors?.['required']">
+              El docente es obligatorio
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div *ngIf="registerDto.userType === 'estudiante'" class="form-group">
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Estudiante</mat-label>
+            <mat-select [(ngModel)]="registerDto.estudianteInfo" name="estudiante" required>
+              <mat-option *ngFor="let estudiante of estudiantes" [value]="estudiante">
+                {{ estudiante.nombres }} {{ estudiante.apellidos }} {{ estudiante.documentoIdentidad }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="registerForm.controls['estudiante']?.errors?.['required']">
+              El estudiante es obligatorio
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-raised-button color="primary" type="submit">
+          Registrar
+        </button>
+        <button mat-button type="button" (click)="resetForm()">Cancelar</button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+
+  <mat-card *ngIf="!isSubmitting">
+    <mat-card-header>
+      <mat-card-title>Usuarios Registrados</mat-card-title>
+    </mat-card-header>
+  
+    <mat-card-content>
+      <mat-form-field appearance="outline" class="search-box">
+        <mat-label>Buscar Usuarios</mat-label>
+        <input matInput (input)="applyFilter($event)" placeholder="Buscar...">
+      </mat-form-field>
+  
+      <table mat-table [dataSource]="paginatedUsers" matSort class="mat-elevation-z8 full-width-table">
+         
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+          <td mat-cell *matCellDef="let user">{{ user.id }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</th>
+          <td mat-cell *matCellDef="let user">{{ user.username }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+          <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="roles">
+          <th mat-header-cell *matHeaderCellDef>Roles</th>
+          <td mat-cell *matCellDef="let user">{{ getRoles(user.roles) }}</td>
+        </ng-container>
+
+  
+  
+    
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let user">
+            <button mat-button (click)="editUser(user.id)">Actualizar</button>
+            <button mat-button (click)="deleteUser(user.id)">Eliminar</button>
+          </td>
+        </ng-container>
+        
+        <tr mat-header-row *matHeaderRowDef="['id', 'username', 'email', 'roles',  'acciones']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['id', 'username', 'email', 'roles', 'acciones'];"></tr>
+      </table>
+  
+      <mat-paginator
+        [length]="filteredUsers.length"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[5, 10, 25]"
+        (page)="onPageChange($event)">
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+  

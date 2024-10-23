@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import com.example.demo.model.entity.Docente;
 import com.example.demo.model.entity.DocenteNivelDetalleCurso;
 import com.example.demo.model.entity.NivelDetalleCurso;
@@ -23,6 +23,7 @@ import com.example.demo.services.service.DocenteNivelDetalleCursoService;
 import com.example.demo.services.service.DocenteService;
 import com.example.demo.services.service.NivelDetalleCursoService;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/docente-nivel-detalle-curso")
 public class DocenteNivelDetalleCursoController {

@@ -1,0 +1,139 @@
+.app-sidenav {
+    background-color: #f7f7f7;
+    color: #333;
+    width: 260px; 
+    padding: 0 10px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sidenav-header, .sidenav-subheader {
+    font-size: 13px;
+    color: #000000;
+    padding: 12px 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 12px;
+  }
+
+
+  .sidenav-header:hover, .sidenav-subheader:hover {
+    background-color: #e0e0e0;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .nav-link {
+    display: flex;
+    align-items: center;
+    color: #333;
+    padding: 8px 10px; 
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .nav-link mat-icon {
+    margin-right: 8px; 
+    color: #555;
+  }
+  
+  .nav-link:hover {
+    background-color: #d9d9d9;
+  }
+  
+  .active {
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    font-weight: 600;
+  }
+  
+  .mat-divider {
+    background-color: #ccc;
+    margin: 8px 0;
+  }
+  
+  .sidenav-container {
+    height: 100%;
+    overflow-y: auto;
+  }
+  .app-toolbar {
+    background-color: rgb(0, 0, 0);
+    color: white;
+  }
+  
+  .logo img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .nav-link {
+    display: flex;
+    align-items: center;
+  }
+
+
+  /* menu */ 
+.icon-menu {
+  --gap: 5px;
+  --height-bar: 2.5px;
+  --pos-y-bar-one: 0;
+  --pos-y-bar-three: 0;
+  --scale-bar: 1;
+  --rotate-bar-one: 0;
+  --rotate-bar-three: 0;
+  width: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  cursor: pointer;
+  position: relative;
+}
+
+.bar {
+  position: relative;
+  height: var(--height-bar);
+  width: 100%;
+  border-radius: .5rem;
+  background-color: #9941fc;
+}
+
+.bar--1 {
+  top: var(--pos-y-bar-one);
+  transform: rotate(var(--rotate-bar-one));
+  transition: top 200ms 100ms, transform 100ms;
+}
+
+.bar--2 {
+  transform: scaleX(var(--scale-bar));
+  transition: transform 150ms 100ms;
+}
+
+.bar--3 {
+  bottom: var(--pos-y-bar-three);
+  transform: rotate(var(--rotate-bar-three));
+  transition: bottom 200ms 100ms, transform 100ms;
+}
+
+.check-icon:checked + .icon-menu > .bar--1 {
+  transition: top 200ms, transform 200ms 100ms;
+}
+
+.check-icon:checked + .icon-menu > .bar--3 {
+  transition: bottom 200ms, transform 200ms 100ms;
+}
+
+.check-icon:checked + .icon-menu {
+  --pos-y-bar-one: calc(var(--gap) + var(--height-bar));
+  --pos-y-bar-three: calc(var(--gap) + var(--height-bar));
+  --scale-bar: 0;
+  --rotate-bar-one: 45deg;
+  --rotate-bar-three: -45deg;
+}
+
+
+

@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import com.example.demo.services.service.AcudienteService;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/acudientes")
 public class AcudienteController {
-
 
     @Autowired
     private AcudienteService acudienteService;
@@ -45,7 +45,8 @@ public class AcudienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AcudienteDTO> updateAcudiente(@PathVariable long id, @RequestBody AcudienteDTO acudienteDetalles) {
+    public ResponseEntity<AcudienteDTO> updateAcudiente(@PathVariable long id,
+            @RequestBody AcudienteDTO acudienteDetalles) {
         acudienteDetalles.setIdAcudiente(id);
         AcudienteDTO acudienteActualizado = acudienteService.save(acudienteDetalles);
         return ResponseEntity.ok(acudienteActualizado);
