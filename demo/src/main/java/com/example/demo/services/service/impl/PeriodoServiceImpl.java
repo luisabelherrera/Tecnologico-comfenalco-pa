@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.entity.Periodo;
-import com.example.demo.repositories.repository.PeriodoRepository;
+import com.example.demo.repositories.jpa.PeriodoRepository;
 import com.example.demo.services.service.PeriodoService;
 
 @Service

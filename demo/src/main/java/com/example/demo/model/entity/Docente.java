@@ -3,12 +3,8 @@ package com.example.demo.model.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.example.demo.model.login.UserEntity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -46,5 +42,10 @@ public class Docente {
     @Column(name = "FechaRegistro")
     private LocalDateTime fechaRegistro = LocalDateTime.now();
 
+
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", unique = true)
+    private UserEntity user;
 
 }

@@ -1,7 +1,7 @@
 package com.example.demo.services.service.impl;
 
 import com.example.demo.model.entity.DocenteNivelDetalleCurso;
-import com.example.demo.repositories.repository.DocenteNivelDetalleCursoRepository;
+import com.example.demo.repositories.jpa.DocenteNivelDetalleCursoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

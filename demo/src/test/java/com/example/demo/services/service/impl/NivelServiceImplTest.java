@@ -2,7 +2,7 @@ package com.example.demo.services.service.impl;
 
 import com.example.demo.model.entity.Nivel;
 import com.example.demo.model.entity.Periodo;
-import com.example.demo.repositories.repository.NivelRepository;
+import com.example.demo.repositories.jpa.NivelRepository;
 import com.example.demo.services.service.PeriodoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 class NivelServiceImplTest {

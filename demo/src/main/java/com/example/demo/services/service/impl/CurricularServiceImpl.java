@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.entity.Curricular;
-import com.example.demo.repositories.repository.CurricularRepository;
+import com.example.demo.repositories.jpa.CurricularRepository;
 import com.example.demo.services.service.CurricularService;
 
 import java.util.List;

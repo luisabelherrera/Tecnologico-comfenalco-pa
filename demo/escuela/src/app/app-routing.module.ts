@@ -68,6 +68,7 @@ import { HorarioComponent } from './components/vista-docente/horario/horario.com
 import { CurricularEstudianteComponent } from './components/vista-estudiante/curricular-estudiante/curricular-estudiante.component';
 import { HorarioEstudianteComponent } from './components/vista-estudiante/horario-estudiante/horario-estudiante.component';
 import { ErrorComponent } from './components/error/error.component';
+import { AgregarNoticiaComponent } from './components/agregar-noticia/agregar-noticia.component';
 
 const routes: Routes = [
 
@@ -233,7 +234,10 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Administracion']  },
   },
-
+  { path: 'agregar-noticia', component: AgregarNoticiaComponent ,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion'] },
+  },
   //docente
   {
     path: 'docentes',

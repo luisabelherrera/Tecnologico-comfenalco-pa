@@ -1,0 +1,64 @@
+.horarios-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .title-with-icon {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    margin-bottom: 16px;
+    color: #333;
+  }
+  
+  .title-with-icon mat-icon {
+    margin-right: 8px;
+    font-size: 28px;
+    color: #3f51b5; // Color del icono
+  }
+  
+  .filter-field {
+    margin-bottom: 16px;
+  }
+  
+  .cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px; // Espacio entre tarjetas
+  }
+  
+  .class-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    transition: transform 0.2s;
+  }
+  
+  .class-card:hover {
+    transform: scale(1.05); // Efecto de aumento al pasar el ratón
+  }
+  
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .card-body {
+    margin-top: 10px;
+  }
+  
+  .card-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+  
+  .event-icon {
+    font-size: 24px;
+    color: #3f51b5; // Color del icono
+  }
+  

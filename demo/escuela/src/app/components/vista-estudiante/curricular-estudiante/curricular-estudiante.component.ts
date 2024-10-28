@@ -15,7 +15,7 @@ export class CurricularEstudianteComponent implements OnInit {
 
   curriculares: Curricular[] = [];
   dataSource = new MatTableDataSource<Curricular>();
-  displayedColumns: string[] = ['idCurricular', 'descripcion', 'activo', 'fechaRegistro', 'docente', 'curso' ,'actions'];
+  displayedColumns: string[] = ['descripcion', 'activo', 'fechaRegistro', 'docente', 'curso' ,'actions'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 

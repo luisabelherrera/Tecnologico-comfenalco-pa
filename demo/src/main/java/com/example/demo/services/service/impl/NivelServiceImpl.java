@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.model.entity.Nivel;
 import com.example.demo.model.entity.Periodo;
-import com.example.demo.repositories.repository.NivelRepository;
+import com.example.demo.repositories.jpa.NivelRepository;
 import com.example.demo.services.service.NivelService;
 import com.example.demo.services.service.PeriodoService;
 

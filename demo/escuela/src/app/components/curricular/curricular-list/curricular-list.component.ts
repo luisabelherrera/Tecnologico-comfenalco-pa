@@ -13,7 +13,7 @@ import { MatPaginator } from '@angular/material/paginator';
 export class CurricularListComponent implements OnInit {
   curriculares: Curricular[] = [];
   dataSource = new MatTableDataSource<Curricular>();
-  displayedColumns: string[] = ['idCurricular', 'descripcion', 'activo', 'fechaRegistro', 'docente', 'actions'];
+  displayedColumns: string[] = ['descripcion', 'activo', 'fechaRegistro', 'docente', 'actions'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 

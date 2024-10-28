@@ -20,7 +20,7 @@ export class NivelComponent implements OnInit {
     successMessage: string | null = null;
     editing: boolean = false;
     currentPage: number = 1;
-    itemsPerPage: number = 5; // Número de items por página
+    itemsPerPage: number = 5; 
     filtro: string = '';
 
     constructor(private nivelService: NivelService, private periodoService: PeriodoService) {}
@@ -48,8 +48,8 @@ export class NivelComponent implements OnInit {
             (data: Nivel[]) => {
                 console.log('Datos de niveles:', data);
                 this.niveles = data || [];
-                this.filteredNiveles = this.niveles; // Inicializa el filtro
-                this.updatePaginatedNiveles(); // Actualiza los niveles paginados
+                this.filteredNiveles = this.niveles;
+                this.updatePaginatedNiveles(); 
                 this.isLoading = false;
             },
             error => this.handleError('Error al cargar los niveles', error)

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.entity.NivelDetalleCurso;
-import com.example.demo.repositories.repository.NivelDetalleCursoRepository;
+import com.example.demo.repositories.jpa.NivelDetalleCursoRepository;
 import com.example.demo.services.service.NivelDetalleCursoService;
 
 import java.util.List;

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.entity.Calificacion;
-import com.example.demo.repositories.repository.CalificacionRepository;
+import com.example.demo.repositories.jpa.CalificacionRepository;
 import com.example.demo.services.service.CalificacionService;
 
 import java.util.List;

@@ -2,7 +2,7 @@ package com.example.demo.services.service.impl;
 
 import com.example.demo.model.entity.Acudiente;
 import com.example.demo.model.entity.dto.AcudienteDTO;
-import com.example.demo.repositories.repository.AcudienteRepository;
+import com.example.demo.repositories.jpa.AcudienteRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

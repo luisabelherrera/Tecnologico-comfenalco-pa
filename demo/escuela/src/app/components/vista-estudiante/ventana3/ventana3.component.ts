@@ -30,7 +30,7 @@ export class Ventana3Component implements OnInit {
 
   calificaciones: Calificacion[] = [];
   dataSource = new MatTableDataSource<Calificacion>();
-  displayedColumns: string[] = ['idCalificacion', 'nota', 'estudiante', 'curricular', 'fechaRegistro', 'actions'];
+  displayedColumns: string[] = [ 'nota', 'estudiante', 'curricular', 'fechaRegistro', 'actions'];
   aiSuggestions: string | null = null;  
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

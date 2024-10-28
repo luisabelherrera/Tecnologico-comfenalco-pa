@@ -70,10 +70,7 @@
   <div class="table-container">
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width-table">
 
-      <ng-container matColumnDef="idNivelDetalle">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-        <td mat-cell *matCellDef="let nivelDetalle">{{ nivelDetalle.idNivelDetalle }}</td>
-      </ng-container>
+
 
       <ng-container matColumnDef="nivel">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Nivel</th>

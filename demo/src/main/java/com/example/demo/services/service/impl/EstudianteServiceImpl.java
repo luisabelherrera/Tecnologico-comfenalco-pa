@@ -1,42 +1,50 @@
 package com.example.demo.services.service.impl;
 
 import com.example.demo.model.entity.dto.EstudianteDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.entity.Estudiante;
-import com.example.demo.repositories.repository.EstudianteRepository;
+import com.example.demo.repositories.jpa.EstudianteRepository;
 import com.example.demo.services.service.EstudianteService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class EstudianteServiceImpl implements EstudianteService {
 
     @Autowired
     private EstudianteRepository estudianteRepository;
 
-    @Override
+    @Cacheable("estudiantecache")
     public List<EstudianteDTO> findAll() {
+        System.out.println("Llamando a estudiantecache y almacenando en caché.");
         return estudianteRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public Optional<EstudianteDTO> findById(Integer id) {
         return estudianteRepository.findById(id).map(this::convertToDTO);
     }
 
-    @Override
+    @CacheEvict(value = "estudiantecache", allEntries = true)
     public EstudianteDTO save(EstudianteDTO estudianteDTO) {
+        estudianteDTO.setFechaRegistro(LocalDateTime.now());
         Estudiante estudiante = convertToEntity(estudianteDTO);
         return convertToDTO(estudianteRepository.save(estudiante));
     }
 
-    @Override
+    @CacheEvict(value = "estudiantecache", allEntries = true)
     public void deleteById(Integer id) {
         estudianteRepository.deleteById(id);
     }

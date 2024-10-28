@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 import com.example.demo.model.entity.Docente;
 import com.example.demo.model.login.Rol;
 import com.example.demo.model.login.UserEntity;
-import com.example.demo.repositories.RoleRepository;
-import com.example.demo.repositories.UserRepository;
+import com.example.demo.repositories.jpa.RoleRepository;
+import com.example.demo.repositories.jpa.UserRepository;
 
 @Component
 public class DataInitializer implements CommandLineRunner {

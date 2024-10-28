@@ -1,5 +1,6 @@
 package com.example.demo.model.entity.dto;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EstudianteDTO {
+public class EstudianteDTO implements Serializable {
     private long idEstudiante;
     private int valorCodigo;
     private String codigo;

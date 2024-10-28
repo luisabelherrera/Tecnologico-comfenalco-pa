@@ -1,0 +1,33 @@
+<div class="form-container">
+    <h2>{{ editando ? 'Editar Noticia' : 'Agregar Nueva Noticia' }}</h2>
+    <form (ngSubmit)="agregarNoticia()">
+        <div class="form-group">
+            <label for="titulo">Título:</label>
+            <input type="text" id="titulo" [(ngModel)]="titulo" name="titulo" required class="form-input">
+        </div>
+        <div class="form-group">
+            <label for="contenido">Contenido:</label>
+            <textarea id="contenido" [(ngModel)]="contenido" name="contenido" required class="form-textarea"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="imagen">Imagen:</label>
+            <input type="file" id="imagen" (change)="onImageSelected($event)" required class="form-file">
+            <img *ngIf="imagen" [src]="imagen" alt="Vista previa de la imagen" class="preview-imagen" />
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ editando ? 'Actualizar Noticia' : 'Agregar Noticia' }}</button>
+            <button type="button" (click)="resetForm()" class="btn btn-secondary">Cancelar</button>
+        </div>
+    </form>
+
+    <h3>Lista de Noticias</h3>
+    <div *ngFor="let noticia of noticias" class="noticia-card">
+        <h4>{{ noticia.titulo }}</h4>
+        <p>{{ noticia.contenido }}</p>
+        <img *ngIf="noticia.imagen" [src]="noticia.imagen" alt="Imagen de noticia" class="noticia-imagen">
+        <div class="noticia-actions">
+            <button (click)="editarNoticia(noticia)" class="btn btn-edit">Editar</button>
+            <button (click)="eliminarNoticia(noticia.id)" class="btn btn-delete">Eliminar</button>
+        </div>
+    </div>
+</div>

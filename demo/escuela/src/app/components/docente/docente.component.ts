@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Docente } from 'src/app/models/entity/docente.model';
-import { DocenteService } from 'src/app/services/Docente/Docente.service';
-import { MatPaginator } from '@angular/material/paginator';
-import { PageEvent } from '@angular/material/paginator';
-import { MatSnackBar } from '@angular/material/snack-bar'; // Importa MatSnackBar
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { MatPaginator, PageEvent } from "@angular/material/paginator";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { Docente } from "src/app/models/entity/docente.model";
+import { DocenteService } from "src/app/services/Docente/Docente.service";
+
 
 @Component({
   selector: 'app-docente',
@@ -103,7 +103,8 @@ export class DocenteComponent implements OnInit {
         this.resetForm();
         this.snackBar.open('Docente actualizado con éxito', 'Cerrar', { duration: 2000 }); 
       }, error => {
-        this.snackBar.open(`No se pudo actualizar el docente: ${error}`, 'Cerrar', { duration: 5000 });  
+        this.snackBar.open(`No se pudo crear el docente: ${error}`, 'Cerrar', { duration: 5000 });
+
       });
     } else {
       this.docenteService.create(this.docenteForm.value).subscribe(() => {
@@ -111,7 +112,7 @@ export class DocenteComponent implements OnInit {
         this.resetForm();
         this.snackBar.open('Docente creado con éxito', 'Cerrar', { duration: 2000 }); 
       }, error => {
-        this.snackBar.open(`No se pudo crear el docente: ${error}`, 'Cerrar', { duration: 5000 }); 
+        this.snackBar.open(`No se pudo crear el docente: ${error}`, 'Cerrar', { duration: 5000 });
       });
     }
   }
@@ -122,7 +123,7 @@ export class DocenteComponent implements OnInit {
         this.resetForm();
         this.snackBar.open('Docente eliminado con éxito', 'Cerrar', { duration: 2000 });
     }, error => {
-        this.snackBar.open(`No se pudo eliminar el docente: ${error}`, 'Cerrar', { duration: 5000 });
+      this.snackBar.open(`No se pudo actualizar el docente: ${error}`, 'Cerrar', { duration: 5000 });
     });
   }
 
@@ -139,4 +140,4 @@ export class DocenteComponent implements OnInit {
       fechaRegistro: new Date()
     });
   }
-}
+} 

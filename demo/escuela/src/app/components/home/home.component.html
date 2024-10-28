@@ -1,1 +1,21 @@
-<h1>  mi inicio  	</h1>
+<div class="noticias-container">
+    <h2 class="noticias-titulo">Publicaciones Recientes</h2>
+    <div class="noticias-grid">
+      <div *ngFor="let noticia of noticias" class="noticia-card">
+        <div class="noticia-header">
+          <h3 class="noticia-titulo">{{ noticia.titulo }}</h3>
+          <span class="noticia-fecha">{{ noticia.fechaCreacion | date: 'longDate' }}</span>
+        </div>
+        <div class="noticia-contenido">
+          <p class="noticia-texto">{{ noticia.contenido | slice: 0:100 }}...</p>
+          <img *ngIf="noticia.imagen" 
+               [src]="noticia.imagen" 
+               alt="Imagen de noticia" 
+               class="noticia-imagen" 
+               (click)="mostrarImagen(noticia)" /> 
+          <button *ngIf="!noticia.imagen" (click)="cargarImagen(noticia)" class="btn-cargar-imagen">Cargar Imagen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  

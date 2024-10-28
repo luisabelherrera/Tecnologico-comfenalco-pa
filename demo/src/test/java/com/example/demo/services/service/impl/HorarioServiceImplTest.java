@@ -1,7 +1,7 @@
 package com.example.demo.services.service.impl;
 
 import com.example.demo.model.entity.Horario;
-import com.example.demo.repositories.repository.HorarioRepository;
+import com.example.demo.repositories.jpa.HorarioRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

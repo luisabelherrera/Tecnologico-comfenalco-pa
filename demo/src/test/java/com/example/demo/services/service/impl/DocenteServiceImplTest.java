@@ -1,7 +1,7 @@
 package com.example.demo.services.service.impl;
 
 import com.example.demo.model.entity.Docente;
-import com.example.demo.repositories.repository.DocenteRepository;
+import com.example.demo.repositories.jpa.DocenteRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

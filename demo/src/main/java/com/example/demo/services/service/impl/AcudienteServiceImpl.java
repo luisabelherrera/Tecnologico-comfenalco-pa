@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.entity.Acudiente;
-import com.example.demo.repositories.repository.AcudienteRepository;
+import com.example.demo.repositories.jpa.AcudienteRepository;
 import com.example.demo.services.service.AcudienteService;
 
 @Service

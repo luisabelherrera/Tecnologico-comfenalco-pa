@@ -24,7 +24,7 @@ export class NivelDetalleComponent implements OnInit {
     isLoading = false;
     editingNivelDetalle: NivelDetalle | null = null;
     displayedColumns: string[] = [
-        'idNivelDetalle',
+      
         'nivel',
         'gradoSeccion',
         'totalVacantes',

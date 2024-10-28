@@ -55,6 +55,8 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/niveldetalle', icon: 'list', title: 'Cupos ' },
     { path: '/horario', icon: 'schedule', title: 'Horario' },
     { path: '/docentes/detalle', icon: 'assignment_ind', title: 'Docentes y Cursos' },
+    { path: '/agregar-noticia', icon: 'article', title: 'Agregar Noticia' }
+
   ];
 
   AdministrarUsuario = [

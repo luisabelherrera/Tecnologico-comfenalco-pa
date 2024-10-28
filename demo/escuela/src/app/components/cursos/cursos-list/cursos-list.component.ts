@@ -13,7 +13,7 @@ import { CursosService } from 'src/app/services/curso/curso.service';
 export class CursosListComponent implements OnInit {
   cursos: Curso[] = [];
   dataSource = new MatTableDataSource<Curso>();
-  displayedColumns: string[] = ['idCurso', 'descripcion', 'activo', 'actions'];
+  displayedColumns: string[] = [ 'descripcion', 'activo', 'actions'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;  
 

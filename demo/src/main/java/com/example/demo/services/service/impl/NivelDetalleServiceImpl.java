@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.entity.NivelDetalle;
-import com.example.demo.repositories.repository.NivelDetalleRepository;
+import com.example.demo.repositories.jpa.NivelDetalleRepository;
 import com.example.demo.services.service.NivelDetalleService;
 
 @Service

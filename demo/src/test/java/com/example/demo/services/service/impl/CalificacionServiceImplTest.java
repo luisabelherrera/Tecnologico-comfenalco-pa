@@ -1,7 +1,7 @@
 package com.example.demo.services.service.impl;
 
 import com.example.demo.model.entity.Calificacion;
-import com.example.demo.repositories.repository.CalificacionRepository;
+import com.example.demo.repositories.jpa.CalificacionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -91,6 +91,8 @@ import { NivelDetalleDialogoGraficoComponent } from './components/niveldetalle/n
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AgregarEstudianteDialogComponent } from './components/matricula/dialog/agregar-estudiante-dialog/agregar-estudiante-dialog.component';
 import { MatricularAcudienteDialogComponent } from './components/matricula/dialog/matricular-acudiente-dialog/matricular-acudiente-dialog.component';
+import { AgregarNoticiaComponent } from './components/agregar-noticia/agregar-noticia.component';
+import { ImagenDialogComponent } from './components/home/dialogo/ImagenDialog.component';
 
 
 @NgModule({
@@ -120,7 +122,8 @@ import { MatricularAcudienteDialogComponent } from './components/matricula/dialo
     MatTooltipModule,
   ],
   declarations: [
-
+    ImagenDialogComponent,
+    AgregarNoticiaComponent,
     Ventana2Component,
     CurricularComponent,
     HorarioComponent,

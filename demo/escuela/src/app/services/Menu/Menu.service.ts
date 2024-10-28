@@ -1,53 +1,59 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { Menu } from 'src/app/models/entity/Menu.interface';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-
+import { Noticia } from 'src/app/models/entity/Noticia.interface';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
-export class MenuService {
-    private apiUrl = `${environment.apiUrl}api/menu`;
+export class NoticiaService {
 
-    constructor(private http: HttpClient) {}
+  private apiUrl = `${environment.apiUrl}api/noticias`;
 
-    private getHeaders(): HttpHeaders {
-        const token = localStorage.getItem('accessToken');
-        return new HttpHeaders({
-            'Authorization': `Bearer ${token}`
-        });
+  constructor(private http: HttpClient) { }
+
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('accessToken');
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
+  // Método para crear una noticia
+  crearNoticia(titulo: string, contenido: string, imagen: File): Observable<Noticia> {
+    const formData = new FormData();
+    formData.append('titulo', titulo);
+    formData.append('contenido', contenido);
+    formData.append('imagen', imagen);
+
+    return this.http.post<Noticia>(`${this.apiUrl}/crear`, formData, { headers: this.getHeaders() });
+  }
+
+  // Método para obtener todas las noticias
+  obtenerNoticias(): Observable<Noticia[]> {
+    return this.http.get<Noticia[]>(this.apiUrl, { headers: this.getHeaders() });
+  }
+
+  // Método para obtener la imagen de una noticia
+  obtenerImagenNoticia(id: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/imagen/${id}`, { headers: this.getHeaders(), responseType: 'blob' });
+  }
+
+  // Método para actualizar una noticia
+  actualizarNoticia(id: string, titulo: string, contenido: string, imagen?: File): Observable<Noticia> {
+    const formData = new FormData();
+    formData.append('titulo', titulo);
+    formData.append('contenido', contenido);
+    if (imagen) {
+      formData.append('imagen', imagen);
     }
 
-    getAll(): Observable<Menu[]> {
-        return this.http.get<Menu[]>(this.apiUrl, { headers: this.getHeaders() })
-            .pipe(catchError(this.handleError));
-    }
+    return this.http.put<Noticia>(`${this.apiUrl}/actualizar/${id}`, formData, { headers: this.getHeaders() });
+  }
 
-    getById(id: number): Observable<Menu> {
-        return this.http.get<Menu>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() })
-            .pipe(catchError(this.handleError));
-    }
-
-    create(menu: Menu): Observable<Menu> {
-        return this.http.post<Menu>(this.apiUrl, menu, { headers: this.getHeaders() })
-            .pipe(catchError(this.handleError));
-    }
-
-    update(id: number, menu: Menu): Observable<Menu> {
-        return this.http.put<Menu>(`${this.apiUrl}/${id}`, menu, { headers: this.getHeaders() })
-            .pipe(catchError(this.handleError));
-    }
-
-    delete(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() })
-            .pipe(catchError(this.handleError));
-    }
-
-    private handleError(error: any) {
-        return throwError(() => new Error('Error inesperado: ' + error));
-    }
+  // Método para eliminar una noticia
+  eliminarNoticia(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/eliminar/${id}`, { headers: this.getHeaders() });
+  }
 }

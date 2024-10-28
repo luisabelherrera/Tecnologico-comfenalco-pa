@@ -11,7 +11,7 @@ import { EstudianteService } from 'src/app/services/estudiante/estudiante.servic
 })
 export class ListarEstudiantesComponent implements OnInit {
   displayedColumns: string[] = [
-    'id',
+
     'codigo',
     'nombres',
     'apellidos',

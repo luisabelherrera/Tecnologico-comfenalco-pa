@@ -2,8 +2,8 @@ package com.example.demo.services.service.impl;
 
 import com.example.demo.model.entity.Inscripcion;
 import com.example.demo.model.entity.NivelDetalle;
-import com.example.demo.repositories.repository.InscripcionRepository;
-import com.example.demo.repositories.repository.NivelDetalleRepository;
+import com.example.demo.repositories.jpa.InscripcionRepository;
+import com.example.demo.repositories.jpa.NivelDetalleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

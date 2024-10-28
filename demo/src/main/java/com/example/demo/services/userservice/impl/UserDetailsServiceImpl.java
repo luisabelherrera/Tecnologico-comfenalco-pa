@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.model.login.Rol;
 import com.example.demo.model.login.UserEntity;
-import com.example.demo.repositories.UserRepository;
+import com.example.demo.repositories.jpa.UserRepository;
 
 @Service("userDetailService")
 @Transactional(readOnly = true)

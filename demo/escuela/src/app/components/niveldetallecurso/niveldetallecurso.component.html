@@ -34,7 +34,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>ID</th>
+          
                 <th>Nivel Detalle</th>
                 <th>Curso</th>
                <th>Activo</th> 
@@ -43,7 +43,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let curso of nivelDetalleCursos">
-                <td>{{ curso.idNivelDetalleCurso }}</td>
+             
                 <td>{{ curso.nivelDetalle.nivel.descripcionNivel }}</td>
                 <td>{{ curso.curso.descripcion }}</td>
                 <td>{{ curso.curso.activo }}</td>

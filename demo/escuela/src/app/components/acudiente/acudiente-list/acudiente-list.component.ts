@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { Acudiente } from 'src/app/models/entity/Acudiente.interface';
 import { AcudienteService } from 'src/app/services/acudiente/acudiente.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSelectChange } from '@angular/material/select'; // Importar MatSelectChange
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSelectChange } from '@angular/material/select'; 
 
 @Component({
   selector: 'app-acudiente-list',
@@ -14,8 +14,8 @@ import { MatSelectChange } from '@angular/material/select'; // Importar MatSelec
 export class AcudienteListComponent implements OnInit, AfterViewInit {
   acudientes: Acudiente[] = [];
   dataSource = new MatTableDataSource<Acudiente>();
-  displayedColumns: string[] = ['id', 'nombres', 'apellidos', 'documentoIdentidad', 'ciudad', 'activo', 'actions'];
-  filterType: string = 'nombre'; // Valor predeterminado para el filtro
+  displayedColumns: string[] = [ 'nombres', 'apellidos', 'documentoIdentidad', 'ciudad', 'activo', 'actions'];
+  filterType: string = 'nombre'; 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; 
 
@@ -54,7 +54,7 @@ export class AcudienteListComponent implements OnInit, AfterViewInit {
 
   applyFilter(event: Event | MatSelectChange): void {
     if (event instanceof MatSelectChange) {
-      this.filterType = event.value; // Actualizar el tipo de filtro cuando se cambia la selección
+      this.filterType = event.value; 
     } else {
       const filterValue = (event.target as HTMLInputElement).value;
       this.dataSource.filterPredicate = (data: Acudiente, filter: string) => {
@@ -67,6 +67,14 @@ export class AcudienteListComponent implements OnInit, AfterViewInit {
         return false;
       };
       this.dataSource.filter = filterValue;
+    }
+  }
+
+  metodoabsorver(event: PageEvent): void {
+    if (event) {
+      this.paginator.pageIndex = event.pageIndex;
+      this.paginator.pageSize = event.pageSize;
+      this.dataSource.paginator = this.paginator;
     }
   }
 }

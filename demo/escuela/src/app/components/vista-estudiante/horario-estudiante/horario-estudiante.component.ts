@@ -12,9 +12,8 @@ import { HorarioService } from 'src/app/services/horario/Horario.service';
 })
 export class HorarioEstudianteComponent implements OnInit {
 
- 
   dataSource = new MatTableDataSource<Horario>(); 
-  displayedColumns: string[] = ['diaSemana', 'horaInicio', 'horaFin', 'nivelDetalleCurso', 'acciones']; // Agregar nivelDetalleCurso
+  displayedColumns: string[] = ['diaSemana', 'horaInicio', 'horaFin', 'nivelDetalleCurso', 'iconos']; 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort; 
@@ -30,12 +29,6 @@ export class HorarioEstudianteComponent implements OnInit {
       this.dataSource.data = horarios; 
       this.dataSource.paginator = this.paginator; 
       this.dataSource.sort = this.sort; 
-    });
-  }
-
-  deleteHorario(id: number) {
-    this.horarioService.deleteHorario(id).subscribe(() => {
-      this.loadHorarios(); 
     });
   }
 

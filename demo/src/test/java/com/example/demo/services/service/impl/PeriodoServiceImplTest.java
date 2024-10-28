@@ -1,8 +1,7 @@
 package com.example.demo.services.service.impl;
 
 import com.example.demo.model.entity.Periodo;
-import com.example.demo.repositories.repository.PeriodoRepository;
-import com.example.demo.services.service.PeriodoService;
+import com.example.demo.repositories.jpa.PeriodoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,7 +14,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 class PeriodoServiceImplTest {

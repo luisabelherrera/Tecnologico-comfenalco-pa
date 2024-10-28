@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.entity.GradoSeccion;
-import com.example.demo.repositories.repository.GradoSeccionRepository;
+import com.example.demo.repositories.jpa.GradoSeccionRepository;
 import com.example.demo.services.service.GradoSeccionService;
 
 import java.util.List;

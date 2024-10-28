@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.entity.Docente;
-import com.example.demo.repositories.repository.DocenteRepository;
+import com.example.demo.repositories.jpa.DocenteRepository;
 import com.example.demo.services.service.DocenteService;
 
 @Service

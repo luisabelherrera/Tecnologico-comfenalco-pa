@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.exceptions.ConflictException;
 import com.example.demo.model.login.Rol;
-import com.example.demo.repositories.RoleRepository;
+import com.example.demo.repositories.jpa.RoleRepository;
 import com.example.demo.services.userservice.RolService;
 
 @Service

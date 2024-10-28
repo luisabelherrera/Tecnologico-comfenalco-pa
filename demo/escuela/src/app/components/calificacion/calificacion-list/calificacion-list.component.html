@@ -17,11 +17,7 @@
   <div class="table-container">
     <table mat-table [dataSource]="dataSource" matSort class="custom-table">
      
-      <ng-container matColumnDef="idCalificacion">
-        <th mat-header-cell *matHeaderCellDef>ID</th>
-        <td mat-cell *matCellDef="let calificacion">{{ calificacion.idCalificacion }}</td>
-      </ng-container>
- 
+   
       <ng-container matColumnDef="nota">
         <th mat-header-cell *matHeaderCellDef>Nota</th>
         <td mat-cell *matCellDef="let calificacion">{{ calificacion.nota }}</td>

@@ -14,7 +14,7 @@ import { MatSort } from '@angular/material/sort';
 export class CalificacionListComponent implements OnInit {
   calificaciones: Calificacion[] = [];
   dataSource = new MatTableDataSource<Calificacion>();
-  displayedColumns: string[] = ['idCalificacion', 'nota', 'estudiante', 'curricular', 'fechaRegistro', 'actions'];
+  displayedColumns: string[] = ['nota', 'estudiante', 'curricular', 'fechaRegistro', 'actions'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;

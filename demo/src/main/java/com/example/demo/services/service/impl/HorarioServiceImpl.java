@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.entity.Horario;
-import com.example.demo.repositories.repository.HorarioRepository;
+import com.example.demo.repositories.jpa.HorarioRepository;
 import com.example.demo.services.service.HorarioService;
 
 import java.util.List;
