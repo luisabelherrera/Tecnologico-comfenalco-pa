@@ -16,12 +16,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
+
 import com.example.demo.model.entity.Docente;
 import com.example.demo.model.entity.DocenteNivelDetalleCurso;
 import com.example.demo.model.entity.NivelDetalleCurso;
 import com.example.demo.services.service.DocenteNivelDetalleCursoService;
 import com.example.demo.services.service.DocenteService;
 import com.example.demo.services.service.NivelDetalleCursoService;
+import com.example.demo.exceptions.customexceptions.exceptionsEntity.DocenteNivelDetalleCursoException;
+import com.example.demo.exceptions.messages.ErrorMessages;
 
 @CrossOrigin
 @RestController
@@ -43,11 +46,11 @@ public class DocenteNivelDetalleCursoController {
         return ResponseEntity.ok(list);
     }
 
-    // Obtener un registro por ID
     @GetMapping("/{id}")
     public ResponseEntity<DocenteNivelDetalleCurso> getById(@PathVariable Integer id) {
         Optional<DocenteNivelDetalleCurso> result = docenteNivelDetalleCursoService.findById(id);
-        return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return result.map(ResponseEntity::ok).orElseThrow(() ->
+                new DocenteNivelDetalleCursoException(ErrorMessages.DOCENTE_NIVEL_DETALLE_CURSO_NOT_FOUND + id));
     }
 
     @PostMapping
@@ -73,14 +76,13 @@ public class DocenteNivelDetalleCursoController {
             if (docenteOptional.isEmpty()) {
                 mensajeError += "Docente no encontrado.";
             }
-            return ResponseEntity.badRequest().body(mensajeError); // Ahora devuelve un String
+            throw new DocenteNivelDetalleCursoException(mensajeError);
         }
     }
 
-    // Actualizar un registro existente
     @PutMapping("/{id}")
     public ResponseEntity<DocenteNivelDetalleCurso> update(@PathVariable Integer id,
-            @RequestBody DocenteNivelDetalleCurso docenteNivelDetalleCursoDetails) {
+                                                           @RequestBody DocenteNivelDetalleCurso docenteNivelDetalleCursoDetails) {
         Optional<DocenteNivelDetalleCurso> existingDocenteNivelDetalleCurso = docenteNivelDetalleCursoService
                 .findById(id);
 
@@ -92,7 +94,7 @@ public class DocenteNivelDetalleCursoController {
             docenteNivelDetalleCursoService.save(updated);
             return ResponseEntity.ok(updated);
         } else {
-            return ResponseEntity.notFound().build();
+            throw new DocenteNivelDetalleCursoException(ErrorMessages.DOCENTE_NIVEL_DETALLE_CURSO_NOT_FOUND + id);
         }
     }
 
@@ -104,7 +106,7 @@ public class DocenteNivelDetalleCursoController {
             docenteNivelDetalleCursoService.deleteById(id);
             return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.notFound().build();
+            throw new DocenteNivelDetalleCursoException(ErrorMessages.DOCENTE_NIVEL_DETALLE_CURSO_NOT_FOUND + id);
         }
     }
 }

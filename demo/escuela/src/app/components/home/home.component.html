@@ -1,21 +1,120 @@
-<div class="noticias-container">
-    <h2 class="noticias-titulo">Publicaciones Recientes</h2>
-    <div class="noticias-grid">
-      <div *ngFor="let noticia of noticias" class="noticia-card">
-        <div class="noticia-header">
-          <h3 class="noticia-titulo">{{ noticia.titulo }}</h3>
-          <span class="noticia-fecha">{{ noticia.fechaCreacion | date: 'longDate' }}</span>
+<header class="header">
+  <nav class="navbar">
+    <div class="logo">
+      <h1 class="logo-text">Institución El Hobo</h1>
+      <div class="user-info">
+        <span *ngIf="userName$ | async as userName; else loading">
+          <i class="fas fa-user-circle"></i> Bienvenido, {{ userName }}. Aquí podrás encontrar las noticias y eventos de la institución.
+        </span>
+        <ng-template #loading>
+          <i class="fas fa-spinner fa-spin"></i> Cargando...
+        </ng-template>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- Botón de chat -->
+<div class="chat-icon" (click)="toggleChat()">
+  <i class="fas fa-comments fa-2x" style="cursor: pointer;"></i>
+</div>
+
+<!-- Contenedor del chat ajustado -->
+<div class="chat-container" [ngStyle]="{'display': chatVisible ? 'block' : 'none'}" style="position: fixed; bottom: 70px; right: 20px; width: 300px; z-index: 1000;">
+  <div class="card chat-card" style="width: 100%; max-height: 400px; overflow: hidden;">
+    <div class="card-header">
+      <ul class="nav nav-pills card-header-pills">
+        <li class="nav-item mr-2" *ngIf="!conectado">
+          <input type="text" [(ngModel)]="mensaje.username" class="form-control" placeholder="Username..." name="username">
+        </li>
+        <li class="nav-item mr-2">
+          <button class="btn btn-success" type="button" (click)="conectar()"
+            *ngIf="!conectado" [disabled]="!mensaje.username"><i class="fas fa-sign-in-alt"></i> Conectar</button>
+        </li>
+        <li class="nav-item">
+          <button class="btn btn-warning" type="button" (click)="desconectar()"
+            *ngIf="conectado"><i class="fas fa-sign-out-alt"></i> Cerrar Chat</button>
+        </li>
+      </ul>
+    </div>
+
+    <div #scrollChat [scrollTop]="scrollChat.scrollHeight" class="card-body chat-body" *ngIf="conectado" style="overflow-y: auto; max-height: 300px;">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item list-group-item-light" *ngFor="let mensaje of mensajes">
+          <span *ngIf="mensaje.tipo=='NUEVO_USUARIO'">
+            <i class="fas fa-user-plus"></i> {{mensaje.fecha | date:'shortTime'}} @ {{mensaje.texto}}
+            <span [ngStyle]="{'color': mensaje.color}">{{mensaje.username}}</span>
+          </span>
+          <span *ngIf="mensaje.tipo=='MENSAJE'">
+            <i class="fas fa-comment-dots"></i> {{mensaje.fecha | date:'shortTime'}}
+            <span [ngStyle]="{'color': mensaje.color}">{{mensaje.username}}</span> dice:<br> {{mensaje.texto}}
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card-footer" *ngIf="conectado">
+      <form class="form-inline" (ngSubmit)="enviarMensaje()">
+        <div class="form-group mx-3">
+          <input type="text" [(ngModel)]="mensaje.texto" class="form-control" placeholder="Escribe un mensaje..." name="texto"
+            (keyup)="escribiendoEvento()">
+          <button type="button" class="btn btn-light" (click)="mostrarEmojis()">😊</button>
+          <button class="btn btn-primary" type="submit">
+            <i class="fas fa-paper-plane"></i> Enviar
+          </button>
         </div>
-        <div class="noticia-contenido">
-          <p class="noticia-texto">{{ noticia.contenido | slice: 0:100 }}...</p>
-          <img *ngIf="noticia.imagen" 
-               [src]="noticia.imagen" 
-               alt="Imagen de noticia" 
-               class="noticia-imagen" 
-               (click)="mostrarImagen(noticia)" /> 
-          <button *ngIf="!noticia.imagen" (click)="cargarImagen(noticia)" class="btn-cargar-imagen">Cargar Imagen</button>
-        </div>
+      </form>
+      <div>{{escribiendo}}</div>
+
+      <div *ngIf="emojisVisible" class="emoji-picker">
+        <span (click)="agregarEmoji('😊')">😊</span>
+        <span (click)="agregarEmoji('🏫')">🏫</span>
+        <span (click)="agregarEmoji('📚')">📚</span>
+        <span (click)="agregarEmoji('✏️')">✏️</span>
+        <span (click)="agregarEmoji('🎓')">🎓</span>
+        <span (click)="agregarEmoji('✨')">✨</span>
+        <span (click)="agregarEmoji('❤️')">❤️</span>
+        <span (click)="agregarEmoji('👍')">👍</span>
+        <span (click)="agregarEmoji('👩‍🏫')">👩‍🏫</span>
+        <span (click)="agregarEmoji('👨‍🏫')">👨‍🏫</span>
+        <span (click)="agregarEmoji('📖')">📖</span>
+        <span (click)="agregarEmoji('📅')">📅</span>
+        <span (click)="agregarEmoji('📝')">📝</span>
+        <span (click)="agregarEmoji('🎉')">🎉</span>
+        <span (click)="agregarEmoji('🤔')">🤔</span>
+        <span (click)="agregarEmoji('😃')">😃</span>
+        <span (click)="agregarEmoji('🎈')">🎈</span>
+        <span (click)="agregarEmoji('🌟')">🌟</span>
+        <span (click)="agregarEmoji('💡')">💡</span>
+        <span (click)="agregarEmoji('🤝')">🤝</span>
+        <span (click)="agregarEmoji('👏')">👏</span>
+        <span (click)="agregarEmoji('📊')">📊</span>
+        <span (click)="agregarEmoji('🎤')">🎤</span>
+        <span (click)="agregarEmoji('🤗')">🤗</span>
+        <span (click)="agregarEmoji('💬')">💬</span>
       </div>
     </div>
   </div>
-  
+</div>
+
+<div class="noticias-container mx-4 my-4">
+  <h2 class="noticias-titulo"><i class="fas fa-newspaper"></i> Las noticias del día</h2>
+
+  <div class="noticias-grid">
+    <div *ngFor="let noticia of noticias" class="noticia-card">
+      <div class="noticia-header">
+        <h3 class="noticia-titulo">{{ noticia.titulo }}</h3>
+        <span class="noticia-fecha">{{ noticia.fechaCreacion | date: 'longDate' }}</span>
+      </div>
+      <div class="noticia-contenido">
+        <p class="noticia-texto">{{ noticia.contenido | slice: 0:100 }}...</p>
+        <img *ngIf="noticia.imagen" 
+             [src]="noticia.imagen" 
+             alt="Imagen de noticia" 
+             class="noticia-imagen" 
+             (click)="mostrarImagen(noticia)" /> 
+        <button *ngIf="!noticia.imagen" (click)="cargarImagen(noticia)" class="btn-cargar-imagen"><i class="fas fa-upload"></i> Cargar Imagen</button>
+      </div>
+    </div>
+  </div>
+</div>

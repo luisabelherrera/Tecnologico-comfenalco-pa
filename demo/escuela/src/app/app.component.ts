@@ -24,8 +24,9 @@ export class AppComponent implements OnInit, OnDestroy {
   isAdministrarUsuarioMenuOpen = false; 
   islinksMenuOpen = false;
   isVentana3MenuOpen = false;
+  isMenu = false;
 
-  links = [{ path: '/home', icon: 'home', title: 'Inicio' }];
+  links = [{ path: '/home', icon: 'assets/iconos/school.png', title: 'Inicio' }];
   ia = [{ path: '/ia', icon: 'home', title: 'ia' }];
   
   Alumno = [
@@ -50,30 +51,38 @@ export class AppComponent implements OnInit, OnDestroy {
 
   configuraciones = [
     { path: '/periodo', icon: 'calendar_today', title: 'Crear Periodo' },
-    { path: '/nivel', icon: 'school', title: 'Crear Nivel Académico' },
-    { path: '/grado-seccion', icon: 'class', title: 'Crear Grado y Sección' },
+    { path: '/nivel', icon: 'school', title: 'Nivel Académico' },
+    { path: '/grado-seccion', icon: 'class', title: 'Grado y Sección' },
     { path: '/niveldetalle', icon: 'list', title: 'Cupos ' },
     { path: '/horario', icon: 'schedule', title: 'Horario' },
     { path: '/docentes/detalle', icon: 'assignment_ind', title: 'Docentes y Cursos' },
-    { path: '/agregar-noticia', icon: 'article', title: 'Agregar Noticia' }
+
 
   ];
+
+  Menu = [
+
+    { path: '/agregar-noticia', icon: 'article', title: 'Agregar Noticia' },
+    { path: '/agregar-recurso', icon: 'attach_file', title: 'Agregar Recurso' }
+  ];
+
+
 
   AdministrarUsuario = [
     { path: '/registro', icon: 'person_add', title: 'Registrar' },
   ];
-
   userLinks = [
-    { path: '/ventana2', icon: 'book', title: 'Calificaciones' },
-    { path: '/curricularDocente', icon: 'book', title: 'Curricular' },
-    { path: '/horarioDocente', icon: 'book', title: 'Horario' },
+    { path: '/ventana2', icon: 'grade', title: 'Calificaciones' },  // Estrella
+    { path: '/curricularDocente', icon: 'book', title: 'Curricular' }, // Libro
+    { path: '/horarioDocente', icon: 'schedule', title: 'Horario' }, // Calendario
   ];
-
+  
   Ventana3Links = [ 
-    { path: '/ventana3', icon: 'book', title: 'Calificación' },
-    { path: '/curricularEstudiante', icon: 'book', title: 'Contenido Curricular' },
-    { path: '/horarioEstudiante', icon: 'book', title: 'Mi Horario' },
+    { path: '/ventana3', icon: 'grade', title: 'Calificación' },  // Estrella
+    { path: '/curricularEstudiante', icon: 'book', title: 'Contenido Curricular' }, // Libro
+    { path: '/horarioEstudiante', icon: 'schedule', title: 'Mi Horario' }, // Calendario
   ];
+  
 
   isAuthenticated$ = this.authService.isAuthenticated$;
   isAdmin$ = this.authService.isAdmin$;
@@ -90,6 +99,7 @@ export class AppComponent implements OnInit, OnDestroy {
   this.isAdmin$.pipe(takeUntil(this.unsubscribe$)).subscribe((isAdmin) => {
     if (isAdmin) {
       this.currentLinks = [
+        ...this.Menu,
         ...this.Alumno,
         ...this.configuraciones,
         ...this.AdministrarUsuario,

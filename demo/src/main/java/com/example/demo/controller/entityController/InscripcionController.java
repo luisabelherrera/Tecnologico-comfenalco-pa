@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import com.example.demo.model.entity.Inscripcion;
 import com.example.demo.services.service.InscripcionService;
+import com.example.demo.exceptions.customexceptions.exceptionsEntity.InscripcionException;
 
 @CrossOrigin
 @RestController
@@ -42,13 +43,13 @@ public class InscripcionController {
     @PostMapping
     public ResponseEntity<?> createInscripcion(@RequestBody Inscripcion inscripcion) {
         if (inscripcion.getAcudiente() == null) {
-            return ResponseEntity.badRequest().body("El acudiente no puede ser nulo.");
+            throw new InscripcionException("El acudiente no puede ser nulo.");
         }
 
         try {
             Inscripcion savedInscripcion = inscripcionService.save(inscripcion);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedInscripcion);
-        } catch (IllegalStateException e) {
+        } catch (InscripcionException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -65,7 +66,7 @@ public class InscripcionController {
         try {
             Inscripcion updatedInscripcion = inscripcionService.save(inscripcion);
             return ResponseEntity.ok(updatedInscripcion);
-        } catch (IllegalStateException e) {
+        } catch (InscripcionException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

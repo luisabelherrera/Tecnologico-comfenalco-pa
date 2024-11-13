@@ -1,21 +1,15 @@
 package com.example.demo.controller.entityController;
 
-import java.util.List;
-import java.util.Optional;
+import com.example.demo.exceptions.customexceptions.exceptionsEntity.GradoSeccionException;
+import com.example.demo.model.entity.GradoSeccion;
+import com.example.demo.services.service.GradoSeccionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import com.example.demo.model.entity.GradoSeccion;
-import com.example.demo.services.service.GradoSeccionService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -35,30 +29,32 @@ public class GradoSeccionController {
     public ResponseEntity<GradoSeccion> getGradoSeccionById(@PathVariable Integer id) {
         Optional<GradoSeccion> gradoSeccion = gradoSeccionService.findById(id);
         return gradoSeccion.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseGet(() -> {
+                    throw new GradoSeccionException("Grado y Sección no encontrado con ID: " + id);
+                });
     }
 
     @PostMapping
     public ResponseEntity<GradoSeccion> createGradoSeccion(@RequestBody GradoSeccion gradoSeccion) {
+        if (gradoSeccion == null || gradoSeccion.getDescripcionGrado() == null || gradoSeccion.getDescripcionSeccion() == null) {
+            throw new GradoSeccionException("Los campos 'DescripcionGrado' y 'DescripcionSeccion' son obligatorios.");
+        }
         GradoSeccion nuevoGradoSeccion = gradoSeccionService.save(gradoSeccion);
         return ResponseEntity.ok(nuevoGradoSeccion);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GradoSeccion> updateGradoSeccion(@PathVariable Integer id,
-
-            @RequestBody GradoSeccion gradoSeccionDetalles) {
+    public ResponseEntity<GradoSeccion> updateGradoSeccion(@PathVariable Integer id, @RequestBody GradoSeccion gradoSeccionDetalles) {
         Optional<GradoSeccion> gradoSeccionExistente = gradoSeccionService.findById(id);
         if (gradoSeccionExistente.isPresent()) {
             GradoSeccion gradoSeccion = gradoSeccionExistente.get();
-
             gradoSeccion.setDescripcionGrado(gradoSeccionDetalles.getDescripcionGrado());
             gradoSeccion.setDescripcionSeccion(gradoSeccionDetalles.getDescripcionSeccion());
             gradoSeccion.setActivo(gradoSeccionDetalles.isActivo());
             GradoSeccion gradoSeccionActualizado = gradoSeccionService.save(gradoSeccion);
             return ResponseEntity.ok(gradoSeccionActualizado);
         } else {
-            return ResponseEntity.notFound().build();
+            throw new GradoSeccionException("No se pudo encontrar GradoSección con ID: " + id);
         }
     }
 
@@ -69,7 +65,7 @@ public class GradoSeccionController {
             gradoSeccionService.deleteById(id);
             return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.notFound().build();
+            throw new GradoSeccionException("No se pudo eliminar GradoSección con ID: " + id);
         }
     }
 }

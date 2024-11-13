@@ -51,6 +51,9 @@ export class EditarEstudianteComponent implements OnInit {
     });
   }
   
+  resetForm(): void {
+    this.router.navigate(['/listar']); // Regresar a la lista de estudiantes al cancelar
+  }
 
   actualizarEstudiante(): void {
     if (this.estudiante && this.estudiante.idEstudiante) {

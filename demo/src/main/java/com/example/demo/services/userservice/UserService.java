@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.http.HttpHeaders;
 
-import com.example.demo.exceptions.NotFoundException;
-import com.example.demo.exceptions.ConflictException;
+import com.example.demo.exceptions.customexceptions.NotFoundException;
+import com.example.demo.exceptions.customexceptions.ConflictException;
 import com.example.demo.model.login.dto.JwtResponseDto;
 import com.example.demo.model.login.dto.LoginDto;
 import com.example.demo.model.login.dto.RegisterDto;

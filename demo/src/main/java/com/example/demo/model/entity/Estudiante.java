@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @Table(name = "ESTUDIANTE")
+
 public class Estudiante implements Serializable {
 
 

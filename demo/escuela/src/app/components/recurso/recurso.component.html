@@ -1,0 +1,38 @@
+
+<div class="container mt-4">
+    <h2>Gestor de Archivos</h2>
+  
+    <div class="mb-3">
+      <label for="fileInput" class="form-label">Seleccionar archivo:</label>
+      <input type="file" id="fileInput" (change)="onFileSelected($event)" class="form-control" />
+    </div>
+    
+    <button (click)="uploadFile()" class="btn btn-primary">Subir Archivo</button>
+  
+    <div *ngIf="message" class="alert alert-info mt-3">{{ message }}</div>
+  
+    <h3 class="mt-4">Lista de Archivos</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Tamaño (bytes)</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let file of files">
+          <td>{{ file.name }}</td>
+          <td>{{ file.type }}</td>
+          <td>{{ file.size }}</td>
+          <td>
+            <button (click)="downloadFile(file)" class="btn btn-success">Descargar</button>
+        </td>
+        
+        
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

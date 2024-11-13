@@ -1,10 +1,18 @@
 <div class="inscripcion-container" style="max-width: 1000px; margin: auto;">
-  <h2>Gestionar inscripción matrícula</h2>
 
   <form (ngSubmit)="isEditing ? update() : create()" #inscripcionForm="ngForm">
     <mat-card>
       <mat-card-content>
 
+<p>
+
+</p>
+        <h2>Gestionar inscripción matrícula</h2>
+
+
+<p>
+  
+</p>
         <mat-form-field appearance="fill">
           <mat-label>Valor Código</mat-label>
           <input matInput [(ngModel)]="nuevoInscripcion.valorCodigo" name="valorCodigo" required #valorCodigo="ngModel">
@@ -133,10 +141,27 @@
         <td mat-cell *matCellDef="let inscripcion">{{ inscripcion.estudiante.nombres }} {{ inscripcion.estudiante.apellidos }}</td>
       </ng-container>
 
+
       <ng-container matColumnDef="fechaRegistro">
         <th mat-header-cell *matHeaderCellDef> Fecha Registro </th>
         <td mat-cell *matCellDef="let inscripcion">{{ inscripcion.fechaRegistro | date }}</td>
       </ng-container>
+
+
+      <ng-container matColumnDef="situacion">
+        <th mat-header-cell *matHeaderCellDef>  situacion </th>
+        <td mat-cell *matCellDef="let inscripcion">{{ inscripcion.situacion}}</td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="Estado">
+        <th mat-header-cell *matHeaderCellDef> Estado </th>
+        <td mat-cell *matCellDef="let inscripcion">
+          <div class="estado-indicador" [ngClass]="inscripcion.activo ? 'activo' : 'inactivo'"></div>
+        </td>
+      </ng-container>
+      
+
 
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef> Acciones </th>
@@ -147,8 +172,8 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="['valorCodigo', 'codigo', 'estudiante', 'fechaRegistro', 'acciones']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['valorCodigo', 'codigo', 'estudiante', 'fechaRegistro', 'acciones'];"></tr>
+      <tr mat-header-row *matHeaderRowDef="['valorCodigo', 'codigo', 'estudiante', 'situacion' ,'fechaRegistro', 'Estado','acciones']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['valorCodigo', 'codigo', 'estudiante', 'situacion','fechaRegistro','Estado' ,'acciones'];"></tr>
     </table>
 
     <!-- Paginator -->

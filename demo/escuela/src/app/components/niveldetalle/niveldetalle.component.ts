@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NivelDetalle } from 'src/app/models/entity/NivelDetalle.interface';
 import { GradoSeccion } from 'src/app/models/entity/GradoSeccion.interface';
 import { Nivel } from 'src/app/models/entity/nivel.interface';
@@ -7,7 +7,10 @@ import { GradoSeccionService } from 'src/app/services/grado-seccion/grado-seccio
 import { NivelService } from 'src/app/services/nivel/Nivel.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
 import { NivelDetalleDialogoGraficoComponent } from './nivel-detalle-dialogo-grafico/nivel-detalle-dialogo-grafico.component';
+import { PageEvent } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'app-nivel-detalle',
@@ -21,10 +24,11 @@ export class NivelDetalleComponent implements OnInit {
     niveles: Nivel[] = [];
     errorMessage: string | null = null;
     successMessage: string | null = null;
+    warningMessage: string | null = null; // Para mensaje de advertencia
     isLoading = false;
     editingNivelDetalle: NivelDetalle | null = null;
+
     displayedColumns: string[] = [
-      
         'nivel',
         'gradoSeccion',
         'totalVacantes',
@@ -33,23 +37,23 @@ export class NivelDetalleComponent implements OnInit {
         'activo',
         'actions'
       ];
-      
+    
     dataSource = new MatTableDataSource<NivelDetalle>(this.nivelDetalles);
 
+    @ViewChild(MatPaginator) paginator: MatPaginator; 
+    @ViewChild(MatSort) sort: MatSort; // Declaración para habilitar matSort
 
     constructor(
         private nivelDetalleService: NivelDetalleService,
         private gradoSeccionService: GradoSeccionService,
         private nivelService: NivelService,
         private dialog: MatDialog
-   
     ) {}
 
     ngOnInit(): void {
         this.loadNivelDetalles();
         this.loadGradosSecciones();
         this.loadNiveles();
-        
     }
 
     loadNivelDetalles(): void {
@@ -59,6 +63,8 @@ export class NivelDetalleComponent implements OnInit {
                 this.nivelDetalles = data;
                 this.dataSource.data = this.nivelDetalles; 
                 this.setLoadingState(false);
+                this.dataSource.paginator = this.paginator; 
+                this.dataSource.sort = this.sort;
             },
             error => this.handleError('Error al cargar los niveles de detalle', error)
         );
@@ -87,25 +93,41 @@ export class NivelDetalleComponent implements OnInit {
             error => this.handleError('Error al cargar los niveles', error)
         );
     }
-    
 
+   
     createOrUpdateNivelDetalle(): void {
+        // Verificar si el nivel o el grado y sección seleccionados están inactivos
+        if (this.nuevoNivelDetalle.nivel && !this.nuevoNivelDetalle.nivel.activo) {
+            this.warningMessage = 'No se puede guardar. El nivel seleccionado está inactivo.';
+            return;
+        }
+        if (this.nuevoNivelDetalle.gradoSeccion && !this.nuevoNivelDetalle.gradoSeccion.activo) {
+            this.warningMessage = 'No se puede guardar. El grado y sección seleccionado está inactivo.';
+            return;
+        }
+        
+        // Verificación de campos obligatorios
         if (!this.isValid(this.nuevoNivelDetalle)) {
             this.errorMessage = 'Por favor, complete todos los campos requeridos.';
             return;
         }
-
+        
         this.setLoadingState(true);
+        this.warningMessage = null; // Limpiar el mensaje de advertencia si la validación es exitosa
+        
         const action = this.editingNivelDetalle ? this.updateNivelDetalle() : this.createNivelDetalle();
         action.subscribe(
             () => {
-                this.successMessage = `Nivel detalle ${this.editingNivelDetalle ? 'actualizado' : 'creado'} con éxito`;
+                const estado = this.nuevoNivelDetalle.activo ? 'Activo' : 'Inactivo';
+                const operacion = this.editingNivelDetalle ? 'actualizado' : 'creado';
+                this.successMessage = `Nivel detalle ${operacion} con éxito. Estado: ${estado}`;
                 this.loadNivelDetalles();
                 this.resetForm();
             },
             error => this.handleError(`Error al ${this.editingNivelDetalle ? 'actualizar' : 'crear'} nivel detalle`, error)
         );
     }
+    
 
     createNivelDetalle() {
         return this.nivelDetalleService.create(this.nuevoNivelDetalle);
@@ -132,7 +154,7 @@ export class NivelDetalleComponent implements OnInit {
             );
         }
     }
-
+    
     resetForm(): void {
         this.nuevoNivelDetalle = this.initializeNuevoNivelDetalle();
         this.editingNivelDetalle = null;
@@ -192,15 +214,17 @@ export class NivelDetalleComponent implements OnInit {
             height: '500px',
             data: nivelDetalle  
         });
-    
+
         dialogRef.afterClosed().subscribe(result => {
-            
         });
     }
     
-      
     applyFilter(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+    onPaginateChange(event: PageEvent): void {
+        console.log(`Página: ${event.pageIndex}, Tamaño de página: ${event.pageSize}`);
     }
 }

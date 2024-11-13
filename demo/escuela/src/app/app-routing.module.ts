@@ -69,6 +69,9 @@ import { CurricularEstudianteComponent } from './components/vista-estudiante/cur
 import { HorarioEstudianteComponent } from './components/vista-estudiante/horario-estudiante/horario-estudiante.component';
 import { ErrorComponent } from './components/error/error.component';
 import { AgregarNoticiaComponent } from './components/agregar-noticia/agregar-noticia.component';
+import { RecursoComponent } from './components/recurso/recurso.component';
+
+
 
 const routes: Routes = [
 
@@ -238,6 +241,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Administracion'] },
   },
+
+  { path: 'agregar-recurso', component: RecursoComponent ,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion'] },
+  },
+
   //docente
   {
     path: 'docentes',
@@ -245,6 +254,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Administracion'] },
   },
+
+  
 
   { path: 'docentes/detalle', component: DocenteNivelDetalleCursoComponent,
     canActivate: [AuthGuard],
@@ -274,7 +285,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Administracion'] },
   },
-
+ 
 
   // Login route
   { path: 'login', component: LoginComponent },

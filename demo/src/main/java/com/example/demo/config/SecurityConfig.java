@@ -49,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/login").permitAll()
                         .requestMatchers("/api/register/**").hasAuthority("Administracion")
                         .requestMatchers("/chat-websocket/**").permitAll()
+                        .requestMatchers("/api/fileManager/files/**").permitAll()
                         .requestMatchers("/admin").hasAuthority("Administracion")
                         .requestMatchers("/docente").hasAuthority("Docente")
                         .requestMatchers("/estudiante").hasAuthority("Estudiante")

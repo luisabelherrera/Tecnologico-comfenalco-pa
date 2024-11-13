@@ -28,6 +28,8 @@ export class NivelDetalleDialogoGraficoComponent implements OnInit {
     this.createChart();
   }
 
+
+
   createChart() {
     const ctx = (document.getElementById('vacantesChart') as HTMLCanvasElement).getContext('2d');
 

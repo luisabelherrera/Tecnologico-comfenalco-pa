@@ -5,13 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @Document(collection = "noticias")
-public class Noticia {
+public class Noticia implements Serializable {
 
     @Id
     private String id;

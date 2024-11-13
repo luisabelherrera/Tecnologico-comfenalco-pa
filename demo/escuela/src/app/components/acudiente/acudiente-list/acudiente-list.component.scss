@@ -55,3 +55,18 @@
   display: flex;
   justify-content: flex-end; /* Alinear el paginador a la derecha */
 }
+
+.estado-indicador {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.estado-indicador.activo {
+  background-color: green; /* Color verde para estado Activo */
+}
+
+.estado-indicador.inactivo {
+  background-color: red; /* Color rojo para estado Inactivo */
+}

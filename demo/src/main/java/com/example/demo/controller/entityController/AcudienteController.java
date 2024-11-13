@@ -3,6 +3,7 @@ package com.example.demo.controller.entityController;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.demo.exceptions.customexceptions.exceptionsEntity.AcudienteNotFoundException;
 import com.example.demo.model.entity.dto.AcudienteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,10 +33,13 @@ public class AcudienteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AcudienteDTO> getAcudienteById(@PathVariable long id) {
+    public ResponseEntity<AcudienteDTO> getAcudienteById(@PathVariable Integer id) {
         Optional<AcudienteDTO> acudiente = acudienteService.findById(id);
-        return acudiente.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        if (acudiente.isPresent()) {
+            return ResponseEntity.ok(acudiente.get());
+        } else {
+            throw new AcudienteNotFoundException(id); // Lanzamos la excepción personalizada
+        }
     }
 
     @PostMapping

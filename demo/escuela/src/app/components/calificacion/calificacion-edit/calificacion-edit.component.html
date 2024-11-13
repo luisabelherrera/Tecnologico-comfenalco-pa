@@ -1,8 +1,10 @@
-<div class="container">
-  <h2>Editar Calificación</h2>
+<div class="container mat-elevation-z8">
+  <h2 class="title-with-icon">
+    <mat-icon>edit</mat-icon> Editar Calificación
+  </h2>
   
-  <form (ngSubmit)="saveCalificacion()" #form="ngForm">
-    <mat-form-field appearance="fill">
+  <form (ngSubmit)="saveCalificacion()" #form="ngForm" class="form-container">
+    <mat-form-field appearance="outline" class="form-field">
       <mat-label>Nota:</mat-label>
       <input 
         matInput 
@@ -17,7 +19,7 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="outline" class="form-field">
       <mat-label>Estudiante:</mat-label>
       <mat-select [(ngModel)]="calificacion.estudiante" name="estudiante" required>
         <mat-option value="" disabled>Seleccione un estudiante</mat-option>
@@ -30,7 +32,7 @@
       </mat-error>
     </mat-form-field>
     
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="outline" class="form-field">
       <mat-label>Curricular:</mat-label>
       <mat-select [(ngModel)]="calificacion.curricular" name="curricular" required>
         <mat-option value="" disabled>Seleccione un curricular</mat-option>
@@ -43,7 +45,7 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="outline" class="form-field">
       <mat-label>Fecha de Registro:</mat-label>
       <input 
         matInput 
@@ -55,7 +57,9 @@
 
     <mat-checkbox [(ngModel)]="calificacion.activo" name="activo">Activo</mat-checkbox>
 
-    <button type="submit" mat-raised-button color="primary" [disabled]="!form.valid">Actualizar</button>
-    <a [routerLink]="['/calificaciones']" mat-button color="warn">Cancelar</a>
+    <div class="button-group">
+      <button type="submit" mat-raised-button color="primary" [disabled]="!form.valid">Actualizar</button>
+      <a [routerLink]="['/calificaciones']" mat-button color="warn">Cancelar</a>
+    </div>
   </form>
 </div>

@@ -46,7 +46,10 @@
              
                 <td>{{ curso.nivelDetalle.nivel.descripcionNivel }}</td>
                 <td>{{ curso.curso.descripcion }}</td>
-                <td>{{ curso.curso.activo }}</td>
+                <td>
+                    <div class="estado-indicador" [ngClass]="curso.curso.activo ? 'activo' : 'inactivo'"></div>
+                  </td>
+                  
                 <td>
                     <button class="btn btn-warning btn-sm" (click)="editCurso(curso)">Edit</button>
                     <button class="btn btn-danger btn-sm" (click)="deleteCurso(curso.idNivelDetalleCurso)">Delete</button>

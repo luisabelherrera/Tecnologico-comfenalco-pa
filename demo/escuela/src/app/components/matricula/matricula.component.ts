@@ -182,7 +182,7 @@ export class MatriculaComponent implements OnInit, OnDestroy {
     });
   
     dialogRef.afterClosed().subscribe(result => {
-      // Aquí puedes manejar el resultado si es necesario
+    
     });
   }
 

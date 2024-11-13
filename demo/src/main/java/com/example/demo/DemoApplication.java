@@ -9,11 +9,9 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @SpringBootApplication
 @EnableCaching
-@EnableAspectJAutoProxy
-
+@EnableAspectJAutoProxy // habilita  aspectos   interceptores  ejemplo  transacciones  logging
 @EnableJpaRepositories(basePackages = "com.example.demo.repositories.jpa")
 @EnableMongoRepositories(basePackages = "com.example.demo.repositories.mongo")
-
 public class DemoApplication {
 
     public static void main(String[] args) {

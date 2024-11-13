@@ -1,5 +1,6 @@
 package com.example.demo.model.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -23,7 +24,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Entity
 @Table(name = "HORARIO")
-public class Horario {
+public class Horario  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

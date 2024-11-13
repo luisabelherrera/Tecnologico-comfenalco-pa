@@ -11,11 +11,10 @@
     </span>
     <span class="title">{{ title }}</span>
   </span>
-
   <span class="spacer"></span>
 
   <span *ngIf="isAuthenticated$ | async" class="user-info">
-    <span *ngIf="userName$ | async as userName; else loading">
+    <span *ngIf="userName$ | async as userName; else loading"  >
       Bienvenido, {{ userName }}
     </span>
     <ng-template #loading>
@@ -28,25 +27,22 @@
   </button>
 </mat-toolbar>
 
-
-
-
-
 <mat-sidenav-container>
   <mat-sidenav #sidenav mode="side" [opened]="isAuthenticated$ | async" class="app-sidenav">
     <nav>
-     <h4 
-  mat-subheader 
-  (click)="islinksMenuOpen = !islinksMenuOpen" 
-  [attr.aria-expanded]="islinksMenuOpen" 
-  style="text-align: center; width: 100%;">
-  Menú Principal
-</h4>
+      <h4 
+        mat-subheader 
+        (click)="islinksMenuOpen = !islinksMenuOpen" 
+        [attr.aria-expanded]="islinksMenuOpen" 
+        style="text-align: center; width: 100%;">
+        <p></p>
+        Menú Principal
+      </h4>
 
-      <mat-divider></mat-divider>
-      <div *ngIf="islinksMenuOpen">
+        
+      <div *ngIf="islinksMenuOpen" class="links-container">
         <a mat-button class="nav-link" *ngFor="let link of links" [routerLink]="link.path" routerLinkActive="active">
-          <mat-icon>{{ link.icon }}</mat-icon>
+          <img [src]="link.icon" alt="{{ link.title }}" style="width: 24px; height: 24px; margin-right: 8px;"/> <!-- Reemplaza mat-icon por img -->
           {{ link.title }}
         </a>
       </div>
@@ -69,7 +65,8 @@
 
     <ng-container *ngIf="isManager$ | async">
       <h4 mat-subheader class="sidenav-header" (click)="isVentana3MenuOpen = !isVentana3MenuOpen" [attr.aria-expanded]="isVentana3MenuOpen">
-        Ventana3
+        <img src="assets/iconos/estudiante.png" alt="Estudiante" style="width: 24px; height: 24px; vertical-align: middle; margin-right: 8px;" />
+       Informacion
       </h4>
       <div *ngIf="isVentana3MenuOpen">
         <nav>
@@ -157,19 +154,39 @@
   </div>
 </ng-container>
 
-    <ng-container *ngIf="!(isAdmin$ | async) && !(isManager$ | async)">
-      <h4 mat-subheader class="sidenav-header" (click)="isUserMenuOpen = !isUserMenuOpen" [attr.aria-expanded]="isUserMenuOpen">
-        Mis Información
-      </h4>
-      <div *ngIf="isUserMenuOpen">
-        <nav>
-          <a mat-button class="nav-link" *ngFor="let link of userLinks" [routerLink]="link.path" routerLinkActive="active">
-            <mat-icon>{{ link.icon }}</mat-icon>
-            {{ link.title }}
-          </a>
-        </nav>
-      </div>
-    </ng-container>
+
+<ng-container *ngIf="isAdmin$ | async">
+  <h4 mat-subheader class="sidenav-header" (click)="isMenu = !isMenu" [attr.aria-expanded]="isMenu">
+    <img src="assets/iconos/informacion.png" alt="Icono Matrícula" style="width: 24px; height: 24px; margin-right: 8px;" /> <!-- Reemplaza la ruta con tu ícono -->
+    Noticias
+  </h4>
+  <div *ngIf="isMenu">
+    <nav>
+      <a mat-button class="nav-link" *ngFor="let link of Menu" [routerLink]="link.path" routerLinkActive="active">
+        <mat-icon>{{ link.icon }}</mat-icon>
+        {{ link.title }}
+      </a>
+    </nav>
+  </div>
+</ng-container>
+<p>
+
+</p>
+<ng-container *ngIf="!(isAdmin$ | async) && !(isManager$ | async)">
+  <h4 mat-subheader class="sidenav-header" (click)="isUserMenuOpen = !isUserMenuOpen" [attr.aria-expanded]="isUserMenuOpen">
+    Información
+    <img src="assets/iconos/profesor.png" alt="Profesor Icono" style="width: 24px; height: 24px; margin-left: 8px;">
+  </h4>
+  <div *ngIf="isUserMenuOpen">
+    <nav>
+      <a mat-button class="nav-link" *ngFor="let link of userLinks" [routerLink]="link.path" routerLinkActive="active">
+        <mat-icon>{{ link.icon }}</mat-icon>
+        {{ link.title }}
+      </a>
+    </nav>
+  </div>
+</ng-container>
+
   </mat-sidenav>
 
   <mat-sidenav-content>

@@ -52,6 +52,8 @@ export class NoticiaService {
     return this.http.put<Noticia>(`${this.apiUrl}/actualizar/${id}`, formData, { headers: this.getHeaders() });
   }
 
+
+
   // Método para eliminar una noticia
   eliminarNoticia(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/eliminar/${id}`, { headers: this.getHeaders() });

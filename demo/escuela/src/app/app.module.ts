@@ -72,6 +72,7 @@ import { NivelDetalleComponent } from './components/niveldetalle/niveldetalle.co
 import { NivelDetalleCursoComponent } from './components/niveldetallecurso/niveldetallecurso.component';
 
 import { PeriodoComponent } from './components/periodo/periodo.component';
+import { NgxPaginationModule } from 'ngx-pagination'; 
 
 import { DocenteComponent } from './components/docente/docente.component';
 
@@ -93,6 +94,9 @@ import { AgregarEstudianteDialogComponent } from './components/matricula/dialog/
 import { MatricularAcudienteDialogComponent } from './components/matricula/dialog/matricular-acudiente-dialog/matricular-acudiente-dialog.component';
 import { AgregarNoticiaComponent } from './components/agregar-noticia/agregar-noticia.component';
 import { ImagenDialogComponent } from './components/home/dialogo/ImagenDialog.component';
+import { RecursoComponent } from './components/recurso/recurso.component';
+import { MatCarouselModule } from '@ngbmodule/material-carousel';
+
 
 
 @NgModule({
@@ -120,8 +124,12 @@ import { ImagenDialogComponent } from './components/home/dialogo/ImagenDialog.co
     MatCheckboxModule,
     MatIconModule,
     MatTooltipModule,
+    NgxPaginationModule ,
+    MatCarouselModule,
   ],
   declarations: [
+
+    RecursoComponent,
     ImagenDialogComponent,
     AgregarNoticiaComponent,
     Ventana2Component,

@@ -1,21 +1,15 @@
 package com.example.demo.controller.entityController;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.*;
+
 import com.example.demo.model.entity.Curso;
 import com.example.demo.services.service.CursoService;
+import com.example.demo.exceptions.customexceptions.exceptionsEntity.CursoNotFoundException;
+
+import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -37,7 +31,8 @@ public class CursoController {
         if (curso.isPresent()) {
             return ResponseEntity.ok(curso.get());
         } else {
-            return ResponseEntity.notFound().build();
+
+            throw new CursoNotFoundException(id);
         }
     }
 
@@ -52,13 +47,12 @@ public class CursoController {
         Optional<Curso> cursoExistente = cursoService.findById(id);
         if (cursoExistente.isPresent()) {
             Curso curso = cursoExistente.get();
-
             curso.setDescripcion(cursoDetalles.getDescripcion());
             curso.setActivo(cursoDetalles.isActivo());
             Curso cursoActualizado = cursoService.save(curso);
             return ResponseEntity.ok(cursoActualizado);
         } else {
-            return ResponseEntity.notFound().build();
+            throw new CursoNotFoundException(id);
         }
     }
 
@@ -69,7 +63,7 @@ public class CursoController {
             cursoService.deleteById(id);
             return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.notFound().build();
+            throw new CursoNotFoundException(id);
         }
     }
 }

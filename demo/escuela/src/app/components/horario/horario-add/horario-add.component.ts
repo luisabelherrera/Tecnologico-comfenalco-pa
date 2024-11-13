@@ -35,7 +35,16 @@
   };
 
     nivelesDetalleCurso: NivelDetalleCurso[] = [];  
-
+    diasSemana: string[] = [
+      'Lunes',
+      'Martes',
+      'Miércoles',
+      'Jueves',
+      'Viernes',
+      'Sábado',
+      'Domingo'
+    ];
+    
     constructor(
       private horarioService: HorarioService,
       private nivelDetalleCursoService: NivelDetalleCursoService,  

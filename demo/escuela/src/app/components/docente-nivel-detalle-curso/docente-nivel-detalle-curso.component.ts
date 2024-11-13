@@ -43,7 +43,7 @@ export class DocenteNivelDetalleCursoComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
   loadData(): void {
-    this.loading = true;
+    this.loading = false;
     this.loadAll();
     this.loadDocentes();
     this.loadNivelesDetalle();
@@ -63,7 +63,7 @@ export class DocenteNivelDetalleCursoComponent implements OnInit, OnDestroy {
       (error) => {
         console.error('Error cargando docentes:', error);
         this.snackBar.open('Error al cargar docentes. Inténtalo de nuevo.', 'Cerrar', {
-          duration: 3000,
+          duration: 0,
         });
         this.loading = false;
       }

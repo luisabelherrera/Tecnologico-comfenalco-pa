@@ -1,5 +1,6 @@
 package com.example.demo.model.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -14,7 +15,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "NIVEL")
-public class Nivel {
+public class Nivel  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

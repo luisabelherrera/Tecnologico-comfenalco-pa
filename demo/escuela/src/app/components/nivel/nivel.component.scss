@@ -1,14 +1,8 @@
 .container {
-    align-items: center; 
-    justify-content: center; 
-  }
-  
-  .form-container {
-    display: flex;
-    flex-direction: column;
-  }
-  
-.container {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  justify-content: center;
   max-width: 1200px; 
   width: 100%;
   margin: 0 auto; 
@@ -17,35 +11,61 @@
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-  .header {
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-  .mat-header-cell {
-    background-color: #3f51b5; 
-    color: white; 
-  }
-  
-  .table-container {
-    width: 100%; 
-  }
-  
-  .full-width-table {
-    width: 100%;  
-  }
-  
-  .button-group {
-    display: flex;
-    gap: 5px;  
-  }
-  
-  .button-group button {
-    margin-right: 5px;  
-  }
-  
-  .pagination {
-    display: flex;
-    justify-content: space-between; 
-    margin-top: 20px;
-  }
-  
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.form-grid {
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+  gap: 16px; 
+}
+
+.header {
+  margin: 20px 0;
+  width: 100%;
+}
+
+.mat-header-cell {
+  background-color: #3f51b5; 
+  color: white; 
+}
+
+.table-container {
+  width: 100%; 
+  overflow-x: auto; 
+}
+
+.nivel-table {
+  width: 100%;
+  border-collapse: collapse; 
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between; 
+  margin-top: 20px; 
+}
+
+.loading, .error, .success {
+  margin: 10px 0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+
+.warning-message {
+  color: #d9534f;
+  background-color: #f9d6d5; 
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  text-align: center;
+}

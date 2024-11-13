@@ -1,21 +1,13 @@
 package com.example.demo.controller.entityController;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import com.example.demo.model.entity.Calificacion;
 import com.example.demo.services.service.CalificacionService;
+import com.example.demo.exceptions.customexceptions.exceptionsEntity.CalificacionNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -37,10 +29,9 @@ public class CalificacionController {
         if (calificacion.isPresent()) {
             return ResponseEntity.ok(calificacion.get());
         } else {
-            return ResponseEntity.notFound().build();
+            throw new CalificacionNotFoundException(id);
         }
     }
-
     @PostMapping
     public ResponseEntity<Calificacion> createCalificacion(@RequestBody Calificacion calificacion) {
         Calificacion nuevaCalificacion = calificacionService.save(calificacion);
@@ -49,16 +40,15 @@ public class CalificacionController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Calificacion> updateCalificacion(@PathVariable Integer id,
-            @RequestBody Calificacion calificacionDetalles) {
+                                                           @RequestBody Calificacion calificacionDetalles) {
         Optional<Calificacion> calificacionExistente = calificacionService.findById(id);
         if (calificacionExistente.isPresent()) {
             Calificacion calificacion = calificacionExistente.get();
-
             calificacion.setNota(calificacionDetalles.getNota());
             Calificacion calificacionActualizada = calificacionService.save(calificacion);
             return ResponseEntity.ok(calificacionActualizada);
         } else {
-            return ResponseEntity.notFound().build();
+            throw new CalificacionNotFoundException(id);
         }
     }
 
@@ -69,7 +59,7 @@ public class CalificacionController {
             calificacionService.deleteById(id);
             return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.notFound().build();
+            throw new CalificacionNotFoundException(id);
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.demo.model.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "NIVEL_DETALLE")
-public class NivelDetalle {
+public class NivelDetalle  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -4,7 +4,10 @@ import com.example.demo.model.entity.Noticia;
 import com.example.demo.model.entity.dto.NoticiaDTO;
 import com.example.demo.repositories.mongo.NoticiaRepository;
 import com.example.demo.services.service.NoticiaService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,12 +15,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class NoticiaServiceImpl implements NoticiaService {
 
     @Autowired
     private NoticiaRepository noticiaRepository;
 
-    @Override
+
+
+    @CacheEvict(value = "Noticiacache", allEntries = true)
     public Noticia crearNoticia(NoticiaDTO noticiaDTO) {
         Noticia noticia = new Noticia();
         noticia.setTitulo(noticiaDTO.getTitulo());
@@ -27,8 +33,7 @@ public class NoticiaServiceImpl implements NoticiaService {
         noticia.setFechaCreacion(LocalDateTime.now());
         return noticiaRepository.save(noticia);
     }
-
-    @Override
+    @Cacheable("Noticiacache")
     public List<Noticia> obtenerNoticias() {
         return noticiaRepository.findAll();
     }
@@ -52,7 +57,8 @@ public class NoticiaServiceImpl implements NoticiaService {
         return null; // O lanza una excepción
     }
 
-    @Override
+
+    @CacheEvict(value = "Noticiacache", allEntries = true)
     public void eliminarNoticia(String id) {
         noticiaRepository.deleteById(id);
     }

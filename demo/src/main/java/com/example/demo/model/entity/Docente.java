@@ -1,5 +1,6 @@
 package com.example.demo.model.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "DOCENTE")
-public class Docente {
+public class Docente  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

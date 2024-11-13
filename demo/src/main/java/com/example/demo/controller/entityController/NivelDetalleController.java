@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
+
 import com.example.demo.model.entity.NivelDetalle;
 import com.example.demo.services.service.NivelDetalleService;
+import com.example.demo.exceptions.customexceptions.exceptionsEntity.NivelDetalleException;
+import com.example.demo.exceptions.messages.ErrorMessages;
 
 @CrossOrigin
 @RestController
@@ -34,8 +37,10 @@ public class NivelDetalleController {
     @GetMapping("/{id}")
     public ResponseEntity<NivelDetalle> getNivelDetalleById(@PathVariable Integer id) {
         Optional<NivelDetalle> nivelDetalle = nivelDetalleService.findById(id);
-        return nivelDetalle.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        if (nivelDetalle.isEmpty()) {
+            throw new NivelDetalleException(ErrorMessages.NIVEL_DETALLE_ERROR + " No encontrado con id: " + id);
+        }
+        return ResponseEntity.ok(nivelDetalle.get());
     }
 
     @PostMapping
@@ -46,12 +51,11 @@ public class NivelDetalleController {
 
     @PutMapping("/{id}")
     public ResponseEntity<NivelDetalle> updateNivelDetalle(@PathVariable Integer id,
-
-            @RequestBody NivelDetalle nivelDetalleDetalles) {
+                                                           @RequestBody NivelDetalle nivelDetalleDetalles) {
         Optional<NivelDetalle> nivelDetalleExistente = nivelDetalleService.findById(id);
         if (nivelDetalleExistente.isPresent()) {
             NivelDetalle nivelDetalle = nivelDetalleExistente.get();
-            // Actualizar los campos necesarios
+
             nivelDetalle.setTotalVacantes(nivelDetalleDetalles.getTotalVacantes());
             nivelDetalle.setVacantesDisponibles(nivelDetalleDetalles.getVacantesDisponibles());
             nivelDetalle.setVacantesOcupadas(nivelDetalleDetalles.getVacantesOcupadas());
@@ -59,7 +63,7 @@ public class NivelDetalleController {
             NivelDetalle nivelDetalleActualizado = nivelDetalleService.save(nivelDetalle);
             return ResponseEntity.ok(nivelDetalleActualizado);
         } else {
-            return ResponseEntity.notFound().build();
+            throw new NivelDetalleException(ErrorMessages.NIVEL_DETALLE_ERROR + " No encontrado con id: " + id);
         }
     }
 
@@ -70,7 +74,7 @@ public class NivelDetalleController {
             nivelDetalleService.deleteById(id);
             return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.notFound().build();
+            throw new NivelDetalleException(ErrorMessages.NIVEL_DETALLE_ERROR + " No encontrado con id: " + id);
         }
     }
 }

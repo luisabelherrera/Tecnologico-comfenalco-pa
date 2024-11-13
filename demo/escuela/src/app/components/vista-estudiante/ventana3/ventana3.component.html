@@ -2,6 +2,9 @@
     
     <div class="header">
       <h2>Notas del Estudiante</h2> 
+      <p>
+
+      </p>
       
       <div class="search-box">
         <input
@@ -16,7 +19,21 @@
     <div class="table-container">
       <table mat-table [dataSource]="dataSource" matSort class="custom-table">
     
+    
+        <ng-container matColumnDef="curso">
+          <th mat-header-cell *matHeaderCellDef>curso</th>
+          <td mat-cell *matCellDef="let calificacion">{{ calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.descripcion }}</td>
+        </ng-container>
+   
 
+        
+        <ng-container matColumnDef="profesor">
+          <th mat-header-cell *matHeaderCellDef>profesor</th>
+          <td mat-cell *matCellDef="let calificacion">
+            {{ calificacion.curricular.docenteNivelDetalleCurso.docente.nombres}}
+            {{ calificacion.curricular.docenteNivelDetalleCurso.docente.apellidos}}
+          </td>
+        </ng-container>
  
         <ng-container matColumnDef="nota">
           <th mat-header-cell *matHeaderCellDef>Nota</th>

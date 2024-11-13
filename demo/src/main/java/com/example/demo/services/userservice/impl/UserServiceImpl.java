@@ -17,9 +17,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.exceptions.ConflictException;
-import com.example.demo.exceptions.JwtAuthenticationException;
-import com.example.demo.exceptions.NotFoundException;
+import com.example.demo.exceptions.customexceptions.ConflictException;
+import com.example.demo.exceptions.customexceptions.JwtAuthenticationException;
+import com.example.demo.exceptions.customexceptions.NotFoundException;
 import com.example.demo.model.login.Rol;
 import com.example.demo.model.login.UserEntity;
 import com.example.demo.model.login.dto.JwtResponseDto;

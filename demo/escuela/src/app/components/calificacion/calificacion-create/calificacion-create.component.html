@@ -1,9 +1,10 @@
-<div class="container">
-  <h2>Crear Calificación</h2>
+<div class="container mat-elevation-z8">
+  <h2 class="title-with-icon">
+    <mat-icon>create</mat-icon> Crear Calificación
+  </h2>
 
-  <form #form="ngForm" (ngSubmit)="saveCalificacion()">
-    
-    <mat-form-field appearance="fill">
+  <form #form="ngForm" (ngSubmit)="saveCalificacion()" class="form-container">
+    <mat-form-field appearance="outline" class="form-field">
       <mat-label>Nota:</mat-label>
       <input 
         matInput
@@ -19,8 +20,7 @@
       </mat-error>
     </mat-form-field>
 
-    
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="outline" class="form-field">
       <mat-label>Estudiante:</mat-label>
       <mat-select [(ngModel)]="calificacion.estudiante" name="estudiante" required>
         <mat-option *ngFor="let estudiante of estudiantes" [value]="estudiante">
@@ -32,7 +32,7 @@
       </mat-error>
     </mat-form-field>
     
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="outline" class="form-field">
       <mat-label>Descripción Curricular:</mat-label>
       <mat-select [(ngModel)]="calificacion.curricular" name="curricular" required>
         <mat-option value="" disabled>Seleccione una descripción curricular</mat-option>
@@ -45,7 +45,7 @@
       </mat-error>
     </mat-form-field>
     
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="outline" class="form-field">
       <mat-label>Fecha de Registro:</mat-label>
       <input 
         matInput 
@@ -57,7 +57,9 @@
 
     <mat-checkbox [(ngModel)]="calificacion.activo" name="activo">Activo</mat-checkbox>
 
-    <button mat-raised-button color="primary" [disabled]="!form.valid">Guardar</button>
-    <a [routerLink]="['/calificaciones']" mat-button color="warn">Cancelar</a>
+    <div class="button-group">
+      <button mat-raised-button color="primary" [disabled]="!form.valid">Guardar</button>
+      <a [routerLink]="['/calificaciones']" mat-button color="warn">Cancelar</a>
+    </div>
   </form>
 </div>

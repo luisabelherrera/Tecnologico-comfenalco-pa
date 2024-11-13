@@ -3,7 +3,7 @@
     <mat-icon>person_add</mat-icon> Registrar usuario
   </h1>
 
-  <mat-spinner *ngIf="isSubmitting" class="loading-spinner"></mat-spinner>
+
 
   <mat-card *ngIf="!isSubmitting">
     <form (ngSubmit)="register()" #registerForm="ngForm" class="form-container">

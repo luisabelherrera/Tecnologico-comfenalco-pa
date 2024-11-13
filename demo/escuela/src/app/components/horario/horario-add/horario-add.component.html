@@ -7,11 +7,16 @@
       
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Día de la Semana</mat-label>
-        <input matInput [(ngModel)]="nuevoHorario.diaSemana" name="diaSemana" required>
+        <mat-select [(ngModel)]="nuevoHorario.diaSemana" name="diaSemana" required>
+          <mat-option *ngFor="let dia of diasSemana" [value]="dia">
+            {{ dia }}
+          </mat-option>
+        </mat-select>
         <mat-error *ngIf="horarioForm.submitted && !nuevoHorario.diaSemana">
           Este campo es obligatorio.
         </mat-error>
       </mat-form-field>
+      
       
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Hora Inicio</mat-label>

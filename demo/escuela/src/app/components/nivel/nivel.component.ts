@@ -18,6 +18,7 @@ export class NivelComponent implements OnInit {
     isLoading: boolean = false;
     errorMessage: string | null = null;
     successMessage: string | null = null;
+    warningMessage: string | null = null; // Mensaje de advertencia
     editing: boolean = false;
     currentPage: number = 1;
     itemsPerPage: number = 5; 
@@ -47,7 +48,7 @@ export class NivelComponent implements OnInit {
         this.nivelService.getAll().subscribe(
             (data: Nivel[]) => {
                 console.log('Datos de niveles:', data);
-                this.niveles = data || [];
+                this.niveles = data.filter(nivel => nivel.periodo?.activo);
                 this.filteredNiveles = this.niveles;
                 this.updatePaginatedNiveles(); 
                 this.isLoading = false;
@@ -68,6 +69,11 @@ export class NivelComponent implements OnInit {
     }
 
     saveNivel() {
+        if (this.nivel.periodo && !this.nivel.periodo.activo) {
+            this.warningMessage = 'No se puede guardar el nivel. El período seleccionado está inactivo.';
+            return; // Detener el proceso de guardado
+        }
+
         if (!this.isNivelValido()) {
             this.errorMessage = 'Por favor, completa todos los campos requeridos.';
             return;
@@ -76,6 +82,7 @@ export class NivelComponent implements OnInit {
         this.isLoading = true;
         this.errorMessage = null;
         this.successMessage = null;
+        this.warningMessage = null; // Restablece el mensaje de advertencia si el período es válido
 
         const saveObservable = this.editing 
             ? this.nivelService.update(this.nivel.idNivel, this.nivel) 

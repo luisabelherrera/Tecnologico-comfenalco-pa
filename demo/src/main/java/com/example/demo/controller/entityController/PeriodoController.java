@@ -1,8 +1,8 @@
 package com.example.demo.controller.entityController;
 
 import java.util.List;
-import java.util.Optional;
 
+import com.example.demo.exceptions.customexceptions.exceptionsEntity.PeriodoNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
+
+
 import com.example.demo.model.entity.Periodo;
 import com.example.demo.services.service.PeriodoService;
 
@@ -33,9 +35,9 @@ public class PeriodoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Periodo> getPeriodoById(@PathVariable Integer id) {
-        Optional<Periodo> periodo = periodoService.findById(id);
-        return periodo.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Periodo periodo = periodoService.findById(id)
+                .orElseThrow(() -> new PeriodoNotFoundException("Periodo no encontrado con id: " + id));
+        return ResponseEntity.ok(periodo);
     }
 
     @PostMapping
@@ -46,28 +48,21 @@ public class PeriodoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Periodo> updatePeriodo(@PathVariable Integer id, @RequestBody Periodo periodoDetalles) {
-        Optional<Periodo> periodoExistente = periodoService.findById(id);
-        if (periodoExistente.isPresent()) {
-            Periodo periodo = periodoExistente.get();
-            periodo.setDescripcion(periodoDetalles.getDescripcion());
-            periodo.setFechaInicio(periodoDetalles.getFechaInicio());
-            periodo.setFechaFin(periodoDetalles.getFechaFin());
-            periodo.setActivo(periodoDetalles.isActivo());
-            Periodo periodoActualizado = periodoService.save(periodo);
-            return ResponseEntity.ok(periodoActualizado);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        Periodo periodoExistente = periodoService.findById(id)
+                .orElseThrow(() -> new PeriodoNotFoundException("Periodo no encontrado con id: " + id));
+        periodoExistente.setDescripcion(periodoDetalles.getDescripcion());
+        periodoExistente.setFechaInicio(periodoDetalles.getFechaInicio());
+        periodoExistente.setFechaFin(periodoDetalles.getFechaFin());
+        periodoExistente.setActivo(periodoDetalles.isActivo());
+        Periodo periodoActualizado = periodoService.save(periodoExistente);
+        return ResponseEntity.ok(periodoActualizado);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePeriodo(@PathVariable Integer id) {
-        Optional<Periodo> periodo = periodoService.findById(id);
-        if (periodo.isPresent()) {
-            periodoService.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        Periodo periodo = periodoService.findById(id)
+                .orElseThrow(() -> new PeriodoNotFoundException("Periodo no encontrado con id: " + id));
+        periodoService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

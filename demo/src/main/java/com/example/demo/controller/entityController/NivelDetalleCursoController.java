@@ -5,17 +5,11 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.*;
+
 import com.example.demo.model.entity.NivelDetalleCurso;
 import com.example.demo.services.service.NivelDetalleCursoService;
+import com.example.demo.exceptions.customexceptions.exceptionsEntity.NivelDetalleCursoException;
 
 @CrossOrigin
 @RestController
@@ -34,8 +28,10 @@ public class NivelDetalleCursoController {
     @GetMapping("/{id}")
     public ResponseEntity<NivelDetalleCurso> getNivelDetalleCursoById(@PathVariable Integer id) {
         Optional<NivelDetalleCurso> nivelDetalleCurso = nivelDetalleCursoService.findById(id);
-        return nivelDetalleCurso.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        if (nivelDetalleCurso.isEmpty()) {
+            throw new NivelDetalleCursoException("NivelDetalleCurso no encontrado con id: " + id);
+        }
+        return ResponseEntity.ok(nivelDetalleCurso.get());
     }
 
     @PostMapping
@@ -46,7 +42,7 @@ public class NivelDetalleCursoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<NivelDetalleCurso> updateNivelDetalleCurso(@PathVariable Integer id,
-            @RequestBody NivelDetalleCurso nivelDetalleCursoDetalles) {
+                                                                     @RequestBody NivelDetalleCurso nivelDetalleCursoDetalles) {
         Optional<NivelDetalleCurso> nivelDetalleCursoExistente = nivelDetalleCursoService.findById(id);
         if (nivelDetalleCursoExistente.isPresent()) {
             NivelDetalleCurso nivelDetalleCurso = nivelDetalleCursoExistente.get();
@@ -54,7 +50,7 @@ public class NivelDetalleCursoController {
             NivelDetalleCurso nivelDetalleCursoActualizado = nivelDetalleCursoService.save(nivelDetalleCurso);
             return ResponseEntity.ok(nivelDetalleCursoActualizado);
         } else {
-            return ResponseEntity.notFound().build();
+            throw new NivelDetalleCursoException("NivelDetalleCurso no encontrado con id: " + id);
         }
     }
 
@@ -65,7 +61,7 @@ public class NivelDetalleCursoController {
             nivelDetalleCursoService.deleteById(id);
             return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.notFound().build();
+            throw new NivelDetalleCursoException("NivelDetalleCurso no encontrado con id: " + id);
         }
     }
 }

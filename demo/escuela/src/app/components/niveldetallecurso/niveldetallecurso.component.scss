@@ -8,3 +8,30 @@
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+.estado-indicador {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+@keyframes parpadeoSuave {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 10px 4px rgba(0, 255, 0, 0.6); /* Suave resplandor */
+  }
+  50% {
+    opacity: 0.7;
+    box-shadow: 0 0 5px 2px rgba(0, 255, 0, 0.3); /* Reducción del resplandor */
+  }
+}
+
+.activo {
+  background-color: green;
+  animation: parpadeoSuave 2s ease-in-out infinite; /* Parpadeo verde suave */
+}
+
+.inactivo {
+  background-color: red;
+  animation: parpadeoSuave 2s ease-in-out infinite; /* Parpadeo rojo suave */
+}

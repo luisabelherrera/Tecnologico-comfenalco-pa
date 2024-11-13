@@ -1,24 +1,43 @@
-<!-- src/app/components/horario-update/horario-update.component.html -->
+<div *ngIf="horario" class="container mat-elevation-z8">
+  <h2 class="title-with-icon">
+    <mat-icon>update</mat-icon> Actualizar Horario
+  </h2>
+  
+  <form (ngSubmit)="actualizarHorario()" #horarioForm="ngForm" class="form-container">
+    
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Día de la Semana</mat-label>
+      <mat-select [(ngModel)]="horario.diaSemana" name="diaSemana" required>
+        <mat-option *ngFor="let dia of diasSemana" [value]="dia">
+          {{ dia }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="horarioForm.submitted && !horario.diaSemana">
+        Este campo es obligatorio.
+      </mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Hora Inicio</mat-label>
+      <input matInput [(ngModel)]="horario.horaInicio" name="horaInicio" required type="time">
+      <mat-error *ngIf="horarioForm.submitted && !horario.horaInicio">
+        Este campo es obligatorio.
+      </mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Hora Fin</mat-label>
+      <input matInput [(ngModel)]="horario.horaFin" name="horaFin" required type="time">
+      <mat-error *ngIf="horarioForm.submitted && !horario.horaFin">
+        Este campo es obligatorio.
+      </mat-error>
+    </mat-form-field>
+    
 
-<div *ngIf="horario">
-    <h2>Actualizar Horario</h2>
-    <form (ngSubmit)="actualizarHorario()">
-      <mat-form-field>
-        <mat-label>Día de la Semana</mat-label>
-        <input matInput [(ngModel)]="horario.diaSemana" name="diaSemana" required>
-      </mat-form-field>
-      
-      <mat-form-field>
-        <mat-label>Hora Inicio</mat-label>
-        <input matInput [(ngModel)]="horario.horaInicio" name="horaInicio" required>
-      </mat-form-field>
-  
-      <mat-form-field>
-        <mat-label>Hora Fin</mat-label>
-        <input matInput [(ngModel)]="horario.horaFin" name="horaFin" required>
-      </mat-form-field>
-  
-      <button mat-raised-button type="submit">Actualizar</button>
-    </form>
-  </div>
-  
+    <div class="button-group">
+      <button mat-raised-button color="primary" type="submit" [disabled]="horarioForm.invalid">Actualizar</button>
+      <button mat-raised-button color="warn" type="button" (click)="cancelar()">Cancelar</button>
+    </div>
+    
+  </form>
+</div>

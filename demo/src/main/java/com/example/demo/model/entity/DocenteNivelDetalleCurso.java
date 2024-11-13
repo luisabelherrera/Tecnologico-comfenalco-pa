@@ -1,5 +1,6 @@
 package com.example.demo.model.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.example.demo.model.entity.dto.DocenteDTO;
@@ -22,7 +23,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "DOCENTE_NIVELDETALLE_CURSO")
-public class DocenteNivelDetalleCurso {
+public class DocenteNivelDetalleCurso implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

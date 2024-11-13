@@ -1,6 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 
 @use "@angular/material" as mat;
+@import 'swiper/swiper-bundle.min.css';
+$aside-bg-color: #3f51b5; // Color de fondo principal del aside
+$aside-item-color: #ffffff; // Color del texto de los elementos
+$aside-item-hover-color: #b3c6ff; // Color de fondo en hover
+$aside-item-active-color: #ffd740; // Color del texto del elemento activo
 
 @include mat.core();
 
@@ -41,9 +46,12 @@ html {
 
 body {
   margin: 0;
+  min-height: 100vh;
+  width: 100vw;
   font-family: Roboto, sans-serif;
   height: 100%;
   display: flex;
+  overflow-x: hidden;
 }
 
 p {
@@ -51,18 +59,105 @@ p {
 }
 
 .icon-20 {
-  font-size: 20px;
+  font-size: 20px; 
 }
+
+
+/* Estilos personalizados para el scroll */
+::-webkit-scrollbar {
+  width: 8px; /* Ancho de la barra de desplazamiento */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color de fondo del track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3f51b5; /* Color de la barra de desplazamiento */
+  border-radius: 10px; /* Borde redondeado de la barra */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #b3c6ff; /* Color de la barra al pasar el cursor */
+}
+
 
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+@media (max-width: 768px) {
+  .dashboard-card {
+      position: relative !important;
+      top: auto;
+      left: auto;
+      right: auto;
+      bottom: auto;
+      margin: 10px;
+  }
+}
+@media (max-width: 768px) {
+  mat-sidenav {
+    width: 80px; // Reduce el ancho del sidebar en pantallas pequeñas
+  }
+}
+@media (max-width: 768px) {
+  .dashboard-card {
+    position: relative !important;
+    margin: 10px;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+  }
+}
+@media (max-width: 768px) {
+  .login-container {
+    mat-card {
+      width: 90%; // Usa casi todo el ancho en dispositivos móviles
+    }
+  }
+}
+@media (max-width: 768px) {
+  .container-component .list,
+  .container-component .details {
+    width: 100%; // Haz que las listas y detalles ocupen todo el ancho
+  }
+}
+@media (max-width: 768px) {
+  .icon-20 {
+    font-size: 18px; // Ajusta el tamaño de los íconos en dispositivos pequeños
+  }
+
+  mat-toolbar {
+    font-size: 14px; // Disminuye el tamaño de la barra de herramientas en móviles
+  }
+}
+@media (max-width: 768px) {
+  .courses-container .courses-list,
+  .courses-container .course-details {
+    width: 100%;
+  }
+}
+@media (max-width: 768px) {
+  mat-card {
+    margin: 5px; // Reduce el margen de las tarjetas para ahorrar espacio
+  }
+}
+@media (max-width: 768px) {
+  .list-container .full-width-table {
+    width: 100%;
+  }
+
+  .details-container {
+    padding: 10px;
+  }
+}
 
 .container {
   margin: 10px;
   flex-wrap: wrap;
-
+  overflow-x: auto;
   .mat-card-header-text {
     margin-left: 0;
     margin-bottom: 10px;
@@ -104,8 +199,9 @@ mat-toolbar {
 
 mat-sidenav {
   box-shadow: 3px 0 6px rgba(0, 0, 0, 0.24);
-  width: 200px;
+  width: 250px; 
   padding-top: 10px;
+  height: 100vh;
 }
 
 mat-card:not(.dashboard-card) {
@@ -457,15 +553,42 @@ mat-toolbar {
     }
   }
 }
+@media (max-width: 768px) {
+  .container-component {
+      flex-direction: column; /* Cambia a una columna en pantallas pequeñas */
+  }
+
+  .courses-container {
+      flex-direction: column;
+  }
+
+  .list, .details, .courses-list, .course-details {
+      width: 100%;
+  }
+
+  /* Ajustes para la barra lateral y la barra de herramientas */
+  mat-sidenav {
+      width: 100%; /* Ocupa todo el ancho en pantallas pequeñas */
+      padding-top: 10px;
+      width: 250px; 
+    }
+
+  mat-toolbar {
+      flex-wrap: wrap;
+      text-align: center;
+  }
+}
 
 html,
 body {
   height: 100%;
+  overflow-x: hidden;
 }
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  overflow-x: hidden;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body { height: 100%;   overflow-x: hidden; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;    overflow-x: hidden;}

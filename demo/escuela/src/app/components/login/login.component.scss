@@ -1,3 +1,34 @@
-.login{
-	color: gold;
-}
+.custom-button {
+	display: flex;
+	align-items: center;
+	font-family: inherit;
+	cursor: pointer;
+	font-weight: 500;
+	font-size: 15px; 
+	padding: 0.5em 1em; 
+	color: white;
+	background: #ad5389;
+	background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+	border: none;
+	letter-spacing: 0.05em;
+	border-radius: 12px; 
+  }
+  
+  .custom-button svg {
+	margin-right: 2px; 
+	transform: rotate(30deg);
+	transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+  }
+  
+  .custom-button span {
+	transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+  }
+  
+  .custom-button:hover svg {
+	transform: translateX(5px) rotate(90deg);
+  }
+  
+  .custom-button:hover span {
+	transform: translateX(7px);
+  }
+  

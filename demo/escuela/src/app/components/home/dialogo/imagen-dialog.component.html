@@ -1,9 +1,9 @@
-<h2 mat-dialog-title>{{ data.titulo }}</h2>
-<div mat-dialog-content>
-  <p><strong>Fecha de Creación:</strong> {{ data.fechaCreacion | date: 'longDate' }}</p>
-  <p>{{ data.contenido }}</p>
+<h2 mat-dialog-title style="color: #6a1b9a; font-weight: bold;">{{ data.titulo }}</h2>
+<div mat-dialog-content style="padding: 16px;">
+  <p><strong style="color: #4a148c;">Fecha de Creación:</strong> {{ data.fechaCreacion | date: 'longDate' }}</p>
+  <p style="color: #555;">{{ data.contenido }}</p>
   <img *ngIf="data.imagen" [src]="data.imagen" alt="Imagen de Noticia" class="imagen-dialog" />
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Cerrar</button>
+<div mat-dialog-actions style="justify-content: flex-end;">
+  <button mat-button (click)="onNoClick()" style="background-color: #6a1b9a; color: white; border-radius: 4px; padding: 6px 12px;">Cerrar</button>
 </div>
