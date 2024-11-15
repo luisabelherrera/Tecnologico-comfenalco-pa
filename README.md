@@ -58,4 +58,5 @@ cambios nuevos
 
    ```bash
    cd <nombre-del-directorio>
-   npm install
+   npm install --legacy-peer-deps
+
