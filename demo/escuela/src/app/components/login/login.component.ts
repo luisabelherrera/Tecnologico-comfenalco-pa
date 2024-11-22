@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { JwtResponseDto, LoginDto } from 'src/app/models/models';
 import { AuthService } from 'src/app/services/auth/AuthService.service';
+import { NotificacionService } from 'src/app/services/notificacion/NotificacionService';
 
 @Component({
   selector: 'app-login',
@@ -9,37 +9,64 @@ import { AuthService } from 'src/app/services/auth/AuthService.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  loginDto: LoginDto = { email: '', password: '' };
+  loginDto = { email: '', password: '' };
+  mensajeUsuario: string = ''; // Mensaje a enviar al administrador
+  mostrarModal: boolean = false;
   errorMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private notificacionService: NotificacionService
+  ) {}
 
   ngOnInit(): void {}
 
   login() {
-    this.errorMessage = ''; 
-
     this.authService.login(this.loginDto).subscribe(
-      (response: JwtResponseDto) => {
-        console.log('Login successful! Access Token:', response.accessToken);
-  
+      (response) => {
         const roles: string[] = response.roles || [];
-        if (roles.length > 0) {
-          if (roles.includes('Administracion')) {
-            this.router.navigate(['/home']);
-          } else if (roles.includes('Estudiante')) {
-            this.router.navigate(['/ventana3']);
-          } else {
-            this.router.navigate(['/ventana2']);
-          }
+        if (roles.includes('Administracion')) {
+          this.router.navigate(['/home']);
+        } else if (roles.includes('Estudiante')) {
+          this.router.navigate(['/ventana3']);
         } else {
-          this.router.navigate(['/login']);
+          this.router.navigate(['/ventana2']);
         }
       },
-      error => {
-        console.error('Login failed!', error);
-        this.errorMessage = 'Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.';
+      (error) => {
+        this.errorMessage = 'Usuario o contraseña incorrectos.';
       }
     );
   }
+
+  abrirModalRecuperacion() {
+    this.mostrarModal = true; // Muestra el modal
+  }
+
+  cerrarModal() {
+    this.mostrarModal = false;
+    this.mensajeUsuario = ''; // Limpia el mensaje al cerrar
+  }
+
+  enviarMensaje() {
+    if (!this.mensajeUsuario.trim()) {
+        alert('Por favor, escribe un mensaje.');
+        return;
+    }
+
+    console.log("Mensaje enviado:", this.mensajeUsuario);  // Imprime el mensaje
+
+    this.notificacionService.notificarAdministrador(this.mensajeUsuario).subscribe(
+        (response) => {
+            console.log("Respuesta del servidor:", response);  // Verifica la respuesta
+            alert('Mensaje enviado al administrador.');
+            this.cerrarModal();
+        },
+        (error) => {
+            console.error("Error al enviar el mensaje:", error);
+            alert('Hubo un problema al procesar la solicitud. Inténtalo de nuevo más tarde.');
+        }
+    );
+}
 }

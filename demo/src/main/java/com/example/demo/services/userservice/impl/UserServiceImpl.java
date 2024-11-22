@@ -27,7 +27,7 @@ import com.example.demo.model.login.dto.LoginDto;
 import com.example.demo.model.login.dto.RegisterDto;
 import com.example.demo.model.login.dto.UserDto;
 import com.example.demo.repositories.jpa.UserRepository;
-import com.example.demo.security.JwtGenerator;
+import com.example.demo.jwt.JwtGenerator;
 import com.example.demo.services.userservice.RolService;
 import com.example.demo.services.userservice.UserService;
 

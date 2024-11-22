@@ -15,6 +15,7 @@ import java.time.Duration;
 @EnableCaching
 public class CacheConfig{
 
+    // ESTE CLASE ES PARA MODIFICAR EL TIEMPO DEL CACHE EN REDIS
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory();
@@ -23,7 +24,7 @@ public class CacheConfig{
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofDays(1)); //10 minutos antes que redis las elimine
+                .entryTtl(Duration.ofDays(5)); //10 minutos antes que redis las elimine
         return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(redisCacheConfiguration)
                 .build();

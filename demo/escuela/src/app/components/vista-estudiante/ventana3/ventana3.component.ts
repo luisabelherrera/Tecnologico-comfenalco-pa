@@ -90,7 +90,7 @@ requestSuggestionsForCalificacion(calificacion: Calificacion): void {
 }
 
 requestSuggestions(grade: number, curricularDescription: string): void {
-  const apiKey = 'AIzaSyAQm3Xcp6dIoFtmnKXmUEsKOoKlbH91I4c';  
+  const apiKey = 'AIzaSyBXqlUsM36gi1At83zNRTwrCLYTfftomYk';  
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
   const prompt = `Con base en la nota actual de ${grade} y la descripción curricular: "${curricularDescription}", por favor proporciona sugerencias en español para mejorar el rendimiento.`;
@@ -108,20 +108,30 @@ requestSuggestions(grade: number, curricularDescription: string): void {
   }).subscribe({
     next: (result) => {
       console.log('Resultado de la API:', result);
-      const suggestions = result.candidates[0]?.content?.parts[0]?.text || 'No se recibió respuesta';
-      this.openSuggestionsDialog(suggestions);
+
+      const suggestions = result.candidates[0]?.content?.parts[0]?.text
+        ?.replace(/{|}/g, '') // Elimina las llaves del mensaje
+        ?.replace(/^•/gm, '✨') // Cambia viñetas por emojis
+        ?.replace(/^(\*\*.*?\*\*)/gm, '🔥 $1') // Agrega emojis a los encabezados
+        ?.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Resalta encabezados con HTML
+
+      this.openSuggestionsDialog(suggestions || '⚠️ No se recibió respuesta.');
     },
     error: (error) => {
       console.error('Error al generar sugerencias:', error);
-      this.openSuggestionsDialog('Ocurrió un error al generar las sugerencias.');   }
+      this.openSuggestionsDialog('❌ Ocurrió un error al generar las sugerencias.');
+    }
   });
 }
+
  
 openSuggestionsDialog(suggestions: string): void {
   this.dialog.open(SuggestionsDialogComponent, {
-    data: { suggestions },
+    width: '500px',
+    data: { suggestions: suggestions },
   });
 }
+
 }
 
 

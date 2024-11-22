@@ -1,4 +1,4 @@
-package com.example.demo.security;
+package com.example.demo.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -59,7 +59,7 @@ public class JwtGenerator {
         return getClaims(token, Claims::getSubject);
     }
 
-    public boolean validateToken(String token) {
+    public boolean validarToken(String token) {
         try {
             Jwts.parser().verifyWith((SecretKey) getKey()).build().parseSignedClaims(token).getPayload();
             return true;
@@ -77,7 +77,7 @@ public class JwtGenerator {
         return false;
     }
 
-    public String refreshToken(Authentication authentication) {
+    public String actualizarToken(Authentication authentication) {
         try {
             UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
             List<String> roles = userPrincipal.getAuthorities().stream()

@@ -1,9 +1,19 @@
-<h2 mat-dialog-title>Sugerencias</h2>
+<h2 mat-dialog-title>💡 Sugerencias para Mejorar</h2>
 <mat-dialog-content>
-  <pre>{{ data.suggestions }}</pre>
+  <div class="suggestions-container" [innerHTML]="data.suggestions"></div>
+  
 </mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button (click)="speak(data.suggestions)">Leer</button>
-  <button mat-button (click)="stop()">Detener</button>
-  <button mat-button (click)="close()">Cerrar</button>
+<mat-dialog-actions align="center">
+  <button mat-raised-button color="primary" (click)="speak(data.suggestions)">
+    <mat-icon>volume_up</mat-icon>
+    Leer
+  </button>
+  <button mat-raised-button color="warn" (click)="stop()">
+    <mat-icon>stop</mat-icon>
+    Detener
+  </button>
+  <button mat-raised-button color="accent" (click)="close()">
+    <mat-icon>close</mat-icon>
+    Cerrar
+  </button>
 </mat-dialog-actions>

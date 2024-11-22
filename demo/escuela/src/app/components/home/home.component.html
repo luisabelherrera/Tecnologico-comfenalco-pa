@@ -14,29 +14,30 @@
   </nav>
 </header>
 
-<!-- Botón de chat -->
 <div class="chat-icon" (click)="toggleChat()">
   <i class="fas fa-comments fa-2x" style="cursor: pointer;"></i>
 </div>
 
-<!-- Contenedor del chat ajustado -->
 <div class="chat-container" [ngStyle]="{'display': chatVisible ? 'block' : 'none'}" style="position: fixed; bottom: 70px; right: 20px; width: 300px; z-index: 1000;">
   <div class="card chat-card" style="width: 100%; max-height: 400px; overflow: hidden;">
     <div class="card-header">
       <ul class="nav nav-pills card-header-pills">
-        <li class="nav-item mr-2" *ngIf="!conectado">
+        <li class="nav-item mr-2" *ngIf="!mensaje.username">
           <input type="text" [(ngModel)]="mensaje.username" class="form-control" placeholder="Username..." name="username">
         </li>
         <li class="nav-item mr-2">
-          <button class="btn btn-success" type="button" (click)="conectar()"
-            *ngIf="!conectado" [disabled]="!mensaje.username"><i class="fas fa-sign-in-alt"></i> Conectar</button>
+          <button class="btn btn-success" type="button" (click)="conectar()" *ngIf="!conectado" [disabled]="!mensaje.username">
+            <i class="fas fa-sign-in-alt"></i> Conectar
+          </button>
         </li>
         <li class="nav-item">
-          <button class="btn btn-warning" type="button" (click)="desconectar()"
-            *ngIf="conectado"><i class="fas fa-sign-out-alt"></i> Cerrar Chat</button>
+          <button class="btn btn-warning" type="button" (click)="desconectar()" *ngIf="conectado">
+            <i class="fas fa-sign-out-alt"></i> Cerrar Chat
+          </button>
         </li>
       </ul>
     </div>
+    
 
     <div #scrollChat [scrollTop]="scrollChat.scrollHeight" class="card-body chat-body" *ngIf="conectado" style="overflow-y: auto; max-height: 300px;">
       <ul class="list-group list-group-flush">

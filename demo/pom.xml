@@ -19,70 +19,45 @@
     </properties>
 
 
-    <!--
-    Este archivo pom.xml configura un proyecto Spring Boot con las siguientes dependencias:
-
-    - spring-boot-starter-security: Proporciona las capacidades de seguridad para la aplicación, permitiendo la autenticación y autorización de usuarios.
-
-    - lombok: Reduce el código boilerplate en Java mediante anotaciones para generar automáticamente métodos como getters y setters.
-
-    - spring-boot-starter-web: Incluye las dependencias necesarias para crear aplicaciones web, soportando controladores y servicios RESTful.
-
-    - spring-boot-starter-validation: Permite la validación de datos en la aplicación utilizando la API de validación de Java Bean.
-
-    - postgresql: Controlador JDBC para conectarse y realizar operaciones en bases de datos PostgreSQL.
-
-    - jjwt-api, jjwt-impl, jjwt-jackson: Proporcionan soporte para crear y validar JSON Web Tokens (JWT) para la autenticación en la aplicación.
-
-    - jackson-databind: Facilita la serialización y deserialización de objetos Java a y desde JSON.
-
-    - h2: Base de datos en memoria utilizada para pruebas y desarrollo, permitiendo la ejecución de pruebas sin necesidad de una base de datos real.
-
-    - spring-boot-starter-thymeleaf: Integra Thymeleaf como motor de plantillas para la generación de vistas en HTML.
-
-    - spring-boot-starter-data-jpa: Proporciona soporte para la integración de Spring Data JPA, facilitando el acceso a bases de datos mediante repositorios y entidades.
-
-    - spring-boot-starter-test: Incluye las bibliotecas necesarias para realizar pruebas unitarias e integración en aplicaciones Spring Boot.
-
-    - spring-boot-starter-data-redis: Proporciona soporte para trabajar con Redis, un sistema de almacenamiento de datos en memoria.
-
-    - spring-boot-starter-cache: Añade la capacidad de implementar caching en la aplicación, mejorando el rendimiento.
-
-    - jedis: Cliente Java para Redis que permite interactuar con el servidor Redis desde la aplicación Java.
-
-    - mockito-core: Biblioteca para realizar pruebas unitarias, permitiendo crear objetos simulados para verificar el comportamiento de las dependencias en pruebas.
--->
 
 
 
 
 
     <dependencies>
-
+        <!-- Spring Security: Proporciona soporte para autenticación y autorización en la aplicación -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+
+        <!-- Lombok: Simplifica el desarrollo reduciendo código repetitivo como getters, setters, y constructores -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-      <dependency>
+
+        <!-- Spring Web: Incluye soporte para construir aplicaciones web basadas en REST y MVC -->
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-       <dependency>
+        <!-- Spring Validation: Proporciona validaciones para los datos del lado del backend -->
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-       <dependency>
+        <!-- PostgreSQL Driver: Permite la conexión con bases de datos PostgreSQL -->
+        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <!-- JJWT API: Manejo de JSON Web Tokens para autenticación segura -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -100,57 +75,77 @@
             <version>0.12.5</version>
             <scope>runtime</scope>
         </dependency>
+
+        <!-- Jackson Databind: Facilita la conversión de objetos Java a JSON y viceversa -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
-       <dependency>
+
+        <!-- H2 Database: Base de datos en memoria utilizada para pruebas y desarrollo -->
+        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
-       <dependency>
+
+        <!-- Thymeleaf: Motor de plantillas para renderizar vistas dinámicas en HTML -->
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
-       <dependency>
+        <!-- Spring Data JPA: Proporciona soporte para el acceso a datos utilizando JPA -->
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+
+        <!-- Spring Boot Test: Incluye herramientas y dependencias para realizar pruebas unitarias e integradas -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- Spring Data Redis: Soporte para trabajar con bases de datos Redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
+
+        <!-- Spring Cache: Facilita la implementación de mecanismos de caché en la aplicación -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
+
+        <!-- Jedis: Cliente para trabajar con Redis -->
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
         </dependency>
 
+        <!-- WebSocket: Soporte para comunicación bidireccional en tiempo real mediante WebSockets -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
+
+        <!-- Mockito: Biblioteca para crear mocks y realizar pruebas unitarias más efectivas -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- Spring Data MongoDB: Soporte para trabajar con bases de datos MongoDB -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
-
     </dependencies>
+
 
     <build>
         <plugins>

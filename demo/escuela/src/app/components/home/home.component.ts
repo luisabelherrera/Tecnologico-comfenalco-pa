@@ -67,55 +67,72 @@ export class HomeComponent implements OnInit {
   }
 
   iniciarConexiónWebSocket(): void {
+    this.userName$.subscribe((username) => {
+      if (username) {
+        this.mensaje.username = username; // Asigna el nombre de usuario autenticado al mensaje
+      }
+    });
+  
     this.client = new Client();
     this.client.webSocketFactory = () => {
       return new SockJS(`${environment.apiUrl}chat-websocket`);
-    }
-
+    };
+  
     this.client.onConnect = (frame) => {
       console.log('Conectados: ' + this.client.connected + ' : ' + frame);
       this.conectado = true;
-
-      this.client.subscribe('/chat/mensaje', e => {
+  
+      this.client.subscribe('/chat/mensaje', (e) => {
         let mensaje: Mensaje = JSON.parse(e.body) as Mensaje;
         mensaje.fecha = new Date(mensaje.fecha);
-
-        if (!this.mensaje.color && mensaje.tipo == 'NUEVO_USUARIO' &&
-          this.mensaje.username == mensaje.username) {
+  
+        if (
+          !this.mensaje.color &&
+          mensaje.tipo == 'NUEVO_USUARIO' &&
+          this.mensaje.username == mensaje.username
+        ) {
           this.mensaje.color = mensaje.color;
         }
-
+  
         this.mensajes.push(mensaje);
         console.log(mensaje);
       });
-
-      this.client.subscribe('/chat/escribiendo', e => {
+  
+      this.client.subscribe('/chat/escribiendo', (e) => {
         this.escribiendo = e.body;
-        setTimeout(() => this.escribiendo = '', 3000);
+        setTimeout(() => (this.escribiendo = ''), 3000);
       });
-
-      console.log(this.clienteId);
-      this.client.subscribe('/chat/historial/' + this.clienteId, e => {
+  
+      this.client.subscribe('/chat/historial/' + this.clienteId, (e) => {
         const historial = JSON.parse(e.body) as Mensaje[];
-        this.mensajes = historial.map(m => {
-          m.fecha = new Date(m.fecha);
-          return m;
-        }).reverse();
+        this.mensajes = historial
+          .map((m) => {
+            m.fecha = new Date(m.fecha);
+            return m;
+          })
+          .reverse();
       });
-
-      this.client.publish({ destination: '/app/historial', body: this.clienteId });
-
+  
+      this.client.publish({
+        destination: '/app/historial',
+        body: this.clienteId,
+      });
+  
       this.mensaje.tipo = 'NUEVO_USUARIO';
-      this.client.publish({ destination: '/app/mensaje', body: JSON.stringify(this.mensaje) });
-    }
-
+      this.client.publish({
+        destination: '/app/mensaje',
+        body: JSON.stringify(this.mensaje),
+      });
+    };
+  
     this.client.onDisconnect = (frame) => {
       console.log('Desconectados: ' + !this.client.connected + ' : ' + frame);
       this.conectado = false;
       this.mensaje = new Mensaje();
       this.mensajes = [];
-    }
+    };
   }
+  
 
   conectar(): void {
     this.client.activate();

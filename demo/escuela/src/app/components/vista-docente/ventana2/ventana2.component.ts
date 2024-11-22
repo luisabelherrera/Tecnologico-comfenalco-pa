@@ -91,39 +91,60 @@ requestSuggestionsForCalificacion(calificacion: Calificacion): void {
 }
 
 requestSuggestions(grade: number, curricularDescription: string): void {
-  const apiKey = 'AIzaSyAQm3Xcp6dIoFtmnKXmUEsKOoKlbH91I4c'; // Reemplaza con tu API key
+  const apiKey = 'AIzaSyBbDd2224c2Gx82P8ZGb7a51AQ-fJ-mg9A'; // Reemplaza con tu API key
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+  
+  // Preparar el prompt
+  const prompt = `
+    Nota actual: ${grade} (Escala: 0 a 5, mínima para pasar: 2.97).
+    Descripción curricular: "${curricularDescription}".
+    Proporciona:
+    1. Sugerencias cortas y precisas para mejorar el rendimiento en este tema.
+    2. Bibliografía relacionada (buscada en internet).
+    3. Videos relevantes en YouTube.
+    Escribe en español, utiliza íconos claros como 📘, 📚, 📺 y evita el uso de asteriscos (*), guiones (-) o cualquier carácter de lista que no sean íconos. Responde de manera directa y clara.
+  `;
 
-  const prompt = `quiero el texto un poco mas reducido por ejemplo mucho lo siento por tu nota dependiendo si es buena o mala // quiero que siempre tomes la nota osea me des de primeor la nota y  Con base en la nota actual de ${grade}  mi escala de nota es de 0 a 5  0 es bajo la nota minima para pasar es 2.97 y la nota mxima es 5  y la descripción curricular: "${curricularDescription}", la descripcion son curricular de ese tema muestrame sugerencia acerca de eso por favor proporciona sugerencias en español para mejorar el rendimiento.
-   y muestrame algunas bibliografia relacionadas con ese temas  buscala en internet quiero que el contenido sea corto y preciso y muestrame video en youtuber`;
-
-  this.http.post<GenerateContentResponse>(url, {
+  // Llamada HTTP
+  this.http.post(url, {
     contents: [
       {
-        parts: [
-          {
-            text: prompt
-          }
-        ]
+        parts: [{ text: prompt }]
       }
     ]
   }).subscribe({
-    next: (result) => {
-      console.log('Resultado de la API:', result);
-      const suggestions = result.candidates[0]?.content?.parts[0]?.text || 'No se recibió respuesta';
-      this.openSuggestionsDialog(suggestions);
+    next: (result: any) => {
+      const suggestions = result?.candidates?.[0]?.content?.parts?.[0]?.text || 
+                          'No se pudo generar respuesta. Verifica la solicitud.';
+      this.openSuggestionsDialog(this.formatResponse(suggestions));
     },
     error: (error) => {
       console.error('Error al generar sugerencias:', error);
-      this.openSuggestionsDialog('Ocurrió un error al generar las sugerencias.'); // Abre el diálogo con el error
+      const errorMsg = 'Ocurrió un error al conectar con la API. Por favor, verifica tu conexión o clave API.';
+      this.openSuggestionsDialog(errorMsg);
     }
   });
-} 
-openSuggestionsDialog(suggestions: string): void {
+}
+
+private formatResponse(response: string): string {
+  return response
+    .replace(/\*/g, '') // Elimina cualquier asterisco residual
+    .replace(/-/g, '')  // Elimina guiones en caso de que aparezcan
+    .replace(/1\./g, '📘') // Cambia "1." por un ícono de libro
+    .replace(/2\./g, '📚') // Cambia "2." por un ícono de biblioteca
+    .replace(/3\./g, '📺'); // Cambia "3." por un ícono de televisión
+}
+  
+
+
+
+openSuggestionsDialog(content: string): void {
   this.dialog.open(SuggestionsDialogComponent, {
-    data: { suggestions },
+    width: '500px',
+    data: { suggestions: content },
   });
 }
+
 }
 
 

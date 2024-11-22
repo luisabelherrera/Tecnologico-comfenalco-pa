@@ -96,6 +96,8 @@ import { AgregarNoticiaComponent } from './components/agregar-noticia/agregar-no
 import { ImagenDialogComponent } from './components/home/dialogo/ImagenDialog.component';
 import { RecursoComponent } from './components/recurso/recurso.component';
 import { MatCarouselModule } from '@ngbmodule/material-carousel';
+import { NotificacionesDialogComponent } from './components/notificaciones-dialog/notificaciones-dialog.component';
+import { FullMessageDialogComponent } from './components/notificaciones-dialog/ventanadenotificaciones/full-message-dialog.component';
 
 
 
@@ -128,7 +130,8 @@ import { MatCarouselModule } from '@ngbmodule/material-carousel';
     MatCarouselModule,
   ],
   declarations: [
-
+    FullMessageDialogComponent,
+    NotificacionesDialogComponent ,
     RecursoComponent,
     ImagenDialogComponent,
     AgregarNoticiaComponent,

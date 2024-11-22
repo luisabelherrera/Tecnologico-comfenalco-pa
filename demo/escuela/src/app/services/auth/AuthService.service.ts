@@ -83,22 +83,26 @@ export class AuthService {
   private handleLoginSuccess(response: JwtResponseDto) {
     const token = response.accessToken;
     localStorage.setItem('accessToken', token);
-    
-    localStorage.setItem('username', response.username); 
-    
+  
+    // Aquí puedes ajustar el nombre de usuario si el backend devuelve el correo
+    const username = response.username.includes('@') 
+      ? response.username.split('@')[0] 
+      : response.username;
+  
+    localStorage.setItem('username', username); 
     localStorage.setItem('roles', JSON.stringify(response.roles)); 
     localStorage.setItem('email', response.email); 
-    
-
+  
     this.isAuthenticatedSubject.next(true);
-    this.userNameSubject.next(response.username); 
+    this.userNameSubject.next(username); // Actualiza el observable con el nombre de usuario real
     this.userEmailSubject.next(response.email);
-    
+  
     this.updateAdminStatus(response.roles);
     this.updateManagerStatus(response.roles);
-    
+  
     this.redirectUser(response.roles); 
   }
+  
 
   private checkAuthenticationStatus() {
     const token = localStorage.getItem('accessToken');

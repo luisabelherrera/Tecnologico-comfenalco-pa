@@ -1,17 +1,17 @@
 .custom-button {
-	display: flex;
-	align-items: center;
-	font-family: inherit;
-	cursor: pointer;
+	display: flex; /* Asegura que el contenido se alinee correctamente */
+	align-items: center; /* Centra verticalmente */
+	justify-content: center; /* Centra horizontalmente */
+	padding: 8px 16px; /* Espaciado interno compacto */
+	font-size: 14px; /* Tamaño del texto */
 	font-weight: 500;
-	font-size: 15px; 
-	padding: 0.5em 1em; 
-	color: white;
-	background: #ad5389;
+	text-align: center; /* Centra el texto */
+	border-radius: 8px; /* Bordes suaves */
+	cursor: pointer;
 	background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+	color: white;
 	border: none;
-	letter-spacing: 0.05em;
-	border-radius: 12px; 
+	transition: background 0.3s ease;
   }
   
   .custom-button svg {
@@ -30,5 +30,142 @@
   
   .custom-button:hover span {
 	transform: translateX(7px);
+  }
+  
+
+  .login-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	background-color: #f5f5f5;
+  }
+  
+  mat-card {
+	width: 400px;
+  }
+  
+  .full-width {
+	width: 100%;
+  }
+  
+  .custom-button {
+	width: 100%;
+	background-color: #6200ea;
+	color: #fff;
+	padding: 8px 16px;
+	border-radius: 4px;
+  }
+  
+  .modal-backdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  }
+  
+  .modal-content {
+	background: #fff;
+	padding: 24px;
+	border-radius: 8px;
+	width: 300px;
+  }
+  
+  .modal-actions {
+	margin-top: 16px;
+	display: flex;
+	justify-content: space-between;
+  }
+  /* Fondo del modal */
+.modal-backdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.6); /* Fondo semitransparente */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 1000;
+  }
+  
+  /* Contenedor del modal */
+  .modal-content {
+	background: #ffffff;
+	padding: 24px 32px;
+	border-radius: 12px;
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Sombra elegante */
+	width: 90%;
+	max-width: 400px; /* Tamaño máximo */
+	text-align: center;
+	animation: fadeIn 0.3s ease-in-out; /* Animación al abrir */
+  }
+  
+  /* Título del modal */
+  .modal-content h2 {
+	font-size: 24px;
+	font-weight: bold;
+	color: #333;
+	margin-bottom: 12px;
+  }
+  
+  /* Descripción del modal */
+  .modal-description {
+	font-size: 14px;
+	color: #666;
+	margin-bottom: 20px;
+  }
+  
+  /* Campo del formulario */
+  mat-form-field.full-width {
+	width: 100%;
+	margin-bottom: 20px;
+  }
+  
+  /* Botones dentro del modal */
+  .modal-actions {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 16px;
+  }
+  
+  .modal-btn, .modal-btn-cancel {
+	display: flex;
+	align-items: center;
+	gap: 8px; /* Espacio entre ícono y texto */
+	padding: 10px 16px;
+	font-size: 14px;
+	font-weight: 500;
+	border-radius: 8px;
+	text-transform: capitalize;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .modal-btn:hover {
+	background-color: #1e88e5;
+	color: #fff;
+  }
+  
+  .modal-btn-cancel:hover {
+	background-color: #e53935;
+	color: #fff;
+  }
+  
+  /* Animación para la apertura */
+  @keyframes fadeIn {
+	from {
+	  opacity: 0;
+	  transform: scale(0.9);
+	}
+	to {
+	  opacity: 1;
+	  transform: scale(1);
+	}
   }
   

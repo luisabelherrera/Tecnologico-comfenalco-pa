@@ -1,4 +1,4 @@
-package com.example.demo.security;
+package com.example.demo.jwt;
 
 import java.io.IOException;
 
@@ -34,7 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         String token = getJwtFromRequest(request);
-        if (StringUtils.hasText(token) && jwtGenerator.validateToken(token)) {
+        if (StringUtils.hasText(token) && jwtGenerator.validarToken(token)) {
 
             String username = jwtGenerator.getUsernameFromJWT(token);
 

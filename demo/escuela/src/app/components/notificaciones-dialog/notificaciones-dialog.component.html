@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>📋 Notificaciones</h2>
+<mat-dialog-content>
+  <mat-list>
+    <mat-list-item
+      *ngFor="let notification of notifications"
+      class="notification-item"
+      (click)="openFullMessage(notification)"
+    >
+      <mat-icon mat-list-icon color="primary">notifications</mat-icon>
+      <p mat-line class="notification-text">{{ notification }}</p>
+    </mat-list-item>
+  </mat-list>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="accent" (click)="close()">Cerrar</button>
+</mat-dialog-actions>

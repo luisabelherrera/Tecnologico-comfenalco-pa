@@ -13,9 +13,19 @@
   </span>
   <span class="spacer"></span>
 
-  <span *ngIf="isAuthenticated$ | async" class="user-info">
-    <span *ngIf="userName$ | async as userName; else loading"  >
-      Bienvenido, {{ userName }}
+  <button
+  mat-mini-fab
+  [class.blink]="isNotificationBlinking"
+  [class.pending]="hasPendingNotifications"
+  style="background-color: black; margin-right: 15px;"
+  *ngIf="isAdmin$ | async"
+  (click)="openNotifications()">
+  <mat-icon>{{ hasPendingNotifications ? 'notifications_active' : 'notifications' }}</mat-icon>
+</button>
+
+<span *ngIf="isAuthenticated$ | async" class="user-info">
+  <span *ngIf="username; else loading">
+    Bienvenido, {{ username }}
     </span>
     <ng-template #loading>
       Cargando...
@@ -26,6 +36,7 @@
     <img [src]="logoutIcon" alt="Logout Icon" style="width: 36px; height: 36px; object-fit: cover;" />
   </button>
 </mat-toolbar>
+
 
 <mat-sidenav-container>
   <mat-sidenav #sidenav mode="side" [opened]="isAuthenticated$ | async" class="app-sidenav">

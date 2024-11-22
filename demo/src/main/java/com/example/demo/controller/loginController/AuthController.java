@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import com.example.demo.model.login.dto.JwtResponseDto;
 import com.example.demo.model.login.dto.LoginDto;
 import com.example.demo.model.login.dto.UserDto;
-import com.example.demo.security.JwtGenerator;
+import com.example.demo.jwt.JwtGenerator;
 import com.example.demo.services.userservice.RolService;
 import com.example.demo.services.userservice.UserService;
 
@@ -53,7 +53,7 @@ public class AuthController {
 
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToke(Authentication authentication) {
-        String token = jwtGenerator.refreshToken(authentication);
+        String token = jwtGenerator.actualizarToken(authentication);
         JwtResponseDto jwtRefresh = new JwtResponseDto(token);
         return new ResponseEntity<>(jwtRefresh, HttpStatus.OK);
     }
