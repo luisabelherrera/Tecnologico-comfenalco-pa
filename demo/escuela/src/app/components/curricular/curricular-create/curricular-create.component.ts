@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { Curricular } from 'src/app/models/entity/curricular.model';
 import { CurricularService } from 'src/app/services/curricular/curricular.service';
 import { NgForm } from '@angular/forms';
-import { Docente } from 'src/app/models/entity/docente.model'; 
 import { DocenteNivelDetalleCurso } from 'src/app/models/entity/docente-nivel-detalle-curso.model'; 
 import { DocenteNivelDetalleCursoService } from 'src/app/services/docente-detalle/docente-nivel-detalle-curso.service';
 
@@ -31,6 +30,8 @@ export class CurricularCreateComponent implements OnInit {
         private docenteService: DocenteNivelDetalleCursoService,
         private router: Router
     ) {}
+
+ 
 
     ngOnInit(): void {
         this.loadDocentes(); 

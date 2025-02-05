@@ -27,4 +27,5 @@ public class EstudianteDTO implements Serializable {
     private String direccion;
     private boolean activo;
     private LocalDateTime fechaRegistro;
+
 }

@@ -37,7 +37,6 @@
       </mat-card-actions>
     </form>
 
-    <!-- Botón para abrir el modal de recuperación -->
     <div class="recover-email">
       <button mat-button (click)="abrirModalRecuperacion()" class="recover-btn">
         Enviar Mensaje al Administrador
@@ -45,7 +44,6 @@
     </div>
   </mat-card>
 
-  <!-- Modal para enviar mensaje al administrador -->
   <div class="modal-backdrop" *ngIf="mostrarModal">
     <div class="modal-content">
       <h2>📩 Enviar Mensaje</h2>
@@ -83,4 +81,8 @@
     </div>
   </div>
 </div>
-``
+<div class="nav-arrow" (click)="irAOtraVentana()">
+  <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+  <span class="nav-text">Más Información</span>
+</div>
+

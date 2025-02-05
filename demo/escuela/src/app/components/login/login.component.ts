@@ -10,7 +10,7 @@ import { NotificacionService } from 'src/app/services/notificacion/NotificacionS
 })
 export class LoginComponent implements OnInit {
   loginDto = { email: '', password: '' };
-  mensajeUsuario: string = ''; // Mensaje a enviar al administrador
+  mensajeUsuario: string = ''; 
   mostrarModal: boolean = false;
   errorMessage: string = '';
 
@@ -22,31 +22,39 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  login() {
-    this.authService.login(this.loginDto).subscribe(
-      (response) => {
-        const roles: string[] = response.roles || [];
-        if (roles.includes('Administracion')) {
-          this.router.navigate(['/home']);
-        } else if (roles.includes('Estudiante')) {
-          this.router.navigate(['/ventana3']);
-        } else {
-          this.router.navigate(['/ventana2']);
-        }
-      },
-      (error) => {
-        this.errorMessage = 'Usuario o contraseña incorrectos.';
-      }
-    );
-  }
+login() {
+  this.authService.login(this.loginDto).subscribe(
+    (response) => {
+      const roles: string[] = response.roles || [];
+      this.router.navigate(['/luna']).then(() => {
+        setTimeout(() => {
+          if (roles.includes('Administracion')) {
+            this.router.navigate(['/home']);
+          } else if (roles.includes('Estudiante')) {
+            this.router.navigate(['/ventana3']);
+          } else {
+            this.router.navigate(['/ventana2']);
+          }
+        }, 1000);
+      });
+    },
+    (error) => {
+      this.errorMessage = 'Usuario o contraseña incorrectos.';
+    }
+  );
+}
+
+irAOtraVentana() {
+  this.router.navigate(['/venta-informacion']); // Reemplaza con la ruta deseada
+}
 
   abrirModalRecuperacion() {
-    this.mostrarModal = true; // Muestra el modal
+    this.mostrarModal = true; 
   }
 
   cerrarModal() {
     this.mostrarModal = false;
-    this.mensajeUsuario = ''; // Limpia el mensaje al cerrar
+    this.mensajeUsuario = ''; 
   }
 
   enviarMensaje() {
@@ -55,11 +63,11 @@ export class LoginComponent implements OnInit {
         return;
     }
 
-    console.log("Mensaje enviado:", this.mensajeUsuario);  // Imprime el mensaje
+    console.log("Mensaje enviado:", this.mensajeUsuario); 
 
     this.notificacionService.notificarAdministrador(this.mensajeUsuario).subscribe(
         (response) => {
-            console.log("Respuesta del servidor:", response);  // Verifica la respuesta
+            console.log("Respuesta del servidor:", response);  
             alert('Mensaje enviado al administrador.');
             this.cerrarModal();
         },

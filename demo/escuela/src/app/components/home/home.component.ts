@@ -184,6 +184,20 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  rotationX: number = 0;
+  rotationY: number = 0;
+
+  onMouseMove(event: MouseEvent) {
+    const container = event.target as HTMLElement;
+    const rect = container.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    this.rotationX = (y / rect.height - 0.5) * 30; // Rango de -15 a 15
+    this.rotationY = (x / rect.width - 0.5) * 30;  // Rango de -15 a 15
+  }
+
+
   mostrarImagen(noticia: Noticia): void {
     this.dialog.open(ImagenDialogComponent, {
       data: {

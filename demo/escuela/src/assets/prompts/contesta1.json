@@ -1,0 +1,23 @@
+[
+    {
+      "id": 1,
+      "name": "Explicación para principiantes",
+      "template": "Responde como si fueras un profesor explicando a principiantes: '[userInput]'"
+    },
+    {
+      "id": 2,
+      "name": "Respuesta profesional",
+      "template": "Sé breve y profesional al responder: '[userInput]'"
+    },
+    {
+      "id": 3,
+      "name": "Estilo creativo",
+      "template": "Responde de forma amigable y creativa: '[userInput]'"
+    },
+    {
+      "id": 4,
+      "name": "Análisis detallado",
+      "template": "Proporciona un análisis detallado sobre el tema: '[userInput]'"
+    }
+  ]
+  

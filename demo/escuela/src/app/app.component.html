@@ -1,14 +1,31 @@
-<mat-toolbar style="background-color: rgb(0, 0, 0); height: 60px;" color="primary" class="mat-elevation-z12">
+<mat-toolbar
+  *ngIf="showLayout"
+  style="background-color: rgb(0, 0, 0); height: 60px;"
+  color="primary"
+  class="mat-elevation-z12"
+>
   <span style="display: flex; align-items: center;">
-    <input hidden class="check-icon" id="check-icon" name="check-icon" type="checkbox">
-    <label class="icon-menu" for="check-icon" (click)="sidenav?.toggle()" *ngIf="isAuthenticated$ | async">
+    <input hidden class="check-icon" id="check-icon" name="check-icon" type="checkbox"  />
+    <label
+      class="icon-menu"
+      for="check-icon"
+      (click)="sidenav?.toggle()"
+      *ngIf="isAuthenticated$ | async"
+    >
       <div class="bar bar--1"></div>
       <div class="bar bar--2"></div>
       <div class="bar bar--3"></div>
     </label>
     <span class="logo">
-      <img src="assets/iconos/tierra.png" alt="Logo" style="width: 42px; height: 42px; border-radius: 0%; object-fit: cover;" />
+      <div class="earth-container">
+        <img
+          src="assets/iconos/tierra.png"
+          alt="Logo"
+          class="earth"
+        />
+      </div>
     </span>
+    
     <span class="title">{{ title }}</span>
   </span>
   <span class="spacer"></span>
@@ -19,27 +36,50 @@
   [class.pending]="hasPendingNotifications"
   style="background-color: black; margin-right: 15px;"
   *ngIf="isAdmin$ | async"
-  (click)="openNotifications()">
+  (click)="abrirIAIcono()"
+  matTooltip="Inteligencia Artificial"
+  matTooltipPosition="above"
+>
+  <mat-icon>{{ hasPendingNotifications ? 'smart_toy' : 'psychology' }}</mat-icon>
+</button>
+
+<button
+  mat-mini-fab
+  [class.blink]="isNotificationBlinking"
+  [class.pending]="hasPendingNotifications"
+  style="background-color: black; margin-right: 15px;"
+  *ngIf="isAdmin$ | async"
+  (click)="openNotifications()"
+  matTooltip="Notificaciones"
+  matTooltipPosition="above"
+>
   <mat-icon>{{ hasPendingNotifications ? 'notifications_active' : 'notifications' }}</mat-icon>
 </button>
 
-<span *ngIf="isAuthenticated$ | async" class="user-info">
-  <span *ngIf="username; else loading">
-    Bienvenido, {{ username }}
+
+  <span *ngIf="isAuthenticated$ | async" class="user-info">
+    <span *ngIf="username; else loading">
+      Bienvenido, {{ username }}
     </span>
-    <ng-template #loading>
-      Cargando...
-    </ng-template>
+    <ng-template #loading>Cargando...</ng-template>
   </span>
 
-  <button mat-mini-fab (click)="logout()" *ngIf="isAuthenticated$ | async" style="background-color: black; margin-left: 13px;">
+  <button
+    mat-mini-fab
+    (click)="logout()"
+    *ngIf="isAuthenticated$ | async"
+    style="background-color: black; margin-left: 13px;"
+  >
     <img [src]="logoutIcon" alt="Logout Icon" style="width: 36px; height: 36px; object-fit: cover;" />
   </button>
 </mat-toolbar>
 
 
+
+
+
 <mat-sidenav-container>
-  <mat-sidenav #sidenav mode="side" [opened]="isAuthenticated$ | async" class="app-sidenav">
+  <mat-sidenav  *ngIf="showLayout" #sidenav mode="side" [opened]="isAuthenticated$ | async" class="app-sidenav">
     <nav>
       <h4 
         mat-subheader 

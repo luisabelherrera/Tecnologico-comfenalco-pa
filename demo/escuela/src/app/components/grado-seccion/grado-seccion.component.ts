@@ -36,6 +36,8 @@ export class GradoSeccionComponent implements OnInit {
     this.loadGradoSecciones();
   }
 
+  
+
   loadGradoSecciones(): void {
     this.gradoSeccionService.getAllGradoSecciones().subscribe(
       (data) => {

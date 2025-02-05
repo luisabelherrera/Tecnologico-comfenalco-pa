@@ -1,10 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { AuthService } from './services/auth/AuthService.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { NotificacionesDialogComponent } from './components/notificaciones-dialog/notificaciones-dialog.component';
 import { NotificacionService } from './services/notificacion/NotificacionService';
+import { NavigationStart, Router } from '@angular/router';
+import { MatSidenav } from '@angular/material/sidenav';
+import { IconoIaComponent } from './components/icono-ia/icono-ia.component';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +17,7 @@ import { NotificacionService } from './services/notificacion/NotificacionService
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Institucion Educativa El Hobo';
   userEmail$ = this.authService.userEmail$;
-
+  @ViewChild('sidenav') sidenav!: MatSidenav; 
   isMatriculaMenuOpen = false; 
   isConfigMenuOpen = false;
   isChatMenuOpen = false; 
@@ -126,12 +129,32 @@ export class AppComponent implements OnInit, OnDestroy {
   userName$ = this.authService.userName$;
  logoUrl = 'assets/iconos/estudiante.png'; 
  logoutIcon: string = 'person'; 
-
+ showLayout: boolean = true;
  constructor(
   private authService: AuthService,
   private dialog: MatDialog,
-  private notificacionService: NotificacionService
-) {}
+  private notificacionService: NotificacionService,
+  private router: Router
+) {
+  // Suscripción a los eventos del router para controlar el layout
+  this.router.events.subscribe((event) => {
+    if (event instanceof NavigationStart) {
+      this.showLayout = !event.url.includes('/luna'); // Oculta el layout en la ruta /luna
+    }
+  });
+}
+abrirIAIcono() {
+  const dialogRef = this.dialog.open(IconoIaComponent, {
+    panelClass: 'dialog-no-padding', // Clase personalizada
+    width: 'auto', // Ajusta automáticamente al contenido
+    height: 'auto',
+  });
+
+  dialogRef.afterOpened().subscribe(() => {
+    console.log('El diálogo se abrió, iniciando voz...');
+  });
+}
+
   openNotifications() {
     this.dialog.open(NotificacionesDialogComponent, {
       width: '400px',

@@ -70,6 +70,8 @@ import { HorarioEstudianteComponent } from './components/vista-estudiante/horari
 import { ErrorComponent } from './components/error/error.component';
 import { AgregarNoticiaComponent } from './components/agregar-noticia/agregar-noticia.component';
 import { RecursoComponent } from './components/recurso/recurso.component';
+import { LunaComponent } from './components/vista-de-etapa/luna/luna.component';
+import { VentaInformacionComponent } from './components/venta-informacion/venta-informacion.component';
 
 
 
@@ -84,6 +86,7 @@ const routes: Routes = [
     data: { roles: ['Docente'] },
   },
 
+  
     // vista Docente curricularDocente
   {
     path: 'curricularDocente',
@@ -104,6 +107,11 @@ const routes: Routes = [
     
   },
 
+  {
+    path: 'venta-informacion',
+    component: VentaInformacionComponent,
+    
+  },
 
   {
     path: 'ventana3',
@@ -232,7 +240,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Administracion']  },
   },
-
+  { path: 'luna', component: LunaComponent },
   { path: 'periodo', component: PeriodoComponent,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion']  },
