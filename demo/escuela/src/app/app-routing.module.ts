@@ -72,6 +72,7 @@ import { AgregarNoticiaComponent } from './components/agregar-noticia/agregar-no
 import { RecursoComponent } from './components/recurso/recurso.component';
 import { LunaComponent } from './components/vista-de-etapa/luna/luna.component';
 import { VentaInformacionComponent } from './components/venta-informacion/venta-informacion.component';
+import { EventosComponent } from './components/ventanas-para-invitados/eventos/eventos/eventos.component';
 
 
 
@@ -134,6 +135,7 @@ const routes: Routes = [
     data: { roles: ['Estudiante'] },
   },
 
+  { path: 'eventos', component: EventosComponent },
 
   // Home route
   { path: 'home', component: HomeComponent },

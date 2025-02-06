@@ -18,5 +18,8 @@ noticias: any;
     this.router.navigate(['/login']); 
   }
   
-
+  irAOtraVentana2() {
+    this.router.navigate(['/eventos']); 
+  }
+  
 }

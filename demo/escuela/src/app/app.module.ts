@@ -74,6 +74,7 @@ import { NotificacionesDialogComponent } from './components/notificaciones-dialo
 import { FullMessageDialogComponent } from './components/notificaciones-dialog/ventanadenotificaciones/full-message-dialog.component';
 import { IconoIaComponent } from './components/icono-ia/icono-ia.component';
 import { VentaInformacionComponent } from './components/venta-informacion/venta-informacion.component';
+import { EventosComponent } from './components/ventanas-para-invitados/eventos/eventos/eventos.component';
 
 
 
@@ -108,7 +109,7 @@ import { VentaInformacionComponent } from './components/venta-informacion/venta-
     
   ],
   declarations: [
-    
+    EventosComponent,
     VentaInformacionComponent,
     IconoIaComponent,
     FullMessageDialogComponent,
