@@ -19,7 +19,8 @@ noticias: any;
   }
   
   irAOtraVentana2() {
-    this.router.navigate(['/eventos']); 
+    this.router.navigate(['/juego']); 
   }
+
   
 }

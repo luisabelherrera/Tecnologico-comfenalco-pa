@@ -72,7 +72,9 @@ import { AgregarNoticiaComponent } from './components/agregar-noticia/agregar-no
 import { RecursoComponent } from './components/recurso/recurso.component';
 import { LunaComponent } from './components/vista-de-etapa/luna/luna.component';
 import { VentaInformacionComponent } from './components/venta-informacion/venta-informacion.component';
-import { EventosComponent } from './components/ventanas-para-invitados/eventos/eventos/eventos.component';
+import {  QuizComponent } from './components/ventanas-para-invitados/eventos/eventos/eventos.component';
+import { PreguntasJuegosComponent } from './components/ventanas-para-invitados/juegos/juegos/preguntas/preguntas-juegos/preguntas-juegos.component';
+import { JuegosComponent } from './components/ventanas-para-invitados/juegos/juegos/juegos.component';
 
 
 
@@ -114,6 +116,20 @@ const routes: Routes = [
     
   },
 
+
+  {
+    path: 'preguntas',
+    component: PreguntasJuegosComponent,
+    
+  },
+
+  {
+    path: 'juego',
+    component: JuegosComponent,
+    
+  },
+
+
   {
     path: 'ventana3',
     component: Ventana3Component,
@@ -135,7 +151,7 @@ const routes: Routes = [
     data: { roles: ['Estudiante'] },
   },
 
-  { path: 'eventos', component: EventosComponent },
+  { path: 'eventos', component: QuizComponent },
 
   // Home route
   { path: 'home', component: HomeComponent },

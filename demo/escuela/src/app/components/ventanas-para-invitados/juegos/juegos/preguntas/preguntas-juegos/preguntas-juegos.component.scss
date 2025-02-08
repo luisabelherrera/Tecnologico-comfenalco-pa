@@ -1,0 +1,31 @@
+.preguntas-container {
+    margin: 20px;
+  
+    button {
+      display: block;
+      background-color: #28a745;
+      color: white;
+      padding: 10px;
+      margin: 5px;
+      border-radius: 5px;
+      border: none;
+  
+      &:hover {
+        background-color: #218838;
+      }
+    }
+  }
+  
+  .resultado {
+    text-align: center;
+    margin-top: 20px;
+  
+    h2 {
+      color: #333;
+    }
+  
+    p {
+      font-size: 18px;
+    }
+  }
+  

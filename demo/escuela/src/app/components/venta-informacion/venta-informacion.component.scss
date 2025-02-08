@@ -271,6 +271,54 @@ mat-card-actions {
 
 
 
+  
+
+@keyframes fadeIn {
+	from {
+	  opacity: 0;
+	  transform: scale(0.9);
+	}
+	to {
+	  opacity: 1;
+	  transform: scale(1);
+	}
+  }
+  
+  .nav-arrow {
+	position: absolute;
+	right: 20px;
+	top: 50%;
+	transform: translateY(-50%);
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	background: rgba(255, 255, 255, 0.6);
+	color: rgb(0, 0, 0);
+	padding: 15px 20px;
+	border-radius: 30px;
+	cursor: pointer;
+	transition: all 0.3s ease-in-out;
+	animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .nav-arrow:hover {
+	background: rgba(255, 0, 255, 0.8);
+	transform: translateY(-50%) scale(1.1);
+  }
+  
+  .arrow-icon {
+	font-size: 28px;
+  }
+  
+  .nav-text {
+	font-size: 18px;
+	font-weight: bold;
+  }
+
+
+
+
+  
 
 
 
@@ -318,3 +366,7 @@ mat-card-actions {
   font-size: 18px;
   font-weight: bold;
 }
+
+
+
+

@@ -1,22 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+interface Pregunta {
+  pregunta: string;
+  opciones: string[];
+  respuestaCorrecta: string;
+}
+
 @Component({
-  selector: 'app-eventos',
+  selector: 'app-quiz',
   templateUrl: './eventos.component.html',
   styleUrls: ['./eventos.component.scss']
 })
-export class EventosComponent implements OnInit {
-
-  constructor(private router: Router,) { }
-
-  ngOnInit( ): void {
-  }
+export class QuizComponent {
 
 
-  irAOtraVentana() {
-    this.router.navigate(['/venta-informacion']); 
-  }
-  
+  constructor(private router: Router) {}
 
 }

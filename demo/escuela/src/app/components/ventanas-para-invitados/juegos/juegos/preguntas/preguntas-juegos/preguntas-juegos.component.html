@@ -1,0 +1,21 @@
+<div class="preguntas-container" *ngIf="!nivelSeleccionado">
+    <h2>Selecciona un nivel:</h2>
+    <button *ngFor="let nivel of niveles" (click)="seleccionarNivel(nivel)">{{ nivel }}</button>
+  </div>
+  
+  <div class="preguntas-container" *ngIf="nivelSeleccionado && !resultado">
+    <h2>Preguntas de nivel {{ nivelSeleccionado }}</h2>
+    <div *ngFor="let pregunta of preguntas; let i = index">
+      <p>{{ pregunta.texto }}</p>
+      <button *ngFor="let opcion of pregunta.opciones" (click)="responder(i, opcion)">{{ opcion }}</button>
+    </div>
+    <button (click)="calificar()" [disabled]="!completado">Calificar</button>
+  </div>
+  
+  <div *ngIf="resultado" class="resultado">
+    <h2>Resultado</h2>
+    <p>Tu puntaje es: {{ puntaje }}/{{ preguntas.length }}</p>
+    <p>{{ sugerencia }}</p>
+    <button (click)="nivelSeleccionado = ''; resultado = false">Intentar de nuevo</button>
+  </div>
+  
