@@ -20,6 +20,7 @@ export class PeriodoComponent implements OnInit, OnDestroy {
   dataSource: MatTableDataSource<Periodo>;
   loading: boolean = false;
   private destroy$: Subject<void> = new Subject<void>();
+  years: number[] = Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i); // Últimos 50 años
 
   displayedColumns: string[] = ['descripcion', 'fechaInicio', 'fechaFin', 'activo', 'actions'];
 

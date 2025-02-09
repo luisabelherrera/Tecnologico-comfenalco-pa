@@ -5,46 +5,60 @@
   
   <p></p>
 
-  <form [formGroup]="periodoForm" (ngSubmit)="createPeriodo()" class="form-container">
-    <mat-form-field class="input-field" appearance="outline">
-      <mat-label>Descripción</mat-label>
-      <input matInput formControlName="descripcion" placeholder="Descripción" />
-      <mat-error *ngIf="periodoForm.get('descripcion').hasError('required')">
-        La descripción es obligatoria
-      </mat-error>
-    </mat-form-field>
-
-    <mat-form-field class="input-field" appearance="outline">
-      <mat-label>Fecha de Inicio</mat-label>
-      <input matInput [matDatepicker]="pickerInicio" formControlName="fechaInicio" />
-      <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
-      <mat-datepicker #pickerInicio></mat-datepicker>
-      <mat-error *ngIf="periodoForm.get('fechaInicio').hasError('required')">
-        La fecha de inicio es obligatoria
-      </mat-error>
-    </mat-form-field>
-
-    <mat-form-field class="input-field" appearance="outline">
-      <mat-label>Fecha de Fin</mat-label>
-      <input matInput [matDatepicker]="pickerFin" formControlName="fechaFin" />
-      <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
-      <mat-datepicker #pickerFin></mat-datepicker>
-      <mat-error *ngIf="periodoForm.get('fechaFin').hasError('required')">
-        La fecha de fin es obligatoria
-      </mat-error>
-    </mat-form-field>
-
-    <mat-checkbox formControlName="activo">Activo</mat-checkbox>
-
-    <div class="button-group">
-      <button mat-raised-button color="primary" type="submit" [disabled]="periodoForm.invalid">
+  <form [formGroup]="periodoForm" (ngSubmit)="createPeriodo()">
+    <div class="row">
+      <div class="col-lg-6">
+        <mat-label class="f-w-600 m-b-8 d-block">Año</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select formControlName="descripcion" placeholder="Selecciona un año">
+            <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="periodoForm.get('descripcion').hasError('required')">
+            El año es obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+ 
+  
+      <div class="col-lg-6">
+        <mat-label class="f-w-600 m-b-8 d-block">Fecha de Inicio</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput [matDatepicker]="pickerInicio" formControlName="fechaInicio" />
+          <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+          <mat-datepicker #pickerInicio></mat-datepicker>
+          <mat-error *ngIf="periodoForm.get('fechaInicio').hasError('required')">
+            La fecha de inicio es obligatoria
+          </mat-error>
+        </mat-form-field>
+      </div>
+  
+      <div class="col-lg-6">
+        <mat-label class="f-w-600 m-b-8 d-block">Fecha de Fin</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput [matDatepicker]="pickerFin" formControlName="fechaFin" />
+          <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFin></mat-datepicker>
+          <mat-error *ngIf="periodoForm.get('fechaFin').hasError('required')">
+            La fecha de fin es obligatoria
+          </mat-error>
+        </mat-form-field>
+      </div>
+  
+      <div class="col-lg-6 d-flex align-items-center">
+        <mat-checkbox formControlName="activo">Activo</mat-checkbox>
+      </div>
+    </div>
+  
+    <div class="m-t-12">
+      <button mat-flat-button color="primary" [disabled]="periodoForm.invalid">
         {{ editingId ? 'Actualizar' : 'Crear' }}
       </button>
-      <button mat-raised-button color="warn" type="button" (click)="resetPeriodo()">
+      <button mat-stroked-button color="warn" type="button" (click)="resetPeriodo()">
         Cancelar
       </button>
     </div>
   </form>
+  
 
   <!-- Buscador de períodos -->
   <div class="header">
