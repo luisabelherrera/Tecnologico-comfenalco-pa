@@ -16,5 +16,8 @@ export class QuizComponent {
 
 
   constructor(private router: Router) {}
+  irAOtraVentana2() {
+    this.router.navigate(['/VentaInformacionComponent']); 
+  }
 
 }
