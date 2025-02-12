@@ -109,6 +109,7 @@ import { QuizComponent } from './components/ventanas-para-invitados/eventos/even
    
   ],
   declarations: [
+    
     QuizComponent,
     VentaInformacionComponent,
     IconoIaComponent,

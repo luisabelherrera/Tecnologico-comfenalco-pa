@@ -1,41 +1,51 @@
 <div class="login-container">
   <mat-card>
     <mat-card-header>
-      <mat-card-title>Login</mat-card-title>
+      <mat-card-title>Institucion Educativa El Hobo</mat-card-title>
     </mat-card-header>
     <form (ngSubmit)="login()">
       <mat-card-content>
-        <mat-form-field class="full-width">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matPrefix>email</mat-icon>
           <input
             matInput
-            placeholder="Email"
+            placeholder="Enter Email"
             [(ngModel)]="loginDto.email"
             name="email"
             required
-            aria-label="Email"
           />
-          <mat-error *ngIf="!loginDto.email">El email es requerido.</mat-error>
         </mat-form-field>
-        <mat-form-field class="full-width">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matPrefix>lock</mat-icon>
           <input
             matInput
-            placeholder="Password"
+            placeholder="Enter Password"
             [(ngModel)]="loginDto.password"
             name="password"
             type="password"
             required
-            aria-label="Password"
           />
-          <mat-error *ngIf="!loginDto.password">La contraseña es requerida.</mat-error>
         </mat-form-field>
+
+      
         <div *ngIf="errorMessage" class="error-message">
           {{ errorMessage }}
         </div>
       </mat-card-content>
-      <mat-card-actions>
-        <button type="submit" class="custom-button">Login</button>
-      </mat-card-actions>
+
+      <button type="submit" class="sign-in-button" mat-raised-button>
+        INICIAR SECCION
+      </button>
     </form>
+
+
+       <div class="divider">
+      <span>O</span>
+    </div>
+
+
+
 
     <div class="recover-email">
       <button mat-button (click)="abrirModalRecuperacion()" class="recover-btn">
@@ -48,7 +58,7 @@
     <div class="modal-content">
       <h2>📩 Enviar Mensaje</h2>
       <p class="modal-description">
-        Escribe un mensaje para enviarlo al administrador.
+        Recuperar.
       </p>
       <mat-form-field class="full-width">
         <mat-label>Escribe tu mensaje</mat-label>
@@ -81,6 +91,14 @@
     </div>
   </div>
 </div>
+
+
+
+
+
+
+
+
 <div class="nav-arrow" (click)="irAOtraVentana()">
   <mat-icon class="arrow-icon">arrow_forward</mat-icon>
   <span class="nav-text">Más Información</span>

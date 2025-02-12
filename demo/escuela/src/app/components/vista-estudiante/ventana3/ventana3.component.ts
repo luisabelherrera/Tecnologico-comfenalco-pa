@@ -90,7 +90,7 @@ requestSuggestionsForCalificacion(calificacion: Calificacion): void {
 }
 
 requestSuggestions(grade: number, curricularDescription: string): void {
-  const apiKey = 'AIzaSyBXqlUsM36gi1At83zNRTwrCLYTfftomYk';  
+  const apiKey = 'AIzaSyB9HNN9nYfHK07TlZiCjMG-qVXZ2u70Rxc';  
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
   const prompt = `Con base en la nota actual de ${grade} y la descripción curricular: "${curricularDescription}", por favor proporciona sugerencias en español para mejorar el rendimiento.`;
@@ -110,10 +110,10 @@ requestSuggestions(grade: number, curricularDescription: string): void {
       console.log('Resultado de la API:', result);
 
       const suggestions = result.candidates[0]?.content?.parts[0]?.text
-        ?.replace(/{|}/g, '') // Elimina las llaves del mensaje
-        ?.replace(/^•/gm, '✨') // Cambia viñetas por emojis
-        ?.replace(/^(\*\*.*?\*\*)/gm, '🔥 $1') // Agrega emojis a los encabezados
-        ?.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Resalta encabezados con HTML
+        ?.replace(/{|}/g, '') 
+        ?.replace(/^•/gm, '✨') 
+        ?.replace(/^(\*\*.*?\*\*)/gm, '🔥 $1') 
+        ?.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); 
 
       this.openSuggestionsDialog(suggestions || '⚠️ No se recibió respuesta.');
     },

@@ -83,9 +83,7 @@
         <mat-card-content>
           <p>Explora los proyectos innovadores de nuestros estudiantes en tecnología, medio ambiente y ciencias aplicadas.</p>
         </mat-card-content>
-        <mat-card-actions>
-          <button mat-button color="primary" (click)="irAOtraVentana2()">Más información</button>
-        </mat-card-actions>
+    
       </mat-card>
     </div>
   </section>
@@ -107,8 +105,16 @@
 
 
 
-  <div class="nav-arrow" (click)="irAOtraVentana2()">
+  <div class="nav-arrow" [matMenuTriggerFor]="menu">
     <mat-icon class="arrow-icon">arrow_forward</mat-icon>
-    <span class="nav-text">Juego Interactivo</span>
+    <span class="nav-text">Información</span>
   </div>
-
+  
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="accion1()">INSTITUCION</button>
+    <button mat-menu-item (click)="accion2()">RECURSOS EDUCATIVOS</button>
+    <button mat-menu-item (click)="accion3()">AULA VIRTUAL</button>
+    <button mat-menu-item (click)="accion4()">MIDE TUS CAPACIDADES TEST</button>
+    <button mat-menu-item (click)="accion5()">MISION Y VISION</button>
+  </mat-menu>
+  

@@ -1,82 +1,33 @@
-#ia-avatar {
-  width: 180px;
-  height: 180px;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  animation: glow 2s infinite alternate ease-in-out;
-}
+.container {
+  text-align: center;
+  padding: 20px;
 
-/* Cabeza sin fondo */
-.head {
-  fill: #2c2c54; // Color oscuro futurista
-  stroke: #474787;
-  stroke-width: 3;
-  transition: fill 0.3s ease-in-out;
+  button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
 
-  &:hover {
-    fill: #40407a;
+    &:hover {
+      background-color: #0056b3;
+    }
+
+    &:disabled {
+      background-color: gray;
+      cursor: not-allowed;
+    }
   }
-}
 
-/* Ojos */
-.eye {
-  fill: #7d5fff; // Azul neón sin fondo
-  stroke: #4b4b4b;
-  stroke-width: 1.5;
-  animation: blink 4s infinite ease-in-out;
-}
-
-@keyframes blink {
-  0%, 100% { transform: scaleY(1); }
-  50% { transform: scaleY(0.1); }
-}
-
-/* Boca */
-.mouth {
-  stroke: #eccc68;
-  stroke-width: 2;
-  fill: transparent;
-}
-
-/* Circuitos */
-.circuit {
-  stroke: #ffdd59;
-  stroke-width: 2;
-  animation: flicker 1.5s infinite alternate ease-in-out;
-}
-
-.node {
-  fill: #ffdd59;
-  stroke: #ffd32a;
-  stroke-width: 2;
-  animation: pulse 1s infinite alternate ease-in-out;
-}
-
-/* Animaciones */
-@keyframes glow {
-  from {
-    filter: drop-shadow(0 0 5px #474787);
+  p {
+    font-size: 18px;
+    margin-top: 10px;
   }
-  to {
-    filter: drop-shadow(0 0 15px #d1c4e9);
-  }
-}
 
-@keyframes flicker {
-  from {
-    stroke-opacity: 0.5;
-  }
-  to {
-    stroke-opacity: 1;
-  }
-}
-
-@keyframes pulse {
-  from {
-    r: 4;
-  }
-  to {
-    r: 6;
+  h2 {
+    color: #333;
   }
 }
