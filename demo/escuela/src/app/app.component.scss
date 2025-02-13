@@ -163,3 +163,111 @@
 .blink {
   animation: blink 1s infinite; /* Parpadeo cada 1 segundo */
 }
+
+
+
+/* Contenedor principal del drawer */
+.example-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ajusta el tamaño del contenido principal para que no se oculte */
+.content {
+  flex-grow: 1;
+  padding: 10px;
+}
+
+.ia-drawer {
+  width: 300px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .ia-drawer {
+    width: 80%;
+  }
+}
+
+
+
+
+
+
+/* Estilo general para el mat-toolbar */
+mat-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+}
+
+
+.logo img {
+  width: 40px; 
+  height: 40px;
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+button.mat-mini-fab {
+  background-color: black;
+  margin-right: 15px;
+  width: 35px; 
+  height: 40px;
+}
+
+@media (max-width: 768px) {
+  mat-toolbar {
+    padding: 0 10px; 
+  }
+
+  .logo img {
+    width: 30px; 
+    height: 30px;
+  }
+
+  .title {
+    display: none;
+  }
+
+  .user-info {
+    display: none; 
+  }
+
+  .spacer {
+    display: none; /* Elimina el espacio entre el logo y los iconos en pantallas pequeñas */
+  }
+
+  .icon-menu {
+    gap: 4px;
+  }
+
+  /* Cambia el orden de los elementos para móviles */
+  mat-toolbar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .check-icon {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Para pantallas muy pequeñas (dispositivos móviles) */
+@media (max-width: 480px) {
+  .logo img {
+    width: 25px; /* Reduce aún más el tamaño del logo */
+    height: 25px;
+  }
+
+  button.mat-mini-fab {
+    width: 35px; /* Ajusta los botones */
+    height: 35px;
+  }
+}

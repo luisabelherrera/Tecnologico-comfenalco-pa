@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NotificacionesDialogComponent } from './components/notificaciones-dialog/notificaciones-dialog.component';
 import { NotificacionService } from './services/notificacion/NotificacionService';
 import { NavigationStart, Router } from '@angular/router';
-import { MatSidenav } from '@angular/material/sidenav';
+import { MatDrawer, MatSidenav } from '@angular/material/sidenav';
 import { IconoIaComponent } from './components/icono-ia/icono-ia.component';
 
 @Component({
@@ -15,7 +15,7 @@ import { IconoIaComponent } from './components/icono-ia/icono-ia.component';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy {
-  title = 'Institucion Educativa El Hobo';
+  title = 'HOBO';
   userEmail$ = this.authService.userEmail$;
   @ViewChild('sidenav') sidenav!: MatSidenav; 
   isMatriculaMenuOpen = false; 
@@ -31,10 +31,14 @@ export class AppComponent implements OnInit, OnDestroy {
   islinksMenuOpen = false;
   isVentana3MenuOpen = false;
   isMenu = false;
-  hasPendingNotifications: boolean = false; // Controla el estado pendiente
-  isNotificationBlinking: boolean = false; // Controla el parpadeo
-  
-
+  hasPendingNotifications: boolean = false; 
+  isNotificationBlinking: boolean = false; 
+  isButtonPressed: boolean = false;
+  toolbarColor: string = 'rgb(0, 0, 0)';  
+  logoImage: string = 'assets/iconos/tierra.png'; 
+  toolbarTextColor: string = 'white';  
+  logoColor: string = 'white';
+  @ViewChild('drawer') drawer: MatDrawer;
   
   links = [{ path: '/home', icon: 'assets/iconos/school.png', title: 'Inicio' }];
   ia = [{ path: '/ia', icon: 'home', title: 'ia' }];
@@ -136,24 +140,28 @@ export class AppComponent implements OnInit, OnDestroy {
   private notificacionService: NotificacionService,
   private router: Router
 ) {
-  // Suscripción a los eventos del router para controlar el layout
   this.router.events.subscribe((event) => {
     if (event instanceof NavigationStart) {
-      this.showLayout = !event.url.includes('/luna'); // Oculta el layout en la ruta /luna
+      this.showLayout = !event.url.includes('/luna'); 
     }
   });
 }
 abrirIAIcono() {
-  const dialogRef = this.dialog.open(IconoIaComponent, {
-    panelClass: 'dialog-no-padding', // Clase personalizada
-    width: 'auto', // Ajusta automáticamente al contenido
-    height: 'auto',
-  });
+  this.isButtonPressed = !this.isButtonPressed;
 
-  dialogRef.afterOpened().subscribe(() => {
-    console.log('El diálogo se abrió, iniciando voz...');
-  });
+  if (this.isButtonPressed) {
+    this.toolbarColor = '#3F51B5';  
+    this.logoImage = 'assets/iconos/inteligencia-artificial.png';  
+    this.toolbarTextColor = '#F5F5F5'; 
+    this.logoColor = '#F5F5F5';  
+  } else {
+    this.toolbarColor = 'rgb(0, 0, 0)'; 
+    this.logoImage = 'assets/iconos/tierra.png'; 
+    this.toolbarTextColor = 'white'; 
+    this.logoColor = 'white';  
+  }
 }
+
 
   openNotifications() {
     this.dialog.open(NotificacionesDialogComponent, {
@@ -166,7 +174,6 @@ abrirIAIcono() {
   ngOnInit() {
     this.cargarNotificaciones();
 
-    // Suscribirse a userName$
     this.authService.userName$.pipe(takeUntil(this.unsubscribe$)).subscribe((name) => {
       this.username = name;
     });

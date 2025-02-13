@@ -1,120 +1,153 @@
+<header class="main-header">
+  <div class="logo">
+    <img src="assets/iconos/inteligencia.png" alt="Logo de la institución">
+  </div>
+  <nav class="main-nav">
+    <ul>
+      <!-- Institución -->
+      <li>
+        <a mat-button [matMenuTriggerFor]="institucionMenu">INSTITUCIÓN <mat-icon>arrow_drop_down</mat-icon></a>
+        <mat-menu #institucionMenu="matMenu">
+          <a mat-menu-item href="#historia">Historia</a>
+          <a mat-menu-item href="#instalaciones">Instalaciones</a>
+          <a mat-menu-item href="#docentes">Cuerpo Docente</a>
+          <a mat-menu-item href="#reglamento">Reglamento</a>
+          <a mat-menu-item href="#calendario">Calendario Académico</a>
+        </mat-menu>
+      </li>
+  
+      <!-- Recursos Educativos -->
+      <li>
+        <a mat-button [matMenuTriggerFor]="recursosMenu">RECURSOS EDUCATIVOS <mat-icon>arrow_drop_down</mat-icon></a>
+        <mat-menu #recursosMenu="matMenu">
+          <a mat-menu-item href="#libros">Libros</a>
+          <a mat-menu-item href="#videos">Videos</a>
+          <a mat-menu-item href="#documentos">Documentos</a>
+        </mat-menu>
+      </li>
+  
+      <!-- Aula Virtual -->
+      <li>
+        <a mat-button [matMenuTriggerFor]="aulaMenu">AULA VIRTUAL <mat-icon>arrow_drop_down</mat-icon></a>
+        <mat-menu #aulaMenu="matMenu">
+          <a mat-menu-item href="#plataforma">Plataforma</a>
+          <a mat-menu-item href="#clases">Clases en Vivo</a>
+          <a mat-menu-item href="#foros">Foros de Discusión</a>
+        </mat-menu>
+      </li>
+  
+      <!-- Test -->
+      <li>
+        <a mat-button [matMenuTriggerFor]="testMenu">TEST <mat-icon>arrow_drop_down</mat-icon></a>
+        <mat-menu #testMenu="matMenu">
+          <a mat-menu-item href="#pruebas">Pruebas Online</a>
+          <a mat-menu-item href="#evaluaciones">Evaluaciones</a>
+        </mat-menu>
+      </li>
+  
+      <!-- Misión y Visión -->
+      <li>
+        <a mat-button [matMenuTriggerFor]="misionVisionMenu">MISIÓN Y VISIÓN <mat-icon>arrow_drop_down</mat-icon></a>
+        <mat-menu #misionVisionMenu="matMenu">
+          <a mat-menu-item href="#mision">Misión</a>
+          <a mat-menu-item href="#vision">Visión</a>
+        </mat-menu>
+      </li>
+    </ul>
+  </nav>
+  
+  <div class="login-button">
+    <button mat-raised-button color="primary" (click)="irAOtraVentana()">Iniciar Sesión</button>
+  </div>
+</header>
 
+<section class="hero">
+  <img src="assets/img/pngwing.com (1).png">
+  <div class="overlay">
+    <h2>Educación de Calidad para un Futuro Brillante</h2>
+    <p>Comprometidos con la excelencia académica y el desarrollo integral.</p>
+    <button mat-raised-button color="accent">Conócenos Más</button>
+  </div>
+</section>
+
+<section class="content">
+  <mat-card class="info-card">
+    <mat-card-title>Sobre Nosotros</mat-card-title>
+    <mat-card-content>
+      <p>Somos una institución con más de 20 años de experiencia en educación de calidad.</p>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="cards">
+    <mat-card class="feature-card">
+      <mat-card-header>
+        <mat-card-title>📚 Educación Integral</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>Programas adaptados al mundo actual.</mat-card-content>
+    </mat-card>
+
+    <mat-card class="feature-card">
+      <mat-card-header>
+        <mat-card-title>💡 Innovación y Tecnología</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>Salones modernos y educación digital.</mat-card-content>
+    </mat-card>
+
+    <mat-card class="feature-card">
+      <mat-card-header>
+        <mat-card-title>🌎 Formación en Valores</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>Preparamos a los estudiantes con principios sólidos.</mat-card-content>
+    </mat-card>
+  </div>
+</section>
+
+<section class="news">
+  <h2 class="section-title">📰 Últimas Noticias & Eventos</h2>
+  <p class="section-subtitle">Mantente informado sobre las actividades y eventos más recientes de nuestra institución.</p>
   
-  <section class="hero">
-    <img src="assets/img/school-298680.jpg">
-    <div class="overlay">
-      <h2>Educación de Calidad para un Futuro Brillante</h2>
-      <p>Comprometidos con la excelencia académica y el desarrollo integral.</p>
-      <button mat-raised-button color="accent">Conócenos Más</button>
-    </div>
-  </section>
-  
-  <section class="content">
-    <mat-card class="info-card">
-      <mat-card-title>Sobre Nosotros</mat-card-title>
+  <div class="news-container">
+    <mat-card class="news-card">
+      <img mat-card-image src="assets/img/IMG_2892-1536x2048.jpeg" alt="Semana Cultural">
+      <mat-card-header>
+        <mat-card-title>Semana Cultural 2024</mat-card-title>
+        <mat-card-subtitle>Del 15 al 20 de septiembre</mat-card-subtitle>
+      </mat-card-header>
       <mat-card-content>
-        <p>Somos una institución con más de 20 años de experiencia en educación de calidad.</p>
+        <p>Disfruta de una semana llena de arte, música y tradición con presentaciones, concursos y mucho más.</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary">Leer más</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="news-card">
+      <img mat-card-image src="assets/img/dengue.jpg" alt="Concurso de Lectura">
+      <mat-card-header>
+        <mat-card-title>Concurso de Lectura</mat-card-title>
+        <mat-card-subtitle>Inscripciones abiertas hasta el 10 de octubre</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Fomenta tu amor por la lectura participando en nuestro concurso anual. Premios y reconocimiento para los mejores.</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary">Participa aquí</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="news-card">
+      <img mat-card-image src="assets/img/Documento-A4-Portada-de-Ciencias-Infantil-Multicolor.png" alt="Feria de Ciencias">
+      <mat-card-header>
+        <mat-card-title>Feria de Ciencias 2024</mat-card-title>
+        <mat-card-subtitle>Exhibición el 5 de noviembre</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Explora los proyectos innovadores de nuestros estudiantes en tecnología, medio ambiente y ciencias aplicadas.</p>
       </mat-card-content>
     </mat-card>
-  
-    <div class="cards">
-      <mat-card class="feature-card">
-        <mat-card-header>
-          <mat-card-title>📚 Educación Integral</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>Programas adaptados al mundo actual.</mat-card-content>
-      </mat-card>
-  
-      <mat-card class="feature-card">
-        <mat-card-header>
-          <mat-card-title>💡 Innovación y Tecnología</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>Salones modernos y educación digital.</mat-card-content>
-      </mat-card>
-  
-      <mat-card class="feature-card">
-        <mat-card-header>
-          <mat-card-title>🌎 Formación en Valores</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>Preparamos a los estudiantes con principios sólidos.</mat-card-content>
-      </mat-card>
-    </div>
-  </section>
-  
-  <section class="news">
-    <h2 class="section-title">📰 Últimas Noticias & Eventos</h2>
-    <p class="section-subtitle">Mantente informado sobre las actividades y eventos más recientes de nuestra institución.</p>
-    
-    <div class="news-container">
-      <mat-card class="news-card">
-        <img mat-card-image src="assets/img/IMG_2892-1536x2048.jpeg" alt="Semana Cultural">
-        <mat-card-header>
-          <mat-card-title>Semana Cultural 2024</mat-card-title>
-          <mat-card-subtitle>Del 15 al 20 de septiembre</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <p>Disfruta de una semana llena de arte, música y tradición con presentaciones, concursos y mucho más.</p>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-button color="primary">Leer más</button>
-        </mat-card-actions>
-      </mat-card>
-  
-      <mat-card class="news-card">
-        <img mat-card-image src="assets/img/dengue.jpg" alt="Concurso de Lectura">
-        <mat-card-header>
-          <mat-card-title>Concurso de Lectura</mat-card-title>
-          <mat-card-subtitle>Inscripciones abiertas hasta el 10 de octubre</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <p>Fomenta tu amor por la lectura participando en nuestro concurso anual. Premios y reconocimiento para los mejores.</p>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-button color="primary">Participa aquí</button>
-        </mat-card-actions>
-      </mat-card>
-  
-      <mat-card class="news-card">
-        <img mat-card-image src="assets/img/Documento-A4-Portada-de-Ciencias-Infantil-Multicolor.png" alt="Feria de Ciencias">
-        <mat-card-header>
-          <mat-card-title>Feria de Ciencias 2024</mat-card-title>
-          <mat-card-subtitle>Exhibición el 5 de noviembre</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <p>Explora los proyectos innovadores de nuestros estudiantes en tecnología, medio ambiente y ciencias aplicadas.</p>
-        </mat-card-content>
-    
-      </mat-card>
-    </div>
-  </section>
-  
-
-
-  <footer>
-    <p>&copy; 2024 Colegio Institución Educativa El Hobo. Todos los derechos reservados.</p>
-  </footer>
-  
-
-
-
-  
-  <div class="nav-arrow-left" (click)="irAOtraVentana()">
-    <mat-icon class="arrow-icon">arrow_back</mat-icon>
-    <span class="nav-text">Iniciar Sesión</span>
   </div>
+</section>
 
-
-
-  <div class="nav-arrow" [matMenuTriggerFor]="menu">
-    <mat-icon class="arrow-icon">arrow_forward</mat-icon>
-    <span class="nav-text">Información</span>
-  </div>
-  
-  <mat-menu #menu="matMenu">
-    <button mat-menu-item (click)="accion1()">INSTITUCION</button>
-    <button mat-menu-item (click)="accion2()">RECURSOS EDUCATIVOS</button>
-    <button mat-menu-item (click)="accion3()">AULA VIRTUAL</button>
-    <button mat-menu-item (click)="accion4()">MIDE TUS CAPACIDADES TEST</button>
-    <button mat-menu-item (click)="accion5()">MISION Y VISION</button>
-  </mat-menu>
-  
+<footer>
+  <p>&copy; 2024 Hobo. Todos los derechos reservados.</p>
+</footer>

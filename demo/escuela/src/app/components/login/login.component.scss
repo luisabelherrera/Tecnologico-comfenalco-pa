@@ -1,11 +1,57 @@
-.container {
+.login-container {
 	min-height: 100vh;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: linear-gradient(135deg, #f8f1ff 0%, #ffe8f7 100%);
+	padding: 2rem;
+	background: #f8f1ff;
+  }
+  
+  .login-card {
+	display: flex;
+	width: 700%;
+	max-width: 800px;
+	background: white;
+	border-radius: 20px;
+	overflow: hidden;
+	box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  }
+  
+  .login-left {
+	flex: 1;
+	background: #8E2DE2;
+	padding: 2rem;
+	display: flex;
+	flex-direction: column;
 	position: relative;
-	padding: 20px;
+	
+  }
+
+
+
+  .illustration-container {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 2rem;
+  }
+  
+  .illustration-container .illustration {
+	width: 140%;  
+	max-width: 900px; 
+	height: auto;
+	object-fit: contain;
+  }
+  
+
+
+
+  
+  .login-right {
+	flex: 1;
+	padding: 3rem;
+	position: relative;
   }
   
   .language-selector {
@@ -16,36 +62,27 @@
 	align-items: center;
 	gap: 8px;
 	cursor: pointer;
-	
-	img {
-	  border-radius: 2px;
-	}
   }
   
-  .sign-in-form {
-	background: white;
-	padding: 40px;
-	border-radius: 12px;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	width: 100%;
-	max-width: 400px;
+  .login-form {
+	max-width: 460px;
+	margin: 0 auto;
+  }
   
-	h1 {
-	  color: #4763E4;
-	  font-size: 28px;
-	  margin-bottom: 8px;
-	  text-align: center;
-	}
+  .sign-in-title {
+	color: #4763E4;
+	font-size: 28px;
+	font-weight: bold;
+	margin-bottom: 8px;
+  }
   
-	.subtitle {
-	  color: #666;
-	  text-align: center;
-	  margin-bottom: 32px;
-	}
+  .sign-in-subtitle {
+	color: #666;
+	margin-bottom: 2rem;
   }
   
   .form-group {
-	margin-bottom: 20px;
+	margin-bottom: 1.5rem;
   
 	label {
 	  display: block;
@@ -56,52 +93,58 @@
   
   .input-container {
 	position: relative;
-  
-	i {
+	
+	mat-icon {
 	  position: absolute;
 	  left: 12px;
 	  top: 50%;
 	  transform: translateY(-50%);
 	  color: #666;
+	  z-index: 1;
 	}
   
 	input {
 	  width: 100%;
 	  padding: 12px 12px 12px 40px;
-	  border: 1px solid #ddd;
+	  border: none;
 	  border-radius: 6px;
 	  font-size: 14px;
-	  transition: border-color 0.3s;
+	  background: #F0F7FF;
+	  transition: background-color 0.3s;
   
 	  &:focus {
 		outline: none;
-		border-color: #4763E4;
+		background: #E8F2FF;
+	  }
+  
+	  &::placeholder {
+		color: #666;
 	  }
 	}
   }
   
   .checkbox-container {
-	margin-bottom: 24px;
-  
-	label {
-	  display: flex;
-	  align-items: center;
-	  gap: 8px;
+	margin-bottom: 1.5rem;
+	
+	::ng-deep .mat-checkbox-label {
 	  color: #666;
-	  cursor: pointer;
 	}
   }
   
-  button[type="submit"] {
+  .sign-in-button {
 	width: 100%;
-	padding: 3px;
+	padding: 12px;
 	border: none;
 	border-radius: 6px;
 	background: linear-gradient(135deg, #E4379F 0%, #4763E4 100%);
 	color: white;
-	font-weight: bold;
+	font-weight: 500;
 	cursor: pointer;
 	transition: opacity 0.3s;
+  
+	&:hover {
+	  opacity: 0.9;
+	}
   
 	&:disabled {
 	  opacity: 0.7;
@@ -111,7 +154,8 @@
   
   .divider {
 	text-align: center;
-	margin: 24px 0;
+	color: #666;
+	margin: 1.5rem 0;
 	position: relative;
   
 	&::before,
@@ -124,107 +168,142 @@
 	  background: #ddd;
 	}
   
-	&::before {
-	  left: 0;
-	}
-  
-	&::after {
-	  right: 0;
-	}
-  
-	span {
-	  background: white;
-	  padding: 0 10px;
-	  color: #666;
-	}
+	&::before { left: 0; }
+	&::after { right: 0; }
   }
   
   .social-buttons {
 	display: flex;
 	justify-content: center;
-	gap: 16px;
-  
-	button {
-	  width: 40px;
-	  height: 40px;
-	  border: none;
-	  border-radius: 50%;
-	  display: flex;
-	  align-items: center;
-	  justify-content: center;
-	  cursor: pointer;
-	  transition: transform 0.3s;
-	  color: white;
-  
-	  &:hover {
-		transform: translateY(-2px);
-	  }
-  
-	  &.instagram {
-		background: #E4405F;
-	  }
-  
-	  &.facebook {
-		background: #1877F2;
-	  }
-  
-	  &.twitter {
-		background: #1DA1F2;
-	  }
-  
-	  &.google {
-		background: #DB4437;
-	  }
-	}
-  }
-
-
-
-  
-
-  @keyframes fadeIn {
-	from {
-	  opacity: 0;
-	  transform: scale(0.9);
-	}
-	to {
-	  opacity: 1;
-	  transform: scale(1);
-	}
+	gap: 1rem;
+	margin-bottom: 1.5rem;
   }
   
-  .nav-arrow {
-	position: absolute;
-	right: 20px;
-	top: 50%;
-	transform: translateY(-50%);
+  .social-button {
+	width: 36px;
+	height: 36px;
+	border: none;
+	border-radius: 50%;
+	background: #8E2DE2;
+	color: white;
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	background: rgba(255, 255, 255, 0.6);
-	color: rgb(0, 0, 0);
-	padding: 15px 20px;
-	border-radius: 30px;
+	justify-content: center;
 	cursor: pointer;
-	transition: all 0.3s ease-in-out;
-	animation: fadeIn 0.5s ease-in-out;
+	transition: opacity 0.3s;
+  
+	&:hover {
+	  opacity: 0.9;
+	}
+  
+	mat-icon {
+	  font-size: 20px;
+	  width: 20px;
+	  height: 20px;
+	}
   }
   
-  .nav-arrow:hover {
-	background: rgba(255, 0, 255, 0.8);
-	transform: translateY(-50%) scale(1.1);
+  .signup-link {
+	text-align: center;
+	margin-bottom: 1rem;
+	color: #666;
+  
+	a {
+	  color: #4763E4;
+	  text-decoration: none;
+	  font-weight: 500;
+  
+	  &:hover {
+		text-decoration: underline;
+	  }
+	}
   }
   
-  .arrow-icon {
-	font-size: 28px;
+  .copyright {
+	text-align: center;
+	color: #666;
+	font-size: 12px;
   }
   
-  .nav-text {
-	font-size: 18px;
-	font-weight: bold;
+  @media (max-width: 768px) {
+	.login-container {
+	  padding: 1rem;
+	  background: #8E2DE2;
+	}
+  
+	.login-card {
+	  flex-direction: column;
+	  max-width: 100%;
+	  background: white;
+	  border-radius: 12px;
+	}
+  
+	.login-left {
+	  display: none;
+	}
+  
+	.login-right {
+	  padding: 2rem 1.5rem;
+	  width: 100%;
+	}
+  
+	.login-form {
+	  max-width: 100%;
+	}
+  
+	.language-selector {
+	  top: 12px;
+	  right: 12px;
+	  
+	  span {
+		color: #333;
+	  }
+	}
+  }
+  
+  @media (max-width: 360px) {
+	.login-right {
+	  padding: 1.5rem 1rem;
+	}
+  
+	.social-buttons {
+	  gap: 0.5rem;
+	}
+  
+	.social-button {
+	  width: 32px;
+	  height: 32px;
+	}
   }
 
 
 
 
+
+
+  .nav-arrow {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	margin-top: 1rem;
+	padding: 8px 16px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	color: #666;
   
+	&:hover {
+	  color: #4763E4;
+	  transform: translateX(5px);
+	}
+  
+	.arrow-icon {
+	  font-size: 20px;
+	  width: 20px;
+	  height: 20px;
+	}
+  
+	.nav-text {
+	  font-size: 14px;
+	}
+  }

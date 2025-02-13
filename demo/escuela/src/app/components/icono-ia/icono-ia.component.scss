@@ -1,33 +1,86 @@
-.container {
-  text-align: center;
-  padding: 20px;
 
-  button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
+body, .container {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  height: 100%; 
+  width: 100%; 
+}
 
-    &:hover {
-      background-color: #0056b3;
-    }
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 12%;
+  right: 0; 
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  z-index: 999;
+  transition: transform 0.3s ease-in-out; 
+}
 
-    &:disabled {
-      background-color: gray;
-      cursor: not-allowed;
-    }
+.interactive-image {
+  cursor: pointer;
+  width: 100px;
+  height: auto;
+  background-color: transparent;
+  border: none;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3); 
+  transition: transform 0.3s ease;
+}
+
+.interactive-image:hover {
+  transform: scale(1.1);
+}
+
+.stop-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  transition: background-color 0.3s ease; 
+}
+
+.stop-button:hover {
+  background-color: #0056b3;
+}
+
+.stop-button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .interactive-image {
+    width: 120px; 
   }
 
-  p {
-    font-size: 18px;
-    margin-top: 10px;
-  }
-
-  h2 {
-    color: #333;
+  .stop-button {
+    padding: 8px 16px;
+    font-size: 14px;
   }
 }
+
+@media (max-width: 480px) {
+  .interactive-image {
+    width: 100px;
+  }
+
+  .stop-button {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
+
+
+

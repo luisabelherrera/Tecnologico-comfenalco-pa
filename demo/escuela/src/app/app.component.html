@@ -1,8 +1,10 @@
 <mat-toolbar
-  *ngIf="showLayout"
-  style="background-color: rgb(0, 0, 0); height: 60px;"
+  *ngIf="isAuthenticated$ | async"
+  [style.background-color]="toolbarColor"
+  height="60px"
   color="primary"
   class="mat-elevation-z12"
+  [style.color]="toolbarTextColor"
 >
   <span style="display: flex; align-items: center;">
     <input hidden class="check-icon" id="check-icon" name="check-icon" type="checkbox"  />
@@ -19,9 +21,10 @@
     <span class="logo">
       <div class="earth-container">
         <img
-          src="assets/iconos/tierra.png"
+          [src]="logoImage"
           alt="Logo"
           class="earth"
+          [style.filter]="'brightness(' + (isButtonPressed ? '2' : '1') + ')'" 
         />
       </div>
     </span>
@@ -40,22 +43,30 @@
   matTooltip="Inteligencia Artificial"
   matTooltipPosition="above"
 >
-  <mat-icon>{{ hasPendingNotifications ? 'smart_toy' : 'psychology' }}</mat-icon>
+  <mat-icon>{{ isButtonPressed ? 'language' : 'smart_toy' }}</mat-icon>
 </button>
 
-<button
-  mat-mini-fab
-  [class.blink]="isNotificationBlinking"
-  [class.pending]="hasPendingNotifications"
-  style="background-color: black; margin-right: 15px;"
-  *ngIf="isAdmin$ | async"
-  (click)="openNotifications()"
-  matTooltip="Notificaciones"
-  matTooltipPosition="above"
->
-  <mat-icon>{{ hasPendingNotifications ? 'notifications_active' : 'notifications' }}</mat-icon>
-</button>
 
+
+
+
+
+  <div *ngIf="isButtonPressed" class="ia-overlay">
+    <app-icono-ia></app-icono-ia> 
+  </div>
+
+  <button
+    mat-mini-fab
+    [class.blink]="isNotificationBlinking"
+    [class.pending]="hasPendingNotifications"
+    style="background-color: black; margin-right: 15px;"
+    *ngIf="isAdmin$ | async"
+    (click)="openNotifications()"
+    matTooltip="Notificaciones"
+    matTooltipPosition="above"
+  >
+    <mat-icon>{{ hasPendingNotifications ? 'notifications_active' : 'notifications' }}</mat-icon>
+  </button>
 
   <span *ngIf="isAuthenticated$ | async" class="user-info">
     <span *ngIf="username; else loading">
@@ -78,8 +89,10 @@
 
 
 
+
+
 <mat-sidenav-container>
-  <mat-sidenav  *ngIf="showLayout" #sidenav mode="side" [opened]="isAuthenticated$ | async" class="app-sidenav">
+  <mat-sidenav #sidenav mode="side" [opened]="isAuthenticated$ | async" class="app-sidenav">
     <nav>
       <h4 
         mat-subheader 

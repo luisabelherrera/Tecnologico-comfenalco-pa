@@ -21,6 +21,14 @@ public class PeriodoServiceImpl implements PeriodoService {
         return periodoRepository.findAll();
     }
 
+
+    public long count() {
+        return periodoRepository.count();
+    }
+
+    public long countByEstado(boolean activo) {
+        return periodoRepository.countByActivo(activo);
+    }
     @Override
     public Optional<Periodo> findById(Integer id) {
         return periodoRepository.findById(id);

@@ -7,4 +7,6 @@ import com.example.demo.model.entity.Periodo;
 
 @Repository
 public interface PeriodoRepository extends JpaRepository<Periodo, Integer> {
+
+    long countByActivo(boolean activo);
 }

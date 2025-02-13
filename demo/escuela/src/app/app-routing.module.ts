@@ -316,7 +316,7 @@ const routes: Routes = [
   // Login route
   { path: 'login', component: LoginComponent },
 
-  { path: '**', redirectTo: '/login' },
+  { path: '**', redirectTo: '/venta-informacion' },
 ];
 
 @NgModule({

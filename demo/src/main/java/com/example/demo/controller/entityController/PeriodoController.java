@@ -3,6 +3,7 @@ package com.example.demo.controller.entityController;
 import java.util.List;
 
 import com.example.demo.exceptions.customexceptions.exceptionsEntity.PeriodoNotFoundException;
+import com.example.demo.services.service.impl.PeriodoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,11 +28,35 @@ public class PeriodoController {
     @Autowired
     private PeriodoService periodoService;
 
+    @Autowired
+    private PeriodoServiceImpl periodoService1;
+
+
+
     @GetMapping
     public ResponseEntity<List<Periodo>> getAllPeriodos() {
         List<Periodo> periodos = periodoService.findAll();
         return ResponseEntity.ok(periodos);
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getPeriodosCount() {
+        long count = periodoService1.count();
+        return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/count/activos")
+    public ResponseEntity<Long> getPeriodosActivosCount() {
+        long count = periodoService1.countByEstado(true);
+        return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/count/inactivos")
+    public ResponseEntity<Long> getPeriodosInactivosCount() {
+        long count = periodoService1.countByEstado(false);
+        return ResponseEntity.ok(count);
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Periodo> getPeriodoById(@PathVariable Integer id) {
@@ -45,6 +70,7 @@ public class PeriodoController {
         Periodo nuevoPeriodo = periodoService.save(periodo);
         return ResponseEntity.ok(nuevoPeriodo);
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Periodo> updatePeriodo(@PathVariable Integer id, @RequestBody Periodo periodoDetalles) {

@@ -31,7 +31,7 @@ login() {
   this.authService.login(this.loginDto).subscribe(
     (response) => {
       const roles: string[] = response.roles || [];
-      this.router.navigate(['/luna']).then(() => {
+      this.router.navigate(['/home']).then(() => {
         setTimeout(() => {
           if (roles.includes('Administracion')) {
             this.router.navigate(['/home']);

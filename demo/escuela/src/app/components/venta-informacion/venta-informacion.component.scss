@@ -1,3 +1,114 @@
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #8E2DE2 0%, #E94057 100%);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
+  .logo {
+    img {
+      height: 60px;
+      width: auto;
+      filter: brightness(0) invert(1); // Hace el logo blanco
+    }
+  }
+
+  .main-nav {
+    ul {
+      display: flex;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        margin: 0 1rem;
+
+        a {
+          text-decoration: none;
+          color: #ffffff;
+          font-weight: 500;
+          transition: all 0.3s ease;
+          padding: 0.5rem 1rem;
+          border-radius: 20px;
+
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+          }
+        }
+      }
+    }
+  }
+
+  .login-button {
+    button {
+      background-color: #ffffff;
+      color: #8E2DE2;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.8);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      }
+    }
+  }
+}
+
+// Estilos para el menú desplegable
+::ng-deep .mat-menu-panel {
+  background: linear-gradient(135deg, #8E2DE2 0%, #E94057 100%);
+  border-radius: 8px;
+}
+
+::ng-deep .mat-menu-content {
+  padding: 0 !important;
+}
+
+::ng-deep .mat-menu-item {
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 36px;
+  height: 36px;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+@media (max-width: 768px) {
+  .main-header {
+    flex-direction: column;
+    padding: 1rem;
+
+    .main-nav {
+      margin: 1rem 0;
+
+      ul {
+        flex-direction: column;
+        align-items: center;
+
+        li {
+          margin: 0.5rem 0;
+        }
+      }
+    }
+
+    .login-button {
+      margin-top: 1rem;
+    }
+  }
+}
+
+
+
+
+
 .spacer {
   flex: 1;
 }

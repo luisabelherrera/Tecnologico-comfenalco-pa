@@ -1,106 +1,74 @@
 <div class="login-container">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Institucion Educativa El Hobo</mat-card-title>
-    </mat-card-header>
-    <form (ngSubmit)="login()">
-      <mat-card-content>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-icon matPrefix>email</mat-icon>
-          <input
-            matInput
-            placeholder="Enter Email"
-            [(ngModel)]="loginDto.email"
-            name="email"
-            required
-          />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-icon matPrefix>lock</mat-icon>
-          <input
-            matInput
-            placeholder="Enter Password"
-            [(ngModel)]="loginDto.password"
-            name="password"
-            type="password"
-            required
-          />
-        </mat-form-field>
-
-      
-        <div *ngIf="errorMessage" class="error-message">
-          {{ errorMessage }}
-        </div>
-      </mat-card-content>
-
-      <button type="submit" class="sign-in-button" mat-raised-button>
-        INICIAR SECCION
-      </button>
-    </form>
-
-
-       <div class="divider">
-      <span>O</span>
+  <div class="login-card">
+    <div class="login-left">
+    
+      <div class="illustration-container">
+        <img src="/assets/img/pngwing.com (3).png" alt="Login Illustration" class="illustration">
+      </div>
     </div>
+    <div class="login-right">
+ 
 
+      <div class="login-form">
+        <h1 class="sign-in-title">INICIAR SESIÓN</h1>
+        <p class="sign-in-subtitle">Ingresa tu email y contraseña para iniciar sesión</p>
 
+        <form (ngSubmit)="login()" #loginForm="ngForm">
+          <div class="form-group">
+            <label>Email</label>
+            <div class="input-container">
+              <mat-icon>email</mat-icon>
+              <input
+                type="email"
+                [(ngModel)]="loginDto.email"
+                name="email"
+                placeholder="admin@example.com"
+                required
+                #email="ngModel"
+              />
+            </div>
+          </div>
 
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-container">
+              <mat-icon>lock</mat-icon>
+              <input
+                type="password"
+                [(ngModel)]="loginDto.password"
+                name="password"
+                placeholder="••••••••••"
+                required
+                #password="ngModel"
+              />
+            </div>
+          </div>
 
-    <div class="recover-email">
-      <button mat-button (click)="abrirModalRecuperacion()" class="recover-btn">
-        Enviar Mensaje al Administrador
-      </button>
-    </div>
-  </mat-card>
+   
 
-  <div class="modal-backdrop" *ngIf="mostrarModal">
-    <div class="modal-content">
-      <h2>📩 Enviar Mensaje</h2>
-      <p class="modal-description">
-        Recuperar.
-      </p>
-      <mat-form-field class="full-width">
-        <mat-label>Escribe tu mensaje</mat-label>
-        <textarea
-          matInput
-          [(ngModel)]="mensajeUsuario"
-          placeholder="Escribe aquí tu mensaje"
-          rows="4"
-          aria-label="Mensaje al administrador"
-        ></textarea>
-      </mat-form-field>
-      <div class="modal-actions">
-        <button
-          mat-raised-button
-          color="primary"
-          (click)="enviarMensaje()"
-          class="modal-btn"
-        >
-          <mat-icon>send</mat-icon> Enviar
-        </button>
-        <button
-          mat-raised-button
-          color="warn"
-          (click)="cerrarModal()"
-          class="modal-btn-cancel"
-        >
-          <mat-icon>close</mat-icon> Cancelar
-        </button>
+          <button 
+            type="submit" 
+            class="sign-in-button"
+            [disabled]="!loginForm.valid"
+          >
+            SIGN IN
+          </button>
+
+          <div class="divider"></div>
+
+       
+
+          <div class="copyright">
+            © 2024  Hobo. Todos los derechos reservados.
+          </div>
+          <div class="nav-arrow" (click)="irAOtraVentana()">
+            <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+            <span class="nav-text">Más Información</span>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 </div>
 
-
-
-
-
-
-
-
-<div class="nav-arrow" (click)="irAOtraVentana()">
-  <mat-icon class="arrow-icon">arrow_forward</mat-icon>
-  <span class="nav-text">Más Información</span>
-</div>
 

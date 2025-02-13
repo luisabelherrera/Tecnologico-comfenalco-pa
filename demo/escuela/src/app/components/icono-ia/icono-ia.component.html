@@ -1,4 +1,9 @@
-<button (click)="startVoiceRecognition()">
-  {{ isRecording ? 'Detener Grabación' : 'Iniciar Grabación' }}
-</button>
-<p>{{ responseText }}</p>
+<div class="image-container">
+  <img 
+    src="assets/img/558fbfd3-0c2e-4c7f-b4d1-d638b759c8ec.png" 
+    alt="Imagen interactiva" 
+    (click)="startVoiceRecognition()" 
+    class="interactive-image">
+</div>
+
+<button (click)="stopAI()" *ngIf="isRecording" class="stop-button">Detener IA</button>

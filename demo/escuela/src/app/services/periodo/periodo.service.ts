@@ -23,6 +23,32 @@ export class PeriodoService {
         return this.http.get<Periodo[]>(this.apiUrl, { headers: this.getHeaders() })
             .pipe(catchError(this.handleError));
     }
+    getPeriodosCount(): Observable<number> {
+        try {
+            return this.http.get<number>(`${this.apiUrl}/count`, { headers: this.getHeaders() })
+                .pipe(catchError(this.handleError));
+        } catch (error) {
+            return throwError(() => new Error('Error obteniendo el número de periodos: ' + error));
+        }
+    }
+    
+    getPeriodosInactivos(): Observable<number> {
+        try {
+            return this.http.get<number>(`${this.apiUrl}/count/inactivos`, { headers: this.getHeaders() })
+                .pipe(catchError(this.handleError));
+        } catch (error) {
+            return throwError(() => new Error('Error obteniendo el número de periodos inactivos: ' + error));
+        }
+    }
+    
+    getPeriodosActivos(): Observable<number> {
+        try {
+            return this.http.get<number>(`${this.apiUrl}/count/activos`, { headers: this.getHeaders() })
+                .pipe(catchError(this.handleError));
+        } catch (error) {
+            return throwError(() => new Error('Error obteniendo el número de periodos activos: ' + error));
+        }
+    }
     
 
     getById(id: number): Observable<Periodo> {
