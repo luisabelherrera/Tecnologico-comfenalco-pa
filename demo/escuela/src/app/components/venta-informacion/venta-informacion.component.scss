@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background: linear-gradient(135deg, #8E2DE2 0%, #E94057 100%);
+  background: linear-gradient(135deg, #2db2ff 0%, #4340e9 100%);
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 
   .logo {
@@ -44,7 +44,7 @@
   .login-button {
     button {
       background-color: #ffffff;
-      color: #8E2DE2;
+      color: #2d66e2;
       border: none;
       padding: 0.5rem 1rem;
       border-radius: 20px;
@@ -62,7 +62,7 @@
 
 // Estilos para el menú desplegable
 ::ng-deep .mat-menu-panel {
-  background: linear-gradient(135deg, #8E2DE2 0%, #E94057 100%);
+  background: linear-gradient(135deg, #2d6ce2 0%, #7340e9 100%);
   border-radius: 8px;
 }
 
@@ -155,7 +155,7 @@
 footer {
   text-align: center;
   padding: 15px;
-  background: #1976d2;
+  background: #004aeb;
   color: white;
   margin-top: 20px;
 }
@@ -216,7 +216,7 @@ mat-card-actions {
 
 .header {
   background-color: #f8f9fa;
-  padding: 20px;
+  padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -226,7 +226,7 @@ mat-card-actions {
   bottom: 20px;
   right: 20px;
   z-index: 1000;
-  background-color: #6a1b9a;
+  background-color: #1b289a;
   border-radius: 50%;
   padding: 10px;
   color: white;
@@ -330,7 +330,7 @@ mat-card-actions {
 }
 
 .card-header {
-  background-color: #6a1b9a;
+  background-color: #1b9a9a;
   color: white;
 }
 

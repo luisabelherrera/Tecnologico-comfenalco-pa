@@ -1,0 +1,13 @@
+<div class="perfil-container" *ngIf="estudiante?.estudiante">
+    <h2>Perfil del Estudiante</h2>
+    <div class="info">
+        <p><strong>Nombre:</strong> {{ estudiante.estudiante.nombres }} {{ estudiante.estudiante.apellidos }}</p>
+        <p><strong>Documento:</strong> {{ estudiante.estudiante.documentoIdentidad }}</p>
+        <p><strong>Código:</strong> {{ estudiante.estudiante.codigo }}</p>
+        <p><strong>Fecha de Nacimiento:</strong> {{ estudiante.estudiante.fechaNacimiento }}</p>
+        <p><strong>Sexo:</strong> {{ estudiante.estudiante.sexo }}</p>
+        <p><strong>Ciudad:</strong> {{ estudiante.estudiante.ciudad }}</p>
+        <p><strong>Dirección:</strong> {{ estudiante.estudiante.direccion }}</p>
+        <p><strong>Activo:</strong> {{ estudiante.estudiante.activo ? 'Sí' : 'No' }}</p>
+    </div>
+</div>

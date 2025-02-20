@@ -1,6 +1,7 @@
 package com.example.demo.services.userservice.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,12 +21,14 @@ import org.springframework.stereotype.Service;
 import com.example.demo.exceptions.customexceptions.ConflictException;
 import com.example.demo.exceptions.customexceptions.JwtAuthenticationException;
 import com.example.demo.exceptions.customexceptions.NotFoundException;
+import com.example.demo.model.entity.Estudiante;
 import com.example.demo.model.login.Rol;
 import com.example.demo.model.login.UserEntity;
 import com.example.demo.model.login.dto.JwtResponseDto;
 import com.example.demo.model.login.dto.LoginDto;
 import com.example.demo.model.login.dto.RegisterDto;
 import com.example.demo.model.login.dto.UserDto;
+import com.example.demo.repositories.jpa.EstudianteRepository;
 import com.example.demo.repositories.jpa.UserRepository;
 import com.example.demo.jwt.JwtGenerator;
 import com.example.demo.services.userservice.RolService;
@@ -43,6 +46,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RolService rolService;
 
+
+
+    @Autowired
+    private EstudianteRepository  estudianteRepository;
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -53,33 +61,60 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
+    public Optional<UserEntity> findById(Long id) {
+        return userRepository.findById(id);
+    }
+    @Override
     public UserDto register(@Valid RegisterDto registerDto) {
-
         if (userRepository.existsByEmail(registerDto.getEmail())) {
             logger.warn("Attempted to register an existing user: {}", registerDto.getEmail());
-            throw new ConflictException("El usuario existe!");
+            throw new ConflictException("El usuario ya existe!");
         }
+    UserEntity user = new UserEntity();
+        // Buscar el estudiante en la BD
+        Estudiante estudiante = null;
+        if (registerDto.getEstudianteId() != null) {
+            estudiante = estudianteRepository.findById(registerDto.getEstudianteId())
+                    .orElseThrow(() -> new NotFoundException("¡Estudiante no encontrado!"));
+        }
+        user.setEstudiante(estudiante);
+        
 
-        UserEntity user = new UserEntity();
+    
+        // Crear el usuario
+        
         user.setUsername(registerDto.getUsername());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         user.setEmail(registerDto.getEmail());
-
+    
+        // Asignar los roles
         Set<Rol> roles = registerDto.getRoles().stream()
                 .map(rol -> rolService.findByname(rol.getName())
                         .orElseThrow(() -> new NotFoundException("Rol no encontrado: " + rol.getName())))
                 .collect(Collectors.toSet());
         user.setRoles(roles);
-
+    
+        // **Asignar el estudiante al usuario**
+        user.setEstudiante(estudiante);
+    
+        // Guardar el usuario
         userRepository.save(user);
         logger.info("User registered: {}", user.getEmail());
-
+    
+        // Convertir a DTO para la respuesta
         UserDto userDto = new UserDto();
         userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());
         userDto.setRoles(user.getRoles());
+        
         return userDto;
     }
+    
+
+    public Optional<UserEntity> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+    
 
     @Override
     public UserDto updateUser(Long id, @Valid RegisterDto updateDto) throws NotFoundException, ConflictException {
@@ -167,14 +202,21 @@ public class UserServiceImpl implements UserService {
     public UserDto getLoguedUser(HttpHeaders headers) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = ((User) authentication.getPrincipal()).getUsername();
-
+    
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
-
+    
         UserDto userDto = new UserDto();
         userDto.setEmail(user.getEmail());
         userDto.setUsername(user.getUsername());
         userDto.setRoles(user.getRoles());
+        
+        // **Asignamos el estudiante si el usuario tiene uno**
+        if (user.getEstudiante() != null) {
+            userDto.setEstudiante(user.getEstudiante());
+        }
+    
         return userDto;
     }
+    
 }

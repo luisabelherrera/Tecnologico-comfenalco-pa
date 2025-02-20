@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.example.demo.model.login.dto.UserDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +17,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EstudianteDTO implements Serializable {
-    private long idEstudiante;
+    private Integer idEstudiante;
+
     private int valorCodigo;
     private String codigo;
     private String nombres;
@@ -27,5 +30,5 @@ public class EstudianteDTO implements Serializable {
     private String direccion;
     private boolean activo;
     private LocalDateTime fechaRegistro;
-
+    private Long userId;
 }

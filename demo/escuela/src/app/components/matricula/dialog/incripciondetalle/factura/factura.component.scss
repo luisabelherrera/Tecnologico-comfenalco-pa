@@ -1,0 +1,74 @@
+.factura-container {
+    width: 60%;
+    margin: 20px auto;
+    padding: 20px;
+    border: 2px solid #333;
+    border-radius: 10px;
+    background: #f9f9f9;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .factura-header h2 {
+    margin: 0;
+    color: #2c3e50;
+  }
+  
+  .fecha {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .factura-info {
+    text-align: left;
+    margin: 20px 0;
+  }
+  
+  .factura-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  
+  .factura-table th, .factura-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .factura-table thead {
+    background: #3498db;
+    color: white;
+  }
+  
+  .total-label {
+    font-weight: bold;
+    text-align: right;
+  }
+  
+  .total-amount {
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  .mensaje {
+    margin-top: 20px;
+    font-style: italic;
+    color: #555;
+  }
+  
+  .btn-pdf {
+    padding: 10px 15px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+  }
+  
+  .btn-pdf:hover {
+    background: #219150;
+  }
+  

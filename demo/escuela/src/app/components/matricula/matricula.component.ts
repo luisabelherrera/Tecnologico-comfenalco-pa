@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { Acudiente } from 'src/app/models/entity/Acudiente.interface';
 import { Estudiante } from 'src/app/models/entity/Estudiante.interface';
-import { Inscripcion } from 'src/app/models/entity/Inscripcion.interface';
+import { EstadoPago, Inscripcion } from 'src/app/models/entity/Inscripcion.interface';
 import { AcudienteService } from 'src/app/services/acudiente/acudiente.service';
 import { EstudianteService } from 'src/app/services/estudiante/estudiante.service';
 import { InscripcionService } from 'src/app/services/matricula/matricula.service';
@@ -30,9 +30,11 @@ export class MatriculaComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   isEditing: boolean = false;
   private subscriptions: Subscription = new Subscription();
-
+  totalElements: number = 0; // Total de elementos
+  totalPages: number = 0; 
   @ViewChild(MatPaginator) paginator: MatPaginator; 
-
+  estadosPago = Object.values(EstadoPago);
+  dataSource = new MatTableDataSource<any>([]);
   constructor(
     private inscripcionService: InscripcionService,
     private estudianteService: EstudianteService,
@@ -41,6 +43,9 @@ export class MatriculaComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {}
+
+
+  
 
   ngOnInit(): void {
     this.loadData();
@@ -56,12 +61,39 @@ export class MatriculaComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+
+
+
+
+
+  
+
   loadData(): void {
     this.loading = true;
-    this.loadInscripciones();
-    this.loadEstudiantes();
-    this.loadAcudientes();
-    this.loadNivelesDetalle();
+  
+    // Llamadas a las funciones asíncronas con forkJoin
+    forkJoin([
+      this.inscripcionService.getAllInscripciones(),
+      this.estudianteService.getAllEstudiantes(),
+      this.acudienteService.getAcudientes(0, 10),  // Aquí deberías pasar los valores correctos de paginación
+      this.nivelDetalleService.getAll()
+    ]).subscribe({
+      next: ([inscripcionesData, estudiantesData, acudientesData, nivelesData]) => {
+        this.inscripciones.data = inscripcionesData;
+        this.estudiantes = estudiantesData;
+        this.acudientes = acudientesData.content;
+        this.nivelesDetalle = nivelesData;
+        this.totalElements = acudientesData.totalElements;
+        this.totalPages = acudientesData.totalPages;
+  
+        this.loading = false;
+        this.inscripciones.paginator = this.paginator;
+      },
+      error: (error) => {
+        this.handleError('Error cargando los datos:', error);
+        this.loading = false;
+      }
+    });
   }
 
   loadInscripciones(): void {
@@ -80,6 +112,7 @@ export class MatriculaComponent implements OnInit, OnDestroy {
   }
 
   openMatricularEstudiantesDialog(): void {
+    console.log(this.acudientes);  
     const dialogRef = this.dialog.open(AgregarEstudianteDialogComponent, {
       data: { estudiantes: this.estudiantes }
     });
@@ -91,13 +124,15 @@ export class MatriculaComponent implements OnInit, OnDestroy {
     });
   }
   openMatricularAcudienteDialog(): void {
+    // Asegúrate de que los acudientes están cargados antes de abrir el diálogo
+    console.log(this.acudientes);  // Verifica que los datos estén disponibles
     const dialogRef = this.dialog.open(MatricularAcudienteDialogComponent, {
-      data: { acudientes: this.acudientes }
+      data: { acudientes: this.acudientes }  // Asegúrate de pasar los datos completos
     });
   
-    dialogRef.afterClosed().subscribe((result: Acudiente | null) => {  
-        if (result) {
-        this.nuevoInscripcion.acudiente = result; 
+    dialogRef.afterClosed().subscribe((result: Acudiente | null) => {
+      if (result) {
+        this.nuevoInscripcion.acudiente = result;  // Asigna el acudiente seleccionado
       }
     });
   }
@@ -127,18 +162,31 @@ export class MatriculaComponent implements OnInit, OnDestroy {
     this.subscriptions.add(estudiantesSub);
   }
  
-  loadAcudientes(): void {
-    const acudientesSub = this.acudienteService.getAcudientes().subscribe(
-      (data: Acudiente[]) => {
-        this.acudientes = data;
+  loadAcudientes(page: number, size: number): void {
+    this.acudienteService.getAcudientes(page, size).subscribe(
+      (data: any) => {
+        this.acudientes = data.content;  // Lista de acudientes
+        this.totalElements = data.totalElements;  // Total de elementos
+        this.totalPages = data.totalPages;  // Total de páginas
+        this.dataSource.data = this.acudientes;  // Actualiza la fuente de datos de la tabla
+
+        // Asegurarse de que el paginador se actualice correctamente
+        if (this.paginator) {
+          this.paginator.pageIndex = page; // Actualiza el índice de página
+          this.paginator.pageSize = size;  // Asegura que el tamaño de página se mantenga
+        }
       },
       (error) => {
-        this.handleError('Error cargando acudientes:', error);
+        console.error('Error cargando acudientes:', error);
+        this.snackBar.open('Error cargando acudientes', 'Cerrar', {
+          duration: 3000,
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar']
+        });
       }
     );
-    this.subscriptions.add(acudientesSub);
   }
-
+  
   loadNivelesDetalle(): void {
     const nivelesSub = this.nivelDetalleService.getAll().subscribe(
       (data: any[]) => {
@@ -225,9 +273,14 @@ export class MatriculaComponent implements OnInit, OnDestroy {
       esRepitente: false,
       activo: true,
       fechaRegistro: new Date(),
+      montoPago: 0,
+      fechaPago: null,
+      metodoPago: '',
+      estadoPago: EstadoPago.PENDIENTE
     };
-    this.isEditing = false; 
+    this.isEditing = false;
   }
+
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;

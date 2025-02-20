@@ -1,22 +1,21 @@
 package com.example.demo.controller.entityController;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.example.demo.exceptions.customexceptions.exceptionsEntity.AcudienteNotFoundException;
+import com.example.demo.model.entity.Acudiente;
 import com.example.demo.model.entity.dto.AcudienteDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import com.example.demo.model.entity.dto.PaginatedResponse;
 import com.example.demo.services.service.AcudienteService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -26,20 +25,26 @@ public class AcudienteController {
     @Autowired
     private AcudienteService acudienteService;
 
-    @GetMapping
-    public ResponseEntity<List<AcudienteDTO>> getAllAcudientes() {
-        List<AcudienteDTO> acudientes = acudienteService.findAll();
-        return ResponseEntity.ok(acudientes);
+    @GetMapping("/acudientes")
+    public ResponseEntity<Page<AcudienteDTO>> getAcudientes(
+            @RequestParam(required = false) String nombres,
+            @RequestParam(required = false) String documentoIdentidad,
+            Pageable pageable) {
+
+        Page<AcudienteDTO> acudientesPage = acudienteService.findByFilters(nombres, documentoIdentidad, pageable);
+        return ResponseEntity.ok(acudientesPage);
     }
+
+
+
+
+
 
     @GetMapping("/{id}")
     public ResponseEntity<AcudienteDTO> getAcudienteById(@PathVariable Integer id) {
         Optional<AcudienteDTO> acudiente = acudienteService.findById(id);
-        if (acudiente.isPresent()) {
-            return ResponseEntity.ok(acudiente.get());
-        } else {
-            throw new AcudienteNotFoundException(id); // Lanzamos la excepción personalizada
-        }
+        return acudiente.map(ResponseEntity::ok)
+                .orElseThrow(() -> new AcudienteNotFoundException(id));
     }
 
     @PostMapping
@@ -50,7 +55,7 @@ public class AcudienteController {
 
     @PutMapping("/{id}")
     public ResponseEntity<AcudienteDTO> updateAcudiente(@PathVariable long id,
-            @RequestBody AcudienteDTO acudienteDetalles) {
+                                                        @RequestBody AcudienteDTO acudienteDetalles) {
         acudienteDetalles.setIdAcudiente(id);
         AcudienteDTO acudienteActualizado = acudienteService.save(acudienteDetalles);
         return ResponseEntity.ok(acudienteActualizado);

@@ -8,7 +8,7 @@
       <li>
         <a mat-button [matMenuTriggerFor]="institucionMenu">INSTITUCIÓN <mat-icon>arrow_drop_down</mat-icon></a>
         <mat-menu #institucionMenu="matMenu">
-          <a mat-menu-item href="#historia">Historia</a>
+          <a mat-menu-item (click)="victor()">Historia</a>
           <a mat-menu-item href="#instalaciones">Instalaciones</a>
           <a mat-menu-item href="#docentes">Cuerpo Docente</a>
           <a mat-menu-item href="#reglamento">Reglamento</a>
@@ -20,7 +20,7 @@
       <li>
         <a mat-button [matMenuTriggerFor]="recursosMenu">RECURSOS EDUCATIVOS <mat-icon>arrow_drop_down</mat-icon></a>
         <mat-menu #recursosMenu="matMenu">
-          <a mat-menu-item href="#libros">Libros</a>
+          <a mat-menu-item  (click)="libro()">Libros</a>
           <a mat-menu-item href="#videos">Videos</a>
           <a mat-menu-item href="#documentos">Documentos</a>
         </mat-menu>
@@ -62,11 +62,11 @@
 </header>
 
 <section class="hero">
-  <img src="assets/img/pngwing.com (1).png">
+  <img src="assets/img/cdc-GDokEYnOfnE-unsplash.jpg">
   <div class="overlay">
     <h2>Educación de Calidad para un Futuro Brillante</h2>
     <p>Comprometidos con la excelencia académica y el desarrollo integral.</p>
-    <button mat-raised-button color="accent">Conócenos Más</button>
+    <button mat-raised-button >Conócenos Más</button>
   </div>
 </section>
 

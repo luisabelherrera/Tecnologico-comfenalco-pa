@@ -27,36 +27,42 @@
   </div>
 
   <div class="table-container">
+    <!-- Tabla con ordenamiento -->
     <table mat-table [dataSource]="dataSource" matSort class="custom-table">
- 
-
+      
+      <!-- Columna de Nombres -->
       <ng-container matColumnDef="nombres">
-        <th mat-header-cell *matHeaderCellDef> Nombres </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombres </th>
         <td mat-cell *matCellDef="let acudiente">{{ acudiente.nombres }}</td>
       </ng-container>
-
+  
+      <!-- Columna de Apellidos -->
       <ng-container matColumnDef="apellidos">
-        <th mat-header-cell *matHeaderCellDef> Apellidos </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Apellidos </th>
         <td mat-cell *matCellDef="let acudiente">{{ acudiente.apellidos }}</td>
       </ng-container>
-
+  
+      <!-- Columna de Documento de Identidad -->
       <ng-container matColumnDef="documentoIdentidad">
-        <th mat-header-cell *matHeaderCellDef> Documento de Identidad </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Documento de Identidad </th>
         <td mat-cell *matCellDef="let acudiente">{{ acudiente.documentoIdentidad }}</td>
       </ng-container>
-
+  
+      <!-- Columna de Ciudad -->
       <ng-container matColumnDef="ciudad">
-        <th mat-header-cell *matHeaderCellDef> Ciudad </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Ciudad </th>
         <td mat-cell *matCellDef="let acudiente">{{ acudiente.ciudad }}</td>
       </ng-container>
-
+  
+      <!-- Columna de Activo -->
       <ng-container matColumnDef="activo">
-        <th mat-header-cell *matHeaderCellDef> Activo </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Activo </th>
         <td mat-cell *matCellDef="let acudiente">
           <div class="estado-indicador" [ngClass]="acudiente.activo ? 'activo' : 'inactivo'"></div>
         </td>
       </ng-container>
-      
+  
+      <!-- Columna de Acciones -->
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Acciones </th>
         <td mat-cell *matCellDef="let acudiente">
@@ -65,17 +71,23 @@
           <button mat-button (click)="deleteAcudiente(acudiente.idAcudiente)" color="warn">Eliminar</button>
         </td>
       </ng-container>
-
+  
+      <!-- Fila de encabezados y datos -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
   </div>
+  
 
   <div class="paginator">
-    <mat-paginator
-      [pageSize]="5"
-      [pageSizeOptions]="[5, 10, 25, 100]"
-      showFirstLastButtons>
-    </mat-paginator>
+    <mat-paginator 
+    [length]="totalElements"  
+    [pageSize]="pageSize"     
+    [pageSizeOptions]="[5, 10, 25, 50, 100, 1000]" 
+    [pageIndex]="pageIndex"   
+    (page)="metodoabsorver($event)">
+  </mat-paginator>
+
+
   </div>
 </div>

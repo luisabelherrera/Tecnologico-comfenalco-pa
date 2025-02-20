@@ -1,8 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { EstudianteService } from 'src/app/services/estudiante/estudiante.service';
 import { Estudiante } from 'src/app/models/entity/Estudiante.interface';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-agregar-estudiante-dialog',

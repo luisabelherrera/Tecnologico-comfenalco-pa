@@ -3,15 +3,9 @@ package com.example.demo.model.entity;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.example.demo.model.entity.enu.EstadoPago;
+import jakarta.persistence.*;
+
 
 @Entity
 @Table(name = "INSCRIPCION")
@@ -41,9 +35,21 @@ public class Inscripcion implements Serializable {
     private boolean esRepitente;
     private boolean activo = true;
 
-    @Column(name = "FechaRegistro")
+    @Column(name = "fecha_registro")
     private LocalDate fechaRegistro;
 
+    // Datos de pago
+    private double montoPago;
+
+    @Column(name = "fecha_pago")
+    private LocalDate fechaPago;
+
+    private String metodoPago; // Ejemplo: "Efectivo", "Tarjeta", "Transferencia"
+
+    @Enumerated(EnumType.STRING)
+    private EstadoPago estadoPago = EstadoPago.PENDIENTE; // Valor por defecto: "Pendiente"
+
+    // Getters y Setters
     public int getIdInscripcion() {
         return idInscripcion;
     }
@@ -132,5 +138,35 @@ public class Inscripcion implements Serializable {
         this.fechaRegistro = fechaRegistro;
     }
 
+    public double getMontoPago() {
+        return montoPago;
+    }
 
+    public void setMontoPago(double montoPago) {
+        this.montoPago = montoPago;
+    }
+
+    public LocalDate getFechaPago() {
+        return fechaPago;
+    }
+
+    public void setFechaPago(LocalDate fechaPago) {
+        this.fechaPago = fechaPago;
+    }
+
+    public String getMetodoPago() {
+        return metodoPago;
+    }
+
+    public void setMetodoPago(String metodoPago) {
+        this.metodoPago = metodoPago;
+    }
+
+    public EstadoPago getEstadoPago() {
+        return estadoPago;
+    }
+
+    public void setEstadoPago(EstadoPago estadoPago) {
+        this.estadoPago = estadoPago;
+    }
 }

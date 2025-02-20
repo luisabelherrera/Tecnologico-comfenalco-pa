@@ -47,6 +47,9 @@ public class EstudianteController {
         }
     }
 
+
+
+    
     @PutMapping("/{id}")
     public ResponseEntity<EstudianteDTO> updateEstudiante(@PathVariable Integer id,
                                                           @RequestBody EstudianteDTO estudianteDetalles) {

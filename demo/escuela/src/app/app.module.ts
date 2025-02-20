@@ -75,7 +75,12 @@ import { FullMessageDialogComponent } from './components/notificaciones-dialog/v
 import { IconoIaComponent } from './components/icono-ia/icono-ia.component';
 import { VentaInformacionComponent } from './components/venta-informacion/venta-informacion.component';
 import { QuizComponent } from './components/ventanas-para-invitados/eventos/eventos/eventos.component';
-
+import { LibrosApiComponent } from './components/ventanas-para-invitados/libro/libros-api/libros-api.component';
+import { VictorComponent } from './components/ventanas-para-invitados/victor/victor.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FacturaComponent } from './components/matricula/dialog/incripciondetalle/factura/factura.component';
+import { PerfilEstudianteComponent } from './components/vista-estudiante/mi-perfil/perfil-estudiante/perfil-estudiante.component';
+import { CommonModule } from '@angular/common';
 
 
 @NgModule({
@@ -106,10 +111,13 @@ import { QuizComponent } from './components/ventanas-para-invitados/eventos/even
     NgxPaginationModule ,
     MatCarouselModule,
     MatIconModule,
-   
+    CommonModule,
+    MatSnackBarModule,
   ],
   declarations: [
-    
+    FacturaComponent,
+    PerfilEstudianteComponent,
+    LibrosApiComponent,
     QuizComponent,
     VentaInformacionComponent,
     IconoIaComponent,

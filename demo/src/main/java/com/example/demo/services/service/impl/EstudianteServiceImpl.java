@@ -39,10 +39,28 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @CacheEvict(value = "estudiantecache", allEntries = true)
     public EstudianteDTO save(EstudianteDTO estudianteDTO) {
-        estudianteDTO.setFechaRegistro(LocalDateTime.now());
-        Estudiante estudiante = convertToEntity(estudianteDTO);
-        return convertToDTO(estudianteRepository.save(estudiante));
+        try {
+            // Set the registration date
+            estudianteDTO.setFechaRegistro(LocalDateTime.now());
+    
+            // Convert DTO to Entity
+            Estudiante estudiante = convertToEntity(estudianteDTO);
+    
+            // Save the Estudiante entity
+            Estudiante savedEstudiante = estudianteRepository.save(estudiante);
+    
+            // Return the saved entity as DTO
+            return convertToDTO(savedEstudiante);
+        } catch (Exception e) {
+            // Log the error with relevant information
+            System.err.println("Error occurred while saving Estudiante: " + e.getMessage());
+            e.printStackTrace();  // Print the stack trace for more details
+            
+            // You can throw a custom exception if needed
+            throw new RuntimeException("Error saving Estudiante: " + e.getMessage(), e);
+        }
     }
+    
 
     @CacheEvict(value = "estudiantecache", allEntries = true)
     public void deleteById(Integer id) {

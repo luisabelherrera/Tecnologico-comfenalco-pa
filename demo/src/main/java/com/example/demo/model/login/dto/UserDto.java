@@ -1,6 +1,8 @@
 package com.example.demo.model.login.dto;
 
 import java.util.Set;
+
+import com.example.demo.model.entity.Estudiante;
 import com.example.demo.model.login.Rol;
 
 public class UserDto {
@@ -9,16 +11,25 @@ public class UserDto {
     private String email;
     private Set<Rol> roles;
     private String password;  // Agregar la contraseña aquí
+private Estudiante estudiante; 
+    public Estudiante getEstudiante() {
+    return estudiante;
+}
+
+public void setEstudiante(Estudiante estudiante) {
+    this.estudiante = estudiante;
+}
 
     public UserDto() {
     }
 
-    public UserDto(Long id, String username, String email, Set<Rol> roles, String password) {
+    public UserDto(Long id, String username, String email, Set<Rol> roles, String password, Estudiante estudiante) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.roles = roles;
         this.password = password;
+        this.estudiante = estudiante;
     }
 
     public Long getId() {

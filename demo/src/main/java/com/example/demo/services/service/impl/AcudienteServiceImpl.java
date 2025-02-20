@@ -1,14 +1,16 @@
 package com.example.demo.services.service.impl;
 
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.example.demo.model.entity.dto.AcudienteDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.example.demo.model.entity.Acudiente;
+import com.example.demo.model.entity.dto.AcudienteDTO;
 import com.example.demo.repositories.jpa.AcudienteRepository;
 import com.example.demo.services.service.AcudienteService;
 
@@ -18,12 +20,19 @@ public class AcudienteServiceImpl implements AcudienteService {
     @Autowired
     private AcudienteRepository acudienteRepository;
 
-    
+    @Cacheable("acudientecache")
+    public Page<AcudienteDTO> findAll(Pageable pageable) {
+        System.out.println("Llamando a acudientecache y almacenando en caché.");
+        return acudienteRepository.findAll(pageable).map(this::convertToDTO);
+    }
+
     @Override
-    public List<AcudienteDTO> findAll() {
-        return acudienteRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public Page<AcudienteDTO> findByFilters(String nombres, String documentoIdentidad, Pageable pageable) {
+        if ((nombres == null || nombres.isEmpty()) && (documentoIdentidad == null || documentoIdentidad.isEmpty())) {
+            return acudienteRepository.findAll(pageable).map(this::convertToDTO);
+        }
+        return acudienteRepository.findByNombresContainingIgnoreCaseOrDocumentoIdentidadContainingIgnoreCase(
+                nombres, documentoIdentidad, pageable).map(this::convertToDTO);
     }
 
     @Override
@@ -32,13 +41,13 @@ public class AcudienteServiceImpl implements AcudienteService {
                 .map(this::convertToDTO);
     }
 
-    @Override
+    @CacheEvict(value = "acudientecache", allEntries = true)
     public AcudienteDTO save(AcudienteDTO acudienteDTO) {
         Acudiente acudiente = convertToEntity(acudienteDTO);
         return convertToDTO(acudienteRepository.save(acudiente));
     }
 
-    @Override
+    @CacheEvict(value = "acudientecache", allEntries = true)
     public void deleteById(long idAcudiente) {
         acudienteRepository.deleteById((int) idAcudiente);
     }

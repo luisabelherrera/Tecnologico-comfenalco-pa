@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Acudiente } from 'src/app/models/entity/Acudiente.interface';
 import { AuthService } from '../auth/AuthService.service'; 
 import { environment } from 'src/environments/environment';
@@ -20,12 +20,28 @@ export class AcudienteService {
       'Authorization': `Bearer ${token}`
     });
   }
-
-  getAcudientes(): Observable<Acudiente[]> {
-    return this.http.get<Acudiente[]>(this.apiUrl, { headers: this.getHeaders() }).pipe(
-      catchError(this.handleError)
+  
+  getAcudientes(page: number, size: number, nombres: string = '', documentoIdentidad: string = ''): Observable<any> {
+    // Construcción correcta de la URL con parámetros opcionales
+    let url = `${this.apiUrl}/acudientes?page=${page}&size=${size}`;
+    
+    if (nombres) {
+      url += `&nombres=${encodeURIComponent(nombres)}`;
+    }
+    
+    if (documentoIdentidad) {
+      url += `&documentoIdentidad=${encodeURIComponent(documentoIdentidad)}`;
+    }
+  
+    return this.http.get<any>(url, { headers: this.getHeaders() }).pipe(
+      map(response => response), // Si necesitas transformar la respuesta, lo harías aquí
+      catchError(error => {
+        console.error('Error fetching acudientes:', error);
+        throw error;  
+      })
     );
   }
+  
 
   getAcudienteById(id: number): Observable<Acudiente> {
     return this.http.get<Acudiente>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() }).pipe(

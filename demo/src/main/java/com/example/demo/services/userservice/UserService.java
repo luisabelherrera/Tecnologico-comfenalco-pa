@@ -1,26 +1,26 @@
 package com.example.demo.services.userservice;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpHeaders;
 
 import com.example.demo.exceptions.customexceptions.NotFoundException;
 import com.example.demo.exceptions.customexceptions.ConflictException;
+import com.example.demo.model.login.UserEntity;
 import com.example.demo.model.login.dto.JwtResponseDto;
 import com.example.demo.model.login.dto.LoginDto;
 import com.example.demo.model.login.dto.RegisterDto;
 import com.example.demo.model.login.dto.UserDto;
 
+
 public interface UserService {
     UserDto register(RegisterDto registerDto);
-
     JwtResponseDto login(LoginDto loginDto);
-
+    Optional<UserEntity> findById(Long id);
+    Optional<UserEntity> findByUsername(String username);  // 🔹 Agregar este método
     List<UserDto> getAllUsers();
-
     UserDto getLoguedUser(HttpHeaders headers);
-
     void deleteUserById(Long id) throws NotFoundException;
-
     UserDto updateUser(Long id, RegisterDto updateDto) throws NotFoundException, ConflictException;
 }

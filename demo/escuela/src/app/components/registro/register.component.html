@@ -103,9 +103,9 @@
         <div *ngIf="registerDto.userType === 'estudiante'" class="form-group">
           <mat-form-field appearance="outline" class="input-field">
             <mat-label>Estudiante</mat-label>
-            <mat-select [(ngModel)]="registerDto.estudianteInfo" name="estudiante" required>
+            <mat-select [(ngModel)]="registerDto.estudiante" name="estudiante" required>
               <mat-option *ngFor="let estudiante of estudiantes" [value]="estudiante">
-                {{ estudiante.nombres }} {{ estudiante.apellidos }} {{ estudiante.documentoIdentidad }}
+                {{ estudiante.nombres }} {{ estudiante.apellidos }} - {{ estudiante.documentoIdentidad }}
               </mat-option>
             </mat-select>
             <mat-error *ngIf="registerForm.controls['estudiante']?.errors?.['required']">
@@ -113,6 +113,9 @@
             </mat-error>
           </mat-form-field>
         </div>
+        
+        
+        
       </mat-card-content>
 
       <mat-card-actions>

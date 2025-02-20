@@ -95,7 +95,7 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/ventana3', icon: 'grade', title: 'Calificación' },  
     { path: '/curricularEstudiante', icon: 'book', title: 'Contenido Curricular' }, // Libro
     { path: '/horarioEstudiante', icon: 'schedule', title: 'Mi Horario' }, 
-    
+    { path: '/perfil-estudiante', icon: 'schedule', title: 'mi perfil' }, 
   ];
   
   

@@ -22,7 +22,7 @@ export class RegisterComponent implements OnInit {
     roles: [],
     userType: '', 
     docenteInfo: null,
-    estudianteInfo: null,
+    estudiante: null,
   };
   roles: RoleDto[] = [];
   docentes: Docente[] = [];
@@ -59,7 +59,7 @@ export class RegisterComponent implements OnInit {
         roles: userToEdit.roles,
         userType: '', 
         docenteInfo: null,
-        estudianteInfo: null,
+        estudiante: null,
       };
       console.log('Editing user:', userToEdit);
     }
@@ -151,7 +151,7 @@ export class RegisterComponent implements OnInit {
       roles: [],
       userType: '', 
       docenteInfo: null,
-      estudianteInfo: null 
+      estudiante: null 
     };
   }
 
@@ -227,7 +227,10 @@ export class RegisterComponent implements OnInit {
   onUserTypeChange(userType: string): void {
     this.registerDto.userType = userType;
     if (userType === 'docente') {
-      this.registerDto.estudianteInfo = null; 
+      this.registerDto.estudiante = null; 
+   } else if (userType === 'estudiante') {
+    this.registerDto.docenteInfo = null;
+    this.registerDto.estudiante = { id: 0 };
     } else {
       this.registerDto.docenteInfo = null;  
     }

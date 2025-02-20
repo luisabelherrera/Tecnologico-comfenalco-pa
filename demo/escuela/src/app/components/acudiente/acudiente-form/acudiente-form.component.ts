@@ -21,6 +21,7 @@ export class AcudienteFormComponent implements OnInit {
     fechaNacimiento: new Date(),
     activo: true,  
     parentesco: '' 
+    
   };
   
 

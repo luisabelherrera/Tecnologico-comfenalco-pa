@@ -90,6 +90,46 @@
           </mat-error>
         </mat-form-field>
 
+
+        <mat-form-field appearance="fill">
+          <mat-label>Monto de Pago</mat-label>
+          <input matInput [(ngModel)]="nuevoInscripcion.montoPago" name="montoPago" required #montoPago="ngModel">
+          <mat-error *ngIf="montoPago.invalid && (montoPago.dirty || montoPago.touched)">
+            El monto de pago es obligatorio.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Fecha de Pago</mat-label>
+          <input matInput [matDatepicker]="pickerPago" [(ngModel)]="nuevoInscripcion.fechaPago" name="fechaPago" #fechaPago="ngModel">
+          <mat-datepicker-toggle matSuffix [for]="pickerPago"></mat-datepicker-toggle>
+          <mat-datepicker #pickerPago></mat-datepicker>
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Método de Pago</mat-label>
+          <mat-select [(ngModel)]="nuevoInscripcion.metodoPago" name="metodoPago" required #metodoPago="ngModel">
+            <mat-option value="Efectivo">Efectivo</mat-option>
+            <mat-option value="Tarjeta">Tarjeta</mat-option>
+            <mat-option value="Transferencia">Transferencia</mat-option>
+          </mat-select>
+          <mat-error *ngIf="metodoPago.invalid && (metodoPago.dirty || metodoPago.touched)">
+            El método de pago es obligatorio.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Estado de Pago</mat-label>
+          <mat-select [(ngModel)]="nuevoInscripcion.estadoPago" name="estadoPago" required #estadoPago="ngModel">
+            <mat-option *ngFor="let estado of estadosPago" [value]="estado">
+              {{ estado }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="estadoPago.invalid && (estadoPago.dirty || estadoPago.touched)">
+            El estado de pago es obligatorio.
+          </mat-error>
+        </mat-form-field>
+
         <mat-checkbox [(ngModel)]="nuevoInscripcion.esRepitente" name="esRepitente">Es Repitente</mat-checkbox>
 
         <mat-checkbox [(ngModel)]="nuevoInscripcion.activo" name="activo">Activo</mat-checkbox>
@@ -152,6 +192,10 @@
         <th mat-header-cell *matHeaderCellDef>  situacion </th>
         <td mat-cell *matCellDef="let inscripcion">{{ inscripcion.situacion}}</td>
       </ng-container>
+
+
+
+   
 
 
       <ng-container matColumnDef="Estado">

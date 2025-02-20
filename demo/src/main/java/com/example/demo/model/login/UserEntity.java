@@ -3,6 +3,8 @@ package com.example.demo.model.login;
 import java.util.Set;
 
 import com.example.demo.model.entity.Docente;
+import com.example.demo.model.entity.Estudiante;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -23,10 +25,10 @@ public class UserEntity {
     @JoinTable(name = "user_rol", joinColumns = @JoinColumn(name = "id_user"), inverseJoinColumns = @JoinColumn(name = "id_rol"))
     private Set<Rol> roles;
 
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Docente docente;
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")  // Asegúrate de que la columna user_id se agregue en la tabla 'users'.
+    private Estudiante estudiante;
+    
 
     public UserEntity(Long id, String username, String password, String email, Set<Rol> roles) {
         this.id = id;

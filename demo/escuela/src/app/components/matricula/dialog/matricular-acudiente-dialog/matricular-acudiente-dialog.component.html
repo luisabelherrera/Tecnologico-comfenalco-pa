@@ -2,11 +2,11 @@
 <div mat-dialog-content>
   <mat-form-field appearance="fill" style="width: 100%;">
     <mat-label>Buscar Acudiente</mat-label>
-    <input matInput [(ngModel)]="searchTerm" placeholder="Escribe el nombre o apellido">
+    <input matInput [(ngModel)]="searchTerm" placeholder="Escribe el nombre o apellido" (ngModelChange)="applyFilter()">
   </mat-form-field>
 
   <mat-list>
-    <mat-list-item *ngFor="let acudiente of filteredAcudientes" (click)="selectAcudiente(acudiente)">
+    <mat-list-item *ngFor="let acudiente of dataSource.data" (click)="selectAcudiente(acudiente)">
       <mat-icon *ngIf="selectedAcudiente === acudiente" color="primary">check_circle</mat-icon>
       <div style="flex-grow: 1; margin-left: 8px;">
         <strong>{{ acudiente.nombres }} {{ acudiente.apellidos }}</strong>
@@ -17,6 +17,16 @@
     </mat-list-item>
   </mat-list>
 
+  <!-- Paginador -->
+  <mat-paginator 
+    [length]="totalElements" 
+    [pageSize]="pageSize" 
+    [pageSizeOptions]="[5, 10, 20]" 
+    [pageIndex]="pageIndex"
+    (page)="metodoabsorver($event)">
+  </mat-paginator>
+
+  <!-- Detalles del Acudiente Seleccionado -->
   <div *ngIf="selectedAcudiente">
     <mat-divider></mat-divider>
     <h3>Detalles del Acudiente Seleccionado</h3>

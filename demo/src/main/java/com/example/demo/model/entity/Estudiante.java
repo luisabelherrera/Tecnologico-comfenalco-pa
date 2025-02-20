@@ -4,11 +4,15 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.example.demo.model.login.UserEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,8 +32,7 @@ public class Estudiante implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idEstudiante;
-
+    private Integer idEstudiante;
     private int valorCodigo;
     private String codigo;
     private String nombres;
@@ -47,4 +50,9 @@ public class Estudiante implements Serializable {
     @Column(name = "FechaRegistro")
     private LocalDateTime fechaRegistro = LocalDateTime.now();
 
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true)
+    private UserEntity user;
+    
+    
 }

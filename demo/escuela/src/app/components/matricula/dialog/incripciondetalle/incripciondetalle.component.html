@@ -1,6 +1,7 @@
 <h2 mat-dialog-title>Detalles de Inscripción</h2>
 <mat-dialog-content class="dialog-content">
   <div class="info-container">
+    <!-- Campos existentes... -->
     <div class="info-item">
       <strong>Valor Código:</strong> <span>{{ data.valorCodigo }}</span>
     </div>
@@ -15,7 +16,7 @@
     </div>
     <div class="info-item">
       <strong>Estudiante:</strong> <span>{{ data.estudiante.nombres }} {{ data.estudiante.apellidos }}</span>
-    </div> 
+    </div>
     <div class="info-item">
       <strong>Acudiente:</strong> <span>{{ data.acudiente.nombres }} {{ data.acudiente.apellidos }}</span>
     </div>
@@ -31,6 +32,20 @@
     <div class="info-item">
       <strong>Fecha Registro:</strong> <span>{{ data.fechaRegistro | date }}</span>
     </div>
+
+    <!-- Campos de pago -->
+    <div class="info-item">
+      <strong>Monto de Pago:</strong> <span>{{ data.montoPago | currency }}</span>
+    </div>
+    <div class="info-item">
+      <strong>Fecha de Pago:</strong> <span>{{ data.fechaPago | date }}</span>
+    </div>
+    <div class="info-item">
+      <strong>Método de Pago:</strong> <span>{{ data.metodoPago }}</span>
+    </div>
+    <div class="info-item">
+      <strong>Estado de Pago:</strong> <span>{{ data.estadoPago }}</span>
+    </div>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions class="dialog-actions">
@@ -42,5 +57,8 @@
   <button mat-button (click)="downloadExcel()" class="action-button full-width-button">
     <img src="assets/iconos/microsoft_office_excel_logo_icon_145720.png" alt="Descargar Excel" class="icon"> 
     Descargar Excel
+  </button>
+  <button mat-button (click)="realizarPago()" class="action-button full-width-button pago-button">
+    💳 Realizar Pago
   </button>
 </mat-dialog-actions>

@@ -11,6 +11,7 @@ import { EstudianteService } from 'src/app/services/estudiante/estudiante.servic
 })
 export class CrearEstudianteComponent {
   estudiante: Estudiante = {
+    idEstudiante: 0,
     valorCodigo: '',
     codigo: '',
     nombres: '',

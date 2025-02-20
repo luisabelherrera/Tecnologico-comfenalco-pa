@@ -40,9 +40,25 @@ export class VentaInformacionComponent implements OnInit {
     });
   }
   irAOtraVentana() {
-    this.router.navigate(['/login']); 
+    this.router.navigate(['/login']).then(() => {
+      this.smoothScrollToTop();
+    });
   }
-
+  
+  smoothScrollToTop() {
+    const scrollDuration = 1000; // Duración en milisegundos (1s)
+    const scrollStep = -window.scrollY / (scrollDuration / 15); // Control del desplazamiento
+    
+    const scrollInterval = setInterval(() => {
+      if (window.scrollY !== 0) {
+        window.scrollBy(0, scrollStep);
+      } else {
+        clearInterval(scrollInterval); // Detiene el intervalo cuando llega arriba
+      }
+    }, 15); // Velocidad del intervalo
+  }
+  
+  
 
   cargarImagen(noticia: Noticia): void {
     if (noticia.id) {
@@ -63,6 +79,16 @@ export class VentaInformacionComponent implements OnInit {
   
   accion4() {
     this.router.navigate(['/juego']); 
+  }
+
+
+  libro() {
+    this.router.navigate(['/libros-api']); 
+  }
+
+
+  victor() {
+    this.router.navigate(['/victor']); 
   }
 
 

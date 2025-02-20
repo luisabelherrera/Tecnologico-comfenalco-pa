@@ -11,6 +11,7 @@ import { EstudianteService } from 'src/app/services/estudiante/estudiante.servic
 })
 export class EditarEstudianteComponent implements OnInit {
   estudiante: Estudiante = {
+    idEstudiante: 0,
     valorCodigo: '',
     codigo: '',
     nombres: '',

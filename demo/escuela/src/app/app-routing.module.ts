@@ -75,6 +75,10 @@ import { VentaInformacionComponent } from './components/venta-informacion/venta-
 import {  QuizComponent } from './components/ventanas-para-invitados/eventos/eventos/eventos.component';
 import { PreguntasJuegosComponent } from './components/ventanas-para-invitados/juegos/juegos/preguntas/preguntas-juegos/preguntas-juegos.component';
 import { JuegosComponent } from './components/ventanas-para-invitados/juegos/juegos/juegos.component';
+import { LibrosApiComponent } from './components/ventanas-para-invitados/libro/libros-api/libros-api.component';
+import { VictorComponent } from './components/ventanas-para-invitados/victor/victor.component';
+import { FacturaComponent } from './components/matricula/dialog/incripciondetalle/factura/factura.component';
+import { PerfilEstudianteComponent } from './components/vista-estudiante/mi-perfil/perfil-estudiante/perfil-estudiante.component';
 
 
 
@@ -286,8 +290,24 @@ const routes: Routes = [
   { path: 'docentes/detalle', component: DocenteNivelDetalleCursoComponent,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion']  },
-  },
+  }, 
 
+
+  { path: 'factura', component: FacturaComponent ,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion']  }, 
+
+    },
+
+
+    { path: 'perfil-estudiante', component: PerfilEstudianteComponent ,
+      canActivate: [AuthGuard],
+      data: { roles: ['Estudiante']  }, 
+      },
+
+
+
+      
   // calificacion
   { path: 'calificaciones', component: CalificacionListComponent ,
     canActivate: [AuthGuard],
@@ -312,9 +332,14 @@ const routes: Routes = [
     data: { roles: ['Administracion'] },
   },
  
-
+  
   // Login route
   { path: 'login', component: LoginComponent },
+
+
+  { path: 'libros-api', component: LibrosApiComponent },
+
+
 
   { path: '**', redirectTo: '/venta-informacion' },
 ];

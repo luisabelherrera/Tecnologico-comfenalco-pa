@@ -10,4 +10,5 @@ export interface Acudiente {
   fechaNacimiento?: Date;  
   activo: boolean;
   parentesco?: string;  
+  
 }

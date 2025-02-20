@@ -1,4 +1,4 @@
-package com.example.demo.model.entity;
+package com.example.demo.model.entity.enu;
 
 public enum EstadoPago {
     PENDIENTE,

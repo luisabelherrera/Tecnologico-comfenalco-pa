@@ -1,29 +1,23 @@
-<div class="horarios-container mat-elevation-z8">
+<div class="horarios-container">
   <h2 class="title-with-icon">
     <mat-icon>access_time</mat-icon> Horario de Clases
   </h2>
 
-  <mat-form-field class="filter-field">
-    <mat-label>Filtrar</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Ejemplo: Lunes" />
-  </mat-form-field>
-
   <div class="cards-container">
-    <div *ngFor="let horario of dataSource.filteredData" class="class-card">
-      <div class="card-header">
-        <h3>{{ horario.diaSemana }}</h3>
-        <mat-icon class="event-icon">event_available</mat-icon>
-      </div>
-      <div class="card-body">
+    <mat-card *ngFor="let horario of dataSource.data" class="class-card">
+
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon class="event-icon">event_available</mat-icon>
+          {{ horario.diaSemana }}
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
         <p><strong>Hora Inicio:</strong> {{ horario.horaInicio }}</p>
         <p><strong>Hora Fin:</strong> {{ horario.horaFin }}</p>
         <p><strong>Curso:</strong> {{ horario.nivelDetalleCurso.curso.descripcion }}</p>
-      </div>
-      <div class="card-footer">
-        <mat-icon color="primary">access_alarm</mat-icon>
-      </div>
-    </div>
+      </mat-card-content>
+    </mat-card>
   </div>
-
-  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
 </div>
