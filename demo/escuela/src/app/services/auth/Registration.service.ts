@@ -6,6 +6,9 @@ import { RegisterDto, RoleDto, UserDto } from 'src/app/models/models';
 import { Router } from '@angular/router';
 import { Docente } from 'src/app/models/entity/docente.model';
 import { environment } from 'src/environments/environment';
+import { Estudiante } from 'src/app/models/entity/Estudiante.interface';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -36,14 +39,19 @@ export class RegistrationService {
     }
   }
 
-  getAllDocentes(): Observable<Docente[]> {
-    return this.http.get<Docente[]>(`${this.apiUrl}/docentes`, { headers: this.getHeaders() })
+  // Nuevo método para obtener estudiantes
+  getAllEstudiantes(): Observable<Estudiante[]> {
+    return this.http.get<Estudiante[]>(`${this.apiUrl}/estudiantes`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
-  register(registerDto: RegisterDto): Observable<UserDto> {
-    return this.http.post<UserDto>(`${this.apiUrl}/register`, registerDto, { headers: this.getHeaders() })
-      .pipe(catchError(this.handleError));
+  // Ajustamos el tipo de respuesta a ApiResponse
+  register(registerDto: RegisterDto): Observable<{ success: boolean; message: string }> {
+    return this.http.post<{ success: boolean; message: string }>(
+      `${this.apiUrl}/register`, 
+      registerDto, 
+      { headers: this.getHeaders() }
+    ).pipe(catchError(this.handleError));
   }
 
   getAllUsers(): Observable<UserDto[]> {
@@ -56,15 +64,16 @@ export class RegistrationService {
       .pipe(catchError(this.handleError));  
   }
   
-  
   createRole(roleDto: RoleDto): Observable<RoleDto> {
     return this.http.post<RoleDto>(`${this.apiUrl}/register/roles`, roleDto, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
- updateUser(userId: number, registerDto: RegisterDto): Observable<UserDto> {
+
+  updateUser(userId: number, registerDto: RegisterDto): Observable<UserDto> {
     return this.http.put<UserDto>(`${this.apiUrl}/register/users/${userId}`, registerDto, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
+
   getAllRoles(): Observable<RoleDto[]> {
     return this.http.get<RoleDto[]>(`${this.apiUrl}/register/roles`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));

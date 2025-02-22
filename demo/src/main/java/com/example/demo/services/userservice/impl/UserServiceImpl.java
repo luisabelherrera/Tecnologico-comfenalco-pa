@@ -148,7 +148,6 @@ public class UserServiceImpl implements UserService {
         userDto.setRoles(user.getRoles());
         return userDto;
     }
-
     @Override
     public List<UserDto> getAllUsers() {
         List<UserEntity> users = userRepository.findAll();
@@ -158,13 +157,16 @@ public class UserServiceImpl implements UserService {
             userDto.setUsername(user.getUsername());
             userDto.setEmail(user.getEmail());
             userDto.setRoles(user.getRoles());
-            userDto.setPassword(user.getPassword()); // Agregar la contraseña aquí
+            userDto.setPassword(user.getPassword()); // Opcional, no recomendado enviar
+            // Agregar el estudiante si existe
+            if (user.getEstudiante() != null) {
+                userDto.setEstudiante(user.getEstudiante());
+            }
             return userDto;
         }).collect(Collectors.toList());
-
+    
         return userDtos;
     }
-
 
     @Override
     public void deleteUserById(Long id) throws NotFoundException {

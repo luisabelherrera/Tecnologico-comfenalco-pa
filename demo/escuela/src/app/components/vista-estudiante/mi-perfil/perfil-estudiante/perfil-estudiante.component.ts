@@ -9,20 +9,33 @@ import { EstudiantePerfilService } from 'src/app/services/estudiante/ventana-est
 })
 export class PerfilEstudianteComponent implements OnInit {
 
-  estudiante?: UserDto;
+  userProfile: UserDto | null = null;
+  error: string | null = null;
+  loading: boolean = false;
 
-  constructor(private perfilService: EstudiantePerfilService, private cdRef: ChangeDetectorRef) {}
+  constructor(private estudiantePerfilService: EstudiantePerfilService) {}
 
   ngOnInit(): void {
-    this.perfilService.getPerfilEstudiante().subscribe(
-      (data) => {
-        console.log("Datos recibidos:", data);
-        this.estudiante = data;
-        this.cdRef.detectChanges(); // Forzar actualización en la vista
-      },
-      (error) => {
-        console.error("Error al obtener perfil:", error);
-      }
-    );
+    this.loadProfile();
+  }
+
+  loadProfile(): void {
+    this.loading = true;
+    this.estudiantePerfilService.getStudentProfile()
+      .subscribe({
+        next: (profile: UserDto) => {
+          this.userProfile = profile;
+          this.loading = false;
+        },
+        error: (err) => {
+          this.error = 'Error loading profile: ' + err.message;
+          this.loading = false;
+        }
+      });
+  }
+
+  // Helper method to get roles as string
+  getRolesString(): string {
+    return this.userProfile?.roles?.map(role => role.name).join(', ') || '';
   }
 }

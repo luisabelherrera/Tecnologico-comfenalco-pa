@@ -23,7 +23,7 @@ export interface RegisterDto {
   password: string;
   roles: RoleDto[];  
   docenteInfo: Docente; 
-  estudiante: Estudiante;
+  estudianteId: number;
 }
 export interface RoleDto {
   id: number;
@@ -36,5 +36,5 @@ export interface UserDto {
   email: string;
   roles: RoleDto[];  
   docenteInfo: Docente; 
-  estudiante: Estudiante;
+  estudiante?: Estudiante;
 }

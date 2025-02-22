@@ -1,20 +1,122 @@
-.full-width-table {
-    width: 100%;
-  }
-  
-  .mat-card {
-    width: 100%;
-  }
-  .mat-header-cell {
-    background-color: #3f51b5; 
-    color: white; 
-  }
-  .container {
-  max-width: 1200px; 
-  width: 100%;
-  margin: 0 auto; 
+.register-container {
+  max-width: 500px;
+  margin: 20px auto;
   padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.user-list-container {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+
+  &:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: #0056b3;
+  }
+}
+
+.loading {
+  text-align: center;
+  color: #666;
+}
+
+.success {
+  color: green;
+  padding: 10px;
+  border: 1px solid green;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.error {
+  color: red;
+  padding: 10px;
+  border: 1px solid red;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f4f4f4;
+    color: #333;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+}
+
+.edit-btn {
+  width: auto;
+  background-color: #ffc107;
+  padding: 5px 10px;
+
+  &:hover {
+    background-color: #e0a800;
+  }
+}
+
+.delete-btn {
+  width: auto;
+  background-color: #dc3545;
+  padding: 5px 10px;
+
+  &:hover {
+    background-color: #c82333;
+  }
 }
