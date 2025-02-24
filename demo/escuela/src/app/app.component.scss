@@ -272,3 +272,51 @@ button.mat-mini-fab {
     height: 35px;
   }
 }
+
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+/* Estilo de la imagen del logo */
+.logo-img {
+  width: 32px; /* Tamaño fijo para íconos */
+  height: 32px;
+  object-fit: contain; /* Mantiene proporciones sin recortar */
+  transition: all 0.3s ease;
+}
+
+/* Resto del SCSS sigue igual (ajustado para brevedad) */
+.icon-menu {
+  --gap: 5px;
+  --height-bar: 2.5px;
+  --pos-y-bar-one: 0;
+  --pos-y-bar-three: 0;
+  --scale-bar: 1;
+  --rotate-bar-one: 0;
+  --rotate-bar-three: 0;
+  width: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  cursor: pointer;
+  position: relative;
+}
+
+.bar {
+  position: relative;
+  height: var(--height-bar);
+  width: 100%;
+  border-radius: 0.5rem;
+  background-color: #9941fc;
+}
+
+/* ... (resto de .icon-menu y .bar sigue igual) */
+
+.app-sidenav {
+  background-color: #f7f7f7;
+  color: #333;
+  width: 250px;
+  transition: width 0.3s ease;
+}

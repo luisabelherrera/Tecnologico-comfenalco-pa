@@ -1,46 +1,63 @@
-.profile-container {
-    padding: 20px;
-    max-width: 600px;
-    margin: 0 auto;
+
+
+
+
+.perfil-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 25px;
+    border-radius: 10px;
+    background: #f8f9fa;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+  
+    .perfil-header {
+      text-align: center;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #dee2e6;
+  
+      h2 {
+        font-size: 22px;
+        font-weight: bold;
+        color: #343a40;
+  
+        i {
+          color: #495057;
+          margin-right: 8px;
+        }
+      }
+    }
+  
+    .perfil-body {
+      margin-top: 20px;
+  
+      .info {
+        font-size: 16px;
+        color: #495057;
+  
+        p {
+          margin-bottom: 5px;
+        }
+        
+        .badge {
+          font-size: 14px;
+          padding: 5px 10px;
+          border-radius: 8px;
+        }
+      }
+  
+      .edit-mode {
+        input {
+          border: 1px solid #ced4da;
+        }
+      }
+    }
+  
+    button {
+      font-size: 14px;
+      font-weight: bold;
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
   }
   
-  .loading {
-    text-align: center;
-    color: #666;
-  }
-  
-  .error {
-    color: red;
-    padding: 10px;
-    border: 1px solid red;
-    border-radius: 4px;
-  }
-  
-  .profile-content {
-    border: 1px solid #ddd;
-    padding: 20px;
-    border-radius: 4px;
-  }
-  
-  .profile-section {
-    margin-bottom: 20px;
-  }
-  
-  .profile-section h3 {
-    color: #333;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 5px;
-  }
-  
-  .profile-section p {
-    margin: 10px 0;
-  }
-  
-  .info-note {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #f8f9fa;
-    border-radius: 4px;
-    font-size: 0.9em;
-    color: #555;
-  }

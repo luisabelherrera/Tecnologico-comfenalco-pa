@@ -1,9 +1,12 @@
-<header class="header">
+<header class="header" [ngStyle]="{
+  'background-color': (currentTheme$ | async)?.backgroundColor,
+  'color': (currentTheme$ | async)?.textColor
+}">
   <nav class="navbar">
     <div class="logo">
-      <h1 class="logo-text">HOBO</h1>
+      <h1 class="logo-text" [ngStyle]="{'color': (currentTheme$ | async)?.textColor}">HOBO</h1>
       <div class="user-info">
-        <span *ngIf="userName$ | async as userName; else loading">
+        <span *ngIf="userName$ | async as userName; else loading" [ngStyle]="{'color': (currentTheme$ | async)?.textColor}">
           <i class="fas fa-user-circle"></i> Bienvenido, {{ userName }}. Aquí podrás encontrar las noticias y eventos de la institución.
         </span>
         <ng-template #loading>
@@ -13,35 +16,33 @@
     </div>
   </nav>
 </header>
-
-
-
-
-
-<div class="chat-icon" (click)="toggleChat()">
-  <i class="fas fa-comments fa-2x" style="cursor: pointer;"></i>
+<div class="chat-icon" (click)="toggleChat()" *ngIf="isAuthenticated" [ngStyle]="{
+  'background-color': (currentTheme$ | async)?.backgroundColor
+}">
+  <i class="fas fa-comments fa-2x" [ngStyle]="{'color': (currentTheme$ | async)?.textColor}" style="cursor: pointer;"></i>
 </div>
 
-<div class="chat-container" [ngStyle]="{'display': chatVisible ? 'block' : 'none'}" style="position: fixed; bottom: 70px; right: 20px; width: 300px; z-index: 1000;">
+<div class="chat-container" [ngStyle]="{
+  'display': chatVisible && isAuthenticated ? 'block' : 'none',
+  'background-color': (currentTheme$ | async)?.backgroundColor,
+  'color': (currentTheme$ | async)?.textColor
+}" style="position: fixed; bottom: 70px; right: 20px; width: 300px; z-index: 1000;">
   <div class="card chat-card" style="width: 100%; max-height: 400px; overflow: hidden;">
-    <div class="card-header">
+    <div [ngStyle]="{
+      'background-color': (currentTheme$ | async)?.backgroundColor,
+      'color': (currentTheme$ | async)?.textColor
+    }">
       <ul class="nav nav-pills card-header-pills">
-        <li class="nav-item mr-2" *ngIf="!mensaje.username">
-          <input type="text" [(ngModel)]="mensaje.username" class="form-control" placeholder="Username..." name="username">
-        </li>
         <li class="nav-item mr-2">
-          <button class="btn btn-success" type="button" (click)="conectar()" *ngIf="!conectado" [disabled]="!mensaje.username">
+          <button class="btn btn-success" type="button" (click)="conectar()" *ngIf="!conectado" [ngStyle]="{
+            'background-color': (currentTheme$ | async)?.backgroundColor,
+            'color': (currentTheme$ | async)?.textColor
+          }">
             <i class="fas fa-sign-in-alt"></i> Conectar
-          </button>
-        </li>
-        <li class="nav-item">
-          <button class="btn btn-warning" type="button" (click)="desconectar()" *ngIf="conectado">
-            <i class="fas fa-sign-out-alt"></i> Cerrar Chat
           </button>
         </li>
       </ul>
     </div>
-    
 
     <div #scrollChat [scrollTop]="scrollChat.scrollHeight" class="card-body chat-body" *ngIf="conectado" style="overflow-y: auto; max-height: 300px;">
       <ul class="list-group list-group-flush">
@@ -58,14 +59,24 @@
       </ul>
     </div>
 
-    <div class="card-footer" *ngIf="conectado">
+
+    <div class="card-footer" *ngIf="conectado" [ngStyle]="{
+      'background-color': (currentTheme$ | async)?.backgroundColor,
+      'color': (currentTheme$ | async)?.textColor
+    }">
       <form class="form-inline" (ngSubmit)="enviarMensaje()">
         <div class="form-group mx-3">
-          <input type="text" [(ngModel)]="mensaje.texto" class="form-control" placeholder="Escribe un mensaje..." name="texto"
-            (keyup)="escribiendoEvento()">
-          <button type="button" class="btn btn-light" (click)="mostrarEmojis()">😊</button>
-          <button class="btn btn-primary" type="submit">
-            <i class="fas fa-paper-plane"></i> Enviar
+          <input
+            type="text"
+            [(ngModel)]="mensaje.texto"
+            class="form-control"
+            placeholder="Escribe un mensaje..."
+            name="texto"
+            (keyup)="escribiendoEvento()"
+            (keyup.enter)="enviarMensaje()"
+          />
+          <button type="button" class="btn btn-light" (click)="mostrarEmojis()">
+            😊
           </button>
         </div>
       </form>
@@ -99,12 +110,15 @@
         <span (click)="agregarEmoji('💬')">💬</span>
       </div>
     </div>
+
+    <div class="card-body" *ngIf="!isAuthenticated" style="text-align: center; padding: 20px;">
+      <p>Por favor, inicia sesión para acceder al chat.</p>
+    </div>
   </div>
 </div>
 
 <div class="noticias-container mx-4 my-4">
   <h2 class="noticias-titulo"><i class="fas fa-newspaper"></i> Las noticias del día</h2>
-
   <div class="noticias-grid">
     <div *ngFor="let noticia of noticias" class="noticia-card">
       <div class="noticia-header">
@@ -118,12 +132,34 @@
              alt="Imagen de noticia" 
              class="noticia-imagen" 
              (click)="mostrarImagen(noticia)" /> 
-        <button *ngIf="!noticia.imagen" (click)="cargarImagen(noticia)" class="btn-cargar-imagen"><i class="fas fa-upload"></i> Cargar Imagen</button>
+        <button *ngIf="!noticia.imagen" (click)="cargarImagen(noticia)" class="btn-cargar-imagen">
+          <i class="fas fa-upload"></i> Cargar Imagen
+        </button>
+      </div>
+      <div class="noticia-interacciones">
+        <button class="btn-like" (click)="darLike(noticia)" [disabled]="!isAuthenticated">
+          <i class="fas fa-heart heart-icon"></i> {{ noticia.likesCount || 0 }}
+        </button>
+        <button class="btn-toggle-comments" (click)="toggleComments(noticia.id)" title="{{ showComments[noticia.id] ? 'Ocultar' : 'Mostrar' }} Comentarios">
+          <i class="fas" [ngClass]="{'fa-eye': !showComments[noticia.id], 'fa-eye-slash': showComments[noticia.id]}"></i>
+        </button>
+      </div>
+      <div class="comentario-input-container" *ngIf="isAuthenticated">
+        <input type="text" 
+               class="comentario-input" 
+               [(ngModel)]="comentarioTexto[noticia.id]" 
+               placeholder="Escribe un comentario..." 
+               (keyup.enter)="noticia.id && comentarioTexto[noticia.id] ? agregarComentario(noticia) : null" />
+      </div>
+      <div class="comentarios-lista" [ngStyle]="{'display': showComments[noticia.id] ? 'block' : 'none'}"
+           *ngIf="noticia.comentarios && noticia.comentarios.length">
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let comentario of noticia.comentarios">
+            <strong>{{ comentario.autor }}</strong>: {{ comentario.contenido }}
+            <span class="comentario-fecha">{{ comentario.fechaCreacion | date: 'short' }}</span>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
 </div>
-
-
-
-

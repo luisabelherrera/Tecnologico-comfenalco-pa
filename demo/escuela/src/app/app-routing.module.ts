@@ -32,8 +32,7 @@ import { CurricularEditComponent } from './components/curricular/curricular-edit
 
 // curso
 import { CursosListComponent } from './components/cursos/cursos-list/cursos-list.component';
-import { CursosCreateComponent } from './components/cursos/cursos-create/cursos-create.component';
-import { CursosEditComponent } from './components/cursos/cursos-edit/cursos-edit.component';
+
 //DOcenteNiveldetalle
 import { DocenteNivelDetalleCursoComponent } from './components/docente-nivel-detalle-curso/docente-nivel-detalle-curso.component';
 //Estudiante
@@ -79,6 +78,7 @@ import { LibrosApiComponent } from './components/ventanas-para-invitados/libro/l
 import { VictorComponent } from './components/ventanas-para-invitados/victor/victor.component';
 import { FacturaComponent } from './components/matricula/dialog/incripciondetalle/factura/factura.component';
 import { PerfilEstudianteComponent } from './components/vista-estudiante/mi-perfil/perfil-estudiante/perfil-estudiante.component';
+import { ThemeCustomizerComponent } from './components/theme-customizer/theme-customizer.component';
 
 
 
@@ -204,14 +204,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Administracion']  },
   },
-  { path: 'cursos/create', component: CursosCreateComponent ,
-    canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
-  },
-  { path: 'cursos/edit/:id', component: CursosEditComponent ,
-    canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
-  },
+
   //estudiante
   { path: 'listar', component: ListarEstudiantesComponent ,
     canActivate: [AuthGuard],
@@ -231,6 +224,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Administracion']  },
   },
+
+
+  { path: 'header',
+    component: ThemeCustomizerComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion'] },
+  },
+
 
   //horario
   {

@@ -1,5 +1,7 @@
+
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common'; // Asegúrate de importar desde @angular/common
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
@@ -9,14 +11,16 @@ import 'jspdf-autotable';
   styleUrls: ['./factura.component.scss']
 })
 export class FacturaComponent implements OnInit {
-
   estudiante: string = '';
   montoPago: number = 0;
   metodoPago: string = '';
   codigo: string = '';
   fecha: string = new Date().toLocaleDateString();
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private location: Location // Inyectamos Location desde @angular/common
+  ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -29,9 +33,6 @@ export class FacturaComponent implements OnInit {
 
   generarPDF(): void {
     const doc = new jsPDF();
-
-    // Agregar un logo (si tienes uno)
-    // doc.addImage('URL_O_PATH_DEL_LOGO', 'JPEG', 10, 10, 30, 30);
 
     // Encabezado
     doc.setFont('helvetica', 'bold');
@@ -75,5 +76,9 @@ export class FacturaComponent implements OnInit {
 
     // Descargar PDF
     doc.save(`Factura_${this.codigo}.pdf`);
+  }
+
+  volver(): void {
+    this.location.back(); // Usamos el método back() del servicio Location
   }
 }

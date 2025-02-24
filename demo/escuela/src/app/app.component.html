@@ -37,7 +37,8 @@
   mat-mini-fab
   [class.blink]="isNotificationBlinking"
   [class.pending]="hasPendingNotifications"
-  style="background-color: black; margin-right: 15px;"
+  [style.backgroundColor]="(currentTheme$ | async)?.backgroundColor"
+  style="margin-right: 15px;"
   *ngIf="isAdmin$ | async"
   (click)="abrirIAIcono()"
   matTooltip="Inteligencia Artificial"
@@ -94,19 +95,18 @@
 <mat-sidenav-container>
   <mat-sidenav #sidenav mode="side" [opened]="isAuthenticated$ | async" class="app-sidenav">
     <nav>
-      <h4 
-        mat-subheader 
-        (click)="islinksMenuOpen = !islinksMenuOpen" 
-        [attr.aria-expanded]="islinksMenuOpen" 
-        style="text-align: center; width: 100%;">
+      <h4
+        mat-subheader
+        (click)="islinksMenuOpen = !islinksMenuOpen"
+        [attr.aria-expanded]="islinksMenuOpen"
+        style="text-align: center; width: 100%;"
+      >
         <p></p>
         Menú Principal
       </h4>
-
-        
       <div *ngIf="islinksMenuOpen" class="links-container">
         <a mat-button class="nav-link" *ngFor="let link of links" [routerLink]="link.path" routerLinkActive="active">
-          <img [src]="link.icon" alt="{{ link.title }}" style="width: 24px; height: 24px; margin-right: 8px;"/> <!-- Reemplaza mat-icon por img -->
+          <img [src]="link.icon" alt="{{ link.title }}" style="width: 24px; height: 24px; margin-right: 8px;" />
           {{ link.title }}
         </a>
       </div>
@@ -219,10 +219,13 @@
 </ng-container>
 
 
+
+
+
 <ng-container *ngIf="isAdmin$ | async">
   <h4 mat-subheader class="sidenav-header" (click)="isMenu = !isMenu" [attr.aria-expanded]="isMenu">
-    <img src="assets/iconos/informacion.png" alt="Icono Matrícula" style="width: 24px; height: 24px; margin-right: 8px;" /> <!-- Reemplaza la ruta con tu ícono -->
-    Noticias
+    <img src="assets/iconos/informacion.png" alt="Icono Noticias" style="width: 24px; height: 24px; margin-right: 8px;" />
+   eventos
   </h4>
   <div *ngIf="isMenu">
     <nav>
@@ -257,3 +260,4 @@
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
+

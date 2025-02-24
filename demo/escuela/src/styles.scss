@@ -2,7 +2,7 @@
 
 @use "@angular/material" as mat;
 @import 'swiper/swiper-bundle.min.css';
-$aside-bg-color: #3f51b5; // Color de fondo principal del aside
+$aside-bg-color: #000000; // Color de fondo principal del aside
 $aside-item-color: #ffffff; // Color del texto de los elementos
 $aside-item-hover-color: #b3c6ff; // Color de fondo en hover
 $aside-item-active-color: #ffd740; // Color del texto del elemento activo
@@ -73,7 +73,7 @@ p {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #3f51b5; /* Color de la barra de desplazamiento */
+  background-color: #000000; /* Color de la barra de desplazamiento */
   border-radius: 10px; /* Borde redondeado de la barra */
 }
 
@@ -182,7 +182,7 @@ p {
 .header {
   padding-bottom: 10px;
   color: #673ab7;
-  border-bottom: 2px solid #ff00ea;
+  border-bottom: 2px solid #000000;
 }
 
 app-root {

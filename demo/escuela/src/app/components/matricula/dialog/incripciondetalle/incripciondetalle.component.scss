@@ -1,61 +1,256 @@
+/* Estilos base */
 .dialog-content {
-    padding: 16px;
-    background-color: #f9f9f9; 
-    border-radius: 8px; 
+  padding: 20px;
+  max-height: 70vh;
+  overflow-y: auto; /* Permitir scroll si hay mucho contenido */
+}
+
+.info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Espacio entre elementos */
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Limitar el ancho máximo en desktop */
+@media (min-width: 1025px) { /* Desktop */
+  .dialog-content {
+    max-width: 600px; /* Ancho máximo en desktop */
+    margin: 0 auto; /* Centrar el contenido */
   }
-  
+
   .info-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; 
+    padding: 20px;
   }
-  
+
   .info-item {
-    display: flex;
-    justify-content: space-between; 
-    padding: 8px;
-    border-bottom: 1px solid #ddd; 
+    padding: 12px;
   }
-  
-  .info-item:last-child {
-    border-bottom: none; 
+}
+
+/* Estilos para los ítems */
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Alinear verticalmente el texto */
+  padding: 10px;
+  background-color: #f9fafb;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #f1f5f9;
+    transform: translateY(-2px); /* Efecto sutil al pasar el ratón */
   }
-  
-  .dialog-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap; 
+
+  strong {
+    font-weight: 600;
+    color: #1f2937;
+    flex: 1; /* Ocupa el espacio disponible a la izquierda */
+    margin-right: 10px;
   }
-  
+
+  span {
+    color: #4b5563;
+    font-size: 14px;
+    text-align: right;
+    flex-shrink: 0; /* Evita que el texto se comprima demasiado */
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  gap: 10px;
+  flex-wrap: wrap; /* Permitir que los botones se envuelvan en pantallas pequeñas */
+  background-color: #f1f5f9;
+  border-top: 1px solid #e5e7eb;
+
   .action-button {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 25px;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    background-color: #f5f5f5; 
-    border: 1px solid #ccc; 
-    border-radius: 4px; 
-    padding: 8px 16px; 
-    transition: background-color 0.3s ease;
-    min-width: 150px;
-    flex: 1 1 150px; 
-    margin: 4px; 
+    justify-content: center;
+    gap: 8px; /* Espacio entre ícono y texto */
+
+    &:hover {
+      background-color: #1e3a8a;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+    }
+
+    &.full-width-button {
+      flex: 1; /* Ocupa el espacio disponible */
+      min-width: 120px; /* Tamaño mínimo para evitar que se encoja demasiado */
+    }
+
+    &.pago-button {
+      background-color: #16a34a;
+
+      &:hover {
+        background-color: #15803d;
+        box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+      }
+    }
   }
-  
-  .full-width-button {
-    flex: 1; 
-  }
-  
-  .action-button:hover {
-    background-color: #e0e0e0;
-  }
-  
+
   .icon {
-    width: 24px; 
-    height: 24px; 
-    margin-right: 8px; 
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
   }
-  
-  .mat-dialog-container {
-    min-width: 600px;
+}
+
+/* Tablets (768px - 1024px) */
+@media (max-width: 1024px) {
+  .dialog-content {
+    padding: 15px;
   }
-  
+
+  .info-container {
+    padding: 10px;
+    gap: 12px;
+  }
+
+  .info-item {
+    padding: 8px;
+    flex-direction: column; /* Apilar en tablets si el espacio es limitado */
+    align-items: flex-start;
+
+    strong {
+      margin-bottom: 5px;
+    }
+
+    span {
+      text-align: left;
+    }
+  }
+
+  .dialog-actions {
+    flex-direction: column; /* Apilar botones en tablets */
+    align-items: stretch;
+
+    .action-button {
+      width: 100%; /* Botones ocupan todo el ancho */
+    }
+  }
+}
+
+/* Mobile (≤ 767px) */
+@media (max-width: 767px) {
+  .dialog-content {
+    padding: 10px;
+    max-height: 60vh; /* Reducir altura máxima en móviles */
+  }
+
+  .info-container {
+    gap: 10px;
+  }
+
+  .info-item {
+    flex-direction: column; /* Apilar verticalmente en móviles */
+    align-items: flex-start;
+    padding: 8px;
+    font-size: 13px;
+
+    strong {
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    span {
+      font-size: 13px;
+      text-align: left;
+    }
+  }
+
+  .dialog-actions {
+    flex-direction: column; /* Botones apilados en móviles */
+    padding: 10px;
+    gap: 8px;
+
+    .action-button {
+      width: 100%; /* Botones ocupan todo el ancho */
+      padding: 8px 16px;
+      font-size: 13px;
+
+      &.full-width-button {
+        min-width: 0; /* Permitir que se ajuste al contenido */
+      }
+
+      .icon {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  /* Ajustes para orientación landscape en móviles */
+  @media (orientation: landscape) {
+    .info-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Distribuir en columnas */
+      gap: 10px;
+    }
+
+    .info-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .dialog-actions {
+      flex-direction: row; /* Botones en línea en landscape */
+      flex-wrap: wrap;
+
+      .action-button {
+        flex: 1 1 45%; /* Cada botón ocupa ~45% del ancho */
+        width: auto;
+      }
+    }
+  }
+}
+
+/* Very small screens (≤ 480px) */
+@media (max-width: 480px) {
+  .dialog-content {
+    padding: 8px;
+  }
+
+  .info-item {
+    padding: 6px;
+    font-size: 12px;
+
+    strong {
+      font-size: 13px;
+    }
+
+    span {
+      font-size: 12px;
+    }
+  }
+
+  .dialog-actions {
+    padding: 8px;
+    gap: 6px;
+
+    .action-button {
+      padding: 6px 12px;
+      font-size: 12px;
+
+      .icon {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}

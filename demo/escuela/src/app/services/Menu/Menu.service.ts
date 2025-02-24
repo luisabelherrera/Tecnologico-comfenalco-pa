@@ -52,8 +52,17 @@ export class NoticiaService {
     return this.http.put<Noticia>(`${this.apiUrl}/actualizar/${id}`, formData, { headers: this.getHeaders() });
   }
 
+// Método para agregar un comentario a una noticia
+agregarComentario(id: string, comentario: { autor: string, contenido: string }): Observable<Noticia> {
+  return this.http.post<Noticia>(`${this.apiUrl}/${id}/comentarios`, comentario, { headers: this.getHeaders() });
+}
 
-
+darLike(id: string): Observable<Noticia> {
+  return this.http.post<Noticia>(`${this.apiUrl}/${id}/likes`, {}, { headers: this.getHeaders() });
+}
+actualizarLikes(noticiaId: string, likedBy: string[]): Observable<Noticia> {
+  return this.http.put<Noticia>(`${this.apiUrl}/${noticiaId}/likes`, { likedBy }, { headers: this.getHeaders() });
+}
   // Método para eliminar una noticia
   eliminarNoticia(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/eliminar/${id}`, { headers: this.getHeaders() });

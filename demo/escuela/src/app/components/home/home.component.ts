@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Noticia } from 'src/app/models/entity/Noticia.interface';
@@ -9,6 +10,8 @@ import { Client } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
 import { Mensaje } from './models/mensaje';
 import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
+import { TemaHeaderService, Theme } from 'src/app/services/tema-header/tema-header.service';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +20,7 @@ import { environment } from 'src/environments/environment';
 })
 export class HomeComponent implements OnInit {
   noticias: Noticia[] = [];
+  currentTheme$: Observable<Theme>;
   selectedSection: string = 'noticias';
   userName$ = this.authService.userName$;
   private client: Client;
@@ -28,6 +32,10 @@ export class HomeComponent implements OnInit {
   clienteId: string = 'id-' + new Date().getTime() + '-' + Math.random().toString(36).substr(2);
   chatVisible: boolean = false;
   currentYear: number = new Date().getFullYear();
+  isAuthenticated: boolean = false;
+  showComments: { [key: string]: boolean } = {};
+  comentarioTexto: { [key: string]: string } = {};
+
   recursosEducativos: Array<any> = [
     {
       titulo: 'Curso de Matemáticas',
@@ -47,45 +55,122 @@ export class HomeComponent implements OnInit {
     private noticiaService: NoticiaService,
     private sanitizer: DomSanitizer,
     private dialog: MatDialog,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private temaHeaderService: TemaHeaderService
+  ) {
+    this.currentTheme$ = this.temaHeaderService.currentTheme$;
+  }
 
   ngOnInit() {
     this.cargarNoticias();
     this.iniciarConexiónWebSocket();
+
+    this.userName$.subscribe((username) => {
+      if (username) {
+        this.mensaje.username = username;
+        this.isAuthenticated = true;
+      } else {
+        this.isAuthenticated = false;
+      }
+    });
+  }
+
+  darLike(noticia: Noticia): void {
+    if (!this.isAuthenticated || !noticia.id || !this.mensaje.username) return;
+
+    // Inicializar likedBy si no existe
+    if (!noticia.likedBy) {
+      noticia.likedBy = [];
+    }
+
+    const userIndex = noticia.likedBy.indexOf(this.mensaje.username);
+    if (userIndex === -1) {
+      // Dar like
+      noticia.likedBy.push(this.mensaje.username);
+      noticia.likesCount = (noticia.likesCount || 0) + 1;
+    } else {
+      // Quitar like
+      noticia.likedBy.splice(userIndex, 1);
+      noticia.likesCount = (noticia.likesCount || 0) - 1;
+    }
+
+    // Guardar en el backend
+    this.noticiaService.actualizarLikes(noticia.id, noticia.likedBy).subscribe({
+      next: (updatedNoticia) => {
+        // Actualizar la noticia local con la respuesta del backend
+        noticia.likesCount = updatedNoticia.likesCount;
+        noticia.likedBy = updatedNoticia.likedBy;
+      },
+      error: (error) => {
+        console.error('Error al actualizar likes', error);
+        // Revertir cambios si falla
+        if (userIndex === -1) {
+          noticia.likedBy.pop();
+          noticia.likesCount = (noticia.likesCount || 0) - 1;
+        } else {
+          noticia.likedBy.push(this.mensaje.username);
+          noticia.likesCount = (noticia.likesCount || 0) + 1;
+        }
+      }
+    });
+  }
+
+  hasLiked(noticia: Noticia): boolean {
+    return this.isAuthenticated && noticia.likedBy?.includes(this.mensaje.username) || false;
+  }
+
+  toggleComments(noticiaId: string): void {
+    this.showComments[noticiaId] = !this.showComments[noticiaId];
+  }
+
+  agregarComentario(noticia: Noticia): void {
+    if (this.isAuthenticated && noticia.id && this.comentarioTexto[noticia.id]) {
+      const comentario = {
+        autor: this.mensaje.username,
+        contenido: this.comentarioTexto[noticia.id],
+        fechaCreacion: new Date()
+      };
+      if (!noticia.comentarios) {
+        noticia.comentarios = [];
+      }
+      noticia.comentarios.push(comentario);
+      this.comentarioTexto[noticia.id] = '';
+      // Aquí iría la lógica para guardar el comentario en el backend si existe
+    }
   }
 
   mostrarEmojis(): void {
-    this.emojisVisible = !this.emojisVisible;
+    if (this.conectado) {
+      this.emojisVisible = !this.emojisVisible;
+    }
   }
+
   toggleChat() {
-    this.chatVisible = !this.chatVisible;
+    if (this.isAuthenticated) {
+      this.chatVisible = !this.chatVisible;
+    }
   }
+
   agregarEmoji(emoji: string): void {
-    this.mensaje.texto += emoji;
-    this.emojisVisible = false;
+    if (this.conectado) {
+      this.mensaje.texto += emoji;
+      this.emojisVisible = false;
+    }
   }
 
   iniciarConexiónWebSocket(): void {
-    this.userName$.subscribe((username) => {
-      if (username) {
-        this.mensaje.username = username; // Asigna el nombre de usuario autenticado al mensaje
-      }
-    });
-  
     this.client = new Client();
     this.client.webSocketFactory = () => {
       return new SockJS(`${environment.apiUrl}chat-websocket`);
     };
-  
+
     this.client.onConnect = (frame) => {
       console.log('Conectados: ' + this.client.connected + ' : ' + frame);
       this.conectado = true;
-  
+
       this.client.subscribe('/chat/mensaje', (e) => {
         let mensaje: Mensaje = JSON.parse(e.body) as Mensaje;
         mensaje.fecha = new Date(mensaje.fecha);
-  
         if (
           !this.mensaje.color &&
           mensaje.tipo == 'NUEVO_USUARIO' &&
@@ -93,16 +178,15 @@ export class HomeComponent implements OnInit {
         ) {
           this.mensaje.color = mensaje.color;
         }
-  
         this.mensajes.push(mensaje);
         console.log(mensaje);
       });
-  
+
       this.client.subscribe('/chat/escribiendo', (e) => {
         this.escribiendo = e.body;
         setTimeout(() => (this.escribiendo = ''), 3000);
       });
-  
+
       this.client.subscribe('/chat/historial/' + this.clienteId, (e) => {
         const historial = JSON.parse(e.body) as Mensaje[];
         this.mensajes = historial
@@ -112,44 +196,51 @@ export class HomeComponent implements OnInit {
           })
           .reverse();
       });
-  
+
       this.client.publish({
         destination: '/app/historial',
         body: this.clienteId,
       });
-  
+
       this.mensaje.tipo = 'NUEVO_USUARIO';
       this.client.publish({
         destination: '/app/mensaje',
         body: JSON.stringify(this.mensaje),
       });
     };
-  
+
     this.client.onDisconnect = (frame) => {
       console.log('Desconectados: ' + !this.client.connected + ' : ' + frame);
       this.conectado = false;
       this.mensaje = new Mensaje();
       this.mensajes = [];
+      this.isAuthenticated = false;
     };
   }
-  
 
   conectar(): void {
-    this.client.activate();
+    if (this.isAuthenticated && this.mensaje.username) {
+      this.client.activate();
+    }
   }
 
   desconectar(): void {
     this.client.deactivate();
+    this.chatVisible = false;
   }
 
   enviarMensaje(): void {
-    this.mensaje.tipo = 'MENSAJE';
-    this.client.publish({ destination: '/app/mensaje', body: JSON.stringify(this.mensaje) });
-    this.mensaje.texto = '';
+    if (this.conectado && this.mensaje.texto) {
+      this.mensaje.tipo = 'MENSAJE';
+      this.client.publish({ destination: '/app/mensaje', body: JSON.stringify(this.mensaje) });
+      this.mensaje.texto = '';
+    }
   }
 
   escribiendoEvento(): void {
-    this.client.publish({ destination: '/app/escribiendo', body: this.mensaje.username });
+    if (this.conectado) {
+      this.client.publish({ destination: '/app/escribiendo', body: this.mensaje.username });
+    }
   }
 
   selectSection(section: string): void {
@@ -157,25 +248,33 @@ export class HomeComponent implements OnInit {
   }
 
   cargarNoticias(): void {
-    this.noticiaService.obtenerNoticias().subscribe({
-      next: (data: Noticia[]) => {
-        this.noticias = data.sort((a, b) =>
-          new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime()
-        );
-        this.noticias.forEach(noticia => this.cargarImagen(noticia));
-      },
-      error: (error) => {
-        console.error('Error al cargar noticias', error);
-      }
-    });
+    const storedNoticias = localStorage.getItem('noticias');
+    if (storedNoticias) {
+      this.noticias = JSON.parse(storedNoticias);
+      this.noticias.forEach(noticia => {
+        noticia.fechaCreacion = new Date(noticia.fechaCreacion);
+        this.cargarImagen(noticia);
+      });
+    } else {
+      this.noticiaService.obtenerNoticias().subscribe({
+        next: (data: Noticia[]) => {
+          this.noticias = data.sort((a, b) =>
+            new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime()
+          );
+          this.noticias.forEach(noticia => this.cargarImagen(noticia));
+        },
+        error: (error) => {
+          console.error('Error al cargar noticias', error);
+        }
+      });
+    }
   }
-
   cargarImagen(noticia: Noticia): void {
     if (noticia.id) {
       this.noticiaService.obtenerImagenNoticia(noticia.id).subscribe({
         next: (blob) => {
           const objectURL = URL.createObjectURL(blob);
-          noticia.imagen = this.sanitizer.bypassSecurityTrustUrl(objectURL);  
+          noticia.imagen = this.sanitizer.bypassSecurityTrustUrl(objectURL);
         },
         error: (error) => {
           console.error('Error al cargar la imagen de la noticia', error);
@@ -184,27 +283,13 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  rotationX: number = 0;
-  rotationY: number = 0;
-
-  onMouseMove(event: MouseEvent) {
-    const container = event.target as HTMLElement;
-    const rect = container.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    this.rotationX = (y / rect.height - 0.5) * 30; // Rango de -15 a 15
-    this.rotationY = (x / rect.width - 0.5) * 30;  // Rango de -15 a 15
-  }
-
-
   mostrarImagen(noticia: Noticia): void {
     this.dialog.open(ImagenDialogComponent, {
       data: {
         titulo: noticia.titulo,
         contenido: noticia.contenido,
         imagen: noticia.imagen,
-        fechaCreacion: noticia.fechaCreacion 
+        fechaCreacion: noticia.fechaCreacion
       }
     });
   }

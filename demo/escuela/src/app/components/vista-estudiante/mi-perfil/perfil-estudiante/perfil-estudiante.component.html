@@ -1,39 +1,59 @@
-<div class="profile-container">
-    <!-- Estado de carga -->
-    <div *ngIf="loading" class="loading">
-      Cargando tu perfil, por favor espera...
-    </div>
-  
-    <!-- Estado de error -->
-    <div *ngIf="error" class="error">
-      {{ error }}
-    </div>
-  
-    <!-- Mostrar perfil -->
-    <div *ngIf="userProfile && !loading" class="profile-content">
-      <h2>Tu Perfil de Estudiante</h2>
-      
-      <div class="profile-section">
-        <h3>Información de tu Cuenta</h3>
-        <p><strong>ID de usuario:</strong> {{ userProfile.id }}</p>
-        <p><strong>Nombre de usuario:</strong> {{ userProfile.username }}</p>
-        <p><strong>Correo electrónico:</strong> {{ userProfile.email }}</p>
-        <p><strong>Tus roles:</strong> {{ getRolesString() }}</p>
-      </div>
-  
-      <div class="profile-section" *ngIf="userProfile.estudiante">
-        <h3>Información del Estudiante</h3>
-        <p><strong>ID de estudiante:</strong> {{ userProfile.estudiante.idEstudiante }}</p>
-        <p><strong>Nombre:</strong> {{ userProfile.estudiante.nombres }}</p>
-        <p><strong>Apellido:</strong> {{ userProfile.estudiante.apellidos }}</p>
-        <p><strong>DocumentoIdentidad:</strong> {{ userProfile.estudiante.documentoIdentidad }}</p>
+<div class="perfil-container" *ngIf="estudiante?.estudiante">
+  <!-- Notification Area -->
+  <div class="alert alert-success" *ngIf="mensajeExito" role="alert">
+    {{ mensajeExito }}
+    <button type="button" class="btn-close float-end" (click)="cerrarMensaje()"></button>
+  </div>
 
-        <p><strong>Codigo:</strong> {{ userProfile.estudiante.codigo }}</p>
-        <p><strong>Activo:</strong> {{ userProfile.estudiante.activo }}</p>
+  <div class="perfil-header">
+    <h2><i class="fas fa-user-circle"></i> Perfil del Estudiante</h2>
+  </div>
+
+  <div class="perfil-body">
+    <div class="info" *ngIf="!editando">
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong>Nombre:</strong> {{ estudiante.estudiante.nombres }} {{ estudiante.estudiante.apellidos }}</p>
+          <p><strong>Documento:</strong> {{ estudiante.estudiante.documentoIdentidad }}</p>
+          <p><strong>Código:</strong> {{ estudiante.estudiante.codigo }}</p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>Fecha de Nacimiento:</strong> {{ estudiante.estudiante.fechaNacimiento }}</p>
+          <p><strong>Sexo:</strong> {{ estudiante.estudiante.sexo }}</p>
+          <p><strong>Ciudad:</strong> {{ estudiante.estudiante.ciudad }}</p>
+        </div>
       </div>
-  
-      <div class="info-note">
-        <p><em>Esta es la información registrada en el sistema. Si necesitas actualizar algún dato, contacta al administrador.</em></p>
+      <p><strong>Dirección:</strong> {{ estudiante.estudiante.direccion }}</p>
+      <p><strong>Activo:</strong> 
+        <span class="badge" [ngClass]="{ 'bg-success': estudiante.estudiante.activo, 'bg-danger': !estudiante.estudiante.activo }">
+          {{ estudiante.estudiante.activo ? 'Sí' : 'No' }}
+        </span>
+      </p>
+      <button class="btn btn-dark mt-3" (click)="habilitarEdicion()">
+        <i class="fas fa-edit"></i> Actualizar Información
+      </button>
+    </div>
+
+    <div class="info edit-mode" *ngIf="editando">
+      <div class="row">
+        <div class="col-md-6">
+          <input type="text" [(ngModel)]="estudiante.estudiante.nombres" class="form-control" placeholder="Nombre">
+          <input type="text" [(ngModel)]="estudiante.estudiante.apellidos" class="form-control mt-2" placeholder="Apellido">
+          <input type="text" [(ngModel)]="estudiante.estudiante.documentoIdentidad" class="form-control mt-2" placeholder="Documento">
+        </div>
+        <div class="col-md-6">
+          <input type="text" [(ngModel)]="estudiante.estudiante.ciudad" class="form-control" placeholder="Ciudad">
+          <input type="text" [(ngModel)]="estudiante.estudiante.direccion" class="form-control mt-2" placeholder="Dirección">
+        </div>
+      </div>
+      <div class="text-end mt-3">
+        <button class="btn btn-success me-2" (click)="guardarCambios()">
+          <i class="fas fa-save"></i> Guardar
+        </button>
+        <button class="btn btn-danger" (click)="cancelarEdicion()">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
       </div>
     </div>
   </div>
+</div>

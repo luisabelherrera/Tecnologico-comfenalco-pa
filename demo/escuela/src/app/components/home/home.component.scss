@@ -1,16 +1,15 @@
 .header {
-  background-color: #f8f9fa;
-  padding: 20px;
+  padding: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .chat-icon {
   position: fixed;
   bottom: 20px;
   right: 20px;
   z-index: 1000;
-  background-color: #6a1b9a;
   border-radius: 50%;
   padding: 10px;
   color: white;
@@ -21,10 +20,11 @@
 .logo-text {
   font-size: 24px;
   font-weight: bold;
+  margin: 0;
 }
 
 .user-info {
-  font-size: 16px;
+  font-size: 1rem;
   color: #555;
 }
 
@@ -85,7 +85,7 @@
 
 .chat-container {
   position: fixed;
-  bottom: 20px;
+  bottom: 70px;
   right: 20px;
   width: 300px;
   z-index: 1000;
@@ -153,7 +153,86 @@
   background-color: #ff9800;
 }
 
+.noticia-interacciones {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 
+.btn-like {
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  background: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  
+  .heart-icon {
+    color: #ff0000; /* Corazón rojo cuando está liked */
+    font-size: 22px; /* Grande y bonito */
+    display: inline-block;
+    transition: transform 0.2s;
+  }
+  
+  &:hover .heart-icon {
+    transform: scale(1.2);
+  }
+  
+  &[disabled] .heart-icon {
+    color: #ccc; /* Gris cuando está deshabilitado */
+  }
+  
+  &[disabled] {
+    cursor: not-allowed;
+  }
+}
 
+.btn-toggle-comments {
+  padding: 5px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #4caf50;
+  
+  &:hover {
+    color: #45a049;
+  }
+}
 
+.comentario-input-container {
+  margin-top: 10px;
+}
 
+.comentario-input {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.comentarios-lista {
+  margin-top: 10px;
+  max-height: 150px;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background-color: #f3e5f5;
+  
+  strong {
+    color: #6a1b9a;
+  }
+}
+
+.comentario-fecha {
+  font-size: 12px;
+  color: #888;
+}

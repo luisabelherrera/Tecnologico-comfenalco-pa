@@ -1,5 +1,3 @@
-// src/app/components/grado-seccion/grado-seccion.component.ts
-
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -27,6 +25,13 @@ export class GradoSeccionComponent implements OnInit {
 
   editingId: number | null = null;
 
+  // Predefined options for selectors
+  gradoOptions: string[] = [
+    'Primero', 'Segundo', 'Tercero', 'Cuarto', 'Quinto',
+    'Sexto', 'Séptimo', 'Octavo', 'Noveno', 'Décimo', 'Undécimo'
+  ];
+  seccionOptions: string[] = ['A', 'B', 'C', 'D', 'E'];
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -35,8 +40,6 @@ export class GradoSeccionComponent implements OnInit {
   ngOnInit(): void {
     this.loadGradoSecciones();
   }
-
-  
 
   loadGradoSecciones(): void {
     this.gradoSeccionService.getAllGradoSecciones().subscribe(

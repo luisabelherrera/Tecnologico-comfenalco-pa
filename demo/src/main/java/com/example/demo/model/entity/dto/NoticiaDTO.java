@@ -1,21 +1,16 @@
 package com.example.demo.model.entity.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import java.util.List;
+
+import com.example.demo.model.entity.Noticia;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
-
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class NoticiaDTO implements Serializable {
-
-    
+public class NoticiaDTO {
     private String titulo;
     private String contenido;
     private byte[] imagen;
     private String tipoImagen;
+    private List<Noticia.Comentario> comentarios; // Campo para comentarios
+    private int likes; // Campo para likes
 }

@@ -1,44 +1,30 @@
-/* Lista de notificaciones */
-mat-list {
-    padding: 0;
-  }
-  
-  /* Cada elemento de la lista */
-  .notification-item {
-    display: flex;
-    align-items: flex-start; /* Alinea el texto y el ícono al inicio */
-    gap: 10px; /* Espaciado entre el ícono y el texto */
-    padding: 10px 0;
-    border-bottom: 1px solid #e0e0e0;
-    transition: background-color 0.2s ease;
-  }
-  
-  /* Hover para cada notificación */
-  .notification-item:hover {
-    background-color: #f9f9f9; /* Fondo claro al pasar el mouse */
-  }
-  
-  /* Icono al lado de la notificación */
-  mat-icon.mat-list-icon {
-    margin-right: 10px;
-    font-size: 20px;
-    color: #1976d2; /* Color azul para el ícono */
-  }
-  
-  /* Texto de cada notificación */
-  .notification-text {
-    margin: 0;
-    font-size: 14px;
-    color: #333;
-    word-wrap: break-word; /* Permite cortar palabras largas */
-    white-space: normal; /* Asegura que el texto envuelto sea visible */
-    overflow: visible; /* Asegura que no se oculte el texto */
-    text-overflow: clip; /* Evita puntos suspensivos automáticos */
-  }
-  
-  /* Contenedor del diálogo */
-  mat-dialog-content {
-    max-height: 400px; /* Altura máxima para el contenido */
-    overflow-y: auto; /* Habilita el scroll si hay muchas notificaciones */
-  }
-  
+.dialog-content {
+  padding: 16px;
+  border-radius: 4px;
+}
+
+.notification-item {
+  cursor: pointer;
+  padding: 8px 0;
+  transition: background-color 0.2s;
+}
+
+.notification-item:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.notification-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+mat-icon {
+  margin-right: 12px;
+}
+
+button[mat-raised-button] {
+  padding: 6px 16px;
+  font-size: 14px;
+  border-radius: 4px;
+}

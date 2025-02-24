@@ -36,7 +36,7 @@ login() {
           if (roles.includes('Administracion')) {
             this.router.navigate(['/home']);
           } else if (roles.includes('Estudiante')) {
-            this.router.navigate(['/ventana3']);
+            this.router.navigate(['/home']);
           } else {
             this.router.navigate(['/ventana2']);
           }

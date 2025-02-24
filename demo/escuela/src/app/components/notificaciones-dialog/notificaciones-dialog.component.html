@@ -1,5 +1,6 @@
 <h2 mat-dialog-title>📋 Notificaciones</h2>
-<mat-dialog-content>
+
+<mat-dialog-content class="dialog-content">
   <mat-list>
     <mat-list-item
       *ngFor="let notification of notifications"
@@ -11,6 +12,16 @@
     </mat-list-item>
   </mat-list>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
-  <button mat-raised-button color="accent" (click)="close()">Cerrar</button>
+  <button
+    mat-raised-button
+    [ngStyle]="{
+      'background-color': (currentTheme$ | async)?.backgroundColor,
+      'color': (currentTheme$ | async)?.textColor
+    }"
+    (click)="close()"
+  >
+    Cerrar
+  </button>
 </mat-dialog-actions>

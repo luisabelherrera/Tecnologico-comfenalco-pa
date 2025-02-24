@@ -7,12 +7,32 @@
       <div class="form-grid">
         <mat-form-field class="input-field" appearance="outline">
           <mat-label>Descripción Grado</mat-label>
-          <input matInput [(ngModel)]="newGradoSeccion.descripcionGrado" name="descripcionGrado" required placeholder="Descripción Grado" />
+          <mat-select
+            [(ngModel)]="newGradoSeccion.descripcionGrado"
+            name="descripcionGrado"
+            required
+            placeholder="Selecciona un grado"
+          >
+            <mat-option *ngFor="let grado of gradoOptions" [value]="grado">
+              {{ grado }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="!newGradoSeccion.descripcionGrado">El grado es obligatorio.</mat-error>
         </mat-form-field>
-        
+
         <mat-form-field class="input-field" appearance="outline">
           <mat-label>Descripción Sección</mat-label>
-          <input matInput [(ngModel)]="newGradoSeccion.descripcionSeccion" name="descripcionSeccion" required placeholder="Descripción Sección" />
+          <mat-select
+            [(ngModel)]="newGradoSeccion.descripcionSeccion"
+            name="descripcionSeccion"
+            required
+            placeholder="Selecciona una sección"
+          >
+            <mat-option *ngFor="let seccion of seccionOptions" [value]="seccion">
+              {{ seccion }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="!newGradoSeccion.descripcionSeccion">La sección es obligatoria.</mat-error>
         </mat-form-field>
 
         <mat-checkbox [(ngModel)]="newGradoSeccion.activo" name="activo">Activo</mat-checkbox>
@@ -50,7 +70,6 @@
           <div class="estado-indicador" [ngClass]="gs['activo'] ? 'activo' : 'inactivo'"></div>
         </td>
       </ng-container>
-      
 
       <ng-container matColumnDef="fechaRegistro">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Registro</th>

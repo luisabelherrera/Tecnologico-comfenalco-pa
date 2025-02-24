@@ -1,6 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FullMessageDialogComponent } from './ventanadenotificaciones/full-message-dialog.component';
+import { Observable } from 'rxjs';
+import { Theme, TemaHeaderService } from 'src/app/services/tema-header/tema-header.service';
 
 @Component({
   selector: 'app-notificaciones-dialog',
@@ -8,24 +10,24 @@ import { FullMessageDialogComponent } from './ventanadenotificaciones/full-messa
   styleUrls: ['./notificaciones-dialog.component.scss'],
 })
 export class NotificacionesDialogComponent {
-  notifications: string[];
+  currentTheme$: Observable<Theme>;
+  notifications: string[]; // Ajusta el tipo según tus datos reales
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialogRef: MatDialogRef<NotificacionesDialogComponent>,
-    private dialog: MatDialog
+    private temaHeaderService: TemaHeaderService,
+    public dialogRef: MatDialogRef<NotificacionesDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { notifications: string[] }
   ) {
-    this.notifications = data.notifications || [];
+    this.currentTheme$ = this.temaHeaderService.currentTheme$;
+    this.notifications = data.notifications;
+  }
+
+  openFullMessage(notification: string) {
+    // Lógica para abrir el mensaje completo (si aplica)
+    console.log('Notificación seleccionada:', notification);
   }
 
   close() {
     this.dialogRef.close();
-  }
-
-  openFullMessage(message: string): void {
-    this.dialog.open(FullMessageDialogComponent, {
-      width: '400px',
-      data: { message },
-    });
   }
 }

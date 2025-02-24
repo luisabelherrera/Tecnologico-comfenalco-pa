@@ -32,9 +32,9 @@ export interface RoleDto {
 export interface UserDto {
   id: number;
   username: string;
-  password: string;
   email: string;
-  roles: RoleDto[];  
-  docenteInfo: Docente; 
-  estudiante?: Estudiante;
+  roles: RoleDto[];
+  password: string;
+  estudiante: Estudiante;
+  docenteInfo: Docente;
 }

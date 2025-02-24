@@ -1,0 +1,19 @@
+<div class="dialog-container">
+    <h2 class="dialog-title">Detalles del Docente</h2>
+    <div class="dialog-content">
+      <p><strong>Documento:</strong> {{ data.documentoIdentidad }}</p>
+      <p><strong>Fecha Nacimiento:</strong> {{ data.fechaNacimiento | date }}</p>
+      <p><strong>Teléfono:</strong>
+        <a [href]="'https://api.whatsapp.com/send?phone=' + data.numeroTelefono" target="_blank" style="text-decoration: none; color: inherit;">
+          {{ data.numeroTelefono }}
+        </a>
+      </p>
+      <p><strong>Ciudad:</strong> {{ data.ciudad }}</p>
+      <p><strong>Dirección:</strong> {{ data.direccion || 'N/A' }}</p>
+      <p><strong>Sexo:</strong> {{ data.sexo || 'N/A' }}</p>
+      <p><strong>Grado de Estudio:</strong> {{ data.gradoEstudio || 'N/A' }}</p>
+    </div>
+    <div class="dialog-actions">
+      <button mat-raised-button color="primary" (click)="closeDialog()">Cerrar</button>
+    </div>
+  </div>

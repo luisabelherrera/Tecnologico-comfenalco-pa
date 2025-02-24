@@ -1,0 +1,80 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { tap, retry } from 'rxjs/operators';
+
+export interface Theme {
+  id?: string;
+  name: string;
+  backgroundColor: string;
+  textColor: string;
+  isActive?: boolean;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TemaHeaderService {
+  private apiUrl = 'http://localhost:8087/api/themes';
+  private currentThemeSubject: BehaviorSubject<Theme>;
+  public currentTheme$: Observable<Theme>;
+
+  constructor(private http: HttpClient) {
+    const defaultTheme: Theme = {
+      name: 'Default',
+      backgroundColor: 'rgb(0, 0, 0)',
+      textColor: 'white',
+      isActive: true
+    };
+    this.currentThemeSubject = new BehaviorSubject<Theme>(defaultTheme);
+    this.currentTheme$ = this.currentThemeSubject.asObservable();
+
+    this.loadActiveTheme();
+  }
+
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('accessToken');
+    return token ? new HttpHeaders({ 'Authorization': `Bearer ${token}` }) : new HttpHeaders();
+  }
+
+  getThemes(): Observable<Theme[]> {
+    return this.http.get<Theme[]>(this.apiUrl, { headers: this.getHeaders() }).pipe(
+      retry(2)
+    );
+  }
+
+  saveTheme(theme: Theme): Observable<Theme> {
+    return this.http.post<Theme>(this.apiUrl, theme, { headers: this.getHeaders() }).pipe(
+      tap(savedTheme => this.applyTheme(savedTheme))
+    );
+  }
+
+  applyTheme(theme: Theme) {
+    console.log('Aplicando tema en el frontend:', theme);
+    this.currentThemeSubject.next(theme);
+  }
+
+  getCurrentTheme(): Theme {
+    return this.currentThemeSubject.value;
+  }
+
+  private loadActiveTheme() {
+    this.http.get<Theme>(`${this.apiUrl}/active`).pipe(
+      retry(2)
+    ).subscribe({
+      next: (theme) => {
+        console.log('Tema activo cargado:', theme);
+        this.applyTheme(theme);
+      },
+      error: (err) => {
+        console.error('Error al cargar tema activo:', err);
+        this.applyTheme({
+          name: 'Default',
+          backgroundColor: 'rgb(0, 0, 0)',
+          textColor: 'white',
+          isActive: true
+        });
+      }
+    });
+  }
+}

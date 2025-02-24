@@ -10,28 +10,31 @@ import * as XLSX from 'xlsx'; // Ensure you have xlsx installed
 export class ExportDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<ExportDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { inscripciones: any[] } 
+    @Inject(MAT_DIALOG_DATA) public data: { inscripciones: any[] }
   ) {}
+
   openPowerBI(): void {
     window.open('https://app.powerbi.com/links/zCYlW_jO51?ctid=9d12bf3f-e4f6-47ab-912f-1a2f0fc48aa4&pbi_source=linkShare', '_blank');
+    this.dialogRef.close('powerbi'); // Opcional: cierra el diálogo tras abrir Power BI
   }
+
   downloadExcel(): void {
     const excelData = this.data.inscripciones.map(inscripcion => ({
       'Valor Código': inscripcion.valorCodigo,
       'Código': inscripcion.codigo,
       'Situación': inscripcion.situacion,
-      'Nivel Detalle': inscripcion.nivelDetalle.nivel.descripcionNivel,
-      'Grado Sección': inscripcion.nivelDetalle.gradoSeccion.descripcionGrado,
-      'Sección': inscripcion.nivelDetalle.gradoSeccion.descripcionSeccion,
-      'Periodo': inscripcion.nivelDetalle.nivel.periodo.descripcion,
-      'Sexo': inscripcion.estudiante.sexo, 
-      'Estudiante': `${inscripcion.estudiante.nombres} ${inscripcion.estudiante.apellidos}`,
-      'Acudiente': `${inscripcion.acudiente.nombres} ${inscripcion.acudiente.apellidos}`,
-      'Institución de Procedencia': inscripcion.institucionProcedencia,
+      'Nivel Detalle': inscripcion.nivelDetalle?.nivel?.descripcionNivel || 'N/A',
+      'Grado Sección': inscripcion.nivelDetalle?.gradoSeccion?.descripcionGrado || 'N/A',
+      'Sección': inscripcion.nivelDetalle?.gradoSeccion?.descripcionSeccion || 'N/A',
+      'Periodo': inscripcion.nivelDetalle?.nivel?.periodo?.descripcion || 'N/A',
+      'Sexo': inscripcion.estudiante?.sexo || 'N/A',
+      'Estudiante': `${inscripcion.estudiante?.nombres || ''} ${inscripcion.estudiante?.apellidos || ''}`,
+      'Acudiente': `${inscripcion.acudiente?.nombres || ''} ${inscripcion.acudiente?.apellidos || ''}`,
+      'Institución de Procedencia': inscripcion.institucionProcedencia || 'N/A',
       'Es Repitente': inscripcion.esRepitente ? 'Sí' : 'No',
       'Activo': inscripcion.activo ? 'Sí' : 'No',
-      'Fecha Registro': inscripcion.fechaRegistro ? new Date(inscripcion.fechaRegistro).toLocaleDateString() : ''
-   }));
+      'Fecha Registro': inscripcion.fechaRegistro ? new Date(inscripcion.fechaRegistro).toLocaleDateString() : 'N/A'
+    }));
 
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
     const workbook: XLSX.WorkBook = XLSX.utils.book_new();
@@ -39,6 +42,7 @@ export class ExportDialogComponent {
 
     const fileName = 'inscripciones.xlsx';
     XLSX.writeFile(workbook, fileName);
+    this.dialogRef.close('excel'); // Cierra el diálogo tras descargar el Excel
   }
 
   onNoClick(): void {

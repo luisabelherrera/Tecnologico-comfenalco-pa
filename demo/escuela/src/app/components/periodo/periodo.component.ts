@@ -7,6 +7,7 @@ import { PeriodoService } from 'src/app/services/periodo/periodo.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router'; // Para recibir query params
 
 @Component({
   selector: 'app-periodo',
@@ -27,8 +28,11 @@ export class PeriodoComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private periodoService: PeriodoService, private fb: FormBuilder) {
-     
+  constructor(
+    private periodoService: PeriodoService,
+    private fb: FormBuilder,
+    private route: ActivatedRoute // Inyectamos ActivatedRoute
+  ) {
     this.periodoForm = this.fb.group({
       descripcion: ['', Validators.required],
       fechaInicio: ['', Validators.required],
@@ -39,11 +43,47 @@ export class PeriodoComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadPeriodos();
+    this.checkQueryParams(); // Verificamos query params al iniciar
   }
 
   ngOnDestroy(): void {
-     this.destroy$.next();
+    this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  // Verificar y prellenar el formulario con datos de query params
+  checkQueryParams() {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      if (params['descripcion']) {
+        const periodoData = {
+          descripcion: params['descripcion'],
+          fechaInicio: new Date(params['fechaInicio']),
+          fechaFin: new Date(params['fechaFin']),
+          activo: params['activo'] === 'true'
+        };
+
+        // Verificamos que las fechas sean válidas
+        if (isNaN(periodoData.fechaInicio.getTime()) || isNaN(periodoData.fechaFin.getTime())) {
+          console.error('Fechas inválidas en query params');
+          return;
+        }
+
+        this.periodoForm.patchValue(periodoData);
+        this.simulateCreation(); // Simulamos la creación
+      }
+    });
+  }
+
+  // Simular la creación automática del periodo
+  simulateCreation() {
+    if (this.periodoForm.valid) {
+      console.log('Simulando creación con:', this.periodoForm.value);
+      setTimeout(() => {
+        this.createPeriodo(); // Creamos el periodo después de 2 segundos
+      }, 2000);
+    } else {
+      console.warn('Formulario inválido al simular creación:', this.periodoForm.errors);
+    }
   }
 
   applyFilter(event: Event): void {
@@ -57,7 +97,7 @@ export class PeriodoComponent implements OnInit, OnDestroy {
   loadPeriodos(): void {
     this.loading = true;
     this.periodoService.getAll()
-      .pipe(takeUntil(this.destroy$))   
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
           this.periodos = data;
@@ -67,7 +107,7 @@ export class PeriodoComponent implements OnInit, OnDestroy {
           this.loading = false;
         },
         error: (err) => {
-          console.error(err);
+          console.error('Error al cargar periodos:', err);
           this.loading = false;
         }
       });
@@ -75,7 +115,6 @@ export class PeriodoComponent implements OnInit, OnDestroy {
 
   createPeriodo(): void {
     if (this.editingId !== null) {
-     
       this.updatePeriodo();
     } else if (this.periodoForm.valid) {
       const nuevoPeriodo: Periodo = this.periodoForm.value;
@@ -86,12 +125,16 @@ export class PeriodoComponent implements OnInit, OnDestroy {
             this.periodos.push(data);
             this.dataSource.data = this.periodos;
             this.resetPeriodo();
+            console.log('Periodo creado:', data);
           },
-          error: (err) => console.error(err)
+          error: (err) => {
+            console.error('Error al crear periodo:', err);
+          }
         });
+    } else {
+      console.warn('Formulario inválido al crear:', this.periodoForm.errors);
     }
   }
-  
 
   editPeriodo(periodo: Periodo): void {
     this.periodoForm.patchValue(periodo);
@@ -100,23 +143,26 @@ export class PeriodoComponent implements OnInit, OnDestroy {
 
   updatePeriodo(): void {
     if (this.editingId !== null && this.periodoForm.valid) {
-      const updatedPeriodo: Periodo = { ...this.periodoForm.value, idPeriodo: this.editingId }; 
+      const updatedPeriodo: Periodo = { ...this.periodoForm.value, idPeriodo: this.editingId };
       this.periodoService.update(this.editingId, updatedPeriodo)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (data) => {
             const index = this.periodos.findIndex(p => p.idPeriodo === this.editingId);
             if (index !== -1) {
-              this.periodos[index] = data;  
-              this.dataSource.data = this.periodos; 
+              this.periodos[index] = data;
+              this.dataSource.data = this.periodos;
             }
             this.resetPeriodo();
+            console.log('Periodo actualizado:', data);
           },
-          error: (err) => console.error(err)
+          error: (err) => {
+            console.error('Error al actualizar periodo:', err);
+          }
         });
     }
   }
-  
+
   deletePeriodo(id: number): void {
     this.periodoService.delete(id)
       .pipe(takeUntil(this.destroy$))
@@ -124,8 +170,11 @@ export class PeriodoComponent implements OnInit, OnDestroy {
         next: () => {
           this.periodos = this.periodos.filter(p => p.idPeriodo !== id);
           this.dataSource.data = this.periodos;
+          console.log('Periodo eliminado:', id);
         },
-        error: (err) => console.error(err)
+        error: (err) => {
+          console.error('Error al eliminar periodo:', err);
+        }
       });
   }
 
@@ -133,4 +182,4 @@ export class PeriodoComponent implements OnInit, OnDestroy {
     this.periodoForm.reset({ activo: true });
     this.editingId = null;
   }
-}  
+}

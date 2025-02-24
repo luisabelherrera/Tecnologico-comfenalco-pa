@@ -1,74 +1,101 @@
 .factura-container {
-    width: 60%;
-    margin: 20px auto;
-    padding: 20px;
-    border: 2px solid #333;
-    border-radius: 10px;
-    background: #f9f9f9;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.factura-header {
+  text-align: center;
+  margin-bottom: 20px;
+
+  h2 {
+    font-size: 1.8rem;
+    color: #333;
   }
-  
-  .factura-header h2 {
-    margin: 0;
-    color: #2c3e50;
-  }
-  
+
   .fecha {
-    font-size: 14px;
+    font-size: 1rem;
     color: #555;
   }
-  
-  .factura-info {
-    text-align: left;
-    margin: 20px 0;
+}
+
+.factura-info {
+  margin-bottom: 20px;
+
+  p {
+    margin: 5px 0;
+    strong {
+      color: #333;
+    }
   }
-  
-  .factura-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-  }
-  
-  .factura-table th, .factura-table td {
-    border: 1px solid #ccc;
+}
+
+.factura-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+
+  th, td {
     padding: 10px;
     text-align: center;
+    border-bottom: 1px solid #ddd;
   }
-  
-  .factura-table thead {
-    background: #3498db;
-    color: white;
+
+  th {
+    background-color: #007bff;
+    color: #fff;
   }
-  
+
   .total-label {
-    font-weight: bold;
     text-align: right;
+    font-weight: bold;
   }
-  
+
   .total-amount {
     font-weight: bold;
-    font-size: 16px;
+    color: #007bff;
   }
-  
-  .mensaje {
-    margin-top: 20px;
-    font-style: italic;
-    color: #555;
+}
+
+.mensaje {
+  text-align: center;
+  font-style: italic;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.btn-pdf, .btn-volver {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-pdf {
+  background-color: #007bff;
+  color: #fff;
+
+  &:hover {
+    background-color: #0056b3;
   }
-  
-  .btn-pdf {
-    padding: 10px 15px;
-    background: #27ae60;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: 0.3s;
+}
+
+.btn-volver {
+  background-color: #6c757d;
+  color: #fff;
+
+  &:hover {
+    background-color: #5a6268;
   }
-  
-  .btn-pdf:hover {
-    background: #219150;
-  }
-  
+}

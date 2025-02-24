@@ -22,7 +22,6 @@ export class RegistrationService {
     const errorMessage = error.error instanceof ErrorEvent
       ? `Client Error: ${error.error.message}`
       : `Server Error Code: ${error.status}\nMessage: ${error.error.message}`;
-    
     console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
   }
@@ -30,22 +29,25 @@ export class RegistrationService {
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('accessToken');
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    
-    if (token) {
-      return headers.set('Authorization', `Bearer ${token}`);
-    } else {
-      this.router.navigate(['/login']);
-      return headers;
-    }
+    return token ? headers.set('Authorization', `Bearer ${token}`) : headers;
   }
+
+ 
 
   // Nuevo método para obtener estudiantes
   getAllEstudiantes(): Observable<Estudiante[]> {
     return this.http.get<Estudiante[]>(`${this.apiUrl}/estudiantes`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
+  updateUser(userId: number, updateDto: RegisterDto): Observable<{ success: boolean; message: string }> {
+    return this.http.put<{ success: boolean; message: string }>(
+      `${this.apiUrl}/register/users/${userId}`,
+      updateDto,
+      { headers: this.getHeaders() }
+    ).pipe(catchError(this.handleError));
+  }
+  
 
-  // Ajustamos el tipo de respuesta a ApiResponse
   register(registerDto: RegisterDto): Observable<{ success: boolean; message: string }> {
     return this.http.post<{ success: boolean; message: string }>(
       `${this.apiUrl}/register`, 
@@ -58,19 +60,8 @@ export class RegistrationService {
     return this.http.get<UserDto[]>(`${this.apiUrl}/register/users`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
-
   deleteUser(userId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/register/users/${userId}`, { headers: this.getHeaders() })
-      .pipe(catchError(this.handleError));  
-  }
-  
-  createRole(roleDto: RoleDto): Observable<RoleDto> {
-    return this.http.post<RoleDto>(`${this.apiUrl}/register/roles`, roleDto, { headers: this.getHeaders() })
-      .pipe(catchError(this.handleError));
-  }
-
-  updateUser(userId: number, registerDto: RegisterDto): Observable<UserDto> {
-    return this.http.put<UserDto>(`${this.apiUrl}/register/users/${userId}`, registerDto, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 

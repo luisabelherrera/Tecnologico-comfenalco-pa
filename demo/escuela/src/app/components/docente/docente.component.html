@@ -1,164 +1,172 @@
-<div class="container mat-elevation-z8" style="margin-top: 20px;">
-  <div class="title-container">
-  <h1 style="margin-bottom: 20px;">Gestión de Docentes</h1>
+<div class="inscripcion-container">
+  <!-- Toggle Buttons -->
+  <div class="toggle-buttons">
+    <button class="toggle-btn" [class.active]="showForm" (click)="toggleView(true)">Registrar Docente</button>
+    <button class="toggle-btn" [class.active]="!showForm" (click)="toggleView(false)">Lista de Docentes</button>
   </div>
 
-  <form [formGroup]="docenteForm" (ngSubmit)="onSubmit()" style="margin-bottom: 20px;">
-    <mat-form-field appearance="outline" class="input-field">
-      <mat-label>Código</mat-label>
-      <input matInput formControlName="codigo" placeholder="Ingrese el código" />
-    </mat-form-field>
+  <!-- Form Section -->
+  <section class="form-section" *ngIf="showForm">
+    <form [formGroup]="docenteForm" (ngSubmit)="onSubmit()" class="inscripcion-form">
+      <h2 class="section-title">{{ selectedDocente ? 'Actualizar Docente' : 'Registrar Nuevo Docente' }}</h2>
 
-    <mat-form-field appearance="outline" class="input-field">
-      <mat-label>Documento de Identidad</mat-label>
-      <input matInput formControlName="documentoIdentidad" placeholder="Ingrese el documento de identidad" />
-    </mat-form-field>
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Código</mat-label>
+          <input matInput formControlName="codigo" readonly required>
+          <mat-error *ngIf="docenteForm.get('codigo')?.hasError('required')">El Código es obligatorio.</mat-error>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline" class="input-field">
-      <mat-label>Nombres</mat-label>
-      <input matInput formControlName="nombres" placeholder="Ingrese los nombres" />
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Documento de Identidad</mat-label>
+          <input matInput formControlName="documentoIdentidad" required>
+          <mat-error *ngIf="docenteForm.get('documentoIdentidad')?.hasError('required')">El Documento es obligatorio.</mat-error>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline" class="input-field">
-      <mat-label>Apellidos</mat-label>
-      <input matInput formControlName="apellidos" placeholder="Ingrese los apellidos" />
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Nombres</mat-label>
+          <input matInput formControlName="nombres" required>
+          <mat-error *ngIf="docenteForm.get('nombres')?.hasError('required')">Los Nombres son obligatorios.</mat-error>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline" class="input-field">
-      <mat-label>Fecha de Nacimiento</mat-label>
-      <input matInput type="date" formControlName="fechaNacimiento" />
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Apellidos</mat-label>
+          <input matInput formControlName="apellidos" required>
+          <mat-error *ngIf="docenteForm.get('apellidos')?.hasError('required')">Los Apellidos son obligatorios.</mat-error>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline" class="input-field">
-      <mat-label>Sexo</mat-label>
-      <input matInput formControlName="sexo" placeholder="Ingrese el sexo" />
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha de Nacimiento</mat-label>
+          <input matInput [matDatepicker]="pickerNacimiento" formControlName="fechaNacimiento" required>
+          <mat-datepicker-toggle matSuffix [for]="pickerNacimiento"></mat-datepicker-toggle>
+          <mat-datepicker #pickerNacimiento></mat-datepicker>
+          <mat-error *ngIf="docenteForm.get('fechaNacimiento')?.hasError('required')">La Fecha es obligatoria.</mat-error>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline" class="input-field">
-      <mat-label>Grado de Estudio</mat-label>
-      <input matInput formControlName="gradoEstudio" placeholder="Ingrese el grado de estudio" />
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Sexo</mat-label>
+          <input matInput formControlName="sexo">
+        </mat-form-field>
 
-    <mat-form-field appearance="outline" class="input-field">
-      <mat-label>Ciudad</mat-label>
-      <input matInput formControlName="ciudad" placeholder="Ingrese la ciudad" />
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Grado de Estudio</mat-label>
+          <input matInput formControlName="gradoEstudio">
+        </mat-form-field>
 
-    <mat-form-field appearance="outline" class="input-field">
-      <mat-label>Dirección</mat-label>
-      <input matInput formControlName="direccion" placeholder="Ingrese la dirección" />
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Ciudad</mat-label>
+          <input matInput formControlName="ciudad" required>
+          <mat-error *ngIf="docenteForm.get('ciudad')?.hasError('required')">La Ciudad es obligatoria.</mat-error>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline" class="input-field">
-      <mat-label>Email</mat-label>
-      <input matInput type="email" formControlName="email" placeholder="Ingrese el email" />
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Dirección</mat-label>
+          <input matInput formControlName="direccion">
+        </mat-form-field>
 
-    <mat-form-field appearance="outline" class="input-field">
-      <mat-label>Número de Teléfono</mat-label>
-      <input matInput formControlName="numeroTelefono" placeholder="Ingrese el número de teléfono" />
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" required>
+          <mat-error *ngIf="docenteForm.get('email')?.hasError('required')">El Email es obligatorio.</mat-error>
+          <mat-error *ngIf="docenteForm.get('email')?.hasError('email')">El Email es inválido.</mat-error>
+        </mat-form-field>
 
-    <div>
-      <mat-checkbox formControlName="activo">Activo</mat-checkbox>
+        <mat-form-field appearance="outline">
+          <mat-label>Número de Teléfono</mat-label>
+          <input matInput formControlName="numeroTelefono" required>
+          <mat-error *ngIf="docenteForm.get('numeroTelefono')?.hasError('required')">El Teléfono es obligatorio.</mat-error>
+          <mat-error *ngIf="docenteForm.get('numeroTelefono')?.hasError('pattern')">Formato inválido.</mat-error>
+        </mat-form-field>
+
+       
+        <div class="checkbox-group">
+          <mat-checkbox formControlName="activo">Activo</mat-checkbox>
+        </div>
+      </div>
+
+      <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="docenteForm.invalid">
+        {{ selectedDocente ? 'Actualizar' : 'Crear' }}
+      </button>
+      <button mat-raised-button color="warn" type="button" class="submit-btn cancel-btn" (click)="resetForm()">Cancelar</button>
+    </form>
+  </section>
+
+  <!-- List Section -->
+  <section class="list-section" *ngIf="!showForm">
+    <h2 class="section-title">Lista de Docentes</h2>
+
+    <div class="inscripcion-actions">
+      <mat-form-field appearance="outline" class="search-box">
+        <mat-label>Filtrar Docentes</mat-label>
+        <input matInput [(ngModel)]="filterValue" (input)="applyFilter()" placeholder="Filtrar por nombre, email, etc." class="filter-input">
+      </mat-form-field>
     </div>
 
-    <div class="action-buttons">
-      <button mat-raised-button color="primary" type="submit" style="margin-top: 10px;">Guardar</button>
-      <button mat-button type="button" (click)="resetForm()" style="margin-top: 10px; margin-left: 10px;">Cancelar</button>
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="dataSource" class="inscripcion-table mat-elevation-z8">
+        <ng-container matColumnDef="codigo">
+          <th mat-header-cell *matHeaderCellDef>Código</th>
+          <td mat-cell *matCellDef="let docente" data-label="Código">{{ docente.codigo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="nombres">
+          <th mat-header-cell *matHeaderCellDef>Nombres</th>
+          <td mat-cell *matCellDef="let docente" data-label="Nombres">{{ docente.nombres }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="apellidos">
+          <th mat-header-cell *matHeaderCellDef>Apellidos</th>
+          <td mat-cell *matCellDef="let docente" data-label="Apellidos">{{ docente.apellidos }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>Email</th>
+          <td mat-cell *matCellDef="let docente" data-label="Email">
+            <a [href]="'mailto:' + docente.email" style="text-decoration: none; color: inherit;">{{ docente.email }}</a>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="activo">
+          <th mat-header-cell *matHeaderCellDef>Activo</th>
+          <td mat-cell *matCellDef="let docente" data-label="Activo">
+            <div class="estado-indicador" [ngClass]="docente.activo ? 'activo' : 'inactivo'"></div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let docente" data-label="Acciones">
+            <div class="action-buttons">
+              <button mat-icon-button class="action-btn see-more-btn" (click)="toggleDetails(docente)" matTooltip="Ver Detalles">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button mat-icon-button class="action-btn edit-btn" (click)="onSelect(docente)" matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="action-btn delete-btn" (click)="onDelete(docente)" matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <!-- No Data Message -->
+      <div *ngIf="dataSource.data.length === 0" class="no-data-message">
+        No hay Docentes para mostrar.
+      </div>
     </div>
-  </form>
 
-  <div>
-    <mat-form-field appearance="outline" class="search-box">
-      <mat-label>Buscar</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Buscar docentes" />
-    </mat-form-field>
-  </div>
-
-  <h2>Lista de Docentes</h2>
-  <table mat-table [dataSource]="displayedDocentes" class="mat-elevation-z8">
- 
-    <ng-container matColumnDef="codigo">
-      <th mat-header-cell *matHeaderCellDef>Código</th>
-      <td mat-cell *matCellDef="let docente">{{ docente.codigo }}</td>
-    </ng-container>
- 
-    <ng-container matColumnDef="nombres">
-      <th mat-header-cell *matHeaderCellDef>Nombres</th>
-      <td mat-cell *matCellDef="let docente">{{ docente.nombres }}</td>
-    </ng-container>
- 
-    <ng-container matColumnDef="apellidos">
-      <th mat-header-cell *matHeaderCellDef>Apellidos</th>
-      <td mat-cell *matCellDef="let docente">{{ docente.apellidos }}</td>
-    </ng-container>
- 
-    <ng-container matColumnDef="documentoIdentidad">
-      <th mat-header-cell *matHeaderCellDef>Documento de Identidad</th>
-      <td mat-cell *matCellDef="let docente">{{ docente.documentoIdentidad }}</td>
-    </ng-container>
- 
-    <ng-container matColumnDef="fechaNacimiento">
-      <th mat-header-cell *matHeaderCellDef>Fecha de Nacimiento</th>
-      <td mat-cell *matCellDef="let docente">{{ docente.fechaNacimiento  }}</td>
-    </ng-container>
- 
-    <ng-container matColumnDef="email">
-      <th mat-header-cell *matHeaderCellDef>Email</th>
-      <td mat-cell *matCellDef="let docente">
-        <a [href]="'mailto:' + docente.email" style="text-decoration: none; color: inherit;">
-          {{ docente.email }}
-        </a>
-      </td>
-    </ng-container>
-    
-    <ng-container matColumnDef="numeroTelefono">
-      <th mat-header-cell *matHeaderCellDef>Número de Teléfono</th>
-      <td mat-cell *matCellDef="let docente">
-        <a [href]="'https://api.whatsapp.com/send?phone=' + docente.numeroTelefono" target="_blank" style="text-decoration: none; color: inherit;">
-          {{ docente.numeroTelefono }}
-        </a>
-      </td>
-    </ng-container>
-    
-    
-    
-    
-    <ng-container matColumnDef="ciudad">
-      <th mat-header-cell *matHeaderCellDef>Ciudad</th>
-      <td mat-cell *matCellDef="let docente">{{ docente.ciudad }}</td>
-    </ng-container>
- 
-    <ng-container matColumnDef="activo">
-      <th mat-header-cell *matHeaderCellDef> Activo </th>
-      <td mat-cell *matCellDef="let docente">
-        <div class="estado-indicador" [ngClass]="docente.activo ? 'activo' : 'inactivo'"></div>
-      </td>
-    </ng-container>
-    
-    <ng-container matColumnDef="acciones">
-      <th mat-header-cell *matHeaderCellDef>Acciones</th>
-      <td mat-cell *matCellDef="let docente">
-        <button mat-icon-button color="accent" (click)="onSelect(docente)">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button color="warn" (click)="onDelete(docente)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-
-  <div>
     <mat-paginator
-      [length]="docentes.length"
+      [length]="dataSource.data.length"
       [pageSize]="pageSize"
       [pageSizeOptions]="[5, 10, 20]"
-      (page)="onPageChange($event)">
-    </mat-paginator>
-  </div>
+      (page)="onPageChange($event)"
+      *ngIf="dataSource.data.length > 0"
+      class="paginator"
+    ></mat-paginator>
+  </section>
 </div>

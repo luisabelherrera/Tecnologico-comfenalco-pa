@@ -57,6 +57,9 @@ public class RegisterController {
         }
     }
 
+
+    
+
     @GetMapping("/users")
     public ResponseEntity<List<UserDto>> getAllUsers() {
         List<UserDto> users = userService.getAllUsers();

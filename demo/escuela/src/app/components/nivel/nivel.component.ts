@@ -18,13 +18,23 @@ export class NivelComponent implements OnInit {
     isLoading: boolean = false;
     errorMessage: string | null = null;
     successMessage: string | null = null;
-    warningMessage: string | null = null; // Mensaje de advertencia
+    warningMessage: string | null = null;
     editing: boolean = false;
     currentPage: number = 1;
-    itemsPerPage: number = 5; 
+    itemsPerPage: number = 5;
     filtro: string = '';
 
-    constructor(private nivelService: NivelService, private periodoService: PeriodoService) {}
+    // Predefined options for selectors
+    nivelSuggestions: string[] = [
+        'Primero', 'Segundo', 'Tercero', 'Cuarto', 'Quinto',
+        'Sexto', 'Séptimo', 'Octavo', 'Noveno', 'Décimo', 'Undécimo'
+    ];
+    turnoSuggestions: string[] = ['Mañana', 'Tarde', 'Noche'];
+
+    constructor(
+        private nivelService: NivelService,
+        private periodoService: PeriodoService
+    ) {}
 
     ngOnInit() {
         this.loadNiveles();
@@ -35,8 +45,8 @@ export class NivelComponent implements OnInit {
         return {
             idNivel: 0,
             periodo: { idPeriodo: 0, descripcion: '', fechaInicio: new Date(), fechaFin: new Date(), activo: true },
-            descripcionNivel: '',
-            descripcionTurno: '',
+            descripcionNivel: '', // Will be set via selector
+            descripcionTurno: '', // Will be set via selector
             horaInicio: '',
             horaFin: '',
             activo: true,
@@ -50,13 +60,13 @@ export class NivelComponent implements OnInit {
                 console.log('Datos de niveles:', data);
                 this.niveles = data.filter(nivel => nivel.periodo?.activo);
                 this.filteredNiveles = this.niveles;
-                this.updatePaginatedNiveles(); 
+                this.updatePaginatedNiveles();
                 this.isLoading = false;
             },
             error => this.handleError('Error al cargar los niveles', error)
         );
     }
-    
+
     loadPeriodos() {
         console.log('Cargando períodos...');
         this.periodoService.getAll().subscribe(
@@ -71,21 +81,21 @@ export class NivelComponent implements OnInit {
     saveNivel() {
         if (this.nivel.periodo && !this.nivel.periodo.activo) {
             this.warningMessage = 'No se puede guardar el nivel. El período seleccionado está inactivo.';
-            return; // Detener el proceso de guardado
+            return;
         }
 
         if (!this.isNivelValido()) {
             this.errorMessage = 'Por favor, completa todos los campos requeridos.';
             return;
         }
-        
+
         this.isLoading = true;
         this.errorMessage = null;
         this.successMessage = null;
-        this.warningMessage = null; // Restablece el mensaje de advertencia si el período es válido
+        this.warningMessage = null;
 
-        const saveObservable = this.editing 
-            ? this.nivelService.update(this.nivel.idNivel, this.nivel) 
+        const saveObservable = this.editing
+            ? this.nivelService.update(this.nivel.idNivel, this.nivel)
             : this.nivelService.create(this.nivel);
 
         saveObservable.subscribe(
@@ -111,7 +121,7 @@ export class NivelComponent implements OnInit {
     }
 
     editNivel(nivel: Nivel) {
-        this.nivel = { ...nivel }; // Clona el nivel a editar
+        this.nivel = { ...nivel };
         this.editing = true;
     }
 
@@ -132,7 +142,6 @@ export class NivelComponent implements OnInit {
         return this.nivel.descripcionNivel && this.nivel.descripcionTurno && this.nivel.periodo.idPeriodo > 0;
     }
 
-    // Métodos de paginación
     previousPage() {
         if (this.currentPage > 1) {
             this.currentPage--;
@@ -151,7 +160,7 @@ export class NivelComponent implements OnInit {
         this.filteredNiveles = this.niveles.filter(nivel =>
             nivel.descripcionNivel.toLowerCase().includes(this.filtro.toLowerCase())
         );
-        this.currentPage = 1; // Resetea a la primera página al filtrar
+        this.currentPage = 1;
         this.updatePaginatedNiveles();
     }
 

@@ -1,60 +1,96 @@
-<div class="container mt-4">
-    <h2 class="mb-4">Agregar Asignatura a curso</h2>
-
-    <form (ngSubmit)="createOrUpdate()" #cursoForm="ngForm" class="mb-4">
-        <div class="form-group">
-            <label for="nivelDetalle">Nivel Detalle:</label>
-            <select [(ngModel)]="selectedCurso.nivelDetalle.idNivelDetalle" name="nivelDetalle" required class="form-control">
-                <option value="" disabled>Select a Nivel Detalle</option> 
-                <option *ngFor="let nivel of nivelesDetalles" [value]="nivel.idNivelDetalle">{{ nivel.nivel.descripcionNivel }} || {{ nivel.nivel.descripcionTurno }}
-                    || {{ nivel.gradoSeccion.descripcionSeccion }}
-                </option>
-            </select>
+<div class="inscripcion-container">
+    <!-- Toggle Buttons -->
+    <div class="toggle-buttons">
+      <button class="toggle-btn" [class.active]="showForm" (click)="toggleView(true)">Gestionar Curso</button>
+      <button class="toggle-btn" [class.active]="!showForm" (click)="toggleView(false)">Lista de Cursos</button>
+    </div>
+  
+    <!-- Form Section -->
+    <section class="form-section" *ngIf="showForm">
+      <form (ngSubmit)="createOrUpdate()" #cursoForm="ngForm" class="inscripcion-form">
+        <h2 class="section-title">{{ isEditing ? 'Actualizar Asignatura a Curso' : 'Agregar Asignatura a Curso' }}</h2>
+  
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Nivel Detalle</mat-label>
+            <mat-select [(ngModel)]="selectedCurso.nivelDetalle.idNivelDetalle" name="nivelDetalle" required>
+              <mat-option value="" disabled>Selecciona un Nivel Detalle</mat-option>
+              <mat-option *ngFor="let nivel of nivelesDetalles" [value]="nivel.idNivelDetalle">
+                {{ nivel.nivel.descripcionNivel }} || {{ nivel.nivel.descripcionTurno }} || {{ nivel.gradoSeccion.descripcionSeccion }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="cursoForm.controls['nivelDetalle']?.invalid && cursoForm.submitted">El nivel detalle es obligatorio.</mat-error>
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline">
+            <mat-label>Curso</mat-label>
+            <mat-select [(ngModel)]="selectedCurso.curso.idCurso" name="curso" required>
+              <mat-option value="" disabled>Selecciona un Curso</mat-option>
+              <mat-option *ngFor="let curso of cursos" [value]="curso.idCurso">{{ curso.descripcion }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="cursoForm.controls['curso']?.invalid && cursoForm.submitted">El curso es obligatorio.</mat-error>
+          </mat-form-field>
+  
+          <div class="checkbox-group">
+            <mat-checkbox [(ngModel)]="selectedCurso.activo" name="activo">Activo</mat-checkbox>
+          </div>
         </div>
-    
-
-        <div class="form-group">
-            <label for="curso">Curso:</label>
-            <select [(ngModel)]="selectedCurso.curso.idCurso" name="curso" required class="form-control">
-                <option value="" disabled>Select a Curso</option>
-                <option *ngFor="let curso of cursos" [value]="curso.idCurso">{{ curso.descripcion }}</option>
-            </select>
-        </div>
-
-        <div class="form-group form-check">
-            <input type="checkbox" [(ngModel)]="selectedCurso.activo" name="activo" class="form-check-input">
-            <label for="activo" class="form-check-label">Activo</label>
-        </div>
-
-        <button type="submit" class="btn btn-primary">{{ isEditing ? 'Update' : 'Create' }}</button>
-        <button type="button" class="btn btn-secondary" (click)="resetForm()">Cancel</button>
-    </form>
-
-    <h3>Lista de Nivel Detalle Cursos</h3>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-          
-                <th>Nivel Detalle</th>
-                <th>Curso</th>
-               <th>Activo</th> 
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let curso of nivelDetalleCursos">
-             
-                <td>{{ curso.nivelDetalle.nivel.descripcionNivel }}</td>
-                <td>{{ curso.curso.descripcion }}</td>
-                <td>
-                    <div class="estado-indicador" [ngClass]="curso.curso.activo ? 'activo' : 'inactivo'"></div>
-                  </td>
-                  
-                <td>
-                    <button class="btn btn-warning btn-sm" (click)="editCurso(curso)">Edit</button>
-                    <button class="btn btn-danger btn-sm" (click)="deleteCurso(curso.idNivelDetalleCurso)">Delete</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+  
+        <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="cursoForm.invalid">
+          {{ isEditing ? 'Actualizar' : 'Crear' }}
+        </button>
+        <button mat-raised-button color="warn" type="button" class="submit-btn cancel-btn" (click)="resetForm()">Cancelar</button>
+      </form>
+    </section>
+  
+    <!-- List Section -->
+    <section class="list-section" *ngIf="!showForm">
+      <h2 class="section-title">Lista de Nivel Detalle Cursos</h2>
+  
+      <div class="table-wrapper">
+        <table mat-table [dataSource]="nivelDetalleCursos" class="inscripcion-table mat-elevation-z8">
+          <!-- Nivel Detalle Column -->
+          <ng-container matColumnDef="nivelDetalle">
+            <th mat-header-cell *matHeaderCellDef>Nivel Detalle</th>
+            <td mat-cell *matCellDef="let curso" data-label="Nivel Detalle">
+              {{ curso.nivelDetalle.nivel.descripcionNivel }}
+            </td>
+          </ng-container>
+  
+          <!-- Curso Column -->
+          <ng-container matColumnDef="curso">
+            <th mat-header-cell *matHeaderCellDef>Curso</th>
+            <td mat-cell *matCellDef="let curso" data-label="Curso">
+              {{ curso.curso.descripcion }}
+            </td>
+          </ng-container>
+  
+          <!-- Activo Column -->
+          <ng-container matColumnDef="activo">
+            <th mat-header-cell *matHeaderCellDef>Activo</th>
+            <td mat-cell *matCellDef="let curso" data-label="Activo">
+              <div class="estado-indicador" [ngClass]="curso.activo ? 'activo' : 'inactivo'"></div>
+            </td>
+          </ng-container>
+  
+          <!-- Acciones Column -->
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let curso" data-label="Acciones">
+              <div class="action-buttons">
+                <button mat-icon-button class="action-btn edit-btn" (click)="editCurso(curso)" matTooltip="Editar">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button class="action-btn delete-btn" (click)="deleteCurso(curso.idNivelDetalleCurso)" matTooltip="Eliminar">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+  
+          <tr mat-header-row *matHeaderRowDef="['nivelDetalle', 'curso', 'activo', 'acciones']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['nivelDetalle', 'curso', 'activo', 'acciones']"></tr>
+        </table>
+      </div>
+    </section>
+  </div>

@@ -4,36 +4,38 @@ import com.example.demo.model.entity.Noticia;
 import com.example.demo.model.entity.dto.NoticiaDTO;
 import com.example.demo.repositories.mongo.NoticiaRepository;
 import com.example.demo.services.service.NoticiaService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class NoticiaServiceImpl implements NoticiaService {
-
     @Autowired
     private NoticiaRepository noticiaRepository;
 
-
-
-    @CacheEvict(value = "Noticiacache", allEntries = true)
+    @Override
     public Noticia crearNoticia(NoticiaDTO noticiaDTO) {
         Noticia noticia = new Noticia();
         noticia.setTitulo(noticiaDTO.getTitulo());
         noticia.setContenido(noticiaDTO.getContenido());
         noticia.setImagen(noticiaDTO.getImagen());
         noticia.setTipoImagen(noticiaDTO.getTipoImagen());
-        noticia.setFechaCreacion(LocalDateTime.now());
+        noticia.setFechaCreacion(new Date());
+        noticia.setLikesCount(0);
+        noticia.setLikedBy(new ArrayList<>());
+        noticia.setComentarios(new ArrayList<>());
         return noticiaRepository.save(noticia);
     }
-    @Cacheable("Noticiacache")
+
+    @Override
     public List<Noticia> obtenerNoticias() {
         return noticiaRepository.findAll();
     }
@@ -45,21 +47,56 @@ public class NoticiaServiceImpl implements NoticiaService {
 
     @Override
     public Noticia actualizarNoticia(String id, NoticiaDTO noticiaDTO) {
-        Optional<Noticia> optionalNoticia = noticiaRepository.findById(id);
-        if (optionalNoticia.isPresent()) {
-            Noticia noticia = optionalNoticia.get();
+        Noticia noticia = noticiaRepository.findById(id).orElse(null);
+        if (noticia != null) {
             noticia.setTitulo(noticiaDTO.getTitulo());
             noticia.setContenido(noticiaDTO.getContenido());
-            noticia.setImagen(noticiaDTO.getImagen());
-            noticia.setTipoImagen(noticiaDTO.getTipoImagen());
+            if (noticiaDTO.getImagen() != null) {
+                noticia.setImagen(noticiaDTO.getImagen());
+                noticia.setTipoImagen(noticiaDTO.getTipoImagen());
+            }
             return noticiaRepository.save(noticia);
         }
-        return null; // O lanza una excepción
+        return null;
     }
 
-
-    @CacheEvict(value = "Noticiacache", allEntries = true)
+    @Override
     public void eliminarNoticia(String id) {
         noticiaRepository.deleteById(id);
     }
+
+    @Override
+    public Noticia agregarComentario(String id, Noticia.Comentario comentario) {
+        Noticia noticia = noticiaRepository.findById(id).orElse(null);
+        if (noticia != null) {
+            if (noticia.getComentarios() == null) {
+                noticia.setComentarios(new ArrayList<>());
+            }
+            comentario.setFechaCreacion(new Date());
+            noticia.getComentarios().add(comentario);
+            return noticiaRepository.save(noticia);
+        }
+        return null;
+    }
+
+    @Override
+public Noticia darLike(String id) {
+    Noticia noticia = noticiaRepository.findById(id).orElse(null);
+    if (noticia != null) {
+        if (noticia.getLikesCount() == null) {
+            noticia.setLikesCount(0);
+        }
+        if (noticia.getLikedBy() == null) {
+            noticia.setLikedBy(new ArrayList<>());
+        }
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!noticia.getLikedBy().contains(username)) { // Prevent duplicate likes
+            noticia.setLikesCount(noticia.getLikesCount() + 1);
+            noticia.getLikedBy().add(username);
+            return noticiaRepository.save(noticia);
+        }
+        return noticia; // No change if already liked
+    }
+    return null;
+}
 }

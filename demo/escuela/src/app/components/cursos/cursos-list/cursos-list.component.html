@@ -1,52 +1,83 @@
-<div class="container">
- 
-  <div class="header">
-    <a [routerLink]="['/cursos/create']" class="btn-create">
-      Crear Nuevo Curso
-    </a>
-    <div class="search-box">
-      <input
-        matInput
-        (keyup)="applyFilter($event)"
-        placeholder="Buscar cursos"
-        class="input-search"
-      />
-    </div>
+<div class="inscripcion-container">
+  <!-- Toggle Buttons -->
+  <div class="toggle-buttons">
+    <button class="toggle-btn" [class.active]="showForm" (click)="toggleView(true)">Gestionar Curso</button>
+    <button class="toggle-btn" [class.active]="!showForm" (click)="toggleView(false)">Lista de Cursos</button>
   </div>
 
-  <div class="table-container"> 
-    <table mat-table [dataSource]="dataSource" matSort class="custom-table mat-elevation-z8 full-width rounded-table">
- 
+  <!-- Form Section -->
+  <section class="form-section" *ngIf="showForm">
+    <form (ngSubmit)="createOrUpdate()" #cursoForm="ngForm" class="inscripcion-form">
+      <h2 class="section-title">{{ isEditing ? 'Actualizar Curso' : 'Crear Nuevo Curso' }}</h2>
 
-      <ng-container matColumnDef="descripcion">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
-        <td mat-cell *matCellDef="let curso"> {{ curso.descripcion }} </td>
-      </ng-container>
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Descripción</mat-label>
+          <input matInput [(ngModel)]="selectedCurso.descripcion" name="descripcion" required #descripcion="ngModel">
+          <mat-error *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched)">La descripción es obligatoria.</mat-error>
+        </mat-form-field>
 
-      <ng-container matColumnDef="activo">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Activo </th>
-        <td mat-cell *matCellDef="let curso">
-          <div class="estado-indicador" [ngClass]="curso.activo ? 'activo' : 'inactivo'"></div>
-        </td>
-      </ng-container>
-      
+        <div class="checkbox-group">
+          <mat-checkbox [(ngModel)]="selectedCurso.activo" name="activo">Activo</mat-checkbox>
+        </div>
+      </div>
 
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Acciones </th>
-        <td mat-cell *matCellDef="let curso">
-          <a mat-button [routerLink]="['/cursos/edit', curso.idCurso]" class="btn-edit rounded">Editar</a>
-          <button mat-button color="warn" (click)="deleteCurso(curso.idCurso)" class="btn-delete rounded">Eliminar</button>
-        </td>
-      </ng-container>
- 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  </div> 
-  <mat-paginator 
-    [pageSize]="5" 
-    [pageSizeOptions]="[5, 10, 25, 100]" 
-    showFirstLastButtons 
-    class="paginator rounded-md">
-  </mat-paginator>
+      <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="cursoForm.invalid">
+        {{ isEditing ? 'Actualizar' : 'Crear' }}
+      </button>
+      <button mat-raised-button color="warn" type="button" class="submit-btn cancel-btn" (click)="resetForm()">Cancelar</button>
+    </form>
+  </section>
+
+  <!-- List Section -->
+  <section class="list-section" *ngIf="!showForm">
+    <h2 class="section-title">Lista de Cursos</h2>
+
+    <div class="inscripcion-actions">
+      <mat-form-field appearance="outline" class="search-box">
+        <mat-label>Buscar Cursos</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Buscar cursos" class="filter-input" />
+      </mat-form-field>
+    </div>
+
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="dataSource" matSort class="inscripcion-table mat-elevation-z8">
+        <ng-container matColumnDef="descripcion">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Descripción</th>
+          <td mat-cell *matCellDef="let curso" data-label="Descripción">{{ curso.descripcion }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="activo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Activo</th>
+          <td mat-cell *matCellDef="let curso" data-label="Activo">
+            <div class="estado-indicador" [ngClass]="curso.activo ? 'activo' : 'inactivo'"></div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let curso" data-label="Acciones">
+            <div class="action-buttons">
+              <button mat-icon-button class="action-btn edit-btn" (click)="editCurso(curso)" matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="action-btn delete-btn" (click)="deleteCurso(curso.idCurso)" matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+    <mat-paginator
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      showFirstLastButtons
+      class="paginator"
+    ></mat-paginator>
+  </section>
 </div>
