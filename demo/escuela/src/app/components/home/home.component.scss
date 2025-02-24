@@ -235,4 +235,63 @@
 .comentario-fecha {
   font-size: 12px;
   color: #888;
+}.noticia-interacciones {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between buttons */
+}
+
+.btn-like, .btn-toggle-comments {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.btn-like .heart-icon {
+  margin-right: 5px;
+}
+
+/* SVG Button Styles */
+.group {
+  position: relative;
+}
+
+.w-6 {
+  width: 24px; /* Matches the SVG width/height */
+}
+
+.hover\:scale-125:hover {
+  transform: scale(1.25); /* Matches hover:scale-125 */
+}
+
+.duration-200 {
+  transition-duration: 200ms; /* Matches duration-200 */
+}
+
+.hover\:stroke-blue-500:hover {
+  stroke: #3b82f6; /* Matches hover:stroke-blue-500 */
+}
+
+/* Tooltip Styles */
+.group-hover\:scale-100:hover .scale-0 {
+  transform: scale(1); /* Matches group-hover:scale-100 */
+}
+
+.scale-0 {
+  transform: scale(0);
+}
+
+.transition-all {
+  transition-property: all;
+}
+
+.duration-300 {
+  transition-duration: 300ms;
+}
+
+.ease-in-out {
+  transition-timing-function: ease-in-out;
 }

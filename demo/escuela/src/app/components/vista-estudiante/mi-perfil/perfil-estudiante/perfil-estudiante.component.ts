@@ -13,7 +13,7 @@ export class PerfilEstudianteComponent implements OnInit {
   estudiante?: UserDto;
   editando: boolean = false;
   copiaEstudiante?: UserDto;
-  mensajeExito: string | null = null; // To store the success message
+  mensajeExito: string | null = null;
 
   constructor(
     private perfilService: EstudiantePerfilService,

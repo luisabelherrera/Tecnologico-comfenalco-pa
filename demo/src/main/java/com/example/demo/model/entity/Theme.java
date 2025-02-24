@@ -1,4 +1,5 @@
 package com.example.demo.model.entity;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -7,9 +8,11 @@ public class Theme {
     @Id
     private String id;
     private String name;
-    private String backgroundColor;
+    private String backgroundColor;         // Required for single-color themes
+    private String backgroundColorLeft;     // Optional for split-color left side
+    private String backgroundColorRight;    // Optional for split-color right side
     private String textColor;
-    private boolean isActive; // Indica si este tema está activo
+    private boolean isActive;
 
     public Theme() {}
 
@@ -20,13 +23,17 @@ public class Theme {
         this.isActive = isActive;
     }
 
-    // Getters y Setters
+    // Getters and Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public String getBackgroundColor() { return backgroundColor; }
     public void setBackgroundColor(String backgroundColor) { this.backgroundColor = backgroundColor; }
+    public String getBackgroundColorLeft() { return backgroundColorLeft; }
+    public void setBackgroundColorLeft(String backgroundColorLeft) { this.backgroundColorLeft = backgroundColorLeft; }
+    public String getBackgroundColorRight() { return backgroundColorRight; }
+    public void setBackgroundColorRight(String backgroundColorRight) { this.backgroundColorRight = backgroundColorRight; }
     public String getTextColor() { return textColor; }
     public void setTextColor(String textColor) { this.textColor = textColor; }
     public boolean isActive() { return isActive; }

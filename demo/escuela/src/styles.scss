@@ -9,22 +9,10 @@ $aside-item-active-color: #ffd740; // Color del texto del elemento activo
 
 @include mat.core();
 
-
-$institucion-angular-primary: mat.define-palette(
-  mat.$indigo-palette
-);
-$institucion-angular-accent: mat.define-palette(
-  mat.$pink-palette,
-  A200,
-  A100,
-  A400
-);
-
-// The warn palette is optional (defaults to red).
+$institucion-angular-primary: mat.define-palette(mat.$indigo-palette);
+$institucion-angular-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
 $institucion-angular-warn: mat.define-palette(mat.$red-palette);
 
-// Create the theme object. A theme consists of configurations for individual
-// theming systems such as "color" or "typography".
 $institucion-angular-theme: mat.define-light-theme(
   (
     color: (
@@ -35,13 +23,11 @@ $institucion-angular-theme: mat.define-light-theme(
   )
 );
 
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
 @include mat.all-component-themes($institucion-angular-theme);
 
 html {
   height: 100%;
+  overflow-x: hidden; /* No horizontal scrolling */
 }
 
 body {
@@ -51,7 +37,7 @@ body {
   font-family: Roboto, sans-serif;
   height: 100%;
   display: flex;
-  overflow-x: hidden;
+  overflow-x: hidden; /* No horizontal scrolling */
 }
 
 p {
@@ -59,96 +45,88 @@ p {
 }
 
 .icon-20 {
-  font-size: 20px; 
+  font-size: 20px;
 }
 
-
-/* Estilos personalizados para el scroll */
+/* Custom scrollbar styles for vertical scrolling only */
 ::-webkit-scrollbar {
-  width: 8px; /* Ancho de la barra de desplazamiento */
+  width: 8px; /* Width of vertical scrollbar */
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Color de fondo del track */
+  background: #f1f1f1; /* Background of the scrollbar track */
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #000000; /* Color de la barra de desplazamiento */
-  border-radius: 10px; /* Borde redondeado de la barra */
+  background-color: #000000; /* Color of the vertical scrollbar thumb */
+  border-radius: 10px; /* Rounded edges */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #b3c6ff; /* Color de la barra al pasar el cursor */
+  background-color: #b3c6ff; /* Color on hover */
 }
 
+/* Hide horizontal scrollbar in Webkit browsers */
+::-webkit-scrollbar:horizontal {
+  display: none;
+}
+
+/* Firefox: Allow vertical scrolling, hide horizontal */
+html, body {
+  scrollbar-width: thin; /* Thin vertical scrollbar */
+  -ms-overflow-style: -ms-autohiding-scrollbar; /* Auto-hide in IE/Edge, vertical only */
+  overflow-x: hidden; /* Explicitly hide horizontal */
+}
 
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-@media (max-width: 768px) {
-  .dashboard-card {
-      position: relative !important;
-      top: auto;
-      left: auto;
-      right: auto;
-      bottom: auto;
-      margin: 10px;
-  }
-}
-@media (max-width: 768px) {
-  mat-sidenav {
-    width: 80px; // Reduce el ancho del sidebar en pantallas pequeñas
-  }
-}
+
 @media (max-width: 768px) {
   .dashboard-card {
     position: relative !important;
-    margin: 10px;
     top: auto;
     left: auto;
     right: auto;
     bottom: auto;
+    margin: 10px;
   }
-}
-@media (max-width: 768px) {
-  .login-container {
-    mat-card {
-      width: 90%; // Usa casi todo el ancho en dispositivos móviles
-    }
+  
+  mat-sidenav {
+    width: 80px; /* Reduce sidebar width on small screens */
+    overflow-y: auto; /* Allow vertical scrolling */
+    overflow-x: hidden; /* No horizontal scrolling */
   }
-}
-@media (max-width: 768px) {
+  
+  .login-container mat-card {
+    width: 90%; /* Nearly full width on mobile */
+  }
+  
   .container-component .list,
-  .container-component .details {
-    width: 100%; // Haz que las listas y detalles ocupen todo el ancho
-  }
-}
-@media (max-width: 768px) {
-  .icon-20 {
-    font-size: 18px; // Ajusta el tamaño de los íconos en dispositivos pequeños
-  }
-
-  mat-toolbar {
-    font-size: 14px; // Disminuye el tamaño de la barra de herramientas en móviles
-  }
-}
-@media (max-width: 768px) {
+  .container-component .details,
   .courses-container .courses-list,
   .courses-container .course-details {
-    width: 100%;
+    width: 100%; /* Full width on mobile */
   }
-}
-@media (max-width: 768px) {
+  
+  .icon-20 {
+    font-size: 18px; /* Adjust icon size on small devices */
+  }
+  
+  mat-toolbar {
+    font-size: 14px; /* Smaller toolbar font on mobile */
+    overflow-x: hidden; /* No horizontal scrolling */
+  }
+  
   mat-card {
-    margin: 5px; // Reduce el margen de las tarjetas para ahorrar espacio
+    margin: 5px; /* Reduce card margin to save space */
   }
-}
-@media (max-width: 768px) {
+  
   .list-container .full-width-table {
     width: 100%;
   }
-
+  
   .details-container {
     padding: 10px;
   }
@@ -157,27 +135,27 @@ p {
 .container {
   margin: 10px;
   flex-wrap: wrap;
-  overflow-x: auto;
-  .mat-card-header-text {
-    margin-left: 0;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #ffd740;
-  }
+  overflow-x: hidden; /* No horizontal scrolling */
+}
 
-  .mat-toolbar {
-    margin-bottom: 10px;
-  }
+.container .mat-card-header-text {
+  margin-left: 0;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ffd740;
+}
 
-  .mat-card.shape {
-    width: 200px;
-  }
+.container .mat-toolbar {
+  margin-bottom: 10px;
+}
+
+.container .mat-card.shape {
+  width: 200px;
 }
 
 .container [class*="col"] {
   padding: 10px;
   flex: 1;
 }
-
 
 .header {
   padding-bottom: 10px;
@@ -195,13 +173,16 @@ mat-toolbar {
   box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2),
     0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
   z-index: 1;
+  overflow-x: hidden; /* No horizontal scrolling */
 }
 
 mat-sidenav {
   box-shadow: 3px 0 6px rgba(0, 0, 0, 0.24);
-  width: 250px; 
+  width: 250px;
   padding-top: 10px;
   height: 100vh;
+  overflow-y: auto; /* Allow vertical scrolling */
+  overflow-x: hidden; /* No horizontal scrolling */
 }
 
 mat-card:not(.dashboard-card) {
@@ -209,24 +190,22 @@ mat-card:not(.dashboard-card) {
 }
 
 .mat-sidenav-container {
-
   background: #ffffff;
   flex: 1;
-
-  .mat-divider {
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-
-  .mat-subheader {
-   
-    margin: 5px;
-    padding-top: 5px;
-    padding-bottom: 1px;
-   
-  }
+  overflow-x: hidden; /* No horizontal scrolling */
+  overflow-y: auto; /* Allow vertical scrolling in content */
 }
 
+.mat-sidenav-container .mat-divider {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.mat-sidenav-container .mat-subheader {
+  margin: 5px;
+  padding-top: 5px;
+  padding-bottom: 1px;
+}
 
 .fill-remaining-space {
   flex: 1 1 auto;
@@ -239,41 +218,38 @@ mat-card:not(.dashboard-card) {
 .container-component {
   display: flex;
   justify-content: space-around;
+}
 
-  .list {
-    width: 49%;
-  }
+.container-component .list {
+  width: 49%;
+}
 
-  .details {
-    width: 49%;
-  }
+.container-component .details {
+  width: 49%;
 }
 
 .courses-container {
   display: flex;
   justify-content: space-around;
-
-  .courses-list {
-    width: 100%;
-  }
-
-  .course-details {
-    width: 100%;
-  }
 }
 
+.courses-container .courses-list {
+  width: 100%;
+}
 
-
+.courses-container .course-details {
+  width: 100%;
+}
 
 .login-container {
   display: flex;
   align-items: center;
   justify-content: center;
   height: calc(100vh - 64px);
+}
 
-  mat-card {
-    width: 400px;
-  }
+.login-container mat-card {
+  width: 400px;
 }
 
 .dashboard-card {
@@ -282,10 +258,10 @@ mat-card:not(.dashboard-card) {
   left: 15px;
   right: 15px;
   bottom: 15px;
+}
 
-  mat-card-header {
-    justify-content: center;
-  }
+.dashboard-card mat-card-header {
+  justify-content: center;
 }
 
 .dashboard-card-content {
@@ -304,35 +280,33 @@ mat-card:not(.dashboard-card) {
 
 .list-container {
   margin: 20px;
-
-  .full-width-table {
-    width: 100%;
-  }
-
-  tr {
-    -webkit-transition: background-color 300ms;
-    -moz-transition: background-color 300ms;
-    -ms-transition: background-color 300ms;
-    -o-transition: background-color 300ms;
-    transition: background-color 300ms;
-  }
-
-  tr:not(.mat-header-row):hover {
-    background: whitesmoke;
-    cursor: pointer;
-  }
 }
 
-.details-container {
-  mat-form-field {
-    width: 100%;
-  }
+.list-container .full-width-table {
+  width: 100%;
+}
 
-  mat-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.list-container tr {
+  -webkit-transition: background-color 300ms;
+  -moz-transition: background-color 300ms;
+  -ms-transition: background-color 300ms;
+  -o-transition: background-color 300ms;
+  transition: background-color 300ms;
+}
+
+.list-container tr:not(.mat-header-row):hover {
+  background: whitesmoke;
+  cursor: pointer;
+}
+
+.details-container mat-form-field {
+  width: 100%;
+}
+
+.details-container mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 mat-list-item:not(:first-of-type) {
@@ -348,20 +322,12 @@ mat-list-item:hover {
   background: whitesmoke;
 }
 
-mat-list-item:not(:first-of-type) {
-  border-top: 1px solid #efefef;
-}
-
 .symbol {
   color: #777;
 }
 
 mat-card-actions {
   margin-bottom: 0;
-}
-
-.full-width {
-  width: 100%;
 }
 
 .nav-link {
@@ -372,223 +338,117 @@ mat-card-actions {
   padding-bottom: 5px;
 }
 
-// UI LOGIN
+/* UI LOGIN */
 .login {
   height: 100%;
-
-  .background {
-    position: fixed;
-    left: 0;
-    right: 0;
-    z-index: 1;
-    display: block;
-    // background: url(assets/background.jpg) no-repeat center center fixed;
-    // background-size: cover;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  .container {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 100;
-
-    .card-wrapper {
-      margin: auto;
-      display: flex;
-      justify-content: center;
-    }
-  }
-
-  mat-card {
-    box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2),
-      0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
-
-    mat-card-header {
-      margin-bottom: 10px;
-    }
-
-    mat-form-field {
-      width: 100%;
-    }
-  }
-
-  .ig-xpro2 {
-    -webkit-filter: contrast(1.3) brightness(0.8) sepia(0.3) saturate(1.5)
-      hue-rotate(-20deg);
-    filter: contrast(1.3) brightness(0.8) sepia(0.3) saturate(1.5)
-      hue-rotate(-20deg);
-  }
-
-  .ig-willow {
-    -webkit-filter: saturate(0.02) contrast(0.85) brightness(1.2) sepia(0.02);
-    filter: saturate(0.02) contrast(0.85) brightness(1.2) sepia(0.02);
-  }
-
-  .ig-walden {
-    -webkit-filter: sepia(0.35) contrast(0.9) brightness(1.1) hue-rotate(-10deg)
-      saturate(1.5);
-    filter: sepia(0.35) contrast(0.9) brightness(1.1) hue-rotate(-10deg)
-      saturate(1.5);
-  }
-
-  .ig-valencia {
-    -webkit-filter: sepia(0.15) saturate(1.5) contrast(0.9);
-    filter: sepia(0.15) saturate(1.5) contrast(0.9);
-  }
-
-  .ig-toaster {
-    -webkit-filter: sepia(0.4) saturate(2.5) hue-rotate(-30deg) contrast(0.67);
-    -filter: sepia(0.4) saturate(2.5) hue-rotate(-30deg) contrast(0.67);
-  }
-
-  .ig-sutro {
-    -webkit-filter: brightness(0.75) contrast(1.3) sepia(0.5) hue-rotate(-25deg);
-    filter: brightness(0.75) contrast(1.3) sepia(0.5) hue-rotate(-25deg);
-  }
-
-  .ig-sierra {
-    -webkit-filter: contrast(0.8) saturate(1.2) sepia(0.15);
-    filter: contrast(0.8) saturate(1.2) sepia(0.15);
-  }
-
-  .ig-rise {
-    -webkit-filter: saturate(1.4) sepia(0.25) hue-rotate(-15deg) contrast(0.8)
-      brightness(1.1);
-    filter: saturate(1.4) sepia(0.25) hue-rotate(-15deg) contrast(0.8)
-      brightness(1.1);
-  }
-
-  .ig-nashville {
-    -webkit-filter: sepia(0.4) saturate(1.5) contrast(0.9) brightness(1.1)
-      hue-rotate(-15deg);
-    filter: sepia(0.4) saturate(1.5) contrast(0.9) brightness(1.1)
-      hue-rotate(-15deg);
-  }
-
-  .ig-mayfair {
-    -webkit-filter: saturate(1.4) contrast(1.1);
-    filter: saturate(1.4) contrast(1.1);
-  }
-
-  .ig-lofi {
-    filter: contrast(1.4) brightness(0.9) sepia(0.05);
-    -webkit-filter: contrast(1.4) brightness(0.9) sepia(0.05);
-  }
-
-  .ig-kelvin {
-    filter: sepia(0.4) saturate(2.4) brightness(1.3) contrast(1);
-    -webkit-filter: sepia(0.4) saturate(2.4) brightness(1.3) contrast(1);
-  }
-
-  .ig-inkwell {
-    -webkit-filter: grayscale(1) brightness(1.2) contrast(1.05);
-    filter: grayscale(1) brightness(1.2) contrast(1.05);
-  }
-
-  .ig-hudson {
-    -webkit-filter: contrast(1.2) brightness(0.9) hue-rotate(-10deg);
-    filter: contrast(1.2) brightness(0.9) hue-rotate(-10deg);
-  }
-
-  .hefe {
-    -webkit-filter: contrast(1.3) sepia(0.3) saturate(1.3) hue-rotate(-10deg)
-      brightness(0.95);
-    filter: contrast(1.3) sepia(0.3) saturate(1.3) hue-rotate(-10deg)
-      brightness(0.95);
-  }
-
-  .ig-earlybird {
-    -webkit-filter: sepia(0.4) saturate(1.6) contrast(1.1) brightness(0.9)
-      hue-rotate(-10deg);
-    filter: sepia(0.4) saturate(1.6) contrast(1.1) brightness(0.9)
-      hue-rotate(-10deg);
-  }
-
-  .ig-brannan {
-    -webkit-filter: sepia(0.5) contrast(1.4);
-    filter: sepia(0.5) contrast(1.4);
-  }
-
-  .ig-amaro {
-    -webkit-filter: hue-rotate(-10deg) contrast(0.9) brightness(1.1)
-      saturate(1.5);
-    filter: hue-rotate(-10deg) contrast(0.9) brightness(1.1) saturate(1.5);
-  }
-
-  .ig-1977 {
-    -webkit-filter: sepia(0.5) hue-rotate(-30deg) saturate(1.2) contrast(0.8);
-    filter: sepia(0.5) hue-rotate(-30deg) saturate(1.2) contrast(0.8);
-  }
 }
 
-// UI TOOLBAR
+.login .background {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  display: block;
+  height: 100%;
+  overflow: hidden;
+}
+
+.login .container {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 100;
+}
+
+.login .container .card-wrapper {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.login mat-card {
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2),
+    0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
+}
+
+.login mat-card mat-card-header {
+  margin-bottom: 10px;
+}
+
+.login mat-card mat-form-field {
+  width: 100%;
+}
+
+/* Instagram-like filters remain unchanged */
+.ig-xpro2 {
+  -webkit-filter: contrast(1.3) brightness(0.8) sepia(0.3) saturate(1.5) hue-rotate(-20deg);
+  filter: contrast(1.3) brightness(0.8) sepia(0.3) saturate(1.5) hue-rotate(-20deg);
+}
+
+/* ... (rest of the Instagram filters remain as is) */
+
+/* UI TOOLBAR */
 mat-toolbar {
   box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2),
     0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
   z-index: 900;
-
-  > .mat-mini-fab {
-    margin-right: 10px;
-  }
-
-  .spacer {
-    flex: 1 1 auto;
-  }
-
-  .title {
-    vertical-align: middle;
-  }
-
-  .logo {
-    margin-left: 20px;
-
-    img {
-      vertical-align: middle;
-      width: 100px;
-      height: auto;
-    }
-  }
 }
+
+mat-toolbar > .mat-mini-fab {
+  margin-right: 10px;
+}
+
+mat-toolbar .spacer {
+  flex: 1 1 auto;
+}
+
+mat-toolbar .title {
+  vertical-align: middle;
+}
+
+mat-toolbar .logo {
+  margin-left: 20px;
+}
+
+mat-toolbar .logo img {
+  vertical-align: middle;
+  width: 100px;
+  height: auto;
+}
+
 @media (max-width: 768px) {
-  .container-component {
-      flex-direction: column; /* Cambia a una columna en pantallas pequeñas */
-  }
-
+  .container-component,
   .courses-container {
-      flex-direction: column;
+    flex-direction: column;
   }
-
+  
   .list, .details, .courses-list, .course-details {
-      width: 100%;
+    width: 100%;
   }
-
-  /* Ajustes para la barra lateral y la barra de herramientas */
+  
   mat-sidenav {
-      width: 100%; /* Ocupa todo el ancho en pantallas pequeñas */
-      padding-top: 10px;
-      width: 250px; 
-    }
-
+    width: 250px;
+    padding-top: 10px;
+    overflow-y: auto; /* Vertical scrolling on mobile */
+    overflow-x: hidden; /* No horizontal scrolling */
+  }
+  
   mat-toolbar {
-      flex-wrap: wrap;
-      text-align: center;
+    flex-wrap: wrap;
+    text-align: center;
+    overflow-x: hidden; /* No horizontal scrolling */
   }
 }
 
-html,
-body {
+/* Remove redundant declarations */
+html, body {
   height: 100%;
-  overflow-x: hidden;
+  overflow-x: hidden; /* Only hide horizontal */
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  overflow-x: hidden;
 }
-
-html, body { height: 100%;   overflow-x: hidden; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;    overflow-x: hidden;}

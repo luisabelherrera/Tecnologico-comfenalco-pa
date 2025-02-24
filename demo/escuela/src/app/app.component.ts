@@ -8,7 +8,7 @@ import { NotificacionService } from './services/notificacion/NotificacionService
 import { NavigationStart, Router } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 import { TemaHeaderService, Theme } from './services/tema-header/tema-header.service';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +18,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class AppComponent implements OnInit, OnDestroy {
   title = 'HOBO';
   @ViewChild('sidenav') sidenav!: MatSidenav;
-  toolbarColor: string = 'rgb(0, 0, 0)';
+  toolbarColor: string | SafeStyle = 'rgb(0, 0, 0)'; // Now supports gradient or single color
   toolbarTextColor: string = 'white';
   logoImage: string = '/assets/iconos/tierra.png';
   isChristmasTheme: boolean = false;
@@ -31,7 +31,7 @@ export class AppComponent implements OnInit, OnDestroy {
   isAdministrarUsuarioMenuOpen = false;
   islinksMenuOpen = false;
   isVentana3MenuOpen = false;
-  isMenu = false; // Para el menú "Noticias"
+  isMenu = false;
   hasPendingNotifications = false;
   isNotificationBlinking = false;
   isButtonPressed = false;
@@ -40,8 +40,6 @@ export class AppComponent implements OnInit, OnDestroy {
   private previousTheme: Theme;
   currentTheme$: Observable<Theme>;
 
-
-  
   links = [{ path: '/home', icon: 'assets/iconos/school.png', title: 'Inicio' }];
   Alumno = [
     { path: '/listar', icon: 'list', title: 'Estudiante' },
@@ -79,10 +77,9 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/curricularDocente', icon: 'book', title: 'Curricular' },
     { path: '/horarioDocente', icon: 'schedule', title: 'Horario' },
   ];
-  
-  Ventana3Links = [ 
-    { path: '/perfil-estudiante', icon: 'schedule', title: 'Mi Perfil' }, 
-    { path: '/ventana3', icon: 'grade', title: 'Calificación' },  
+  Ventana3Links = [
+    { path: '/perfil-estudiante', icon: 'schedule', title: 'Mi Perfil' },
+    { path: '/ventana3', icon: 'grade', title: 'Calificación' },
     { path: '/curricularEstudiante', icon: 'book', title: 'Contenido Curricular' },
     { path: '/horarioEstudiante', icon: 'schedule', title: 'Mi Horario' },
   ];
@@ -102,14 +99,22 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private temaHeaderService: TemaHeaderService,
     private sanitizer: DomSanitizer
-    
   ) {
+    this.currentTheme$ = this.temaHeaderService.currentTheme$;
     this.temaHeaderService.currentTheme$.pipe(takeUntil(this.unsubscribe$)).subscribe(theme => {
       console.log('Tema recibido en AppComponent:', theme);
-      this.toolbarColor = theme.backgroundColor || this.toolbarColor;
+
+      // Handle split colors with a gradient, fallback to single color
+      if (theme.backgroundColorLeft && theme.backgroundColorRight) {
+        const gradient = `linear-gradient(to right, ${theme.backgroundColorLeft}, ${theme.backgroundColorRight})`;
+        this.toolbarColor = this.sanitizer.bypassSecurityTrustStyle(gradient);
+      } else {
+        this.toolbarColor = theme.backgroundColor || this.toolbarColor;
+      }
+
       this.toolbarTextColor = theme.textColor || this.toolbarTextColor;
       this.isChristmasTheme = theme.name.toLowerCase() === 'navidad';
-      document.documentElement.style.setProperty('--theme-background-color', this.toolbarColor);
+      document.documentElement.style.setProperty('--theme-background-color', typeof this.toolbarColor === 'string' ? this.toolbarColor : theme.backgroundColor || 'rgb(0, 0, 0)');
     });
 
     this.router.events.subscribe(event => {
@@ -146,7 +151,7 @@ export class AppComponent implements OnInit, OnDestroy {
         });
       }
     });
-    document.documentElement.style.setProperty('--theme-background-color', this.toolbarColor);
+    document.documentElement.style.setProperty('--theme-background-color', typeof this.toolbarColor === 'string' ? this.toolbarColor : 'rgb(0, 0, 0)');
   }
 
   cargarNotificaciones() {
@@ -176,7 +181,6 @@ export class AppComponent implements OnInit, OnDestroy {
     const currentTheme = this.temaHeaderService.getCurrentTheme();
 
     if (this.isButtonPressed) {
-      // Guardar el tema actual antes de cambiarlo
       this.previousTheme = { ...currentTheme };
       this.temaHeaderService.applyTheme({
         ...currentTheme,
@@ -184,7 +188,6 @@ export class AppComponent implements OnInit, OnDestroy {
         textColor: '#F5F5F5',
       });
     } else {
-      // Restaurar el tema anterior en lugar de establecer un valor fijo
       this.temaHeaderService.applyTheme(this.previousTheme);
     }
   }

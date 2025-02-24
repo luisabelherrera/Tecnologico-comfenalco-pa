@@ -1,7 +1,4 @@
-<header class="header" [ngStyle]="{
-  'background-color': (currentTheme$ | async)?.backgroundColor,
-  'color': (currentTheme$ | async)?.textColor
-}">
+<header class="header" [style.background]="headerBackground" [style.color]="(currentTheme$ | async)?.textColor">
   <nav class="navbar">
     <div class="logo">
       <h1 class="logo-text" [ngStyle]="{'color': (currentTheme$ | async)?.textColor}">HOBO</h1>
@@ -16,26 +13,31 @@
     </div>
   </nav>
 </header>
+
 <div class="chat-icon" (click)="toggleChat()" *ngIf="isAuthenticated" [ngStyle]="{
-  'background-color': (currentTheme$ | async)?.backgroundColor
+  'background-color': (currentTheme$ | async)?.backgroundColorLeft || (currentTheme$ | async)?.backgroundColor
 }">
   <i class="fas fa-comments fa-2x" [ngStyle]="{'color': (currentTheme$ | async)?.textColor}" style="cursor: pointer;"></i>
 </div>
 
 <div class="chat-container" [ngStyle]="{
   'display': chatVisible && isAuthenticated ? 'block' : 'none',
-  'background-color': (currentTheme$ | async)?.backgroundColor,
+  'background': (currentTheme$ | async)?.backgroundColorLeft && (currentTheme$ | async)?.backgroundColorRight 
+    ? 'linear-gradient(to right, ' + (currentTheme$ | async)?.backgroundColorLeft + ', ' + (currentTheme$ | async)?.backgroundColorRight + ')' 
+    : (currentTheme$ | async)?.backgroundColor,
   'color': (currentTheme$ | async)?.textColor
 }" style="position: fixed; bottom: 70px; right: 20px; width: 300px; z-index: 1000;">
   <div class="card chat-card" style="width: 100%; max-height: 400px; overflow: hidden;">
     <div [ngStyle]="{
-      'background-color': (currentTheme$ | async)?.backgroundColor,
+      'background': (currentTheme$ | async)?.backgroundColorLeft && (currentTheme$ | async)?.backgroundColorRight 
+        ? 'linear-gradient(to right, ' + (currentTheme$ | async)?.backgroundColorLeft + ', ' + (currentTheme$ | async)?.backgroundColorRight + ')' 
+        : (currentTheme$ | async)?.backgroundColor,
       'color': (currentTheme$ | async)?.textColor
     }">
       <ul class="nav nav-pills card-header-pills">
         <li class="nav-item mr-2">
           <button class="btn btn-success" type="button" (click)="conectar()" *ngIf="!conectado" [ngStyle]="{
-            'background-color': (currentTheme$ | async)?.backgroundColor,
+            'background-color': (currentTheme$ | async)?.backgroundColorLeft || (currentTheme$ | async)?.backgroundColor,
             'color': (currentTheme$ | async)?.textColor
           }">
             <i class="fas fa-sign-in-alt"></i> Conectar
@@ -59,9 +61,10 @@
       </ul>
     </div>
 
-
     <div class="card-footer" *ngIf="conectado" [ngStyle]="{
-      'background-color': (currentTheme$ | async)?.backgroundColor,
+      'background': (currentTheme$ | async)?.backgroundColorLeft && (currentTheme$ | async)?.backgroundColorRight 
+        ? 'linear-gradient(to right, ' + (currentTheme$ | async)?.backgroundColorLeft + ', ' + (currentTheme$ | async)?.backgroundColorRight + ')' 
+        : (currentTheme$ | async)?.backgroundColor,
       'color': (currentTheme$ | async)?.textColor
     }">
       <form class="form-inline" (ngSubmit)="enviarMensaje()">
@@ -140,9 +143,29 @@
         <button class="btn-like" (click)="darLike(noticia)" [disabled]="!isAuthenticated">
           <i class="fas fa-heart heart-icon"></i> {{ noticia.likesCount || 0 }}
         </button>
-        <button class="btn-toggle-comments" (click)="toggleComments(noticia.id)" title="{{ showComments[noticia.id] ? 'Ocultar' : 'Mostrar' }} Comentarios">
-          <i class="fas" [ngClass]="{'fa-eye': !showComments[noticia.id], 'fa-eye-slash': showComments[noticia.id]}"></i>
-        </button>
+        <div class="group relative inline-block">
+          <button (click)="toggleComments(noticia.id)" class="btn-toggle-comments">
+            <svg
+              stroke-linejoin="round"
+              stroke-linecap="round"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              height="24" 
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 hover:scale-125 duration-200 hover:stroke-blue-500"
+              fill="none"
+            >
+              <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+              <path d="M8 9h8"></path>
+              <path d="M8 13h6"></path>
+              <path
+                d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z"
+              ></path>
+            </svg>
+          </button>
+        </div>
       </div>
       <div class="comentario-input-container" *ngIf="isAuthenticated">
         <input type="text" 

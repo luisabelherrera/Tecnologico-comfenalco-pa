@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/AuthService.service';
 import { NotificacionService } from 'src/app/services/notificacion/NotificacionService';
+import { Observable } from 'rxjs';
+import { Theme, TemaHeaderService } from 'src/app/services/tema-header/tema-header.service';
 
 @Component({
   selector: 'app-login',
@@ -10,76 +12,74 @@ import { NotificacionService } from 'src/app/services/notificacion/NotificacionS
 })
 export class LoginComponent implements OnInit {
   loginDto = { email: '', password: '' };
-  mensajeUsuario: string = ''; 
+  mensajeUsuario: string = '';
   mostrarModal: boolean = false;
   errorMessage: string = '';
+  currentTheme$: Observable<Theme>;
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private notificacionService: NotificacionService
-  ) {}
+    private notificacionService: NotificacionService,
+    private temaHeaderService: TemaHeaderService
+  ) {
+    this.currentTheme$ = this.temaHeaderService.currentTheme$;
+  }
 
   ngOnInit(): void {}
 
+  login() {
+    this.authService.login(this.loginDto).subscribe(
+      (response) => {
+        const roles: string[] = response.roles || [];
+        this.router.navigate(['/home']).then(() => {
+          setTimeout(() => {
+            if (roles.includes('Administracion')) {
+              this.router.navigate(['/home']);
+            } else if (roles.includes('Estudiante')) {
+              this.router.navigate(['/home']);
+            } else {
+              this.router.navigate(['/ventana2']);
+            }
+          }, 1000);
+        });
+      },
+      (error) => {
+        this.errorMessage = 'Usuario o contraseña incorrectos.';
+      }
+    );
+  }
 
-
-
-
-  
-login() {
-  this.authService.login(this.loginDto).subscribe(
-    (response) => {
-      const roles: string[] = response.roles || [];
-      this.router.navigate(['/home']).then(() => {
-        setTimeout(() => {
-          if (roles.includes('Administracion')) {
-            this.router.navigate(['/home']);
-          } else if (roles.includes('Estudiante')) {
-            this.router.navigate(['/home']);
-          } else {
-            this.router.navigate(['/ventana2']);
-          }
-        }, 1000);
-      });
-    },
-    (error) => {
-      this.errorMessage = 'Usuario o contraseña incorrectos.';
-    }
-  );
-}
-
-irAOtraVentana() {
-  this.router.navigate(['/venta-informacion']); // Reemplaza con la ruta deseada
-}
+  irAOtraVentana() {
+    this.router.navigate(['/venta-informacion']);
+  }
 
   abrirModalRecuperacion() {
-    this.mostrarModal = true; 
+    this.mostrarModal = true;
   }
 
   cerrarModal() {
     this.mostrarModal = false;
-    this.mensajeUsuario = ''; 
+    this.mensajeUsuario = '';
   }
 
   enviarMensaje() {
     if (!this.mensajeUsuario.trim()) {
-        alert('Por favor, escribe un mensaje.');
-        return;
+      alert('Por favor, escribe un mensaje.');
+      return;
     }
 
-    console.log("Mensaje enviado:", this.mensajeUsuario); 
-
+    console.log("Mensaje enviado:", this.mensajeUsuario);
     this.notificacionService.notificarAdministrador(this.mensajeUsuario).subscribe(
-        (response) => {
-            console.log("Respuesta del servidor:", response);  
-            alert('Mensaje enviado al administrador.');
-            this.cerrarModal();
-        },
-        (error) => {
-            console.error("Error al enviar el mensaje:", error);
-            alert('Hubo un problema al procesar la solicitud. Inténtalo de nuevo más tarde.');
-        }
+      (response) => {
+        console.log("Respuesta del servidor:", response);
+        alert('Mensaje enviado al administrador.');
+        this.cerrarModal();
+      },
+      (error) => {
+        console.error("Error al enviar el mensaje:", error);
+        alert('Hubo un problema al procesar la solicitud. Inténtalo de nuevo más tarde.');
+      }
     );
-}
+  }
 }

@@ -6,7 +6,9 @@ import { tap, retry } from 'rxjs/operators';
 export interface Theme {
   id?: string;
   name: string;
-  backgroundColor: string;
+  backgroundColor?: string;         // Optional for single-color
+  backgroundColorLeft?: string;     // Optional for split-color left
+  backgroundColorRight?: string;    // Optional for split-color right
   textColor: string;
   isActive?: boolean;
 }
@@ -22,8 +24,8 @@ export class TemaHeaderService {
   constructor(private http: HttpClient) {
     const defaultTheme: Theme = {
       name: 'Default',
-      backgroundColor: 'rgb(0, 0, 0)',
-      textColor: 'white',
+      backgroundColor: '#ffffff',
+      textColor: '#333333',
       isActive: true
     };
     this.currentThemeSubject = new BehaviorSubject<Theme>(defaultTheme);
@@ -70,8 +72,8 @@ export class TemaHeaderService {
         console.error('Error al cargar tema activo:', err);
         this.applyTheme({
           name: 'Default',
-          backgroundColor: 'rgb(0, 0, 0)',
-          textColor: 'white',
+          backgroundColor: '#ffffff',
+          textColor: '#333333',
           isActive: true
         });
       }

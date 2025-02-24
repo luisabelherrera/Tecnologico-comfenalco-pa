@@ -1,9 +1,8 @@
-
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Noticia } from 'src/app/models/entity/Noticia.interface';
 import { NoticiaService } from 'src/app/services/Menu/Menu.service';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { ImagenDialogComponent } from './dialogo/ImagenDialog.component';
 import { AuthService } from 'src/app/services/auth/AuthService.service';
 import { Client } from '@stomp/stompjs';
@@ -35,6 +34,7 @@ export class HomeComponent implements OnInit {
   isAuthenticated: boolean = false;
   showComments: { [key: string]: boolean } = {};
   comentarioTexto: { [key: string]: string } = {};
+  headerBackground: string | SafeStyle = '#ffffff'; // Supports gradient or single color
 
   recursosEducativos: Array<any> = [
     {
@@ -51,6 +51,8 @@ export class HomeComponent implements OnInit {
     }
   ];
 
+  @ViewChild('scrollChat') scrollChat!: ElementRef;
+
   constructor(
     private noticiaService: NoticiaService,
     private sanitizer: DomSanitizer,
@@ -59,6 +61,15 @@ export class HomeComponent implements OnInit {
     private temaHeaderService: TemaHeaderService
   ) {
     this.currentTheme$ = this.temaHeaderService.currentTheme$;
+    this.currentTheme$.subscribe(theme => {
+      // Handle split colors with a gradient, fallback to single color
+      if (theme.backgroundColorLeft && theme.backgroundColorRight) {
+        const gradient = `linear-gradient(to right, ${theme.backgroundColorLeft}, ${theme.backgroundColorRight})`;
+        this.headerBackground = this.sanitizer.bypassSecurityTrustStyle(gradient);
+      } else {
+        this.headerBackground = theme.backgroundColor || '#ffffff';
+      }
+    });
   }
 
   ngOnInit() {
@@ -78,32 +89,26 @@ export class HomeComponent implements OnInit {
   darLike(noticia: Noticia): void {
     if (!this.isAuthenticated || !noticia.id || !this.mensaje.username) return;
 
-    // Inicializar likedBy si no existe
     if (!noticia.likedBy) {
       noticia.likedBy = [];
     }
 
     const userIndex = noticia.likedBy.indexOf(this.mensaje.username);
     if (userIndex === -1) {
-      // Dar like
       noticia.likedBy.push(this.mensaje.username);
       noticia.likesCount = (noticia.likesCount || 0) + 1;
     } else {
-      // Quitar like
       noticia.likedBy.splice(userIndex, 1);
       noticia.likesCount = (noticia.likesCount || 0) - 1;
     }
 
-    // Guardar en el backend
     this.noticiaService.actualizarLikes(noticia.id, noticia.likedBy).subscribe({
       next: (updatedNoticia) => {
-        // Actualizar la noticia local con la respuesta del backend
         noticia.likesCount = updatedNoticia.likesCount;
         noticia.likedBy = updatedNoticia.likedBy;
       },
       error: (error) => {
         console.error('Error al actualizar likes', error);
-        // Revertir cambios si falla
         if (userIndex === -1) {
           noticia.likedBy.pop();
           noticia.likesCount = (noticia.likesCount || 0) - 1;
@@ -135,7 +140,6 @@ export class HomeComponent implements OnInit {
       }
       noticia.comentarios.push(comentario);
       this.comentarioTexto[noticia.id] = '';
-      // Aquí iría la lógica para guardar el comentario en el backend si existe
     }
   }
 
@@ -180,6 +184,9 @@ export class HomeComponent implements OnInit {
         }
         this.mensajes.push(mensaje);
         console.log(mensaje);
+        if (this.scrollChat) {
+          this.scrollChat.nativeElement.scrollTop = this.scrollChat.nativeElement.scrollHeight;
+        }
       });
 
       this.client.subscribe('/chat/escribiendo', (e) => {
@@ -269,6 +276,7 @@ export class HomeComponent implements OnInit {
       });
     }
   }
+
   cargarImagen(noticia: Noticia): void {
     if (noticia.id) {
       this.noticiaService.obtenerImagenNoticia(noticia.id).subscribe({

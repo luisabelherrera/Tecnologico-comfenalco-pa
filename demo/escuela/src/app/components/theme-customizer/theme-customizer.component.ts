@@ -10,15 +10,16 @@ export class ThemeCustomizerComponent implements OnInit {
   themes: Theme[] = [];
   selectedTheme: Theme = {
     name: '',
-    backgroundColor: '#000000',
-    textColor: '#FFFFFF',
+    backgroundColor: '#ffffff',  // Default single color
+    textColor: '#333333',
     isActive: true
   };
+  useSplitColors: boolean = false;
 
   predefinedThemes: Theme[] = [
-    { name: 'Navidad', backgroundColor: '#FF0000', textColor: '#FFFFFF', isActive: false },
-    { name: 'Halloween', backgroundColor: '#FF7518', textColor: '#FFFFFF', isActive: false },
-    { name: 'San Valentín', backgroundColor: '#FF69B4', textColor: '#FFFFFF', isActive: false }
+    { name: 'Navidad (Split)', backgroundColorLeft: '#ffe6e6', backgroundColorRight: '#ffcccc', textColor: '#d32f2f', isActive: false },
+    { name: 'Halloween (Split)', backgroundColorLeft: '#fff3e0', backgroundColorRight: '#ffe0b2', textColor: '#f57c00', isActive: false },
+    { name: 'San Valentín', backgroundColor: '#ff69b4', textColor: '#ffffff', isActive: false }
   ];
 
   constructor(private temaHeaderService: TemaHeaderService) {}
@@ -31,6 +32,19 @@ export class ThemeCustomizerComponent implements OnInit {
       },
       error: (err) => console.error('Error al cargar temas:', err)
     });
+  }
+
+  toggleSplitColors() {
+    this.useSplitColors = !this.useSplitColors;
+    if (!this.useSplitColors) {
+      delete this.selectedTheme.backgroundColorLeft;
+      delete this.selectedTheme.backgroundColorRight;
+      this.selectedTheme.backgroundColor = '#ffffff';
+    } else {
+      delete this.selectedTheme.backgroundColor;
+      this.selectedTheme.backgroundColorLeft = '#f0f0f0';
+      this.selectedTheme.backgroundColorRight = '#ffffff';
+    }
   }
 
   applyTheme(theme: Theme) {
@@ -57,6 +71,7 @@ export class ThemeCustomizerComponent implements OnInit {
 
   selectPredefinedTheme(theme: Theme) {
     this.selectedTheme = { ...theme, isActive: true };
+    this.useSplitColors = !!(theme.backgroundColorLeft || theme.backgroundColorRight);
     this.applyTheme(this.selectedTheme);
   }
 

@@ -2,14 +2,11 @@ package com.example.demo.controller.entityController;
 
 import com.example.demo.model.entity.Theme;
 import com.example.demo.repositories.mongo.ThemeRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/themes")
