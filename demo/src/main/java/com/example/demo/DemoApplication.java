@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableCaching
-@EnableAspectJAutoProxy // habilita  aspectos   interceptores  ejemplo  transacciones  logging
+@EnableAspectJAutoProxy
 @EnableJpaRepositories(basePackages = "com.example.demo.repositories.jpa")
 @EnableMongoRepositories(basePackages = "com.example.demo.repositories.mongo")
 public class DemoApplication {

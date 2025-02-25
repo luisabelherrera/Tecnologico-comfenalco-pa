@@ -1,63 +1,28 @@
-
-
-
-
 .perfil-container {
-    max-width: 700px;
-    margin: 40px auto;
-    padding: 25px;
-    border-radius: 10px;
-    background: #f8f9fa;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    position: relative;
-  
-    .perfil-header {
-      text-align: center;
-      padding-bottom: 15px;
-      border-bottom: 2px solid #dee2e6;
-  
-      h2 {
-        font-size: 22px;
-        font-weight: bold;
-        color: #343a40;
-  
-        i {
-          color: #495057;
-          margin-right: 8px;
-        }
-      }
-    }
-  
-    .perfil-body {
-      margin-top: 20px;
-  
-      .info {
-        font-size: 16px;
-        color: #495057;
-  
-        p {
-          margin-bottom: 5px;
-        }
-        
-        .badge {
-          font-size: 14px;
-          padding: 5px 10px;
-          border-radius: 8px;
-        }
-      }
-  
-      .edit-mode {
-        input {
-          border: 1px solid #ced4da;
-        }
-      }
-    }
-  
-    button {
-      font-size: 14px;
-      font-weight: bold;
-      padding: 8px 12px;
-      border-radius: 8px;
-    }
-  }
-  
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.perfil-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.calificaciones-section {
+  margin-top: 30px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  padding: 10px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f5f5f5;
+}

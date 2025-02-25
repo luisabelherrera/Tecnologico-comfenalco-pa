@@ -49,9 +49,4 @@ public class Docente  implements Serializable {
     @JoinColumn(name = "user_id", unique = true)
     private UserEntity user;
 
-
-
-
-
-    
 }

@@ -9,7 +9,6 @@ import { EstudiantePerfilService } from 'src/app/services/estudiante/ventana-est
   styleUrls: ['./perfil-estudiante.component.scss']
 })
 export class PerfilEstudianteComponent implements OnInit {
-
   estudiante?: UserDto;
   editando: boolean = false;
   copiaEstudiante?: UserDto;
@@ -21,6 +20,10 @@ export class PerfilEstudianteComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.cargarPerfil();
+  }
+
+  cargarPerfil(): void {
     this.perfilService.getPerfilEstudiante().subscribe(
       (data) => {
         this.estudiante = data;
@@ -44,21 +47,20 @@ export class PerfilEstudianteComponent implements OnInit {
   guardarCambios(): void {
     if (!this.estudiante || !this.estudiante.estudiante) return;
 
-    this.estudianteService.updateEstudiante(this.estudiante.estudiante.idEstudiante, this.estudiante.estudiante)
-      .subscribe(
-        (response) => {
-          console.log('Actualización exitosa:', response);
-          this.mensajeExito = 'Perfil del Estudiante Actualizado'; // Set success message
-          this.editando = false;
-          setTimeout(() => this.cerrarMensaje(), 3000); // Auto-hide after 3 seconds
-        },
-        (error) => {
-          console.error('Error al actualizar estudiante:', error);
-        }
-      );
+    this.estudianteService.updateEstudiante(this.estudiante.estudiante.idEstudiante, this.estudiante.estudiante).subscribe(
+      (response) => {
+        console.log('Actualización exitosa:', response);
+        this.mensajeExito = 'Perfil del Estudiante Actualizado';
+        this.editando = false;
+        setTimeout(() => this.cerrarMensaje(), 3000);
+      },
+      (error) => {
+        console.error('Error al actualizar estudiante:', error);
+      }
+    );
   }
 
   cerrarMensaje(): void {
-    this.mensajeExito = null; // Clear the message
+    this.mensajeExito = null;
   }
 }
