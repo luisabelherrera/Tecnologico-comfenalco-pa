@@ -213,8 +213,8 @@
       border-collapse: collapse;
 
       th {
-        background-color: #1e40af;
-        color: white;
+        background-color: #e6e6e6;
+        color: rgb(0, 0, 0);
         font-weight: 600;
         padding: 14px;
         font-size: 15px;
@@ -227,6 +227,8 @@
         font-size: 14px;
         color: #1f2937;
       }
+
+       
 
       .action-buttons {
         display: flex;
@@ -249,10 +251,13 @@
               background-color: rgba(220, 38, 38, 0.1);
             }
           }
+
+         
         }
       }
     }
   }
+
 
   .paginator {
     margin-top: 20px;

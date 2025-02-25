@@ -79,6 +79,7 @@ import { VictorComponent } from './components/ventanas-para-invitados/victor/vic
 import { FacturaComponent } from './components/matricula/dialog/incripciondetalle/factura/factura.component';
 import { PerfilEstudianteComponent } from './components/vista-estudiante/mi-perfil/perfil-estudiante/perfil-estudiante.component';
 import { ThemeCustomizerComponent } from './components/theme-customizer/theme-customizer.component';
+import { ChatGestionComponent } from './components/gestion-chat/chat-gestion/chat-gestion.component';
 
 
 
@@ -231,6 +232,13 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Administracion'] },
   },
+
+  { path: 'chat-gestion',
+    component: ChatGestionComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion'] },
+  },
+
 
 
   //horario

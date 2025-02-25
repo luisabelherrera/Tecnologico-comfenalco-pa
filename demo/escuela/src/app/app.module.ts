@@ -82,6 +82,7 @@ import { PerfilEstudianteComponent } from './components/vista-estudiante/mi-perf
 import { CommonModule } from '@angular/common';
 import { DialogoComponent } from './components/docente/dialogo/dialogo/dialogo.component';
 import { ThemeCustomizerComponent } from './components/theme-customizer/theme-customizer.component';
+import { ChatGestionComponent } from './components/gestion-chat/chat-gestion/chat-gestion.component';
 
 
 @NgModule({
@@ -118,6 +119,7 @@ import { ThemeCustomizerComponent } from './components/theme-customizer/theme-cu
 
   ],
   declarations: [
+    ChatGestionComponent,
     ThemeCustomizerComponent,
     DialogoComponent,
     FacturaComponent,

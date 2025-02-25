@@ -16,9 +16,10 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy {
-  title = 'HOBO';
+  title = ' HOBO';
+
   @ViewChild('sidenav') sidenav!: MatSidenav;
-  toolbarColor: string | SafeStyle = 'rgb(0, 0, 0)'; // Now supports gradient or single color
+  toolbarColor: string | SafeStyle = 'rgb(0, 0, 0)';
   toolbarTextColor: string = 'white';
   logoImage: string = '/assets/iconos/tierra.png';
   isChristmasTheme: boolean = false;
@@ -68,6 +69,8 @@ export class AppComponent implements OnInit, OnDestroy {
   Menu = [
     { path: '/agregar-noticia', icon: 'article', title: 'Agregar Noticia' },
     { path: '/header', icon: 'article', title: 'Personalizar Header' },
+    { path: '/chat-gestion', icon: 'article', title: 'chat' },
+ 
   ];
   AdministrarUsuario = [
     { path: '/registro', icon: 'person_add', title: 'Registrar' },
@@ -104,7 +107,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.temaHeaderService.currentTheme$.pipe(takeUntil(this.unsubscribe$)).subscribe(theme => {
       console.log('Tema recibido en AppComponent:', theme);
 
-      // Handle split colors with a gradient, fallback to single color
       if (theme.backgroundColorLeft && theme.backgroundColorRight) {
         const gradient = `linear-gradient(to right, ${theme.backgroundColorLeft}, ${theme.backgroundColorRight})`;
         this.toolbarColor = this.sanitizer.bypassSecurityTrustStyle(gradient);
@@ -208,4 +210,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
+  onSidenavToggle(opened: boolean) {
+    // Forzar recalculo del layout
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 300); // Coincide con la duración de la transición
+  }
+
 }
