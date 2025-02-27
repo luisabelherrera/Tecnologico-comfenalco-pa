@@ -136,3 +136,69 @@ h2 {
   color: #7f8c8d;
   margin: 0;
 }
+
+/* Estilos para el boletín (oculto en pantalla, pero usado para PDF) */
+.print-boletin {
+  display: none; /* Oculto en pantalla, pero capturado para PDF */
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media print {
+  /* No necesitamos estilos de impresión, ya que usamos PDF */
+  .header, .grades-grid, .no-grades, .btn-print, .btn-suggestions {
+    display: none !important;
+  }
+}
+
+.boletin-header {
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #d5dbde;
+  padding-bottom: 10px;
+}
+
+.boletin-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 10px;
+}
+
+.boletin-header p {
+  font-size: 14px;
+  color: #34495e;
+  margin: 5px 0;
+}
+
+.boletin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.boletin-table th,
+.boletin-table td {
+  border: 1px solid #d5dbde;
+  padding: 10px;
+  text-align: left;
+  font-size: 14px;
+  color: #34495e;
+}
+
+.boletin-table th {
+  background: #eef2f6;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.boletin-footer {
+  text-align: center;
+  font-size: 12px;
+  color: #7f8c8d;
+  margin-top: 20px;
+  border-top: 1px solid #d5dbde;
+  padding-top: 10px;
+}

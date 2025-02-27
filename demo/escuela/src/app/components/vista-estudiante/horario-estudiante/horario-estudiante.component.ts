@@ -1,10 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Horario } from 'src/app/models/entity/horario.model';
-import { Calificacion } from 'src/app/models/entity/Calificacion.interface';
+import { Inscripcion } from 'src/app/models/entity/Inscripcion.interface';
+import { DocenteNivelDetalleCurso } from 'src/app/models/entity/docente-nivel-detalle-curso.model';
 import { HorarioService } from 'src/app/services/horario/Horario.service';
 import { EstudiantePerfilService } from 'src/app/services/estudiante/ventana-estudiante/estudiante-perfil.service';
-import { CalificacionService } from 'src/app/services/calificacion/calificacion.service';
+import { InscripcionService } from 'src/app/services/matricula/matricula.service';
 import { UserDto } from 'src/app/models/models';
+import { DocenteNivelDetalleCursoService } from 'src/app/services/docente-detalle/docente-nivel-detalle-curso.service';
+
+interface TimeSlot {
+  inicio: string;
+  fin: string;
+}
 
 @Component({
   selector: 'app-horario-estudiante',
@@ -13,17 +20,18 @@ import { UserDto } from 'src/app/models/models';
 })
 export class HorarioEstudianteComponent implements OnInit {
   estudiante?: UserDto;
-  calificaciones: Calificacion[] = [];
+  inscripcion?: Inscripcion;
   horarios: Horario[] = [];
-  schedule: { [day: string]: { [time: string]: { curso: string, profesor: string, hasConflict: boolean } } } = {};
-
+  docentesNivelDetalleCurso: DocenteNivelDetalleCurso[] = [];
+  schedule: { [day: string]: { [timeKey: string]: { curso: string, profesor: string, hasConflict: boolean } } } = {};
   daysOfWeek: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-  timeSlots: string[] = []; // Rangos de tiempo (por ejemplo, "08:00", "09:00", etc.)
+  timeSlots: TimeSlot[] = [];
 
   constructor(
     private horarioService: HorarioService,
     private estudiantePerfilService: EstudiantePerfilService,
-    private calificacionService: CalificacionService
+    private inscripcionService: InscripcionService,
+    private docenteNivelDetalleCursoService: DocenteNivelDetalleCursoService
   ) {}
 
   ngOnInit(): void {
@@ -34,7 +42,7 @@ export class HorarioEstudianteComponent implements OnInit {
     this.estudiantePerfilService.getPerfilEstudiante().subscribe(
       (data) => {
         this.estudiante = data;
-        this.loadCalificacionesYHorarios();
+        this.loadInscripcionYHorarios();
       },
       (error) => {
         console.error('Error al obtener el perfil del estudiante:', error);
@@ -42,68 +50,80 @@ export class HorarioEstudianteComponent implements OnInit {
     );
   }
 
-  loadCalificacionesYHorarios(): void {
+  loadInscripcionYHorarios(): void {
     if (!this.estudiante?.estudiante?.idEstudiante) return;
 
-    // Obtener calificaciones del estudiante
-    this.calificacionService.getCalificaciones().subscribe(
-      (calificacionesData) => {
-        this.calificaciones = calificacionesData.filter(
-          (calificacion) => calificacion.estudiante.idEstudiante === this.estudiante?.estudiante?.idEstudiante
+    this.inscripcionService.getAllInscripciones().subscribe(
+      (inscripcionesData) => {
+        this.inscripcion = inscripcionesData.find(
+          (ins) => ins.estudiante.idEstudiante === this.estudiante?.estudiante?.idEstudiante && ins.activo
         );
 
-        // Obtener todos los horarios
-        this.horarioService.getAllHorarios().subscribe(
-          (horariosData) => {
-            this.horarios = horariosData;
+        if (!this.inscripcion?.nivelDetalle?.idNivelDetalle) {
+          console.error('No hay inscripción activa o nivel detalle asociado');
+          return;
+        }
 
-            // Inicializar el horario
-            this.initializeSchedule();
+        this.docenteNivelDetalleCursoService.getAll().subscribe(
+          (docentesData) => {
+            this.docentesNivelDetalleCurso = docentesData;
+            console.log('DocentesNivelDetalleCurso cargados:', this.docentesNivelDetalleCurso);
 
-            // Agrupar horarios por día para detectar conflictos
-            const horariosPorDia: { [day: string]: Horario[] } = {};
-            this.horarios.forEach(horario => {
-              if (!horariosPorDia[horario.diaSemana]) horariosPorDia[horario.diaSemana] = [];
-              horariosPorDia[horario.diaSemana].push(horario);
-            });
+            this.horarioService.getAllHorarios().subscribe(
+              (horariosData) => {
+                this.horarios = horariosData.filter(
+                  (horario) => horario.nivelDetalleCurso?.nivelDetalle?.idNivelDetalle === this.inscripcion?.nivelDetalle?.idNivelDetalle
+                );
+                console.log('Horarios filtrados:', this.horarios);
 
-            // Llenar el horario con los datos del estudiante y detectar conflictos
-            this.horarios.forEach(horario => {
-              const calificacion = this.calificaciones.find(c =>
-                c.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.idNivelDetalleCurso === horario.nivelDetalleCurso?.idNivelDetalleCurso
-              );
-              if (calificacion) {
-                const startTime = horario.horaInicio.substring(0, 5); // "HH:mm"
-                const endTime = horario.horaFin.substring(0, 5); // "HH:mm"
-                const day = horario.diaSemana;
-                const curso = calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.descripcion;
-                const profesor = `${calificacion.curricular.docenteNivelDetalleCurso.docente.nombres} ${calificacion.curricular.docenteNivelDetalleCurso.docente.apellidos}`;
+                this.initializeSchedule();
 
-                // Detectar conflictos en el mismo día, solo si son del mismo curso (mismo nivelDetalleCurso)
-                const conflictos = this.detectConflicts(horariosPorDia[day] || [], horario, calificacion);
-                const hasConflict = conflictos.length > 0;
+                const horariosPorDia: { [day: string]: Horario[] } = {};
+                this.horarios.forEach(horario => {
+                  if (!horariosPorDia[horario.diaSemana]) horariosPorDia[horario.diaSemana] = [];
+                  horariosPorDia[horario.diaSemana].push(horario);
+                });
 
-                // Usar el inicio como clave principal para el tiempo
-                if (!this.schedule[day]) this.schedule[day] = {};
-                this.schedule[day][startTime] = { curso, profesor, hasConflict };
-                this.addTimeSlot(startTime); // Añadir al conjunto de timeSlots si no existe
+                this.horarios.forEach(horario => {
+                  const startTime = horario.horaInicio.substring(0, 5);
+                  const endTime = horario.horaFin.substring(0, 5);
+                  const timeKey = `${startTime}-${endTime}`; // "08:00-09:00"
+                  const day = horario.diaSemana;
+                  const curso = horario.nivelDetalleCurso?.curso?.descripcion || 'Sin curso';
+                
+                  const docenteAsignado = this.docentesNivelDetalleCurso.find(
+                    (dndc) => dndc.nivelDetalleCurso.idNivelDetalleCurso === horario.nivelDetalleCurso?.idNivelDetalleCurso
+                  );
+                  const profesor = docenteAsignado && docenteAsignado.docente
+                    ? `${docenteAsignado.docente.nombres} ${docenteAsignado.docente.apellidos}`
+                    : 'Sin profesor asignado';
+                
+                  const conflictos = this.detectConflicts(horariosPorDia[day] || [], horario);
+                  const hasConflict = conflictos.length > 0;
+                
+                  if (!this.schedule[day]) this.schedule[day] = {};
+                  this.schedule[day][timeKey] = { curso, profesor, hasConflict };
+                  this.addTimeSlot(startTime, endTime);
+                });
+
+                this.timeSlots.sort((a, b) => {
+                  const [hoursA, minutesA] = a.inicio.split(':').map(Number);
+                  const [hoursB, minutesB] = b.inicio.split(':').map(Number);
+                  return hoursA * 60 + minutesA - (hoursB * 60 + minutesB);
+                });
+              },
+              (error) => {
+                console.error('Error al obtener horarios:', error);
               }
-            });
-
-            // Ordenar timeSlots para que aparezcan en orden ascendente
-            this.timeSlots.sort((a, b) => {
-              const [hoursA, minutesA] = a.split(':').map(Number);
-              const [hoursB, minutesB] = b.split(':').map(Number);
-              return hoursA * 60 + minutesA - (hoursB * 60 + minutesB);
-            });
+            );
           },
           (error) => {
-            console.error('Error al obtener horarios:', error);
+            console.error('Error al obtener docentesNivelDetalleCurso:', error);
           }
         );
       },
       (error) => {
-        console.error('Error al obtener calificaciones:', error);
+        console.error('Error al obtener inscripciones:', error);
       }
     );
   }
@@ -113,30 +133,19 @@ export class HorarioEstudianteComponent implements OnInit {
     this.daysOfWeek.forEach(day => {
       this.schedule[day] = {};
     });
-    this.timeSlots = []; // Reiniciar timeSlots
+    this.timeSlots = [];
   }
 
-  addTimeSlot(time: string): void {
-    if (!this.timeSlots.includes(time)) {
-      this.timeSlots.push(time);
+  addTimeSlot(inicio: string, fin: string): void {
+    const timeSlot = { inicio, fin };
+    if (!this.timeSlots.some(ts => ts.inicio === inicio && ts.fin === fin)) {
+      this.timeSlots.push(timeSlot);
     }
   }
 
-  // Función para detectar conflictos de horarios en el mismo día, solo si son del mismo curso
-  detectConflicts(horarios: Horario[], currentHorario: Horario, currentCalificacion: Calificacion): Horario[] {
+  detectConflicts(horarios: Horario[], currentHorario: Horario): Horario[] {
     return horarios.filter(h => {
-      if (h.idHorario === currentHorario.idHorario) return false; // Excluir el horario actual
-
-      // Encontrar la calificación asociada al otro horario (si existe)
-      const otherCalificacion = this.calificaciones.find(c =>
-        c.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.idNivelDetalleCurso === h.nivelDetalleCurso?.idNivelDetalleCurso
-      );
-
-      // Solo consideramos conflicto si ambos horarios pertenecen al mismo curso (mismo nivelDetalleCurso)
-      if (!otherCalificacion || otherCalificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.idNivelDetalleCurso !== currentCalificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.idNivelDetalleCurso) {
-        return false; // No hay conflicto si son cursos diferentes
-      }
-
+      if (h.idHorario === currentHorario.idHorario) return false;
       const start1 = this.parseTime(currentHorario.horaInicio);
       const end1 = this.parseTime(currentHorario.horaFin);
       const start2 = this.parseTime(h.horaInicio);
@@ -145,13 +154,11 @@ export class HorarioEstudianteComponent implements OnInit {
     });
   }
 
-  // Convertir cadena de tiempo "HH:mm:ss" a minutos desde medianoche
   parseTime(time: string): number {
     const [hours, minutes] = time.split(':').map(Number);
     return hours * 60 + minutes;
   }
 
-  // Verificar si dos rangos de tiempo se superponen
   doTimesOverlap(start1: number, end1: number, start2: number, end2: number): boolean {
     return start1 < end2 && start2 < end1;
   }

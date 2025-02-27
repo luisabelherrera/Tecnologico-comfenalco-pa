@@ -10,7 +10,7 @@ import * as SockJS from 'sockjs-client';
 import { Mensaje } from './models/mensaje';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
-import { TemaHeaderService, Theme } from 'src/app/services/tema-header/tema-header.service';
+import { TemaHeaderService } from 'src/app/services/tema-header/tema-header.service';
 
 @Component({
   selector: 'app-home',
@@ -19,7 +19,7 @@ import { TemaHeaderService, Theme } from 'src/app/services/tema-header/tema-head
 })
 export class HomeComponent implements OnInit {
   noticias: Noticia[] = [];
-  currentTheme$: Observable<Theme>;
+  currentTheme$: Observable<any>;
   selectedSection: string = 'noticias';
   userName$ = this.authService.userName$;
   private client: Client;
@@ -27,14 +27,17 @@ export class HomeComponent implements OnInit {
   conectado: boolean = false;
   mensaje: Mensaje = new Mensaje();
   mensajes: Mensaje[] = [];
-  escribiendo: string;
+  escribiendo: string = '';
   clienteId: string = 'id-' + new Date().getTime() + '-' + Math.random().toString(36).substr(2);
   chatVisible: boolean = false;
   currentYear: number = new Date().getFullYear();
   isAuthenticated: boolean = false;
+  isAdmin: boolean = false; // Added for admin check
+  isBlocked: boolean = false; // Added for blocked status
+  errorMessage: string = ''; // Added for error feedback
   showComments: { [key: string]: boolean } = {};
   comentarioTexto: { [key: string]: string } = {};
-  headerBackground: string | SafeStyle = '#ffffff'; // Supports gradient or single color
+  headerBackground: string | SafeStyle = '#ffffff';
 
   recursosEducativos: Array<any> = [
     {
@@ -62,7 +65,6 @@ export class HomeComponent implements OnInit {
   ) {
     this.currentTheme$ = this.temaHeaderService.currentTheme$;
     this.currentTheme$.subscribe(theme => {
-      // Handle split colors with a gradient, fallback to single color
       if (theme.backgroundColorLeft && theme.backgroundColorRight) {
         const gradient = `linear-gradient(to right, ${theme.backgroundColorLeft}, ${theme.backgroundColorRight})`;
         this.headerBackground = this.sanitizer.bypassSecurityTrustStyle(gradient);
@@ -76,16 +78,21 @@ export class HomeComponent implements OnInit {
     this.cargarNoticias();
     this.iniciarConexiónWebSocket();
 
+    this.authService.isAuthenticated$.subscribe((authenticated) => {
+      this.isAuthenticated = authenticated;
+    });
+
     this.userName$.subscribe((username) => {
       if (username) {
         this.mensaje.username = username;
-        this.isAuthenticated = true;
-      } else {
-        this.isAuthenticated = false;
       }
     });
-  }
 
+    this.authService.isAdmin$.subscribe((isAdmin) => {
+      this.isAdmin = isAdmin;
+    });
+  }
+  
   darLike(noticia: Noticia): void {
     if (!this.isAuthenticated || !noticia.id || !this.mensaje.username) return;
 

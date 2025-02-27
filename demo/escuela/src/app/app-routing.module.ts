@@ -80,6 +80,7 @@ import { FacturaComponent } from './components/matricula/dialog/incripciondetall
 import { PerfilEstudianteComponent } from './components/vista-estudiante/mi-perfil/perfil-estudiante/perfil-estudiante.component';
 import { ThemeCustomizerComponent } from './components/theme-customizer/theme-customizer.component';
 import { ChatGestionComponent } from './components/gestion-chat/chat-gestion/chat-gestion.component';
+import { ModificarHomeComponent } from './components/modificar-home/modificar-home.component';
 
 
 
@@ -222,6 +223,12 @@ const routes: Routes = [
 
   //estudiante
   { path: 'grado-seccion', component: GradoSeccionComponent ,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion']  },
+  },
+
+
+  { path: 'modifica-home', component: ModificarHomeComponent ,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion']  },
   },

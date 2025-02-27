@@ -67,11 +67,12 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/docentes/detalle', icon: 'assignment_ind', title: 'Docentes y Cursos' },
   ];
   Menu = [
-    { path: '/agregar-noticia', icon: 'article', title: 'Agregar Noticia' },
-    { path: '/header', icon: 'article', title: 'Personalizar Header' },
-    { path: '/chat-gestion', icon: 'article', title: 'chat' },
- 
+    { path: '/agregar-noticia', icon: 'post_add', title: 'Agregar Noticia' },
+    { path: '/chat-gestion', icon: 'chat', title: 'Gestionar Chat' },
+    { path: '/Descripcion', icon: 'edit_note', title: 'Modificar Descripción' },
+    { path: '/header', icon: 'web', title: 'Personalizar Header' },
   ];
+  
   AdministrarUsuario = [
     { path: '/registro', icon: 'person_add', title: 'Registrar' },
   ];

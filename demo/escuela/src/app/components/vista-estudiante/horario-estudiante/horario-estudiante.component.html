@@ -7,20 +7,19 @@
     <table class="schedule-table">
       <thead>
         <tr>
-          <th>Hora</th>
           <th *ngFor="let day of daysOfWeek">{{ day }}</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let time of timeSlots">
-          <td>{{ time }}</td>
+        <tr *ngFor="let slot of timeSlots">
           <td *ngFor="let day of daysOfWeek">
-            <div class="schedule-cell" *ngIf="schedule[day][time]" [ngClass]="{
-              'conflict': schedule[day][time].hasConflict,
-              'no-conflict': !schedule[day][time].hasConflict
+            <div class="schedule-cell" *ngIf="schedule[day][slot.inicio + '-' + slot.fin]" [ngClass]="{
+              'conflict': schedule[day][slot.inicio + '-' + slot.fin].hasConflict,
+              'no-conflict': !schedule[day][slot.inicio + '-' + slot.fin].hasConflict
             }">
-              <p class="course">{{ schedule[day][time].curso }}</p>
-              <p class="professor">{{ schedule[day][time].profesor }}</p>
+              <p class="course">{{ schedule[day][slot.inicio + '-' + slot.fin].curso }}</p>
+              <p class="professor">{{ schedule[day][slot.inicio + '-' + slot.fin].profesor }}</p>
+              <p class="time">{{ slot.inicio }} - {{ slot.fin }}</p>
             </div>
           </td>
         </tr>

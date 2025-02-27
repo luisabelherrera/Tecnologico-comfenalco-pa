@@ -1,7 +1,7 @@
 <div class="container">
   <div class="header">
     <h2>Mis Calificaciones</h2>
-    <button (click)="printBoletin()" class="btn-print">Descargar Boletín en PDF</button>
+    <button (click)="printBoletin()" class="btn-print">Imprimir Boletín</button>
   </div>
 
   <div class="grades-grid">
@@ -25,6 +25,46 @@
 
     <div class="no-grades" *ngIf="calificaciones.length === 0">
       <p>No tienes calificaciones registradas aún.</p>
+    </div>
+  </div>
+
+  <!-- Sección oculta para PDF (no visible en pantalla, solo para impresión/PDF) -->
+  <div #printBoletinContent class="print-boletin">
+    <div class="boletin-header" *ngIf="calificaciones.length > 0">
+      <h1>Boletín de Notas</h1>
+      <p><strong>Estudiante:</strong> {{ estudiante?.estudiante?.nombres }} {{ estudiante?.estudiante?.apellidos }}</p>
+      <p><strong>Documento:</strong> {{ estudiante?.estudiante?.documentoIdentidad }}</p>
+      <p><strong>Fecha de Emisión:</strong> {{ today | date: 'dd/MM/yyyy' }}</p>
+    </div>
+    <div *ngIf="calificaciones.length > 0">
+      <table class="boletin-table">
+        <thead>
+          <tr>
+            <th>Curso</th>
+            <th>Curricular</th>
+            <th>Profesor</th>
+            <th>Nota</th>
+            <th>Fecha Registro</th>
+            <th>Horario</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let calificacion of calificaciones">
+            <td>{{ calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.descripcion }}</td>
+            <td>{{ calificacion.curricular.descripcion }}</td>
+            <td>{{ calificacion.curricular.docenteNivelDetalleCurso.docente.nombres }} {{ calificacion.curricular.docenteNivelDetalleCurso.docente.apellidos }}</td>
+            <td>{{ calificacion.nota }}</td>
+            <td>{{ calificacion.fechaRegistro | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ calificacion.horario?.horaInicio.substring(0, 5) }} - {{ calificacion.horario?.horaFin.substring(0, 5) }} ({{ calificacion.horario?.diaSemana }})</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="boletin-footer">
+        <p>Generado por el Sistema de Gestión Académica</p>
+      </div>
+    </div>
+    <div class="no-grades" *ngIf="calificaciones.length === 0">
+      <p>No hay calificaciones registradas para generar un boletín.</p>
     </div>
   </div>
 </div>

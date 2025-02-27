@@ -83,6 +83,8 @@ import { CommonModule } from '@angular/common';
 import { DialogoComponent } from './components/docente/dialogo/dialogo/dialogo.component';
 import { ThemeCustomizerComponent } from './components/theme-customizer/theme-customizer.component';
 import { ChatGestionComponent } from './components/gestion-chat/chat-gestion/chat-gestion.component';
+import { ModificarHomeComponent } from './components/modificar-home/modificar-home.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -115,10 +117,10 @@ import { ChatGestionComponent } from './components/gestion-chat/chat-gestion/cha
     MatIconModule,
     CommonModule,
     MatSnackBarModule,
-
-
+    DragDropModule,
   ],
   declarations: [
+    
     ChatGestionComponent,
     ThemeCustomizerComponent,
     DialogoComponent,
@@ -176,7 +178,7 @@ import { ChatGestionComponent } from './components/gestion-chat/chat-gestion/cha
     AppComponent,
     HomeComponent,
     LoginComponent,
-    
+    ModificarHomeComponent,
   ],
   providers: [AuthService]  ,
 
