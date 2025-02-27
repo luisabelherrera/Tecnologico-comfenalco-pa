@@ -1,5 +1,6 @@
 import { Curricular } from "./curricular.model";
 import { Estudiante } from "./Estudiante.interface";
+import { Horario } from "./horario.model";
 
 export interface Calificacion {
     idCalificacion: number;
@@ -8,4 +9,5 @@ export interface Calificacion {
     nota: number;
     activo: boolean;
     fechaRegistro: Date;
+    horario?: Horario;
 }

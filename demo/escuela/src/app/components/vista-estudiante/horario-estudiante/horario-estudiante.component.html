@@ -1,23 +1,36 @@
-<div class="horarios-container">
-  <h2 class="title-with-icon">
-    <mat-icon>access_time</mat-icon> Horario de Clases
-  </h2>
-
-  <div class="cards-container">
-    <mat-card *ngFor="let horario of dataSource.data" class="class-card">
-
-      <mat-card-header>
-        <mat-card-title>
-          <mat-icon class="event-icon">event_available</mat-icon>
-          {{ horario.diaSemana }}
-        </mat-card-title>
-      </mat-card-header>
-
-      <mat-card-content>
-        <p><strong>Hora Inicio:</strong> {{ horario.horaInicio }}</p>
-        <p><strong>Hora Fin:</strong> {{ horario.horaFin }}</p>
-        <p><strong>Curso:</strong> {{ horario.nivelDetalleCurso.curso.descripcion }}</p>
-      </mat-card-content>
-    </mat-card>
+<div class="container">
+  <div class="header">
+    <h2>Mi Horario de Clases</h2>
   </div>
+
+  <div class="schedule-container" *ngIf="timeSlots.length > 0; else noSchedule">
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th>Hora</th>
+          <th *ngFor="let day of daysOfWeek">{{ day }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let time of timeSlots">
+          <td>{{ time }}</td>
+          <td *ngFor="let day of daysOfWeek">
+            <div class="schedule-cell" *ngIf="schedule[day][time]" [ngClass]="{
+              'conflict': schedule[day][time].hasConflict,
+              'no-conflict': !schedule[day][time].hasConflict
+            }">
+              <p class="course">{{ schedule[day][time].curso }}</p>
+              <p class="professor">{{ schedule[day][time].profesor }}</p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noSchedule>
+    <div class="no-data">
+      <p>No tienes horarios registrados.</p>
+    </div>
+  </ng-template>
 </div>

@@ -83,7 +83,7 @@ export class AppComponent implements OnInit, OnDestroy {
   Ventana3Links = [
     { path: '/perfil-estudiante', icon: 'schedule', title: 'Mi Perfil' },
     { path: '/ventana3', icon: 'grade', title: 'Calificación' },
-    { path: '/curricularEstudiante', icon: 'book', title: 'Contenido Curricular' },
+  
     { path: '/horarioEstudiante', icon: 'schedule', title: 'Mi Horario' },
   ];
 
