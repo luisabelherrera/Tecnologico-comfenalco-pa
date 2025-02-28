@@ -15,15 +15,14 @@ export interface LoginDto {
   email: string;
   password: string;
 }
-
 export interface RegisterDto {
-  id: number;
+  id?: number; // Optional for updates
   username: string;
   email: string;
   password: string;
-  roles: RoleDto[];  
-  docenteInfo: Docente; 
-  estudianteId: number;
+  roles: RoleDto[];
+  estudianteId?: number; // Optional ID to link an existing student
+  docenteId?: number;   // Optional ID to link an existing teacher
 }
 export interface RoleDto {
   id: number;
@@ -34,7 +33,7 @@ export interface UserDto {
   username: string;
   email: string;
   roles: RoleDto[];
-  password: string;
-  estudiante: Estudiante;
-  docenteInfo: Docente;
+  password?: string; // Optional as it’s not always returned
+  estudiante: Estudiante | null;
+  docente: Docente | null; // Renamed from docenteInfo for consistency
 }

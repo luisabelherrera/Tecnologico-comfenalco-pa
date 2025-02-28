@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.demo.exceptions.customexceptions.exceptionsEntity.HorarioException;
 import com.example.demo.model.entity.Horario;
 import com.example.demo.services.service.HorarioService;
+import com.example.demo.services.service.impl.HorarioServiceImpl;
 
 @CrossOrigin
 @RestController
@@ -18,6 +19,10 @@ public class HorarioController {
 
     @Autowired
     private HorarioService horarioService;
+
+   
+    @Autowired
+    private  HorarioServiceImpl horarioServiceImpl;
 
     @GetMapping
     public ResponseEntity<List<Horario>> getAllHorarios() {
@@ -29,7 +34,11 @@ public class HorarioController {
             return ResponseEntity.badRequest().body(null);
         }
     }
-
+    @GetMapping("/docente/{idDocente}")
+    public ResponseEntity<List<Horario>> getHorariosByDocente(@PathVariable Integer idDocente) {
+        List<Horario> horarios = horarioServiceImpl.findByDocenteId(idDocente);
+        return ResponseEntity.ok(horarios);
+    }
     @GetMapping("/{id}")
     public ResponseEntity<Horario> getHorarioById(@PathVariable Integer id) {
         try {

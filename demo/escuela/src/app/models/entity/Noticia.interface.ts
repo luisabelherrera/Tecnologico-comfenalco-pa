@@ -10,10 +10,12 @@ export interface Noticia {
     id?: string;
     titulo: string;
     contenido: string;
-    imagen?: SafeResourceUrl | string; // Can be a URL or binary data
-    tipoImagen?: string;
-    fechaCreacion?: Date | string; // Accepts string from MongoDB
-    likesCount?: number; // Matches MongoDB field
+    imagen?: SafeResourceUrl | string; // For image display
+    imagenPath?: string;              // Path to image file
+    video?: SafeResourceUrl | string; // For video display
+    videoPath?: string;               // Path to video file
+    fechaCreacion?: Date | string;
+    likesCount?: number;
     likedBy?: string[];
     comentarios?: Comentario[];
 }

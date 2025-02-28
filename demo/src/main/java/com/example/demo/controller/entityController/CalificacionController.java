@@ -2,6 +2,7 @@ package com.example.demo.controller.entityController;
 
 import com.example.demo.model.entity.Calificacion;
 import com.example.demo.services.service.CalificacionService;
+import com.example.demo.services.service.impl.CalificacionServiceImpl;
 import com.example.demo.exceptions.customexceptions.exceptionsEntity.CalificacionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,10 @@ public class CalificacionController {
     @Autowired
     private CalificacionService calificacionService;
 
+
+
+    @Autowired
+    private     CalificacionServiceImpl calificacionServiceImpl;
     @GetMapping
     public ResponseEntity<List<Calificacion>> getAllCalificaciones() {
         List<Calificacion> calificaciones = calificacionService.findAll();
@@ -37,7 +42,11 @@ public class CalificacionController {
         Calificacion nuevaCalificacion = calificacionService.save(calificacion);
         return ResponseEntity.ok(nuevaCalificacion);
     }
-
+    @GetMapping("/docente/{idDocente}")
+    public ResponseEntity<List<Calificacion>> getCalificacionesByDocente(@PathVariable Integer idDocente) {
+        List<Calificacion> calificaciones = calificacionServiceImpl.findByDocenteId(idDocente);
+        return ResponseEntity.ok(calificaciones);
+    }
     @PutMapping("/{id}")
     public ResponseEntity<Calificacion> updateCalificacion(@PathVariable Integer id,
                                                            @RequestBody Calificacion calificacionDetalles) {

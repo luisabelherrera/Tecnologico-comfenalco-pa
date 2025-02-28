@@ -4,7 +4,6 @@ import com.example.demo.model.entity.Noticia;
 import com.example.demo.model.entity.dto.NoticiaDTO;
 import com.example.demo.repositories.mongo.NoticiaRepository;
 import com.example.demo.services.service.NoticiaService;
-import com.example.demo.services.service.impl.NoticiaServiceImpl;
 import com.example.demo.exceptions.customexceptions.exceptionsEntity.NoticiaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -24,27 +25,28 @@ public class NoticiaController {
     @Autowired
     private NoticiaService noticiaService;
 
-
     @Autowired
-    private  NoticiaRepository  noticiaRepository;
+    private NoticiaRepository noticiaRepository;
 
-    // Crear una noticia
     @PostMapping("/crear")
     public ResponseEntity<Noticia> crearNoticia(
             @RequestParam("titulo") String titulo,
             @RequestParam("contenido") String contenido,
-            @RequestParam("imagen") MultipartFile imagen) {
+            @RequestParam(value = "imagen", required = false) MultipartFile imagen,
+            @RequestParam(value = "video", required = false) MultipartFile video) {
+        System.out.println("Received request to create noticia: " + titulo);
+        NoticiaDTO noticiaDTO = new NoticiaDTO();
+        noticiaDTO.setTitulo(titulo);
+        noticiaDTO.setContenido(contenido);
+        noticiaDTO.setImagen(imagen);
+        noticiaDTO.setVideo(video);
+    
         try {
-            NoticiaDTO noticiaDTO = new NoticiaDTO();
-            noticiaDTO.setTitulo(titulo);
-            noticiaDTO.setContenido(contenido);
-            noticiaDTO.setImagen(imagen.getBytes());
-            noticiaDTO.setTipoImagen(imagen.getContentType());
-
             Noticia noticia = noticiaService.crearNoticia(noticiaDTO);
             return new ResponseEntity<>(noticia, HttpStatus.CREATED);
-        } catch (IOException e) {
-            throw new NoticiaException("Error al cargar la imagen de la noticia.");
+        } catch (Exception e) {
+            System.err.println("Error creating noticia: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -58,12 +60,36 @@ public class NoticiaController {
     @GetMapping("/imagen/{id}")
     public ResponseEntity<byte[]> obtenerImagenNoticia(@PathVariable String id) {
         Noticia noticia = noticiaService.obtenerNoticiaPorId(id);
-        if (noticia == null || noticia.getImagen() == null) {
-            throw new NoticiaException("Noticia no encontrada con id: " + id);
+        if (noticia == null || noticia.getImagenPath() == null) {
+            throw new NoticiaException("Noticia o imagen no encontrada con id: " + id);
         }
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(noticia.getTipoImagen()))
-                .body(noticia.getImagen());
+        try {
+            byte[] imagenBytes = Files.readAllBytes(Paths.get(noticia.getImagenPath()));
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG) // Adjust based on file type
+                    .body(imagenBytes);
+        } catch (IOException e) {
+            throw new NoticiaException("Error al leer la imagen: " + id);
+        }
+    }
+
+    @GetMapping("/video/{id}")
+    public ResponseEntity<byte[]> obtenerVideoNoticia(@PathVariable String id) {
+        Noticia noticia = noticiaService.obtenerNoticiaPorId(id);
+        if (noticia == null || noticia.getVideoPath() == null) {
+            System.out.println("Video not found for noticia ID: " + id);
+            throw new NoticiaException("Noticia o video no encontrada con id: " + id);
+        }
+        try {
+            byte[] videoBytes = Files.readAllBytes(Paths.get(noticia.getVideoPath()));
+            String contentType = Files.probeContentType(Paths.get(noticia.getVideoPath()));
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType != null ? contentType : "video/mp4"))
+                    .body(videoBytes);
+        } catch (IOException e) {
+            System.err.println("Error reading video for ID " + id + ": " + e.getMessage());
+            throw new NoticiaException("Error al leer el video: " + id);
+        }
     }
 
     // Actualizar una noticia
@@ -72,24 +98,19 @@ public class NoticiaController {
             @PathVariable String id,
             @RequestParam("titulo") String titulo,
             @RequestParam("contenido") String contenido,
-            @RequestParam(value = "imagen", required = false) MultipartFile imagen) {
-        try {
-            NoticiaDTO noticiaDTO = new NoticiaDTO();
-            noticiaDTO.setTitulo(titulo);
-            noticiaDTO.setContenido(contenido);
-            if (imagen != null) {
-                noticiaDTO.setImagen(imagen.getBytes());
-                noticiaDTO.setTipoImagen(imagen.getContentType());
-            }
+            @RequestParam(value = "imagen", required = false) MultipartFile imagen,
+            @RequestParam(value = "video", required = false) MultipartFile video) {
+        NoticiaDTO noticiaDTO = new NoticiaDTO();
+        noticiaDTO.setTitulo(titulo);
+        noticiaDTO.setContenido(contenido);
+        noticiaDTO.setImagen(imagen);
+        noticiaDTO.setVideo(video);
 
-            Noticia noticiaActualizada = noticiaService.actualizarNoticia(id, noticiaDTO);
-            if (noticiaActualizada != null) {
-                return new ResponseEntity<>(noticiaActualizada, HttpStatus.OK);
-            } else {
-                throw new NoticiaException("Noticia no encontrada con id: " + id);
-            }
-        } catch (IOException e) {
-            throw new NoticiaException("Error al cargar la imagen de la noticia.");
+        Noticia noticiaActualizada = noticiaService.actualizarNoticia(id, noticiaDTO);
+        if (noticiaActualizada != null) {
+            return new ResponseEntity<>(noticiaActualizada, HttpStatus.OK);
+        } else {
+            throw new NoticiaException("Noticia no encontrada con id: " + id);
         }
     }
 
@@ -102,6 +123,7 @@ public class NoticiaController {
         noticiaService.eliminarNoticia(id);
         return ResponseEntity.noContent().build();
     }
+
     @PutMapping("/{id}/likes")
     public Noticia updateLikes(@PathVariable String id, @RequestBody Map<String, List<String>> body) {
         Noticia noticia = noticiaRepository.findById(id).orElseThrow();
@@ -109,6 +131,7 @@ public class NoticiaController {
         noticia.setLikesCount(body.get("likedBy").size());
         return noticiaRepository.save(noticia);
     }
+
     // Agregar un comentario a una noticia
     @PostMapping("/{id}/comentarios")
     public ResponseEntity<Noticia> agregarComentario(

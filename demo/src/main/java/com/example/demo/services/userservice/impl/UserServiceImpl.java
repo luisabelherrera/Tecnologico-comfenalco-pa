@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.exceptions.customexceptions.ConflictException;
 import com.example.demo.exceptions.customexceptions.JwtAuthenticationException;
 import com.example.demo.exceptions.customexceptions.NotFoundException;
+import com.example.demo.model.entity.Docente;
 import com.example.demo.model.entity.Estudiante;
 import com.example.demo.model.login.Rol;
 import com.example.demo.model.login.UserEntity;
@@ -28,6 +29,7 @@ import com.example.demo.model.login.dto.JwtResponseDto;
 import com.example.demo.model.login.dto.LoginDto;
 import com.example.demo.model.login.dto.RegisterDto;
 import com.example.demo.model.login.dto.UserDto;
+import com.example.demo.repositories.jpa.DocenteRepository;
 import com.example.demo.repositories.jpa.EstudianteRepository;
 import com.example.demo.repositories.jpa.UserRepository;
 import com.example.demo.jwt.JwtGenerator;
@@ -56,7 +58,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private JwtGenerator jwtGenerator;
-
+@Autowired
+    private DocenteRepository docenteRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -70,47 +73,54 @@ public class UserServiceImpl implements UserService {
             logger.warn("Attempted to register an existing user: {}", registerDto.getEmail());
             throw new ConflictException("El usuario ya existe!");
         }
-    UserEntity user = new UserEntity();
-        // Buscar el estudiante en la BD
-        Estudiante estudiante = null;
-        if (registerDto.getEstudianteId() != null) {
-            estudiante = estudianteRepository.findById(registerDto.getEstudianteId())
-                    .orElseThrow(() -> new NotFoundException("¡Estudiante no encontrado!"));
-        }
-        user.setEstudiante(estudiante);
-        
-
     
-        // Crear el usuario
+        UserEntity user = new UserEntity();
         
+        // Configuración básica del usuario
         user.setUsername(registerDto.getUsername());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         user.setEmail(registerDto.getEmail());
     
-        // Asignar los roles
+        // Asignar roles
         Set<Rol> roles = registerDto.getRoles().stream()
                 .map(rol -> rolService.findByname(rol.getName())
                         .orElseThrow(() -> new NotFoundException("Rol no encontrado: " + rol.getName())))
                 .collect(Collectors.toSet());
         user.setRoles(roles);
     
-        // **Asignar el estudiante al usuario**
-        user.setEstudiante(estudiante);
-    
-        // Guardar el usuario
+        // Guardar usuario primero
         userRepository.save(user);
+    
+        // Manejar Estudiante
+        if (registerDto.getEstudianteId() != null) {
+            Estudiante estudiante = estudianteRepository.findById(registerDto.getEstudianteId())
+                    .orElseThrow(() -> new NotFoundException("¡Estudiante no encontrado!"));
+            estudiante.setUser(user);  // Establecer la relación
+            estudianteRepository.save(estudiante);
+            user.setEstudiante(estudiante);
+        }
+    
+        // Manejar Docente
+        if (registerDto.getDocenteId() != null) {
+            Docente docente = docenteRepository.findById(registerDto.getDocenteId())
+                    .orElseThrow(() -> new NotFoundException("¡Docente no encontrado!"));
+            docente.setUser(user);  // Establecer la relación
+            docenteRepository.save(docente);
+            user.setDocente(docente);
+        }
+    
         logger.info("User registered: {}", user.getEmail());
     
-        // Convertir a DTO para la respuesta
+        // Crear respuesta DTO
         UserDto userDto = new UserDto();
         userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());
         userDto.setRoles(user.getRoles());
+        userDto.setEstudiante(user.getEstudiante());
+        userDto.setDocente(user.getDocente());
         
         return userDto;
     }
-    
-
     public Optional<UserEntity> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
@@ -148,26 +158,22 @@ public class UserServiceImpl implements UserService {
         userDto.setRoles(user.getRoles());
         return userDto;
     }
+
     @Override
     public List<UserDto> getAllUsers() {
         List<UserEntity> users = userRepository.findAll();
-        List<UserDto> userDtos = users.stream().map(user -> {
+        return users.stream().map(user -> {
             UserDto userDto = new UserDto();
             userDto.setId(user.getId());
             userDto.setUsername(user.getUsername());
             userDto.setEmail(user.getEmail());
             userDto.setRoles(user.getRoles());
-            userDto.setPassword(user.getPassword()); // Opcional, no recomendado enviar
-            // Agregar el estudiante si existe
-            if (user.getEstudiante() != null) {
-                userDto.setEstudiante(user.getEstudiante());
-            }
+            userDto.setPassword(user.getPassword());
+            userDto.setEstudiante(user.getEstudiante());
+            userDto.setDocente(user.getDocente());
             return userDto;
         }).collect(Collectors.toList());
-    
-        return userDtos;
     }
-
     @Override
     public void deleteUserById(Long id) throws NotFoundException {
         if (!userRepository.existsById(id)) {
@@ -199,26 +205,21 @@ public class UserServiceImpl implements UserService {
             throw new JwtAuthenticationException("Credenciales inválidas");
         }
     }
-
     @Override
     public UserDto getLoguedUser(HttpHeaders headers) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = ((User) authentication.getPrincipal()).getUsername();
-    
+        
         UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
-    
+            .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+        
         UserDto userDto = new UserDto();
         userDto.setEmail(user.getEmail());
         userDto.setUsername(user.getUsername());
         userDto.setRoles(user.getRoles());
+        userDto.setEstudiante(user.getEstudiante());
+        userDto.setDocente(user.getDocente());
         
-        // **Asignamos el estudiante si el usuario tiene uno**
-        if (user.getEstudiante() != null) {
-            userDto.setEstudiante(user.getEstudiante());
-        }
-    
         return userDto;
     }
-    
 }

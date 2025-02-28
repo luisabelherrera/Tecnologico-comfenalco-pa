@@ -8,17 +8,18 @@ import { SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./imagen-dialog.component.scss'],
 })
 export class ImagenDialogComponent {
-    constructor(
-        private dialogRef: MatDialogRef<ImagenDialogComponent>, 
-        @Inject(MAT_DIALOG_DATA) public data: { 
-          titulo: string; 
-          contenido: string; 
-          imagen: SafeResourceUrl; 
-          fechaCreacion: Date; 
-        }
-      ) {}
-      
-      onNoClick(): void {
-        this.dialogRef.close();
-      }
+  constructor(
+    private dialogRef: MatDialogRef<ImagenDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: {
+      titulo: string;
+      contenido: string;
+      imagen: SafeResourceUrl | null;
+      video: SafeResourceUrl | null; // Add video
+      fechaCreacion: Date;
     }
+  ) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+}

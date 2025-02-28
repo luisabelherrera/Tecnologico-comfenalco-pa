@@ -25,7 +25,9 @@ public class CalificacionServiceImpl implements CalificacionService {
     public Optional<Calificacion> findById(Integer id) {
         return calificacionRepository.findById(id);
     }
-
+    public List<Calificacion> findByDocenteId(Integer idDocente) {
+        return calificacionRepository.findByCurricularDocenteNivelDetalleCursoDocenteIdDocente(idDocente);
+    }
     @Override
     public Calificacion save(Calificacion calificacion) {
         return calificacionRepository.save(calificacion);

@@ -1,16 +1,14 @@
 package com.example.demo.model.entity.dto;
 
-import java.util.List;
-
-import com.example.demo.model.entity.Noticia;
-
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
+
 @Data
 public class NoticiaDTO {
     private String titulo;
     private String contenido;
-    private byte[] imagen;
-    private String tipoImagen;
-    private List<Noticia.Comentario> comentarios; // Campo para comentarios
-    private int likes; // Campo para likes
+    private MultipartFile imagen; // For uploading image
+    private MultipartFile video; // For uploading video (optional)
+    private String imagenPath;   // Path after saving
+    private String videoPath;    // Path after saving (optional)
 }

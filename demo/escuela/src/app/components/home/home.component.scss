@@ -291,7 +291,26 @@
 .duration-300 {
   transition-duration: 300ms;
 }
+.btn-ver-mas {
+  background: none;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  color: #3f51b5; /* Blue to match theme */
+  font-size: 20px; /* Larger icon */
+  transition: transform 0.2s ease, color 0.2s ease;
+  margin-top: 10px;
+}
 
+.btn-ver-mas:hover {
+  color: #303f9f; /* Darker blue on hover */
+  transform: scale(1.2); /* Slight scale-up effect */
+}
 .ease-in-out {
   transition-timing-function: ease-in-out;
+}.noticia-video {
+  max-width: 100%;
+  height: auto;
+  cursor: pointer;
+  margin-top: 10px;
 }

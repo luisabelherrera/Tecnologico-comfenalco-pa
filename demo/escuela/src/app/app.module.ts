@@ -118,6 +118,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     CommonModule,
     MatSnackBarModule,
     DragDropModule,
+    
   ],
   declarations: [
     

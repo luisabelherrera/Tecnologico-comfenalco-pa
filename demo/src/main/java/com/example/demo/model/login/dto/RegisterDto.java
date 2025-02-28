@@ -14,6 +14,6 @@ public class RegisterDto {
     private String password;
     private Set<Rol> roles;
     private Integer estudianteId;
-
+    private Integer docenteId;
 
 }

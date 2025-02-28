@@ -15,11 +15,11 @@ public class Noticia {
     private String id;
     private String titulo;
     private String contenido;
-    private byte[] imagen;
-    private String tipoImagen;
+    private String imagenPath; // Path to the image file
+    private String videoPath; // Path to the video file (optional)
     private Date fechaCreacion;
-    private Integer likesCount = 0; // Changed from 'likes' to 'likesCount' to match MongoDB
-    private List<String> likedBy = new ArrayList<>(); // Matches MongoDB field
+    private Integer likesCount = 0;
+    private List<String> likedBy = new ArrayList<>();
     private List<Comentario> comentarios = new ArrayList<>();
 
     @Data

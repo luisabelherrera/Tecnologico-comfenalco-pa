@@ -1,8 +1,4 @@
-
-
-
 <div class="auth-container">
-  <!-- Botones para alternar entre formulario y lista -->
   <div class="toggle-buttons">
     <button class="toggle-btn" [class.active]="showForm" (click)="toggleView(true)">
       {{ isEditing ? 'Editar' : 'Registrar' }}
@@ -10,13 +6,13 @@
     <button class="toggle-btn" [class.active]="!showForm" (click)="toggleView(false)">Lista de Usuarios</button>
   </div>
 
-  <!-- Sección de Registro/Edición -->
+  <!-- Registro/Edición -->
   <section class="register-section" *ngIf="showForm">
     <h2 class="section-title">{{ isEditing ? 'Actualizar Usuario' : 'Registrar Nuevo Usuario' }}</h2>
 
     <div class="status-box" *ngIf="loading || successMessage || errorMessage">
       <div *ngIf="loading" class="loading">
-        <span class="spinner"></span> {{ isEditing ? 'Actualizando' : 'Registrando' }} usuario, por favor espera...
+        <span class="spinner"></span> {{ isEditing ? 'Actualizando' : 'Registrando' }} usuario...
       </div>
       <div *ngIf="successMessage" class="success">
         <span class="icon-success">✔</span> {{ successMessage }}
@@ -27,26 +23,6 @@
     </div>
 
     <form *ngIf="!loading && !successMessage" (ngSubmit)="onSubmit()" #registerForm="ngForm" class="register-form">
-      <div class="form-field">
-        <label for="estudianteId">Estudiante:</label>
-        <select id="estudianteId" name="estudianteId" [(ngModel)]="registerDto.estudianteId" required>
-          <option value="0" disabled>Selecciona un estudiante</option>
-          <option *ngFor="let estudiante of estudiantes" [value]="estudiante.idEstudiante">
-            {{ estudiante.nombres }} {{ estudiante.apellidos }} (ID: {{ estudiante.idEstudiante }})
-          </option>
-        </select>
-      </div>
-
-      <div class="form-field">
-        <label for="docenteInfo">Docente (opcional):</label>
-        <select id="docenteInfo" name="docenteInfo" [(ngModel)]="registerDto.docenteInfo">
-          <option [ngValue]="null">Ninguno</option>
-          <option *ngFor="let docente of docentes" [ngValue]="docente">
-            {{ docente.nombres }} {{ docente.apellidos }} (ID: {{ docente.idDocente }})
-          </option>
-        </select>
-      </div>
-
       <div class="form-field">
         <label for="username">Nombre de usuario:</label>
         <input type="text" id="username" name="username" [(ngModel)]="registerDto.username" required placeholder="Ingresa el usuario">
@@ -65,8 +41,26 @@
       <div class="form-field">
         <label for="roles">Rol:</label>
         <select id="roles" name="roles" [(ngModel)]="registerDto.roles" required>
-          <option *ngFor="let rol of roles" [ngValue]="[rol]">
-            {{ rol.name }} (ID: {{ rol.id }})
+          <option *ngFor="let rol of roles" [ngValue]="[rol]">{{ rol.name }} (ID: {{ rol.id }})</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="estudianteId">Estudiante (opcional):</label>
+        <select id="estudianteId" name="estudianteId" [(ngModel)]="registerDto.estudianteId">
+          <option [ngValue]="undefined">Ninguno</option>
+          <option *ngFor="let estudiante of estudiantes" [ngValue]="estudiante.idEstudiante">
+            {{ estudiante.nombres }} {{ estudiante.apellidos }} (ID: {{ estudiante.idEstudiante }})
+          </option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="docenteId">Docente (opcional):</label>
+        <select id="docenteId" name="docenteId" [(ngModel)]="registerDto.docenteId">
+          <option [ngValue]="undefined">Ninguno</option>
+          <option *ngFor="let docente of docentes" [ngValue]="docente.idDocente">
+            {{ docente.nombres }} {{ docente.apellidos }} (ID: {{ docente.idDocente }})
           </option>
         </select>
       </div>
@@ -77,9 +71,7 @@
     </form>
   </section>
 
-
-  
-  <!-- Sección de Lista de Usuarios -->
+  <!-- Lista de Usuarios -->
   <section class="users-section" *ngIf="!showForm">
     <h2 class="section-title">Lista de Usuarios Registrados</h2>
 
@@ -87,12 +79,12 @@
       <input type="text" [(ngModel)]="filterValue" (input)="applyFilter()" placeholder="Filtrar por usuario, email o rol" class="filter-input">
     </div>
 
-    <div class="status-box" *ngIf="loading || error">
+    <div class="status-box" *ngIf="loading || errorMessage">
       <div *ngIf="loading" class="loading">
-        <span class="spinner"></span> Cargando usuarios, por favor espera...
+        <span class="spinner"></span> Cargando usuarios...
       </div>
-      <div *ngIf="error" class="error">
-        <span class="icon-error">✖</span> {{ error }}
+      <div *ngIf="errorMessage" class="error">
+        <span class="icon-error">✖</span> {{ errorMessage }}
       </div>
     </div>
 
@@ -123,23 +115,20 @@
                 <mat-icon class="no-data-icon">person_off</mat-icon>
               </ng-template>
             </td>
-          
-            <!-- Docente -->
             <td>
-              <ng-container *ngIf="user.docenteInfo; else noDocente">
-                {{ user.docenteInfo.nombres }} {{ user.docenteInfo.apellidos }}
+              <ng-container *ngIf="user.docente; else noDocente">
+                {{ user.docente.nombres }} {{ user.docente.apellidos }}
               </ng-container>
               <ng-template #noDocente>
                 <mat-icon class="no-data-icon">person_off</mat-icon>
               </ng-template>
             </td>
-          
             <td>
               <div class="action-buttons">
                 <button mat-icon-button class="action-btn edit-btn" (click)="editUser(user)" matTooltip="Editar">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button class="action-btn delete-btn" (click)="deleteUser(user.id!)" matTooltip="Eliminar">
+                <button mat-icon-button class="action-btn delete-btn" (click)="deleteUser(user.id)" matTooltip="Eliminar">
                   <mat-icon>close</mat-icon>
                 </button>
               </div>

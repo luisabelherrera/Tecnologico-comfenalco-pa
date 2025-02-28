@@ -1,60 +1,73 @@
 <div class="form-container">
-    <!-- Form Section -->
-    <section class="form-section">
-      <h2 class="section-title">{{ editando ? 'Editar Noticia' : 'Agregar Nueva Noticia' }}</h2>
-      <form (ngSubmit)="agregarNoticia()" class="news-form">
-        <div class="form-grid">
-          <div class="form-group">
-            <mat-form-field appearance="outline">
-              <mat-label>Título</mat-label>
-              <input matInput type="text" id="titulo" [(ngModel)]="titulo" name="titulo" required>
-              <mat-error *ngIf="!titulo">El título es obligatorio.</mat-error>
-            </mat-form-field>
-          </div>
-  
-          <div class="form-group">
-            <mat-form-field appearance="outline">
-              <mat-label>Contenido</mat-label>
-              <textarea matInput id="contenido" [(ngModel)]="contenido" name="contenido" required rows="5"></textarea>
-              <mat-error *ngIf="!contenido">El contenido es obligatorio.</mat-error>
-            </mat-form-field>
-          </div>
-  
-          <div class="form-group image-group">
-            <label for="imagen" class="image-label">Imagen:</label>
-            <input type="file" id="imagen" (change)="onImageSelected($event)" class="form-file" accept="image/*">
-            <div class="image-preview" *ngIf="imagen">
-              <img [src]="imagen" alt="Vista previa de la imagen" class="preview-imagen" />
-            </div>
+  <!-- Form Section -->
+  <section class="form-section">
+    <h2 class="section-title">{{ editando ? 'Editar Noticia' : 'Agregar Nueva Noticia' }}</h2>
+    <form (ngSubmit)="agregarNoticia()" class="news-form">
+      <div class="form-grid">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Título</mat-label>
+            <input matInput type="text" id="titulo" [(ngModel)]="titulo" name="titulo" required>
+            <mat-error *ngIf="!titulo">El título es obligatorio.</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Contenido</mat-label>
+            <textarea matInput id="contenido" [(ngModel)]="contenido" name="contenido" required rows="5"></textarea>
+            <mat-error *ngIf="!contenido">El contenido es obligatorio.</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group image-group">
+          <label for="imagen" class="image-label">Imagen (opcional):</label>
+          <input type="file" id="imagen" (change)="onFileSelected($event, 'imagen')" class="form-file" accept="image/*">
+          <div class="image-preview" *ngIf="imagen">
+            <img [src]="imagen" alt="Vista previa de la imagen" class="preview-imagen" />
           </div>
         </div>
-  
-        <div class="form-actions">
-          <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="!titulo || !contenido">
-            {{ editando ? 'Actualizar Noticia' : 'Agregar Noticia' }}
-          </button>
-          <button mat-raised-button color="warn" type="button" (click)="resetForm()" class="cancel-btn">Cancelar</button>
-        </div>
-      </form>
-    </section>
-  
-    <!-- List Section -->
-    <section class="list-section">
-      <h3 class="section-title">Lista de Noticias</h3>
-      <div class="noticias-grid">
-        <div *ngFor="let noticia of noticias" class="noticia-card">
-          <h4>{{ noticia.titulo }}</h4>
-          <p>{{ noticia.contenido }}</p>
-          <img *ngIf="noticia.imagen" [src]="noticia.imagen" alt="Imagen de noticia" class="noticia-imagen">
-          <div class="noticia-actions">
-            <button mat-icon-button class="action-btn edit-btn" (click)="editarNoticia(noticia)" matTooltip="Editar">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button class="action-btn delete-btn" (click)="eliminarNoticia(noticia.id)" matTooltip="Eliminar">
-              <mat-icon>delete</mat-icon>
-            </button>
+
+        <div class="form-group video-group">
+          <label for="video" class="image-label">Video (opcional):</label>
+          <input type="file" id="video" (change)="onFileSelected($event, 'video')" class="form-file" accept="video/*">
+          <div class="video-preview" *ngIf="video">
+            <video [src]="video" controls class="preview-video">
+              Tu navegador no soporta el elemento de video.
+            </video>
           </div>
         </div>
       </div>
-    </section>
-  </div>
+
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="!titulo || !contenido">
+          {{ editando ? 'Actualizar Noticia' : 'Agregar Noticia' }}
+        </button>
+        <button mat-raised-button color="warn" type="button" (click)="resetForm()" class="cancel-btn">Cancelar</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- List Section -->
+  <section class="list-section">
+    <h3 class="section-title">Lista de Noticias</h3>
+    <div class="noticias-grid">
+      <div *ngFor="let noticia of noticias" class="noticia-card">
+        <h4>{{ noticia.titulo }}</h4>
+        <p>{{ noticia.contenido }}</p>
+        <img *ngIf="noticia.imagen" [src]="noticia.imagen" alt="Imagen de noticia" class="noticia-imagen">
+        <video *ngIf="noticia.video" [src]="noticia.video" controls class="noticia-video">
+          Tu navegador no soporta el elemento de video.
+        </video>
+        <div class="noticia-actions">
+          <button mat-icon-button class="action-btn edit-btn" (click)="editarNoticia(noticia)" matTooltip="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button class="action-btn delete-btn" (click)="eliminarNoticia(noticia.id)" matTooltip="Eliminar">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

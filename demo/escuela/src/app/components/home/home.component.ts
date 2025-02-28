@@ -268,6 +268,7 @@ export class HomeComponent implements OnInit {
       this.noticias.forEach(noticia => {
         noticia.fechaCreacion = new Date(noticia.fechaCreacion);
         this.cargarImagen(noticia);
+        this.cargarVideo(noticia); // Load video
       });
     } else {
       this.noticiaService.obtenerNoticias().subscribe({
@@ -275,7 +276,10 @@ export class HomeComponent implements OnInit {
           this.noticias = data.sort((a, b) =>
             new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime()
           );
-          this.noticias.forEach(noticia => this.cargarImagen(noticia));
+          this.noticias.forEach(noticia => {
+            this.cargarImagen(noticia);
+            this.cargarVideo(noticia); // Load video
+          });
         },
         error: (error) => {
           console.error('Error al cargar noticias', error);
@@ -285,17 +289,51 @@ export class HomeComponent implements OnInit {
   }
 
   cargarImagen(noticia: Noticia): void {
-    if (noticia.id) {
+    if (noticia.id && noticia.imagenPath) {
       this.noticiaService.obtenerImagenNoticia(noticia.id).subscribe({
         next: (blob) => {
-          const objectURL = URL.createObjectURL(blob);
-          noticia.imagen = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+          if (blob) {
+            const objectURL = URL.createObjectURL(blob);
+            noticia.imagen = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+          }
         },
         error: (error) => {
           console.error('Error al cargar la imagen de la noticia', error);
+          noticia.imagen = null; // Fallback
         }
       });
     }
+  }
+
+  cargarVideo(noticia: Noticia): void {
+    if (noticia.id && noticia.videoPath) {
+      this.noticiaService.obtenerVideoNoticia(noticia.id).subscribe({
+        next: (blob) => {
+          if (blob) {
+            const objectURL = URL.createObjectURL(blob);
+            noticia.video = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+            console.log('Video loaded for noticia:', noticia.id);
+          }
+        },
+        error: (error) => {
+          console.error('Error al cargar el video de la noticia', error);
+          noticia.video = null; // Fallback
+        }
+      });
+    }
+  }
+  verNoticia(noticia: Noticia): void {
+    this.dialog.open(ImagenDialogComponent, {
+      data: {
+        titulo: noticia.titulo,
+        contenido: noticia.contenido,
+        imagen: noticia.imagen,
+        video: noticia.video,
+        fechaCreacion: noticia.fechaCreacion
+      },
+      width: '1000px', 
+      maxHeight: '90vh' 
+    });
   }
 
   mostrarImagen(noticia: Noticia): void {
@@ -304,6 +342,7 @@ export class HomeComponent implements OnInit {
         titulo: noticia.titulo,
         contenido: noticia.contenido,
         imagen: noticia.imagen,
+        video: noticia.video, // Pass video to dialog
         fechaCreacion: noticia.fechaCreacion
       }
     });

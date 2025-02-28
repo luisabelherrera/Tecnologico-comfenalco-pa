@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { Horario } from 'src/app/models/entity/horario.model';
 import { environment } from 'src/environments/environment';
 
@@ -32,12 +32,20 @@ export class HorarioService {
   createHorario(horario: Horario): Observable<Horario> {
     return this.http.post<Horario>(this.apiUrl, horario, { headers: this.getHeaders() });
   }
-
+  getHorariosByDocente(idDocente: number): Observable<Horario[]> {
+    return this.http.get<Horario[]>(`${this.apiUrl}/docente/${idDocente}`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
   updateHorario(id: number, horario: Horario): Observable<Horario> {
     return this.http.put<Horario>(`${this.apiUrl}/${id}`, horario, { headers: this.getHeaders() });
   }
 
   deleteHorario(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
+  }
+  private handleError(error: any) {
+    console.error('Error occurred:', error);
+    return throwError(() => new Error('Error al obtener horarios.'));
   }
 }
