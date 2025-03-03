@@ -1,21 +1,14 @@
 package com.example.demo.model.entity.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class NoticiaDTO implements Serializable {
-
-    
+public class NoticiaDTO {
     private String titulo;
     private String contenido;
-    private byte[] imagen;
-    private String tipoImagen;
+    private MultipartFile imagen; // For uploading image
+    private MultipartFile video; // For uploading video (optional)
+    private String imagenPath;   // Path after saving
+    private String videoPath;    // Path after saving (optional)
 }

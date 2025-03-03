@@ -25,7 +25,7 @@ public class HorarioServiceImpl implements HorarioService {
     public Optional<Horario> findById(Integer id) {
         return horarioRepository.findById(id);
     }
-
+   
     @Override
     public Horario save(Horario horario) {
         return horarioRepository.save(horario);

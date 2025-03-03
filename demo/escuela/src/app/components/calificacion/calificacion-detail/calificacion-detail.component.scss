@@ -1,34 +1,210 @@
+// Contenedor principal (visible en pantalla y PDF)
+.container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: linear-gradient(135deg, #ffffff, #f9fafb);
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+// Encabezado para el PDF
+.print-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb; // Línea más fina para un diseño limpio
+
+  .logo {
+    max-width: 80px; // Tamaño del logo en pantalla
+    height: auto;
+  }
+}
+
+// Contenido en grid para el PDF
+.content-grid {
+  margin-top: 1rem;
+}
+
+section {
+  background-color: #f9fafb; // Fondo más claro para las secciones
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); // Sombra más sutil
+
+  h4 {
+    font-size: 1.125rem; // Tamaño de fuente más pequeño para ahorrar espacio
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    font-size: 0.875rem; // Fuente más pequeña para compactar
+    color: #4b5563;
+    margin-bottom: 0.5rem;
+
+    strong {
+      color: #1f2937;
+      font-weight: 600;
+    }
+
+    .text-green-500 {
+      color: #10b981; // Verde para "Sí"
+      font-weight: 500;
+    }
+
+    .text-red-500 {
+      color: #dc2626; // Rojo para "No"
+      font-weight: 500;
+    }
+  }
+}
+
+// Títulos principales
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+// Botones (visible en pantalla, oculto en PDF)
 .btn {
-    display: inline-block;
-    padding: 10px 20px;
-    margin: 5px;
-    /* Espaciado entre los botones */
-    border: none;
-    border-radius: 5px;
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  margin: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  &.btn-print {
+    background-color: #10b981;
+    color: #ffffff;
+
+    &:hover {
+      background-color: #059669;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  &.btn-back {
+    background-color: #3b82f6;
+    color: #ffffff;
+
+    &:hover {
+      background-color: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+  }
 }
 
-.btn-print {
-    background-color: #28a745;
-    /* Color verde */
-    color: white;
+// Spinner de carga
+.spinner-border {
+  border: 4px solid #3b82f6;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
 }
 
-.btn-print:hover {
-    background-color: #218838;
-    /* Color verde más oscuro al pasar el ratón */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.btn-back {
-    background-color: #007bff;
-    /* Color azul */
-    color: white;
+// Alerta de error
+.alert-danger {
+  background-color: #fee2e2;
+  border-left: 4px solid #dc2626;
+  color: #991b1b;
+  font-weight: 500;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.btn-back:hover {
-    background-color: #0056b3;
-    /* Color azul más oscuro al pasar el ratón */
+// Estilos específicos para impresión (PDF)
+@media print {
+  .print-content {
+    background: #ffffff !important; // Fondo blanco para el PDF
+    box-shadow: none !important; // Eliminar sombras en impresión
+    padding: 0 !important; // Eliminar padding adicionales
+    margin: 0 !important; // Eliminar márgenes
+    width: 100% !important; // Usar todo el ancho de la página
+    height: auto !important; // Altura automática para ajustarse al contenido
+    border-radius: 0 !important; // Eliminar bordes redondeados
+
+    h1, h4, p, strong {
+      color: #000000 !important; // Texto negro para mejor legibilidad
+    }
+
+    hr {
+      border-top: 1px solid #e5e7eb !important; // Línea más simple para impresión
+    }
+
+    .btn {
+      display: none !important; // Ocultar botones en el PDF
+    }
+
+    .print-header {
+      .logo {
+        max-width: 50px !important; // Reducir tamaño del logo en el PDF
+      }
+
+      border-bottom: 1px solid #e5e7eb !important; // Mantener la línea en el PDF
+    }
+
+    .content-grid {
+      grid-template-columns: 1fr 1fr !important; // Mantener las columnas en PDF
+      gap: 0.5rem !important; // Reducir el espacio entre secciones
+    }
+
+    section {
+      background-color: #ffffff !important; // Fondo blanco en PDF
+      padding: 0.75rem !important; // Reducir padding para ahorrar espacio
+      box-shadow: none !important; // Eliminar sombras en PDF
+    }
+  }
+
+  // Ocultar elementos que no deben aparecer en el PDF
+  .container {
+    padding: 0 !important;
+    background: none !important;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .btn {
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  .card-body {
+    h4 {
+      font-size: 1.125rem;
+    }
+
+    p {
+      font-size: 0.875rem;
+    }
+  }
 }

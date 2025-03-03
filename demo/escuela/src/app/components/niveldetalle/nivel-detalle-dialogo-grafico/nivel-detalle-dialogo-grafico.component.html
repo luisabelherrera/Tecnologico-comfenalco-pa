@@ -1,22 +1,48 @@
 <div class="dialog-container">
-    <h2 class="dialog-title">Detalles de Vacantes</h2>
-    <div class="chart-container">
-      <canvas id="vacantesChart"></canvas>
+  <h2 class="dialog-title">Detalles de Vacantes por Grado y Sección</h2>
+
+  <mat-form-field appearance="outline" class="filter-select">
+    <mat-label>Filtrar por Nivel</mat-label>
+    <mat-select [(value)]="selectedNivel" (selectionChange)="applyNivelFilter()">
+      <mat-option value="">Todos</mat-option>
+      <mat-option *ngFor="let nivel of uniqueNiveles" [value]="nivel">{{ nivel }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="content-wrapper">
+    <div class="charts-wrapper">
+      <div class="chart-section">
+        <h3 class="chart-title">Comparación de Vacantes (Bar)</h3>
+        <div class="chart-container">
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-section">
+        <h3 class="chart-title">Distribución Total (Doughnut)</h3>
+        <div class="chart-container">
+          <canvas id="doughnutChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-section">
+        <h3 class="chart-title">Total por Sección (Pie)</h3>
+        <div class="chart-container">
+          <canvas id="pieChart"></canvas>
+        </div>
+      </div>
     </div>
-    <div class="vacant-info">
-      <div class="vacant-item">
-        <span class="vacant-label">Vacantes Disponibles:</span>
-        <span class="vacant-value">{{ vacantesDisponibles }}</span>
-      </div>
-      <div class="vacant-item">
-        <span class="vacant-label">Vacantes Ocupadas:</span>
-        <span class="vacant-value">{{ vacantesOcupadas }}</span>
-      </div>
-      <div class="vacant-item">
-        <span class="vacant-label">Total de Vacantes:</span>
-        <span class="vacant-value">{{ totalVacantes }}</span>
+
+    <div class="info-wrapper">
+      <div class="vacant-info">
+        <h3 class="info-title">Resumen</h3>
+        <div class="vacant-item" *ngFor="let nd of filteredNivelDetalles">
+          <span class="vacant-label">{{ nd.gradoSeccion.descripcionGrado }} - {{ nd.gradoSeccion.descripcionSeccion }}:</span>
+          <span class="vacant-value">Disp: {{ nd.vacantesDisponibles }} / Ocup: {{ nd.vacantesOcupadas }} / Total: {{ nd.totalVacantes }}</span>
+        </div>
       </div>
     </div>
-    <button class="close-button" (click)="close()">Cerrar</button>
   </div>
-  
+
+  <button class="close-button" mat-raised-button color="primary" (click)="close()">Cerrar</button>
+</div>

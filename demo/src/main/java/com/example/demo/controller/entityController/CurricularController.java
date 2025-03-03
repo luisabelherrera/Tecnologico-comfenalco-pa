@@ -1,11 +1,14 @@
 package com.example.demo.controller.entityController;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.model.entity.Curricular;
+import com.example.demo.repositories.jpa.CurricularRepository;
 import com.example.demo.services.service.CurricularService;
+import com.example.demo.services.service.impl.CurricularServiceImpl;
 import com.example.demo.exceptions.customexceptions.exceptionsEntity.CurricularNotFoundException;
 
 import java.util.List;
@@ -18,6 +21,11 @@ public class CurricularController {
 
     @Autowired
     private CurricularService curricularService;
+
+    @Autowired
+        private CurricularServiceImpl curricularRepository;
+
+    
 
     @GetMapping
     public ResponseEntity<List<Curricular>> getAllCurriculares() {
@@ -40,7 +48,11 @@ public class CurricularController {
         Curricular nuevoCurricular = curricularService.save(curricular);
         return ResponseEntity.ok(nuevoCurricular);
     }
-
+@GetMapping("/docente/{idDocente}")
+public ResponseEntity<List<Curricular>> getCurricularesPorDocente(@PathVariable Integer idDocente) {
+  List<Curricular> curriculares = curricularRepository.findByDocenteId(idDocente);
+  return new ResponseEntity<>(curriculares, HttpStatus.OK);
+}
     @PutMapping("/{id}")
     public ResponseEntity<Curricular> updateCurricular(@PathVariable Integer id,
                                                        @RequestBody Curricular curricularDetalles) {

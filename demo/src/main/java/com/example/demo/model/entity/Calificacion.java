@@ -26,7 +26,7 @@ public class Calificacion implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idCalificacion;
+    private Integer idCalificacion;
 
     @ManyToOne
     @JoinColumn(name = "IdCurricular")

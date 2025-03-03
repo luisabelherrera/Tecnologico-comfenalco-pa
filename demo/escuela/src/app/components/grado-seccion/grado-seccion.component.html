@@ -1,78 +1,107 @@
-<div class="nivel-container">
-  <div class="form-container">
-    <h2 class="title-with-icon">
-      <mat-icon>school</mat-icon> Gestión de Secciones de Grado
-    </h2>
-    <form (ngSubmit)="newGradoSeccion.idGradoSeccion ? updateGradoSeccion() : createGradoSeccion()">
+<div class="container">
+  <!-- Toggle Buttons -->
+  <div class="toggle-buttons">
+    <button class="toggle-btn" [class.active]="showForm" (click)="toggleView(true)">Registrar Sección de Grado</button>
+    <button class="toggle-btn" [class.active]="!showForm" (click)="toggleView(false)">Lista de Secciones de Grado</button>
+  </div>
+
+  <!-- Form Section -->
+  <section class="form-section" *ngIf="showForm">
+    <form (ngSubmit)="createGradoSeccion()" class="inscripcion-form">
+      <h2 class="section-title">{{ editingId ? 'Actualizar Sección de Grado' : 'Registrar Nueva Sección de Grado' }}</h2>
+
       <div class="form-grid">
-        <mat-form-field class="input-field" appearance="outline">
+        <mat-form-field appearance="outline">
           <mat-label>Descripción Grado</mat-label>
-          <input matInput [(ngModel)]="newGradoSeccion.descripcionGrado" name="descripcionGrado" required placeholder="Descripción Grado" />
+          <mat-select [(ngModel)]="newGradoSeccion.descripcionGrado" name="descripcionGrado" required>
+            <mat-option *ngFor="let grado of gradoOptions" [value]="grado">{{ grado }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="!newGradoSeccion.descripcionGrado">El grado es obligatorio.</mat-error>
         </mat-form-field>
-        
-        <mat-form-field class="input-field" appearance="outline">
+
+        <mat-form-field appearance="outline">
           <mat-label>Descripción Sección</mat-label>
-          <input matInput [(ngModel)]="newGradoSeccion.descripcionSeccion" name="descripcionSeccion" required placeholder="Descripción Sección" />
+          <mat-select [(ngModel)]="newGradoSeccion.descripcionSeccion" name="descripcionSeccion" required>
+            <mat-option *ngFor="let seccion of seccionOptions" [value]="seccion">{{ seccion }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="!newGradoSeccion.descripcionSeccion">La sección es obligatoria.</mat-error>
         </mat-form-field>
 
-        <mat-checkbox [(ngModel)]="newGradoSeccion.activo" name="activo">Activo</mat-checkbox>
+        <div class="checkbox-group">
+          <mat-checkbox [(ngModel)]="newGradoSeccion.activo" name="activo">Activo</mat-checkbox>
+        </div>
       </div>
 
-      <div class="button-group">
-        <button mat-raised-button color="primary" type="submit">{{ newGradoSeccion.idGradoSeccion ? 'Actualizar' : 'Crear' }}</button>
-        <button mat-raised-button color="warn" type="button" (click)="resetForm()">Cancelar</button>
-      </div>
+      <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="!newGradoSeccion.descripcionGrado || !newGradoSeccion.descripcionSeccion">
+        {{ editingId ? 'Actualizar' : 'Crear' }}
+      </button>
+      <button mat-raised-button color="warn" type="button" class="submit-btn cancel-btn" (click)="resetForm()">Cancelar</button>
     </form>
-  </div>
+  </section>
 
-  <div class="header">
-    <mat-form-field class="search-box">
-      <mat-label>Buscar secciones de grado</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Buscar secciones de grado" />
-    </mat-form-field>
-  </div>
+  <!-- List Section -->
+  <section class="list-section" *ngIf="!showForm">
+    <h2 class="section-title">Lista de Secciones de Grado</h2>
 
-  <div class="table-container">
-    <table mat-table [dataSource]="dataSource" matSort class="custom-table">
-      <ng-container matColumnDef="descripcionGrado">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Descripción Grado</th>
-        <td mat-cell *matCellDef="let gs">{{ gs['descripcionGrado'] }}</td>
-      </ng-container>
+    <div class="inscripcion-actions">
+      <mat-form-field appearance="outline" class="search-box">
+        <mat-label>Buscar secciones de grado</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Buscar secciones de grado">
+      </mat-form-field>
+    </div>
 
-      <ng-container matColumnDef="descripcionSeccion">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Descripción Sección</th>
-        <td mat-cell *matCellDef="let gs">{{ gs['descripcionSeccion'] }}</td>
-      </ng-container>
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="dataSource" matSort class="inscripcion-table mat-elevation-z8">
+        <ng-container matColumnDef="descripcionGrado">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Descripción Grado</th>
+          <td mat-cell *matCellDef="let gs" data-label="Descripción Grado">{{ gs.descripcionGrado }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="activo">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Activo</th>
-        <td mat-cell *matCellDef="let gs">
-          <div class="estado-indicador" [ngClass]="gs['activo'] ? 'activo' : 'inactivo'"></div>
-        </td>
-      </ng-container>
-      
+        <ng-container matColumnDef="descripcionSeccion">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Descripción Sección</th>
+          <td mat-cell *matCellDef="let gs" data-label="Descripción Sección">{{ gs.descripcionSeccion }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="fechaRegistro">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Registro</th>
-        <td mat-cell *matCellDef="let gs">{{ gs['fechaRegistro'] | date: 'short' }}</td>
-      </ng-container>
+        <ng-container matColumnDef="activo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Activo</th>
+          <td mat-cell *matCellDef="let gs" data-label="Activo">
+            <div class="estado-indicador" [ngClass]="gs.activo ? 'activo' : 'inactivo'"></div>
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Acciones</th>
-        <td mat-cell *matCellDef="let gs">
-          <button mat-icon-button (click)="editGradoSeccion(gs)">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="deleteGradoSeccion(gs.idGradoSeccion)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="fechaRegistro">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Registro</th>
+          <td mat-cell *matCellDef="let gs" data-label="Fecha Registro">{{ gs.fechaRegistro | date: 'short' }}</td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  </div>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let gs" data-label="Acciones">
+            <div class="action-buttons">
+              <button mat-icon-button class="action-btn edit-btn" (click)="editGradoSeccion(gs)" matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="action-btn delete-btn" (click)="deleteGradoSeccion(gs.idGradoSeccion)" matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
 
-  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <div *ngIf="dataSource.data.length === 0" class="no-data-message">
+        No hay secciones de grado para mostrar.
+      </div>
+    </div>
+
+    <mat-paginator
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      [showFirstLastButtons]="true"
+      class="paginator"
+    ></mat-paginator>
+  </section>
 </div>

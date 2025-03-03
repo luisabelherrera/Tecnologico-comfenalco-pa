@@ -8,6 +8,9 @@
   </div>
   <p class="dialog-text">{{ data.contenido }}</p>
   <img *ngIf="data.imagen" [src]="data.imagen" alt="Imagen de Noticia" class="imagen-dialog" />
+  <video *ngIf="data.video" [src]="data.video" controls class="video-dialog">
+    Tu navegador no soporta el elemento de video.
+  </video>
 </div>
 <div mat-dialog-actions class="dialog-actions">
   <button mat-raised-button color="accent" class="dialog-button" (click)="onNoClick()">Cerrar</button>

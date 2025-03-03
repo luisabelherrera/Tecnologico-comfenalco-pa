@@ -1,12 +1,11 @@
 package com.example.demo.model.login;
 
 import java.util.Set;
-
 import com.example.demo.model.entity.Docente;
 import com.example.demo.model.entity.Estudiante;
-
 import jakarta.persistence.*;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Data
 @Entity
@@ -22,13 +21,18 @@ public class UserEntity {
     private String email;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_rol", joinColumns = @JoinColumn(name = "id_user"), inverseJoinColumns = @JoinColumn(name = "id_rol"))
+    @JoinTable(name = "user_rol", 
+               joinColumns = @JoinColumn(name = "id_user"), 
+               inverseJoinColumns = @JoinColumn(name = "id_rol"))
     private Set<Rol> roles;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")  // Asegúrate de que la columna user_id se agregue en la tabla 'users'.
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, optional = true)
+    @JsonManagedReference
     private Estudiante estudiante;
-    
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, optional = true)
+    @JsonManagedReference
+    private Docente docente;
 
     public UserEntity(Long id, String username, String password, String email, Set<Rol> roles) {
         this.id = id;
@@ -40,5 +44,4 @@ public class UserEntity {
 
     public UserEntity() {
     }
-
 }

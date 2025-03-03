@@ -1,62 +1,76 @@
 <div *ngIf="loading" class="flex flex-col items-center text-center my-5">
-    <div class="spinner-border animate-spin inline-block w-8 h-8 border-4 border-blue-600 rounded-full" role="status">
-        <span class="visually-hidden">Cargando...</span>
-    </div>
-    <p class="mt-2 text-gray-600">Cargando detalles...</p>
+  <div class="spinner-border animate-spin inline-block w-8 h-8 border-4 border-blue-600 rounded-full" role="status">
+    <span class="visually-hidden">Cargando...</span>
+  </div>
+  <p class="mt-2 text-gray-600">Cargando detalles...</p>
 </div>
 
 <div *ngIf="error" class="alert alert-danger p-4 mb-4 text-red-700 bg-red-100 rounded-lg" role="alert">
-    {{ error }}
+  {{ error }}
 </div>
 
 <div *ngIf="calificacion" class="container mx-auto my-5 p-5 bg-white rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold text-center mb-4">Detalles de la Calificación</h2>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title text-lg font-semibold">ID: {{ calificacion.idCalificacion }}</h5>
-            <p class="card-text text-xl"><strong>Nota:</strong> {{ calificacion.nota }}</p>
-            
-            <hr class="my-4">
+  <div class="print-content" id="print-content">
+    <header class="header flex items-center justify-between mb-4 print-header border-b border-gray-200 pb-2">
+      <img src="assets/img/Colombia.png" alt="Logo" class="logo" />
+      <h1 class="text-2xl font-bold text-gray-800">Boletín de Calificación</h1>
+    </header>
 
-            <h4 class="text-lg font-semibold">Detalles del Estudiante</h4>
-            <p><strong>Nombre:</strong> {{ calificacion.estudiante.nombres }} {{ calificacion.estudiante.apellidos }}</p>
-            <p><strong>Documento de Identidad:</strong> {{ calificacion.estudiante.documentoIdentidad }}</p>
-            <p><strong>Fecha de Nacimiento:</strong> {{ calificacion.estudiante.fechaNacimiento | date: 'dd/MM/yyyy' }}</p>
-            <p><strong>Sexo:</strong> {{ calificacion.estudiante.sexo }}</p>
-            <p><strong>Ciudad:</strong> {{ calificacion.estudiante.ciudad }}</p>
+    <div class="content-grid grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Detalles de la Calificación -->
+      <section class="bg-gray-50 p-4 rounded-lg shadow-sm">
+        <h4 class="text-lg font-semibold text-gray-800 mb-2">Detalles de la Calificación</h4>
+        <p><strong>ID:</strong> {{ calificacion.idCalificacion }}</p>
+        <p><strong>Nota:</strong> {{ calificacion.nota }}</p>
+        <p><strong>Fecha de Registro:</strong> {{ calificacion.fechaRegistro | date: 'dd/MM/yyyy' }}</p>
+      </section>
 
-            <hr class="my-4">
+      <!-- Detalles del Estudiante -->
+      <section class="bg-gray-50 p-4 rounded-lg shadow-sm">
+        <h4 class="text-lg font-semibold text-gray-800 mb-2">Detalles del Estudiante</h4>
+        <p><strong>Nombre:</strong> {{ calificacion.estudiante.nombres }} {{ calificacion.estudiante.apellidos }}</p>
+        <p><strong>Documento:</strong> {{ calificacion.estudiante.documentoIdentidad }}</p>
+        <p><strong>Nacimiento:</strong> {{ calificacion.estudiante.fechaNacimiento | date: 'dd/MM/yyyy' }}</p>
+        <p><strong>Sexo:</strong> {{ calificacion.estudiante.sexo }}</p>
+        <p><strong>Ciudad:</strong> {{ calificacion.estudiante.ciudad }}</p>
+      </section>
 
-            <h4 class="text-lg font-semibold">Detalles Curriculares</h4>
-            <p><strong>Descripción:</strong> {{ calificacion.curricular.descripcion }}</p>
-            <p><strong>Activo:</strong>
-                <span [ngClass]="calificacion.curricular.activo ? 'text-green-500' : 'text-red-500'">
-                    {{ calificacion.curricular.activo ? 'Sí' : 'No' }}
-                </span>
-            </p>
-            <p><strong>Fecha de Registro:</strong> {{ calificacion.curricular.fechaRegistro | date: 'dd/MM/yyyy' }}</p>
+      <!-- Detalles Curriculares -->
+      <section class="bg-gray-50 p-4 rounded-lg shadow-sm">
+        <h4 class="text-lg font-semibold text-gray-800 mb-2">Detalles Curriculares</h4>
+        <p><strong>Descripción:</strong> {{ calificacion.curricular.descripcion }}</p>
+        <p><strong>Activo:</strong>
+          <span [ngClass]="calificacion.curricular.activo ? 'text-green-500' : 'text-red-500'">
+            {{ calificacion.curricular.activo ? 'Sí' : 'No' }}
+          </span>
+        </p>
+        <p><strong>Fecha de Registro:</strong> {{ calificacion.curricular.fechaRegistro | date: 'dd/MM/yyyy' }}</p>
+      </section>
 
-            <hr class="my-4">
+      <!-- Detalles del Docente -->
+      <section class="bg-gray-50 p-4 rounded-lg shadow-sm">
+        <h4 class="text-lg font-semibold text-gray-800 mb-2">Detalles del Docente</h4>
+        <p><strong>Nombre:</strong> {{ calificacion.curricular.docenteNivelDetalleCurso.docente.nombres }} {{ calificacion.curricular.docenteNivelDetalleCurso.docente.apellidos }}</p>
+      </section>
 
-            <h4 class="text-lg font-semibold">Detalles del Docente</h4>
-            <p><strong>Nombre del Docente:</strong> {{ calificacion.curricular.docenteNivelDetalleCurso.docente.nombres}}</p>
-            <p><strong>Apellido del Docente:</strong> {{ calificacion.curricular.docenteNivelDetalleCurso.docente.apellidos }}</p>
+      <!-- Detalles del Curso -->
+      <section class="bg-gray-50 p-4 rounded-lg shadow-sm md:col-span-2">
+        <h4 class="text-lg font-semibold text-gray-800 mb-2">Detalles del Curso</h4>
+        <p><strong>Nombre:</strong> {{ calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.descripcion }}</p>
+        <p><strong>Activo:</strong> {{ calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.activo ? 'Sí' : 'No' }}</p>
+        <p><strong>Fecha de Registro:</strong> {{ calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.fechaRegistro | date: 'dd/MM/yyyy' }}</p>
+      </section>
 
-            <hr class="my-4">
-
-            <h4 class="text-lg font-semibold">Detalles del Curso</h4>
-            <p><strong>Nombre del Curso:</strong> {{ calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.descripcion }}</p>
-            <p><strong>Descripción del Curso:</strong> {{ calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.activo }}</p>
-            <p><strong>Fecha de registro:</strong> {{ calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.fechaRegistro }}</p>
-
-            <hr class="my-4">
-
-            <p><strong>Fecha de Registro de Calificación:</strong> {{ calificacion.fechaRegistro | date: 'dd/MM/yyyy' }}</p>
-        </div>
+      <!-- Fecha de Registro de Calificación -->
+      <section class="bg-gray-50 p-4 rounded-lg shadow-sm md:col-span-2">
+        <h4 class="text-lg font-semibold text-gray-800 mb-2">Fecha de Registro de Calificación</h4>
+        <p>{{ calificacion.fechaRegistro | date: 'dd/MM/yyyy' }}</p>
+      </section>
     </div>
-    
-    <div class="text-center my-4">
-        <button class="btn btn-print" (click)="printPDF()">Imprimir PDF</button>
-        <a class="btn btn-back" [routerLink]="['/calificaciones']">Volver a la lista</a>
-    </div>
+  </div>
+  
+  <div class="text-center my-4">
+    <button class="btn btn-print" (click)="printPDF()">Imprimir PDF</button>
+    <a class="btn btn-back" [routerLink]="['/calificaciones']">Volver a la lista</a>
+  </div>
 </div>

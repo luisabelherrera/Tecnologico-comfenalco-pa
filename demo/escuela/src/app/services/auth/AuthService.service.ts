@@ -42,7 +42,10 @@ export class AuthService {
       })
     );
   }
-
+  getCurrentUserId(): number {
+    const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    return user.docente?.idDocente || 0; // Ajusta según tu estructura de usuario
+  }
   getAllRoles(): Observable<RoleDto[]> {
     return this.http.get<RoleDto[]>(`${this.apiUrl}/roles`).pipe(
       catchError((error) => {

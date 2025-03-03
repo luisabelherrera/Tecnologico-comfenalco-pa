@@ -1,41 +1,123 @@
+/* Ensure full height for the entire app */
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow-x: hidden; /* Prevent horizontal scroll on the entire page */
+}
+
+.example-container {
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden; /* No horizontal scroll for the container */
+}
+
+mat-toolbar {
+  flex-shrink: 0; /* Prevents toolbar from shrinking */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+  width: 100%; /* Ensure it fits the container */
+  box-sizing: border-box; /* Include padding in width */
+  overflow-x: hidden; /* No horizontal scroll in toolbar */
+}
+
+mat-sidenav-container {
+  flex: 1; /* Takes remaining space */
+  overflow: hidden; /* Prevents double scrollbars (both x and y) */
+}
+/* Resto del CSS sin cambios hasta el sidenav */
 .app-sidenav {
-  background-color: #f7f7f7;
+  background-color: #e8ecef; /* Un gris ligeramente más oscuro que #f7f7f7 */
   color: #333;
-  width: 250px; 
- 
-  transition: width 0.3s ease; 
+  width: 250px;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: width 0.3s ease;
+  box-sizing: border-box;
 }
 
 .sidenav-header, .sidenav-subheader {
   font-size: 13px;
-  color: #000000;
+  color: #1a1a1a; /* Un negro más suave y oscuro que #000000 para mejor contraste */
   padding: 12px 10px;
-  font-weight: 100%;
+  font-weight: 400; /* Aumentamos de 100 a 400 para letras más gruesas */
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  margin-top: 12px;    
+  margin-top: 12px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .sidenav-header:hover, .sidenav-subheader:hover {
-  background-color: #e0e0e0;
+  background-color: #d1d5db; /* Más oscuro que #e0e0e0 para el hover */
   cursor: pointer;
   border-radius: 4px;
+}
+
+/* Resto del CSS relacionado con el sidenav */
+.nav-link {
+  display: flex;
+  align-items: center;
+  color: #333;
+  padding: 8px 10px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500; /* Mantenemos este peso para consistencia */
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.nav-link mat-icon {
+  margin-right: 8px;
+  color: #555;
+}
+
+.nav-link:hover {
+  background-color: #c4c8cc; /* Ajustamos para que combine con el nuevo tono */
+}
+
+.active {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  font-weight: 600;
+}
+
+.mat-divider {
+  background-color: #b3b3b3; /* Un poco más oscuro que #ccc */
+  margin: 8px 0;
+}
+
+/* Media queries ajustadas */
+@media (max-width: 768px) {
+  .app-sidenav {
+    width: 200px;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
 }
 
 .nav-link {
   display: flex;
   align-items: center;
   color: #333;
-  padding: 8px 10px; 
+  padding: 8px 10px;
   text-decoration: none;
   font-size: 13px;
   font-weight: 500;
   border-radius: 4px;
   transition: background-color 0.3s ease, color 0.3s ease;
+  width: 100%; /* Fit within sidenav */
+  box-sizing: border-box;
 }
 
 .nav-link mat-icon {
-  margin-right: 8px; 
+  margin-right: 8px;
   color: #555;
 }
 
@@ -54,25 +136,21 @@
   margin: 8px 0;
 }
 
-.sidenav-container {
-  height: 100%;
-  overflow-y: auto;
-}
-
-.app-toolbar {
-  background-color: rgb(0, 0, 0);
-  color: white;
-}
-
 .logo img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+  width: 40px;
+  height: 40px;
   object-fit: cover;
+  transition: all 0.3s ease;
+  animation: spin 5s linear infinite;
 }
 
+button.mat-mini-fab {
+  background-color: black;
+  margin-right: 15px;
+  width: 35px;
+  height: 40px;
+}
 
-/* Menu icon styles */
 .icon-menu {
   --gap: 5px;
   --height-bar: 2.5px;
@@ -93,7 +171,7 @@
   position: relative;
   height: var(--height-bar);
   width: 100%;
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   background-color: #9941fc;
 }
 
@@ -130,11 +208,6 @@
   --rotate-bar-three: -45deg;
 }
 
-.link-icon {
-  width: 24px; 
-  height: 24px; 
-}
-
 @keyframes spin {
   from {
     transform: rotate(0deg);
@@ -144,90 +217,45 @@
   }
 }
 
-.logo img {
-  animation: spin 5s linear infinite;
-}
-
 @keyframes blink {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 1;
-  }
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
 
 .blink {
-  animation: blink 1s infinite; /* Parpadeo cada 1 segundo */
+  animation: blink 1s infinite;
 }
 
-
-
-/* Contenedor principal del drawer */
-.example-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Ajusta el tamaño del contenido principal para que no se oculte */
-.content {
-  flex-grow: 1;
-  padding: 10px;
-}
-
-.ia-drawer {
+.ia-overlay {
+  position: fixed;
+  top: 60px;
+  right: 0;
   width: 300px;
   background-color: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease;
+  overflow-x: hidden; /* Prevent horizontal scroll in overlay */
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
-  .ia-drawer {
-    width: 80%;
+  .app-sidenav {
+    width: 200px;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden; /* No horizontal scroll on mobile */
   }
-}
 
-
-
-
-
-
-/* Estilo general para el mat-toolbar */
-mat-toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 15px;
-}
-
-
-.logo img {
-  width: 40px; 
-  height: 40px;
-  object-fit: cover;
-  transition: all 0.3s ease;
-  
-}
-
-button.mat-mini-fab {
-  background-color: black;
-  margin-right: 15px;
-  width: 35px; 
-  height: 40px;
-}
-
-@media (max-width: 768px) {
   mat-toolbar {
-    padding: 0 10px; 
+    padding: 0 10px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
 
   .logo img {
-    width: 30px; 
+    width: 30px;
     height: 30px;
   }
 
@@ -236,39 +264,146 @@ button.mat-mini-fab {
   }
 
   .user-info {
-    display: none; 
+    display: none;
   }
 
   .spacer {
-    display: none; /* Elimina el espacio entre el logo y los iconos en pantallas pequeñas */
+    display: none;
   }
 
   .icon-menu {
     gap: 4px;
   }
 
-  /* Cambia el orden de los elementos para móviles */
   mat-toolbar {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .check-icon {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    flex-direction: row; /* Keep horizontal for better layout */
+    justify-content: space-between;
   }
 }
 
-/* Para pantallas muy pequeñas (dispositivos móviles) */
 @media (max-width: 480px) {
   .logo img {
-    width: 25px; /* Reduce aún más el tamaño del logo */
+    width: 25px;
     height: 25px;
   }
 
   button.mat-mini-fab {
-    width: 35px; /* Ajusta los botones */
+    width: 35px;
     height: 35px;
   }
+}
+
+.emoji-icon {
+  font-size: 24px; /* Smaller to fit mat-mini-fab (default is ~40px diameter) */
+  display: inline-block;
+  line-height: 1; /* Aligns emoji vertically */
+}
+
+.emoji-icon:after {
+  content: attr(data-content); /* Default state */
+}
+
+.emoji-icon:hover:after {
+  content: attr(data-hover-content); /* Hover state */
+}
+
+.emoji-icon:active:after {
+  content: attr(data-active-content); /* Active/clicked state */
+}
+
+
+
+
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.earth {
+  --watercolor: #3344c1;
+  --landcolor: #7cc133;
+  width: 40px; /* Tamaño del logo anterior */
+  height: 40px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  filter: brightness(1); /* Valor por defecto, sobrescrito por Angular */
+  object-fit: cover; /* Mantenemos del diseño anterior */
+}
+
+.earth-loader {
+  width: 100%;
+  height: 100%;
+  background-color: var(--watercolor);
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 2px rgba(255, 255, 255, 0.25), /* Proporcional a 40px */
+    inset 0 -2px rgba(0, 0, 0, 0.25);
+  border: solid 1px white; /* Reducido proporcionalmente */
+  animation: startround 1s;
+  animation-iteration-count: 1;
+}
+
+/* Ajustamos los SVG para encajar en 40px */
+.earth-loader svg {
+  width: 36px; /* Ligeramente menor que el contenedor */
+  height: auto;
+}
+
+.earth-loader svg:nth-child(1) {
+  position: absolute;
+  bottom: -8px; /* Proporcional a 40px */
+  animation: round1 5s infinite linear 0.75s;
+}
+
+.earth-loader svg:nth-child(2) {
+  position: absolute;
+  top: -12px; /* Proporcional a 40px */
+  animation: round1 5s infinite linear;
+}
+
+.earth-loader svg:nth-child(3) {
+  position: absolute;
+  top: -10px; /* Proporcional a 40px */
+  animation: round2 5s infinite linear;
+}
+
+.earth-loader svg:nth-child(4) {
+  position: absolute;
+  bottom: -9px; /* Proporcional a 40px */
+  animation: round2 5s infinite linear 0.75s;
+}
+
+/* Animaciones como en el diseño original, escaladas */
+@keyframes startround {
+  0% { filter: brightness(500%); box-shadow: none; }
+  75% { filter: brightness(500%); box-shadow: none; }
+  100% {
+    filter: brightness(100%);
+    box-shadow:
+      inset 0 2px rgba(255, 255, 255, 0.25),
+      inset 0 -2px rgba(0, 0, 0, 0.25);
+  }
+}
+
+@keyframes round1 {
+  0% { left: -8px; opacity: 100%; transform: skewX(0deg) rotate(0deg); }
+  30% { left: -24px; opacity: 100%; transform: skewX(-25deg) rotate(25deg); }
+  31% { left: -24px; opacity: 0%; transform: skewX(-25deg) rotate(25deg); }
+  35% { left: 28px; opacity: 0%; transform: skewX(25deg) rotate(-25deg); }
+  45% { left: 28px; opacity: 100%; transform: skewX(25deg) rotate(-25deg); }
+  100% { left: -8px; opacity: 100%; transform: skewX(0deg) rotate(0deg); }
+}
+
+@keyframes round2 {
+  0% { left: 20px; opacity: 100%; transform: skewX(0deg) rotate(0deg); }
+  75% { left: -28px; opacity: 100%; transform: skewX(-25deg) rotate(25deg); }
+  76% { left: -28px; opacity: 0%; transform: skewX(-25deg) rotate(25deg); }
+  77% { left: 32px; opacity: 0%; transform: skewX(25deg) rotate(-25deg); }
+  80% { left: 32px; opacity: 100%; transform: skewX(25deg) rotate(-25deg); }
+  100% { left: 20px; opacity: 100%; transform: skewX(0deg) rotate(0deg); }
 }

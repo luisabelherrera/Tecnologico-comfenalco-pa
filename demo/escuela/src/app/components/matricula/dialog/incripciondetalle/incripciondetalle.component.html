@@ -1,51 +1,20 @@
-<h2 mat-dialog-title>Detalles de Inscripción</h2>
 <mat-dialog-content class="dialog-content">
   <div class="info-container">
-    <!-- Campos existentes... -->
-    <div class="info-item">
-      <strong>Valor Código:</strong> <span>{{ data.valorCodigo }}</span>
-    </div>
-    <div class="info-item">
-      <strong>Código:</strong> <span>{{ data.codigo }}</span>
-    </div>
-    <div class="info-item">
-      <strong>Situación:</strong> <span>{{ data.situacion }}</span>
-    </div>
-    <div class="info-item">
-      <strong>Nivel Detalle:</strong> <span>{{ data.nivelDetalle.nivel.descripcionNivel }} {{ data.nivelDetalle.nivel.periodo.descripcion }}</span>
-    </div>
-    <div class="info-item">
-      <strong>Estudiante:</strong> <span>{{ data.estudiante.nombres }} {{ data.estudiante.apellidos }}</span>
-    </div>
-    <div class="info-item">
-      <strong>Acudiente:</strong> <span>{{ data.acudiente.nombres }} {{ data.acudiente.apellidos }}</span>
-    </div>
-    <div class="info-item">
-      <strong>Institución de Procedencia:</strong> <span>{{ data.institucionProcedencia }}</span>
-    </div>
-    <div class="info-item">
-      <strong>Es Repitente:</strong> <span>{{ data.esRepitente ? 'Sí' : 'No' }}</span>
-    </div>
-    <div class="info-item">
-      <strong>Activo:</strong> <span>{{ data.activo ? 'Sí' : 'No' }}</span>
-    </div>
-    <div class="info-item">
-      <strong>Fecha Registro:</strong> <span>{{ data.fechaRegistro | date }}</span>
-    </div>
-
-    <!-- Campos de pago -->
-    <div class="info-item">
-      <strong>Monto de Pago:</strong> <span>{{ data.montoPago | currency }}</span>
-    </div>
-    <div class="info-item">
-      <strong>Fecha de Pago:</strong> <span>{{ data.fechaPago | date }}</span>
-    </div>
-    <div class="info-item">
-      <strong>Método de Pago:</strong> <span>{{ data.metodoPago }}</span>
-    </div>
-    <div class="info-item">
-      <strong>Estado de Pago:</strong> <span>{{ data.estadoPago }}</span>
-    </div>
+    <!-- Tus campos existentes... -->
+    <div class="info-item"><strong>Valor Código:</strong> <span>{{ data.valorCodigo }}</span></div>
+    <div class="info-item"><strong>Código:</strong> <span>{{ data.codigo }}</span></div>
+    <div class="info-item"><strong>Situación:</strong> <span>{{ data.situacion }}</span></div>
+    <div class="info-item"><strong>Nivel Detalle:</strong> <span>{{ data.nivelDetalle.nivel.descripcionNivel }} {{ data.nivelDetalle.nivel.periodo.descripcion }}</span></div>
+    <div class="info-item"><strong>Estudiante:</strong> <span>{{ data.estudiante.nombres }} {{ data.estudiante.apellidos }}</span></div>
+    <div class="info-item"><strong>Acudiente:</strong> <span>{{ data.acudiente.nombres }} {{ data.acudiente.apellidos }}</span></div>
+    <div class="info-item"><strong>Institución de Procedencia:</strong> <span>{{ data.institucionProcedencia }}</span></div>
+    <div class="info-item"><strong>Es Repitente:</strong> <span>{{ data.esRepitente ? 'Sí' : 'No' }}</span></div>
+    <div class="info-item"><strong>Activo:</strong> <span>{{ data.activo ? 'Sí' : 'No' }}</span></div>
+    <div class="info-item"><strong>Fecha Registro:</strong> <span>{{ data.fechaRegistro | date }}</span></div>
+    <div class="info-item"><strong>Monto de Pago:</strong> <span>{{ data.montoPago | currency }}</span></div>
+    <div class="info-item"><strong>Fecha de Pago:</strong> <span>{{ data.fechaPago | date }}</span></div>
+    <div class="info-item"><strong>Método de Pago:</strong> <span>{{ data.metodoPago }}</span></div>
+    <div class="info-item"><strong>Estado de Pago:</strong> <span>{{ data.estadoPago }}</span></div>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions class="dialog-actions">

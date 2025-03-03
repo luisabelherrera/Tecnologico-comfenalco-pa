@@ -1,9 +1,30 @@
-<div class="image-container">
-  <img 
-    src="assets/img/558fbfd3-0c2e-4c7f-b4d1-d638b759c8ec.png" 
-    alt="Imagen interactiva" 
-    (click)="startVoiceRecognition()" 
-    class="interactive-image">
-</div>
+<div class="ai-interface">
+  <div class="ai-core">
+    <div class="ai-ring"></div>
+    <div class="ai-face">
+      <div class="voice-indicator" [class.active]="isRecording"></div>
+      <div class="ai-display" (click)="startVoiceRecognition()">
+        <span class="pulse"></span>
+        <span class="pulse delay"></span>
+      </div>
+    </div>
+  </div>
 
-<button (click)="stopAI()" *ngIf="isRecording" class="stop-button">Detener IA</button>
+  <!-- Sección para mostrar el último mensaje de la IA -->
+  <div class="response-output">
+    <p class="ai-text">{{ responseText }}</p>
+  </div>
+
+  <!-- Minichat con el historial de la conversación -->
+  <div class="chat-history">
+    <div class="chat-container">
+      <div *ngFor="let message of chatHistory" class="chat-message" [class.user]="message.sender === 'user'" [class.ai]="message.sender === 'ai'">
+        <span class="sender">{{ message.sender === 'user' ? 'Tú' : 'IA' }}</span>
+        <p>{{ message.message }}</p>
+        <span class="timestamp">{{ message.timestamp | date:'HH:mm:ss' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <button (click)="stopAI()" *ngIf="isRecording" class="stop-button">Detener IA</button>
+</div>

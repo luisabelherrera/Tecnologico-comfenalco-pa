@@ -1,48 +1,58 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class NotificacionService {
-    private apiUrl = `${environment.apiUrl}api/notificaciones`; 
+  private apiUrl = `${environment.apiUrl}api/notificaciones`;
 
-    constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-    notificarAdministrador(mensaje: string): Observable<any> {
-        return this.http.post<any>(this.apiUrl, { mensaje })
-            .pipe(catchError(this.handleError)); 
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('accessToken'); // Adjust key based on your auth system
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
+  notificarAdministrador(mensaje: string): Observable<any> {
+    return this.http.post<any>(this.apiUrl, { mensaje }, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  marcarComoLeida(id: string): Observable<any> {
+    const url = `${this.apiUrl}/${id}/marcar-como-leida`;
+    return this.http.patch<any>(url, null, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  eliminarNotificacion(id: string): Observable<any> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.delete<any>(url, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  obtenerNotificaciones(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  private handleError(error: any) {
+    let errorMessage = 'Error inesperado: ';
+    if (error.status === 401) {
+      errorMessage = 'No autorizado. Por favor, inicia sesión nuevamente.';
+      // Optionally trigger logout here
+    } else if (error.error instanceof ErrorEvent) {
+      errorMessage += error.error.message;
+    } else {
+      errorMessage += `Código ${error.status}: ${error.message}`;
     }
-    marcarComoLeida(id: string): Observable<any> {
-        const url = `${this.apiUrl}/${id}/marcar-como-leida`; 
-        return this.http.patch<any>(url, null)
-          .pipe(catchError(this.handleError)); 
-      }
-      eliminarNotificacion(id: string): Observable<any> {
-        const url = `${this.apiUrl}/${id}`;
-        return this.http.delete<any>(url).pipe(
-          catchError((error) => {
-            console.error('Error al eliminar la notificación:', error);
-            return throwError(() => new Error('Error al eliminar la notificación.'));
-          })
-        );
-      }
-      
-    obtenerNotificaciones(): Observable<any[]> {
-        return this.http.get<any[]>(this.apiUrl).pipe(catchError(this.handleError));
-      }
-    // Manejo de errores
-    private handleError(error: any) {
-        let errorMessage = 'Error inesperado: ';
-        if (error.error instanceof ErrorEvent) {
-            errorMessage += error.error.message;
-        } else {
-            errorMessage += `Código ${error.status}: ${error.message}`;
-        }
-        console.error('Error:', errorMessage);
-        return throwError(() => new Error(errorMessage));
-    }
+    console.error('Error:', errorMessage);
+    return throwError(() => new Error(errorMessage));
+  }
 }

@@ -1,128 +1,151 @@
-<div class="register-container">
-  <h2>{{ isEditing ? 'Actualizar Usuario' : 'Registrar Nuevo Usuario' }}</h2>
+<div class="auth-container">
+  <div class="toggle-buttons">
+    <button class="toggle-btn" [class.active]="showForm" (click)="toggleView(true)">
+      {{ isEditing ? 'Editar' : 'Registrar' }}
+    </button>
+    <button class="toggle-btn" [class.active]="!showForm" (click)="toggleView(false)">Lista de Usuarios</button>
+  </div>
 
-  <div *ngIf="loading" class="loading">Procesando, por favor espera...</div>
-  <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
-  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+  <!-- Registro/Edición -->
+  <section class="register-section" *ngIf="showForm">
+    <h2 class="section-title">{{ isEditing ? 'Actualizar Usuario' : 'Registrar Nuevo Usuario' }}</h2>
 
-  <form *ngIf="!loading && !successMessage" (ngSubmit)="onSubmit()" #registerForm="ngForm">
-    <div class="form-group">
-      <label for="estudianteId">Estudiante:</label>
-      <select 
-        id="estudianteId" 
-        name="estudianteId" 
-        [(ngModel)]="registerDto.estudianteId" 
-        required>
-        <option value="0" disabled>Selecciona un estudiante</option>
-        <option *ngFor="let estudiante of estudiantes" [value]="estudiante.idEstudiante">
-          {{ estudiante.nombres }} {{ estudiante.apellidos }} (ID: {{ estudiante.idEstudiante }})
-        </option>
-      </select>
+    <div class="status-box" *ngIf="loading || successMessage || errorMessage">
+      <div *ngIf="loading" class="loading">
+        <span class="spinner"></span> {{ isEditing ? 'Actualizando' : 'Registrando' }} usuario...
+      </div>
+      <div *ngIf="successMessage" class="success">
+        <span class="icon-success">✔</span> {{ successMessage }}
+      </div>
+      <div *ngIf="errorMessage" class="error">
+        <span class="icon-error">✖</span> {{ errorMessage }}
+      </div>
     </div>
 
-    <div class="form-group">
-      <label for="docenteInfo">Docente (opcional):</label>
-      <select 
-        id="docenteInfo" 
-        name="docenteInfo" 
-        [(ngModel)]="registerDto.docenteInfo">
-        <option [ngValue]="null">Ninguno</option>
-        <option *ngFor="let docente of docentes" [ngValue]="docente">
-          {{ docente.nombres }} {{ docente.apellidos }} (ID: {{ docente.idDocente }})
-        </option>
-      </select>
+    <form *ngIf="!loading && !successMessage" (ngSubmit)="onSubmit()" #registerForm="ngForm" class="register-form">
+      <div class="form-field">
+        <label for="username">Nombre de usuario:</label>
+        <input type="text" id="username" name="username" [(ngModel)]="registerDto.username" required placeholder="Ingresa el usuario">
+      </div>
+
+      <div class="form-field">
+        <label for="email">Correo electrónico:</label>
+        <input type="email" id="email" name="email" [(ngModel)]="registerDto.email" required placeholder="correo@ejemplo.com">
+      </div>
+
+      <div class="form-field" *ngIf="!isEditing">
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" [(ngModel)]="registerDto.password" required placeholder="********">
+      </div>
+
+      <div class="form-field">
+        <label for="roles">Rol:</label>
+        <select id="roles" name="roles" [(ngModel)]="registerDto.roles" required>
+          <option *ngFor="let rol of roles" [ngValue]="[rol]">{{ rol.name }} (ID: {{ rol.id }})</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="estudianteId">Estudiante (opcional):</label>
+        <select id="estudianteId" name="estudianteId" [(ngModel)]="registerDto.estudianteId">
+          <option [ngValue]="undefined">Ninguno</option>
+          <option *ngFor="let estudiante of estudiantes" [ngValue]="estudiante.idEstudiante">
+            {{ estudiante.nombres }} {{ estudiante.apellidos }} (ID: {{ estudiante.idEstudiante }})
+          </option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="docenteId">Docente (opcional):</label>
+        <select id="docenteId" name="docenteId" [(ngModel)]="registerDto.docenteId">
+          <option [ngValue]="undefined">Ninguno</option>
+          <option *ngFor="let docente of docentes" [ngValue]="docente.idDocente">
+            {{ docente.nombres }} {{ docente.apellidos }} (ID: {{ docente.idDocente }})
+          </option>
+        </select>
+      </div>
+
+      <button type="submit" class="submit-btn" [disabled]="!registerForm.valid">
+        {{ isEditing ? 'Actualizar' : 'Registrar' }}
+      </button>
+    </form>
+  </section>
+
+  <!-- Lista de Usuarios -->
+  <section class="users-section" *ngIf="!showForm">
+    <h2 class="section-title">Lista de Usuarios Registrados</h2>
+
+    <div class="filter-container">
+      <input type="text" [(ngModel)]="filterValue" (input)="applyFilter()" placeholder="Filtrar por usuario, email o rol" class="filter-input">
     </div>
 
-    <div class="form-group">
-      <label for="username">Nombre de usuario:</label>
-      <input 
-        type="text" 
-        id="username" 
-        name="username" 
-        [(ngModel)]="registerDto.username" 
-        required>
+    <div class="status-box" *ngIf="loading || errorMessage">
+      <div *ngIf="loading" class="loading">
+        <span class="spinner"></span> Cargando usuarios...
+      </div>
+      <div *ngIf="errorMessage" class="error">
+        <span class="icon-error">✖</span> {{ errorMessage }}
+      </div>
     </div>
 
-    <div class="form-group">
-      <label for="email">Correo electrónico:</label>
-      <input 
-        type="email" 
-        id="email" 
-        name="email" 
-        [(ngModel)]="registerDto.email" 
-        required>
+    <div class="table-wrapper" *ngIf="pagedUsers.length > 0 && !loading">
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Estudiante</th>
+            <th>Docente</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of pagedUsers">
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ getRolesString(user) }}</td>
+            <td>
+              <ng-container *ngIf="user.estudiante; else noEstudiante">
+                {{ user.estudiante.nombres }} {{ user.estudiante.apellidos }}
+              </ng-container>
+              <ng-template #noEstudiante>
+                <mat-icon class="no-data-icon">person_off</mat-icon>
+              </ng-template>
+            </td>
+            <td>
+              <ng-container *ngIf="user.docente; else noDocente">
+                {{ user.docente.nombres }} {{ user.docente.apellidos }}
+              </ng-container>
+              <ng-template #noDocente>
+                <mat-icon class="no-data-icon">person_off</mat-icon>
+              </ng-template>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button mat-icon-button class="action-btn edit-btn" (click)="editUser(user)" matTooltip="Editar">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button class="action-btn delete-btn" (click)="deleteUser(user.id)" matTooltip="Eliminar">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <div class="form-group">
-      <label for="password">Contraseña:</label>
-      <input 
-        type="password" 
-        id="password" 
-        name="password" 
-        [(ngModel)]="registerDto.password" 
-        [required]="!isEditing">
-        <small *ngIf="isEditing">Dejar en blanco para mantener la contraseña actual</small>
-    </div>
+    <p class="no-data" *ngIf="users.length === 0 && !loading">No hay usuarios registrados.</p>
 
-    <div class="form-group">
-      <label for="roles">Rol:</label>
-      <select 
-        id="roles" 
-        name="roles" 
-        [(ngModel)]="registerDto.roles" 
-        required>
-        <option *ngFor="let rol of roles" [ngValue]="[rol]">
-          {{ rol.name }} (ID: {{ rol.id }})
-        </option>
-      </select>
-    </div>
-
-    <button type="submit" [disabled]="!registerForm.valid">{{ isEditing ? 'Actualizar' : 'Registrar' }}</button>
-    <button type="button" *ngIf="isEditing" (click)="resetForm()">Cancelar</button>
-  </form>
-</div>
-
-<div class="user-list-container">
-  <h2>Lista de Usuarios Registrados</h2>
-
-  <div *ngIf="loading" class="loading">Cargando usuarios, por favor espera...</div>
-  <div *ngIf="error" class="error">{{ error }}</div>
-
-  <table *ngIf="pagedUsers.length > 0 && !loading" class="user-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Usuario</th>
-        <th>Email</th>
-        <th>Roles</th>
-        <th>Estudiante</th>
-        <th>Docente</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of pagedUsers">
-        <td>{{ user.id }}</td>
-        <td>{{ user.username }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ getRolesString(user) }}</td>
-        <td>{{ user.estudiante ? user.estudiante.nombres + ' ' + user.estudiante.apellidos : 'N/A' }}</td>
-        <td>{{ user.docenteInfo ? user.docenteInfo.nombres + ' ' + user.docenteInfo.apellidos : 'N/A' }}</td>
-        <td>
-          <button class="edit-btn" (click)="editUser(user)">Actualizar</button>
-          <button class="delete-btn" (click)="deleteUser(user.id!)">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <p *ngIf="users.length === 0 && !loading">No hay usuarios registrados.</p>
-
-  <mat-paginator
-    [length]="users.length"
-    [pageSize]="pageSize"
-    [pageSizeOptions]="pageSizeOptions"
-    (page)="handlePageEvent($event)"
-    *ngIf="users.length > 0">
-  </mat-paginator>
+    <mat-paginator
+      [length]="filteredUsers.data.length"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="handlePageEvent($event)"
+      *ngIf="users.length > 0">
+    </mat-paginator>
+  </section>
 </div>

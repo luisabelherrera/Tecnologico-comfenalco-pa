@@ -1,39 +1,42 @@
 <div class="factura-container">
-    <div class="factura-header">
-      <h2>Factura Electrónica</h2>
-      <p class="fecha"><strong>Fecha:</strong> {{ fecha }}</p>
-    </div>
-  
-    <div class="factura-info">
-      <p><strong>Estudiante:</strong> {{ estudiante }}</p>
-      <p><strong>Código de Factura:</strong> {{ codigo }}</p>
-      <p><strong>Método de Pago:</strong> {{ metodoPago }}</p>
-    </div>
-  
-    <table class="factura-table">
-      <thead>
-        <tr>
-          <th>Descripción</th>
-          <th>Cantidad</th>
-          <th>Precio</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Inscripción</td>
-          <td>1</td>
-          <td>${{ montoPago }}</td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="2" class="total-label">Total:</td>
-          <td class="total-amount">${{ montoPago }}</td>
-        </tr>
-      </tfoot>
-    </table>
-  
-    <p class="mensaje">Gracias por su inscripción. ¡Esperamos verte pronto!</p>
-  
-    <button (click)="generarPDF()" class="btn-pdf">📄 Descargar Factura PDF</button>
+  <div class="factura-header">
+    <h2>Factura Electrónica</h2>
+    <p class="fecha"><strong>Fecha:</strong> {{ fecha }}</p>
   </div>
+
+  <div class="factura-info">
+    <p><strong>Estudiante:</strong> {{ estudiante }}</p>
+    <p><strong>Código de Factura:</strong> {{ codigo }}</p>
+    <p><strong>Método de Pago:</strong> {{ metodoPago }}</p>
+  </div>
+
+  <table class="factura-table">
+    <thead>
+      <tr>
+        <th>Descripción</th>
+        <th>Cantidad</th>
+        <th>Precio</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Inscripción</td>
+        <td>1</td>
+        <td>${{ montoPago }}</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2" class="total-label">Total:</td>
+        <td class="total-amount">${{ montoPago }}</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <p class="mensaje">Gracias por su inscripción. ¡Esperamos verte pronto!</p>
+
+  <div class="button-container">
+    <button (click)="generarPDF()" class="btn-pdf">📄 Descargar Factura PDF</button>
+    <button (click)="volver()" class="btn-volver">⬅ Volver</button>
+  </div>
+</div>

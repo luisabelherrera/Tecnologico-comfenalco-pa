@@ -1,7 +1,16 @@
-<h2 mat-dialog-title>Mensaje Completo</h2>
+<h2 mat-dialog-title>{{data.title}}</h2>
 <mat-dialog-content>
   <p class="full-message">{{ data.message }}</p>
+  <p class="error-message" *ngIf="errorMessage">{{errorMessage}}</p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-raised-button color="accent" (click)="close()">Cerrar</button>
+  <button mat-button color="warn" (click)="deleteNotification()" aria-label="Eliminar notificación">
+    Eliminar
+  </button>
+  <button mat-button color="primary" (click)="markAsRead()" aria-label="Marcar como leída">
+    Marcar como leída
+  </button>
+  <button mat-raised-button color="accent" (click)="close()" aria-label="Cerrar diálogo">
+    Cerrar
+  </button>
 </mat-dialog-actions>

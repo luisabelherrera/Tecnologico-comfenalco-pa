@@ -1,78 +1,132 @@
-<div class="container">
- 
-
-  <div class="container mat-elevation-z8" style="margin-top: 20px;">
-    <div class="title-container">
-    <h1 style="margin-bottom: 20px;">Gestión de Calificación</h1>
-    </div>
-  <div class="header">
-    <a [routerLink]="['/calificaciones/create']" class="btn-create">
-      Crear Nueva Calificación
-    </a>
-    <div class="search-box">
-      <input
-        matInput
-        (keyup)="applyFilter($event)"
-        placeholder="Buscar calificaciones"
-        class="input-search"
-      />
-    </div>
-  </div>
- 
-  <div class="table-container">
-    <table mat-table [dataSource]="dataSource" matSort class="custom-table">
-     
-   
-      <ng-container matColumnDef="nota">
-        <th mat-header-cell *matHeaderCellDef>Nota</th>
-        <td mat-cell *matCellDef="let calificacion">{{ calificacion.nota }}</td>
-      </ng-container>
- 
-      <ng-container matColumnDef="estudiante">
-        <th mat-header-cell *matHeaderCellDef>Estudiante</th>
-        <td mat-cell *matCellDef="let calificacion">
-          {{ calificacion.estudiante.nombres }} {{ calificacion.estudiante.apellidos }}
-        </td>
-      </ng-container>
- 
-      <ng-container matColumnDef="curricular">
-        <th mat-header-cell *matHeaderCellDef>Curricular</th>
-        <td mat-cell *matCellDef="let calificacion">{{ calificacion.curricular.descripcion }}</td>
-      </ng-container>   
-      <ng-container matColumnDef="fechaRegistro">
-        <th mat-header-cell *matHeaderCellDef>Fecha Registro</th>
-        <td mat-cell *matCellDef="let calificacion">
-          {{ calificacion.fechaRegistro | date: 'short' }}  
-        </td>
-      </ng-container>
-
-       
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Acciones</th>
-        <td mat-cell *matCellDef="let calificacion" class="actions">
-          <a [routerLink]="['/calificaciones/detail', calificacion.idCalificacion]" class="btn-details">
-            Ver Detalles
-          </a>
-          <a [routerLink]="['/calificaciones/edit', calificacion.idCalificacion]" class="btn-edit">
-            Editar
-          </a>
-          <button (click)="deleteCalificacion(calificacion.idCalificacion)" class="btn-delete">
-            Eliminar
-          </button>
-        </td>
-      </ng-container>
- 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+<div class="inscripcion-container">
+  <!-- Toggle Buttons -->
+  <div class="toggle-buttons">
+    <button class="toggle-btn" [class.active]="showForm" (click)="toggleView(true)">Registrar Calificación</button>
+    <button class="toggle-btn" [class.active]="!showForm" (click)="toggleView(false)">Lista de Calificaciones</button>
   </div>
 
-  <!-- Paginador -->
-  <div class="paginator">
+  <!-- Form Section -->
+  <section class="form-section" *ngIf="showForm">
+    <form [formGroup]="calificacionForm" (ngSubmit)="onSubmit()" class="inscripcion-form">
+      <h2 class="section-title">{{ selectedCalificacion ? 'Actualizar Calificación' : 'Registrar Nueva Calificación' }}</h2>
+
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Nota</mat-label>
+          <input matInput type="number" formControlName="nota" required min="0" max="100">
+          <mat-error *ngIf="calificacionForm.get('nota')?.hasError('required')">La nota es obligatoria.</mat-error>
+          <mat-error *ngIf="calificacionForm.get('nota')?.hasError('min')">La nota debe ser mayor o igual a 0.</mat-error>
+          <mat-error *ngIf="calificacionForm.get('nota')?.hasError('max')">La nota debe ser menor o igual a 100.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Estudiante</mat-label>
+          <mat-select formControlName="estudiante" required>
+            <mat-option *ngFor="let estudiante of estudiantes" [value]="estudiante">
+              {{ estudiante.nombres }} {{ estudiante.apellidos }} ({{ estudiante.documentoIdentidad }})
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="calificacionForm.get('estudiante')?.hasError('required')">El estudiante es obligatorio.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Curricular</mat-label>
+          <mat-select formControlName="curricular" required>
+            <mat-option *ngFor="let curricular of curriculares" [value]="curricular">
+              {{ curricular.descripcion }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="calificacionForm.get('curricular')?.hasError('required')">El curricular es obligatorio.</mat-error>
+        </mat-form-field>
+
+        <div class="checkbox-group">
+          <mat-checkbox formControlName="activo">Activo</mat-checkbox>
+        </div>
+      </div>
+
+      <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="calificacionForm.invalid">
+        {{ selectedCalificacion ? 'Actualizar' : 'Crear' }}
+      </button>
+      <button mat-raised-button color="warn" type="button" class="submit-btn cancel-btn" (click)="resetForm()">Cancelar</button>
+    </form>
+  </section>
+
+  <!-- List Section -->
+  <section class="list-section" *ngIf="!showForm">
+    <h2 class="section-title">Lista de Calificaciones</h2>
+
+    <div class="inscripcion-actions">
+      <mat-form-field appearance="outline" class="search-box">
+        <mat-label>Filtrar Calificaciones</mat-label>
+        <input matInput [(ngModel)]="filterValue" (input)="applyFilter()" placeholder="Filtrar por nota, estudiante, etc." class="filter-input">
+      </mat-form-field>
+    </div>
+
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="dataSource" matSort class="inscripcion-table mat-elevation-z8">
+        <ng-container matColumnDef="nota">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nota</th>
+          <td mat-cell *matCellDef="let calificacion" data-label="Nota">{{ calificacion.nota }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="estudiante">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Estudiante</th>
+          <td mat-cell *matCellDef="let calificacion" data-label="Estudiante">{{ calificacion.estudiante.nombres }} {{ calificacion.estudiante.apellidos }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="curricular">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Curricular</th>
+          <td mat-cell *matCellDef="let calificacion" data-label="Curricular">{{ calificacion.curricular.descripcion }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaRegistro">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Registro</th>
+          <td mat-cell *matCellDef="let calificacion" data-label="Fecha Registro">{{ calificacion.fechaRegistro | date:'dd/MM/yyyy' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="activo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Activo</th>
+          <td mat-cell *matCellDef="let calificacion" data-label="Activo">
+            <div class="estado-indicador" [ngClass]="calificacion.activo ? 'activo' : 'inactivo'"></div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let calificacion" data-label="Acciones">
+            <div class="action-buttons">
+              <button mat-icon-button class="action-btn see-more-btn" (click)="viewDetails(calificacion.idCalificacion)" matTooltip="Ver Detalles">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button mat-icon-button class="action-btn pdf-btn" (click)="printPDF(calificacion)" matTooltip="Generar PDF">
+                <mat-icon>picture_as_pdf</mat-icon>
+              </button>
+              <button mat-icon-button class="action-btn edit-btn" (click)="onSelect(calificacion)" matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="action-btn delete-btn" (click)="onDelete(calificacion)" matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <div *ngIf="dataSource.data.length === 0" class="no-data-message">
+        No hay calificaciones para mostrar.
+      </div>
+    </div>
+
     <mat-paginator
-      [pageSize]="5"
-      [pageSizeOptions]="[5, 10, 25, 100]"
-      showFirstLastButtons
+      [length]="dataSource.data.length"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 20]"
+      (page)="onPageChange($event)"
+      *ngIf="dataSource.data.length > 0"
+      class="paginator"
     ></mat-paginator>
-  </div>
+  </section>
 </div>

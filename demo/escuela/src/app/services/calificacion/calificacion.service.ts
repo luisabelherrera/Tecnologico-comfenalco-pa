@@ -11,8 +11,7 @@ import { environment } from 'src/environments/environment';
 export class CalificacionService {
   private apiUrl = `${environment.apiUrl}api/calificaciones`;
 
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('accessToken');
@@ -26,9 +25,26 @@ export class CalificacionService {
       catchError(this.handleError)
     );
   }
+  saveCalificacion(calificacion: Calificacion): Observable<Calificacion> {
+    return this.http.post<Calificacion>(this.apiUrl, calificacion, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
 
+  getCalificacionesPorCurricular(idCurricular: number): Observable<Calificacion[]> {
+    const url = `${this.apiUrl}/curricular/${idCurricular}`;
+    return this.http.get<Calificacion[]>(url, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
   getCalificacionById(id: number): Observable<Calificacion> {
     return this.http.get<Calificacion>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getCalificacionesByDocente(idDocente: number): Observable<Calificacion[]> {
+    return this.http.get<Calificacion[]>(`${this.apiUrl}/docente/${idDocente}`, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
@@ -40,11 +56,10 @@ export class CalificacionService {
   }
 
   updateCalificacion(id: number, calificacion: Calificacion): Observable<Calificacion> {
-    console.log('Actualizando calificación:', calificacion);
     return this.http.put<Calificacion>(`${this.apiUrl}/${id}`, calificacion, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
-}
+  }
 
   deleteCalificacion(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() }).pipe(

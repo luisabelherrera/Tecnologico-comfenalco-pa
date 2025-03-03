@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { Docente } from 'src/app/models/entity/docente.model';
 import { Estudiante } from 'src/app/models/entity/Estudiante.interface';
-import { RegisterDto, RoleDto, UserDto } from 'src/app/models/models';
+import { UserDto, RegisterDto, RoleDto } from 'src/app/models/models';
 import { RegistrationService } from 'src/app/services/auth/Registration.service';
 
 @Component({
@@ -12,16 +13,8 @@ import { RegistrationService } from 'src/app/services/auth/Registration.service'
 })
 export class RegisterComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  registerDto: RegisterDto = {
-    id: 0,
-    username: '',
-    email: '',
-    password: '',
-    roles: [],
-    docenteInfo: null as any,
-    estudianteId: 0
-  };
+  filteredUsers = new MatTableDataSource<UserDto>([]);
+  registerDto: RegisterDto = { username: '', email: '', password: '', roles: [] };
   users: UserDto[] = [];
   pagedUsers: UserDto[] = [];
   estudiantes: Estudiante[] = [];
@@ -30,20 +23,33 @@ export class RegisterComponent implements OnInit {
   successMessage: string | null = null;
   errorMessage: string | null = null;
   loading: boolean = false;
-  error: string | null = null;
-  isEditing: boolean = false; // Para distinguir entre registrar y actualizar
+  filterValue = '';
+  showForm: boolean = true;
+  isEditing: boolean = false;
 
-  // Propiedades del paginador
   pageSize = 5;
   pageIndex = 0;
   pageSizeOptions = [5, 10, 25];
+  displayedColumns = ['id', 'username', 'email', 'roles', 'estudiante', 'docente', 'acciones'];
 
   constructor(private registrationService: RegistrationService) {}
 
   ngOnInit(): void {
     this.loadEstudiantes();
+    this.loadDocentes();
     this.loadUsers();
     this.loadRoles();
+  }
+
+  toggleView(showForm: boolean): void {
+    this.showForm = showForm;
+    if (showForm && !this.isEditing) this.resetForm();
+    if (!showForm) this.applyFilter();
+  }
+
+  applyFilter(): void {
+    this.filteredUsers.filter = this.filterValue.trim().toLowerCase();
+    this.updatePagedUsers();
   }
 
   loadUsers(): void {
@@ -51,66 +57,28 @@ export class RegisterComponent implements OnInit {
     this.registrationService.getAllUsers().subscribe({
       next: (users) => {
         this.users = users;
+        this.filteredUsers.data = users;
         this.updatePagedUsers();
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Error al cargar usuarios: ' + err.message;
+        this.errorMessage = 'Error al cargar usuarios: ' + err.message;
         this.loading = false;
       }
     });
-  }
-
-  updatePagedUsers(): void {
-    const startIndex = this.pageIndex * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    this.pagedUsers = this.users.slice(startIndex, endIndex);
-  }
-
-  handlePageEvent(event: PageEvent): void {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.updatePagedUsers();
-  }
-
-  deleteUser(userId: number): void {
-    if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
-      this.loading = true;
-      this.registrationService.deleteUser(userId).subscribe({
-        next: () => {
-          this.successMessage = 'Usuario eliminado correctamente';
-          this.loadUsers();
-        },
-        error: (err) => {
-          this.errorMessage = 'Error al eliminar usuario: ' + err.message;
-          this.loading = false;
-        }
-      });
-    }
-  }
-
-  // Método para cargar los datos del usuario en el formulario para edición
-  editUser(user: UserDto): void {
-    this.isEditing = true;
-    this.registerDto = {
-      id: user.id || 0,
-      username: user.username || '',
-      email: user.email || '',
-      password: '', // Dejamos vacío por seguridad, el backend debe ignorarlo si no se envía
-      roles: user.roles || [],
-      docenteInfo: user.docenteInfo || null,
-      estudianteId: user.estudiante ? user.estudiante.idEstudiante : 0
-    };
-  }
-
-  getRolesString(user: UserDto): string {
-    return user.roles?.map(role => role.name).join(', ') || 'Sin roles';
   }
 
   loadEstudiantes(): void {
     this.registrationService.getAllEstudiantes().subscribe({
       next: (estudiantes) => (this.estudiantes = estudiantes),
       error: (err) => (this.errorMessage = 'Error al cargar estudiantes: ' + err.message)
+    });
+  }
+
+  loadDocentes(): void {
+    this.registrationService.getAllDocentes().subscribe({
+      next: (docentes) => (this.docentes = docentes),
+      error: (err) => (this.errorMessage = 'Error al cargar docentes: ' + err.message)
     });
   }
 
@@ -125,56 +93,86 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  onSubmit(): void {
-    this.loading = true;
-    this.successMessage = null;
-    this.errorMessage = null;
+  updatePagedUsers(): void {
+    const startIndex = this.pageIndex * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.pagedUsers = this.filteredUsers.filteredData.slice(startIndex, endIndex);
+  }
 
-    if (this.isEditing) {
-      // Actualizar usuario existente
-      this.registrationService.updateUser(this.registerDto.id, this.registerDto).subscribe({
-        next: (updatedUser) => {
-          this.successMessage = 'Usuario actualizado correctamente';
-          this.resetForm();
-          this.isEditing = false;
+  getRolesString(user: UserDto): string {
+    return user.roles.map(r => r.name).join(', ');
+  }
+
+  handlePageEvent(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePagedUsers();
+  }
+
+  editUser(user: UserDto): void {
+    this.isEditing = true;
+    this.showForm = true;
+    this.registerDto = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      password: '', // Don’t prefill password
+      roles: user.roles,
+      estudianteId: user.estudiante?.idEstudiante,
+      docenteId: user.docente?.idDocente
+    };
+  }
+
+  deleteUser(userId: number): void {
+    if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
+      this.loading = true;
+      this.registrationService.deleteUser(userId).subscribe({
+        next: (response) => {
+          this.successMessage = response.message;
           this.loadUsers();
         },
         error: (err) => {
-          this.errorMessage = 'Error al actualizar usuario: ' + err.message;
-          this.loading = false;
-        }
-      });
-    } else {
-      // Registrar nuevo usuario
-      this.registrationService.register(this.registerDto).subscribe({
-        next: (response) => {
-          if (response.success) {
-            this.successMessage = response.message;
-            this.resetForm();
-            this.loadUsers();
-          } else {
-            this.errorMessage = response.message;
-          }
-          this.loading = false;
-        },
-        error: (err) => {
-          this.errorMessage = 'Error al registrar: ' + err.message;
+          this.errorMessage = 'Error al eliminar usuario: ' + err.message;
           this.loading = false;
         }
       });
     }
   }
 
+  onSubmit(): void {
+    this.loading = true;
+    this.successMessage = null;
+    this.errorMessage = null;
+
+    const apiCall = this.isEditing
+      ? this.registrationService.updateUser(this.registerDto.id!, this.registerDto)
+      : this.registrationService.register(this.registerDto);
+
+    apiCall.subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.successMessage = response.message;
+          this.loading = false;
+          setTimeout(() => location.reload(), 1500);
+        } else {
+          this.errorMessage = response.message;
+          this.loading = false;
+        }
+      },
+      error: (err) => {
+        this.errorMessage = `Error al ${this.isEditing ? 'actualizar' : 'registrar'}: ` + err.message;
+        this.loading = false;
+      }
+    });
+  }
+
   resetForm(): void {
     this.registerDto = {
-      id: 0,
       username: '',
       email: '',
       password: '',
-      roles: this.registerDto.roles,
-      docenteInfo: null as any,
-      estudianteId: 0
+      roles: this.roles.find(r => r.name === 'Estudiante') ? [this.roles.find(r => r.name === 'Estudiante')!] : []
     };
-    this.isEditing = false; // Reiniciar el estado de edición
+    this.isEditing = false;
   }
 }

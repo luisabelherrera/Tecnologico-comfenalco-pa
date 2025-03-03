@@ -1,14 +1,13 @@
 export interface Estudiante {
-  idEstudiante: number; 
-  valorCodigo: string; 
+  idEstudiante: number;
+  valorCodigo: string; // Changed to string
   codigo: string;
-  nombres: string; 
+  nombres: string;
   apellidos: string;
   documentoIdentidad: string;
-  fechaNacimiento: Date; 
-  sexo: string; 
-  ciudad: string; 
-  direccion: string; 
-  activo: boolean; 
-  
+  fechaNacimiento: Date; // Changed to Date
+  sexo: string;
+  ciudad: string;
+  direccion: string;
+  activo: boolean;
 }

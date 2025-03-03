@@ -1,114 +1,54 @@
-.container {
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
+.perfil-container {
   padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.header {
-  display: flex;
-  justify-content: space-between; /* Cambiado a space-between para mejor distribución */
-  align-items: center;
+.perfil-header {
+  text-align: center;
   margin-bottom: 20px;
 }
 
-.btn-create {
-  background-color: #4caf50;
-  color: #fff; /* Texto blanco para mejor contraste */
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  text-decoration: none;
-  transition: background-color 0.3s ease, transform 0.2s;
-  margin-right: 20px;
+.perfil-body {
+  padding: 15px;
 }
 
-.btn-create:hover {
-  background-color: #45a049;
-  transform: scale(1.05); /* Efecto de aumento al pasar el mouse */
+.info {
+  p {
+    margin: 10px 0;
+  }
+  
+  .badge {
+    padding: 5px 10px;
+    font-size: 14px;
+  }
 }
 
-.btn-details, .btn-edit, .btn-delete, .btn-IA {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 3px;
-  color: white;
-  transition: background-color 0.3s ease, transform 0.2s;
+.edit-mode {
+  .form-control {
+    margin-bottom: 10px;
+  }
 }
 
-.btn-details {
-  background-color: #ff9800;
+.alert-success {
+  margin-bottom: 20px;
 }
 
-.btn-edit {
-  background-color: #2196f3;
+.btn {
+  padding: 8px 16px;
 }
 
-.btn-delete {
-  background-color: #f44336;
+.btn-dark {
+  background-color: #343a40;
+  border-color: #343a40;
 }
 
-.btn-IA {
-  background-color: transparent; /* Fondo transparente */
-  border: none; /* Sin borde */
-  cursor: pointer; /* Cambiar cursor al pasar por encima */
-  padding: 0; /* Sin padding para ajustar el tamaño del botón al SVG */
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
 }
 
-.btn-details:hover, .btn-edit:hover, .btn-delete:hover {
-  transform: scale(1.05); /* Aumentar tamaño al pasar el ratón */
-}
-
-.btn-IA:hover {
-  transform: scale(1.1); /* Aumentar tamaño al pasar el ratón */
-}
-
-.input-search {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 300px; /* Ancho fijo para la barra de búsqueda */
-}
-
-.table-container {
-  margin-top: 20px;
-}
-
-.custom-table {
-  width: 100%;
-  border-collapse: collapse; /* Quitar espacio entre bordes de la tabla */
-}
-
-.custom-table th, .custom-table td {
-  padding: 12px; /* Espaciado en celdas */
-  text-align: left; /* Alinear texto a la izquierda */
-}
-
-.custom-table th {
-  background-color: #f1f1f1; /* Fondo diferente para encabezados */
-  border-bottom: 2px solid #ddd; /* Línea debajo de encabezados */
-}
-
-.paginator {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-.actions-container {
-  display: flex; /* Utiliza flexbox para alinear los elementos en línea */
-  align-items: center; /* Centra verticalmente los elementos */
-}
-
-.btn-details,
-.btn-edit,
-.btn-delete,
-.btn-IA {
-  margin-right: 8px; /* Espacio entre los botones */
-}
-
-.suggestions-container {
-  margin-left: 8px; /* Espacio para el contenedor de sugerencias */
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
 }

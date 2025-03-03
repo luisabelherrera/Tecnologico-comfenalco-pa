@@ -1,122 +1,147 @@
-<div class="container mat-elevation-z8">
-  <h2 class="title-with-icon">
-    <mat-icon>school</mat-icon> Gestión de cupos
-  </h2>
-  
-  <form (ngSubmit)="createOrUpdateNivelDetalle()" class="form-container">
-    <mat-form-field class="input-field" appearance="outline">
-      <mat-label>Nivel</mat-label>
-      <mat-select [(ngModel)]="nuevoNivelDetalle.nivel" name="nivel" required>
-        <mat-option *ngFor="let nivel of niveles" [value]="nivel">{{ nivel.descripcionNivel }}</mat-option>
-      </mat-select>
-      <mat-error *ngIf="!nuevoNivelDetalle.nivel">El nivel es obligatorio</mat-error>
-    </mat-form-field>
+<div class="container">
+  <!-- Toggle Buttons -->
+  <div class="toggle-buttons">
+    <button class="toggle-btn" [class.active]="showForm" (click)="toggleView(true)">Registrar Cupo</button>
+    <button class="toggle-btn" [class.active]="!showForm" (click)="toggleView(false)">Lista de Cupos</button>
+  </div>
 
-    <mat-form-field class="input-field" appearance="outline">
-      <mat-label>Grado y Sección</mat-label>
-      <mat-select [(ngModel)]="nuevoNivelDetalle.gradoSeccion" name="gradoSeccion" required>
-        <mat-option *ngFor="let gradoSeccion of gradosSecciones" [value]="gradoSeccion">
-          {{ gradoSeccion.descripcionGrado }} - {{ gradoSeccion.descripcionSeccion }}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="!nuevoNivelDetalle.gradoSeccion">El grado y sección son obligatorios</mat-error>
-    </mat-form-field>
+  <!-- Form Section -->
+  <section class="form-section" *ngIf="showForm">
+    <form (ngSubmit)="createOrUpdateNivelDetalle()" class="inscripcion-form">
+      <h2 class="section-title">{{ editingNivelDetalle ? 'Actualizar Cupo' : 'Registrar Nuevo Cupo' }}</h2>
 
-    <mat-form-field class="input-field" appearance="outline">
-      <mat-label>Total de Cupo</mat-label>
-      <input matInput type="number" [(ngModel)]="nuevoNivelDetalle.totalVacantes" name="totalVacantes" required />
-      <mat-error *ngIf="!nuevoNivelDetalle.totalVacantes">El total de vacantes es obligatorio</mat-error>
-    </mat-form-field>
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Nivel</mat-label>
+          <mat-select [(ngModel)]="nuevoNivelDetalle.nivel" name="nivel" required>
+            <mat-option *ngFor="let nivel of niveles" [value]="nivel">{{ nivel.descripcionNivel }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="!nuevoNivelDetalle.nivel">El nivel es obligatorio</mat-error>
+        </mat-form-field>
 
-    <mat-form-field class="input-field" appearance="outline">
-      <mat-label>Cupo Disponibles</mat-label>
-      <input matInput type="number" [(ngModel)]="nuevoNivelDetalle.vacantesDisponibles" name="vacantesDisponibles" required />
-      <mat-error *ngIf="!nuevoNivelDetalle.vacantesDisponibles">Las vacantes disponibles son obligatorias</mat-error>
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Grado y Sección</mat-label>
+          <mat-select [(ngModel)]="nuevoNivelDetalle.gradoSeccion" name="gradoSeccion" required>
+            <mat-option *ngFor="let gradoSeccion of gradosSecciones" [value]="gradoSeccion">
+              {{ gradoSeccion.descripcionGrado }} - {{ gradoSeccion.descripcionSeccion }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="!nuevoNivelDetalle.gradoSeccion">El grado y sección son obligatorios</mat-error>
+        </mat-form-field>
 
-    <mat-form-field class="input-field" appearance="outline">
-      <mat-label>Cupo Ocupados</mat-label>
-      <input matInput type="number" [value]="nuevoNivelDetalle.vacantesOcupadas" name="vacantesOcupadas" disabled />
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Total de Cupo</mat-label>
+          <input matInput type="number" [(ngModel)]="nuevoNivelDetalle.totalVacantes" name="totalVacantes" required />
+          <mat-error *ngIf="!nuevoNivelDetalle.totalVacantes">El total de vacantes es obligatorio</mat-error>
+        </mat-form-field>
 
-    <mat-checkbox [(ngModel)]="nuevoNivelDetalle.activo" name="activo">Activo</mat-checkbox>
+        <mat-form-field appearance="outline">
+          <mat-label>Cupo Disponibles</mat-label>
+          <input matInput type="number" [(ngModel)]="nuevoNivelDetalle.vacantesDisponibles" name="vacantesDisponibles" required />
+          <mat-error *ngIf="!nuevoNivelDetalle.vacantesDisponibles">Las vacantes disponibles son obligatorias</mat-error>
+        </mat-form-field>
 
-    <div class="button-group">
-      <button mat-raised-button color="primary" type="submit">
+        <mat-form-field appearance="outline">
+          <mat-label>Cupo Ocupados</mat-label>
+          <input matInput type="number" [value]="nuevoNivelDetalle.vacantesOcupadas" name="vacantesOcupadas" disabled />
+        </mat-form-field>
+
+        <div class="checkbox-group">
+          <mat-checkbox [(ngModel)]="nuevoNivelDetalle.activo" name="activo">Activo</mat-checkbox>
+        </div>
+      </div>
+
+      <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="!isValid(nuevoNivelDetalle)">
         {{ editingNivelDetalle ? 'Actualizar' : 'Crear' }}
       </button>
-      <button mat-raised-button color="warn" type="button" (click)="resetForm()">
-        Cancelar
-      </button>
+      <button mat-raised-button color="warn" type="button" class="submit-btn cancel-btn" (click)="resetForm()">Cancelar</button>
+
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+      <div *ngIf="warningMessage" class="warning-message">{{ warningMessage }}</div>
+    </form>
+  </section>
+
+  <!-- List Section -->
+  <section class="list-section" *ngIf="!showForm">
+    <h2 class="section-title">Lista de Cupos</h2>
+
+    <div class="inscripcion-actions">
+      <mat-form-field appearance="outline" class="search-box">
+        <mat-label>Buscar cupos</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Buscar cupos">
+      </mat-form-field>
     </div>
 
-    <div *ngIf="warningMessage" class="warning-message">
-      {{ warningMessage }}
-  </div>
-  <div *ngIf="successMessage" class="success-message">
-    {{ successMessage }}
-</div>
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="dataSource" matSort class="inscripcion-table mat-elevation-z8">
+        <ng-container matColumnDef="nivel">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nivel</th>
+          <td mat-cell *matCellDef="let element" data-label="Nivel">{{ element.nivel.descripcionNivel }}</td>
+        </ng-container>
 
+        <ng-container matColumnDef="gradoSeccion">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Grado / Sección</th>
+          <td mat-cell *matCellDef="let element" data-label="Grado / Sección">{{ element.gradoSeccion.descripcionGrado }} - {{ element.gradoSeccion.descripcionSeccion }}</td>
+        </ng-container>
 
-  </form>
+        <ng-container matColumnDef="totalVacantes">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Vacantes</th>
+          <td mat-cell *matCellDef="let element" data-label="Total Vacantes">{{ element.totalVacantes }}</td>
+        </ng-container>
 
-  <div class="header">
-    <mat-form-field class="search-box">
-      <mat-label>Buscar Niveles de Detalle</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Buscar niveles" />
-    </mat-form-field>
-  </div>
+        <ng-container matColumnDef="vacantesDisponibles">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Vacantes Disponibles</th>
+          <td mat-cell *matCellDef="let element" data-label="Vacantes Disponibles">{{ element.vacantesDisponibles }}</td>
+        </ng-container>
 
-  <div class="table-container">
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width-table"> <!-- Añadir matSort aquí -->
-  
-      <ng-container matColumnDef="nivel">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nivel </th>
-        <td mat-cell *matCellDef="let element"> {{ element.nivel.descripcionNivel }} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="gradoSeccion">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Grado / Sección </th>
-        <td mat-cell *matCellDef="let element"> {{ element.gradoSeccion.descripcionGrado }} - {{ element.gradoSeccion.descripcionSeccion }} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="totalVacantes">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Vacantes </th>
-        <td mat-cell *matCellDef="let element"> {{ element.totalVacantes }} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="vacantesDisponibles">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Vacantes Disponibles </th>
-        <td mat-cell *matCellDef="let element"> {{ element.vacantesDisponibles }} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="vacantesOcupadas">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Vacantes Ocupadas </th>
-        <td mat-cell *matCellDef="let element"> {{ element.vacantesOcupadas }} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="activo">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Activo </th>
-        <td mat-cell *matCellDef="let element">
-          <div class="estado-indicador" [ngClass]="element.activo ? 'activo' : 'inactivo'"></div>
-        </td>
-      </ng-container>
-      
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Acciones </th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-button (click)="setEditingNivelDetalle(element)">Editar</button>
-          <button mat-button (click)="deleteNivelDetalle(element.idNivelDetalle)">Eliminar</button>
-          <button mat-button (click)="openDialogGrafico(element)">Ver Gráfico</button>
-        </td>
-      </ng-container>
-  
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  
-    <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" (page)="onPaginateChange($event)">
-    </mat-paginator>
-  </div>
-  
+        <ng-container matColumnDef="vacantesOcupadas">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Vacantes Ocupadas</th>
+          <td mat-cell *matCellDef="let element" data-label="Vacantes Ocupadas">{{ element.vacantesOcupadas }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="activo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Activo</th>
+          <td mat-cell *matCellDef="let element" data-label="Activo">
+            <div class="estado-indicador" [ngClass]="element.activo ? 'activo' : 'inactivo'"></div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let element" data-label="Acciones">
+            <div class="action-buttons">
+              <button mat-icon-button class="action-btn edit-btn" (click)="setEditingNivelDetalle(element)" matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="action-btn delete-btn" (click)="deleteNivelDetalle(element.idNivelDetalle)" matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button mat-icon-button class="action-btn see-more-btn" (click)="openDialogGrafico(element)" matTooltip="Ver Gráfico">
+                <mat-icon>bar_chart</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <div *ngIf="dataSource.data.length === 0 && !isLoading" class="no-data-message">
+        No hay cupos para mostrar.
+      </div>
+      <div *ngIf="isLoading" class="no-data-message">
+        Cargando cupos...
+      </div>
+    </div>
+
+    <mat-paginator
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 20]"
+      [showFirstLastButtons]="true"
+      (page)="onPaginateChange($event)"
+      class="paginator"
+    ></mat-paginator>
+  </section>
 </div>

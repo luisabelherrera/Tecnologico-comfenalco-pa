@@ -1,26 +1,198 @@
-.horarios-container {
-  max-width: 900px;
-  margin: auto;
+.container {
   padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.cards-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 16px;
-  margin-top: 20px;
+.header {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.class-card {
-  transition: transform 0.3s;
+h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.schedule-container {
+  overflow-x: auto; /* Scroll solo en pantallas grandes si es necesario */
+  -webkit-overflow-scrolling: touch;
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+}
+
+.schedule-table th,
+.schedule-table td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #eef2f6;
+  font-size: 14px;
+  color: #5d6d7e;
+  min-width: 80px;
+}
+
+.schedule-table th {
+  background: #eef2f6;
+  font-weight: 600;
+  color: #2c3e50;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.schedule-cell {
+  padding: 8px;
   border-radius: 8px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 4px 0;
+  transition: all 0.3s ease;
 }
 
-.class-card:hover {
-  transform: scale(1.05);
+.conflict {
+  background: #e74c3c;
+  color: #fff;
 }
 
-.event-icon {
-  color: #1976d2;
+.conflict:hover {
+  background: #c0392b;
+}
+
+.no-conflict {
+  background: #27ae60;
+  color: #fff;
+}
+
+.no-conflict:hover {
+  background: #219653;
+}
+
+.course {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.professor {
+  font-size: 12px;
+  margin: 4px 0 0;
+}
+
+.no-data {
+  text-align: center;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px dashed #d5dbde;
+  color: #7f8c8d;
+  font-size: 16px;
+}
+
+/* Media Queries para responsividad */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  .schedule-table th,
+  .schedule-table td {
+    padding: 8px;
+    font-size: 12px;
+    min-width: 70px;
+  }
+
+  .schedule-cell {
+    padding: 6px;
+  }
+
+  .course {
+    font-size: 12px;
+  }
+
+  .professor {
+    font-size: 10px;
+  }
+}
+
+/* Diseño responsive completo para móviles */
+@media (max-width: 480px) {
+  .schedule-container {
+    overflow-x: visible; /* Eliminamos scroll horizontal */
+  }
+
+  .schedule-table {
+    display: block; /* Cambiamos a diseño de bloques */
+    box-shadow: none; /* Quitamos sombra para un diseño más limpio */
+    border-radius: 0;
+  }
+
+  .schedule-table thead {
+    display: none; /* Ocultamos los días en la cabecera */
+  }
+
+  .schedule-table tbody,
+  .schedule-table tr,
+  .schedule-table td {
+    display: block;
+    width: 100%;
+    border: none;
+    padding: 0;
+    margin-bottom: 10px; /* Espacio entre bloques */
+  }
+
+  .schedule-table td {
+    position: relative;
+    text-align: left;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    overflow: hidden; /* Para que los bordes redondeados funcionen */
+  }
+
+  /* Mostrar el día como encabezado dentro de cada celda */
+  .schedule-table td:before {
+    content: attr(data-day); /* Requiere agregar data-day en el HTML */
+    display: block;
+    background: #eef2f6;
+    padding: 8px 12px;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 12px;
+    border-bottom: 1px solid #d5dbde;
+  }
+
+  .schedule-cell {
+    padding: 8px 12px;
+    margin: 0;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  .course {
+    font-size: 12px;
+  }
+
+  .professor {
+    font-size: 10px;
+    margin: 2px 0 0;
+  }
+
+  .no-data {
+    font-size: 12px;
+    padding: 10px;
+  }
 }

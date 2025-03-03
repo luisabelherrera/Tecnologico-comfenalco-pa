@@ -14,15 +14,13 @@ import { NivelDetalleCursoService } from 'src/app/services/niveldetallecurso/niv
 })
 export class DocenteNivelDetalleCursoComponent implements OnInit, OnDestroy {
   docenteNivelDetalleCursos: DocenteNivelDetalleCurso[] = [];
-  paginatedData: DocenteNivelDetalleCurso[] = [];
   filteredData: DocenteNivelDetalleCurso[] = [];
   nuevoDocenteNivelCurso: Partial<DocenteNivelDetalleCurso> = {};
   editingDocenteNivelCurso: DocenteNivelDetalleCurso | null = null;
   docentes: Docente[] = [];
   nivelesDetalle: any[] = [];
   loading: boolean = false;
-  pageSize: number = 5; 
-  pageIndex: number = 0; 
+  showForm: boolean = false;
 
   private subscriptions: Subscription = new Subscription();
 
@@ -34,16 +32,25 @@ export class DocenteNivelDetalleCursoComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadData(); 
+    this.loadData();
     this.resetForm();
   }
-  
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
+
+  toggleView(show: boolean): void {
+    this.showForm = show;
+    this.editingDocenteNivelCurso = null;
+    if (!show) {
+      this.loadAll();
+      this.resetForm();
+    }
+  }
+
   loadData(): void {
-    this.loading = false;
+    this.loading = true;
     this.loadAll();
     this.loadDocentes();
     this.loadNivelesDetalle();
@@ -52,48 +59,26 @@ export class DocenteNivelDetalleCursoComponent implements OnInit, OnDestroy {
   loadAll(): void {
     const loadSub = this.docenteNivelDetalleCursoService.getAll().subscribe(
       (data: DocenteNivelDetalleCurso[]) => {
-       
-        this.docenteNivelDetalleCursos = [];
-        this.filteredData = [];
-        this.docenteNivelDetalleCursos = data;  
-        this.filteredData = data;  
-        this.updatePaginatedData(); 
+        this.docenteNivelDetalleCursos = data;
+        this.filteredData = data;
         this.loading = false;
       },
       (error) => {
         console.error('Error cargando docentes:', error);
-        this.snackBar.open('Error al cargar docentes. Inténtalo de nuevo.', 'Cerrar', {
-          duration: 0,
-        });
+        this.snackBar.open('Error al cargar docentes. Inténtalo de nuevo.', 'Cerrar', { duration: 3000 });
         this.loading = false;
       }
     );
     this.subscriptions.add(loadSub);
   }
-  
- 
-  updatePaginatedData(): void {
-    const startIndex = this.pageIndex * this.pageSize;
-    this.paginatedData = this.filteredData.slice(startIndex, startIndex + this.pageSize);
-  }
- 
+
   applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase(); // Cast to HTMLInputElement
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
     this.filteredData = this.docenteNivelDetalleCursos.filter(docenteNivelCurso =>
       docenteNivelCurso.docente.nombres.toLowerCase().includes(filterValue) ||
       docenteNivelCurso.docente.apellidos.toLowerCase().includes(filterValue) ||
       docenteNivelCurso.nivelDetalleCurso.curso.descripcion.toLowerCase().includes(filterValue)
     );
-    this.pageIndex = 0; 
-    this.updatePaginatedData();  
-  }
-  
-  
- 
-  changePage(event: any): void {
-    this.pageIndex = event.pageIndex;  
-    this.pageSize = event.pageSize; 
-    this.updatePaginatedData(); 
   }
 
   loadDocentes(): void {
@@ -104,9 +89,7 @@ export class DocenteNivelDetalleCursoComponent implements OnInit, OnDestroy {
       },
       (error) => {
         console.error('Error cargando docentes:', error);
-        this.snackBar.open('Error al cargar docentes. Inténtalo de nuevo.', 'Cerrar', {
-          duration: 3000,
-        });
+        this.snackBar.open('Error al cargar docentes. Inténtalo de nuevo.', 'Cerrar', { duration: 3000 });
       }
     );
     this.subscriptions.add(docentesSub);
@@ -120,28 +103,23 @@ export class DocenteNivelDetalleCursoComponent implements OnInit, OnDestroy {
       },
       (error) => {
         console.error('Error cargando niveles de detalle:', error);
-        this.snackBar.open('Error al cargar niveles de detalle. Inténtalo de nuevo.', 'Cerrar', {
-          duration: 3000,
-        });
+        this.snackBar.open('Error al cargar niveles de detalle. Inténtalo de nuevo.', 'Cerrar', { duration: 3000 });
       }
     );
     this.subscriptions.add(nivelesSub);
   }
 
   create(): void {
-    console.log('Nuevo Docente Nivel Curso:', this.nuevoDocenteNivelCurso);
+    if (!this.nuevoDocenteNivelCurso.docente?.idDocente || !this.nuevoDocenteNivelCurso.nivelDetalleCurso?.idNivelDetalleCurso) {
+      this.snackBar.open('Por favor, complete todos los campos requeridos.', 'Cerrar', { duration: 3000 });
+      return;
+    }
     const createSub = this.docenteNivelDetalleCursoService.create(this.nuevoDocenteNivelCurso as DocenteNivelDetalleCurso).subscribe(
       (docente) => {
-        if (docente && docente.idDocenteNivelDetalleCurso) {
-   
-          this.docenteNivelDetalleCursos.push(docente);
-          this.filteredData.push(docente);
-          this.updatePaginatedData();
-          this.snackBar.open('Docente agregado exitosamente', 'Cerrar', { duration: 3000 });
-        } else {
-          console.warn('No se pudo agregar el docente.');
-        }
-        this.resetForm();
+        this.docenteNivelDetalleCursos.push(docente);
+        this.filteredData.push(docente);
+        this.snackBar.open('Docente agregado exitosamente', 'Cerrar', { duration: 3000 });
+        this.toggleView(false);
       },
       (error) => {
         console.error('Error al agregar docente:', error);
@@ -150,39 +128,32 @@ export class DocenteNivelDetalleCursoComponent implements OnInit, OnDestroy {
     );
     this.subscriptions.add(createSub);
   }
-  
-  
 
   edit(docente: DocenteNivelDetalleCurso): void {
     this.editingDocenteNivelCurso = docente;
     this.nuevoDocenteNivelCurso = { ...docente };
+    this.showForm = true;
   }
 
   update(): void {
-    if (this.editingDocenteNivelCurso) {
+    if (this.editingDocenteNivelCurso && this.nuevoDocenteNivelCurso.docente?.idDocente && this.nuevoDocenteNivelCurso.nivelDetalleCurso?.idNivelDetalleCurso) {
       const updatedDocente = {
         ...this.editingDocenteNivelCurso,
         ...this.nuevoDocenteNivelCurso,
       };
-
       const updateSub = this.docenteNivelDetalleCursoService.update(this.editingDocenteNivelCurso.idDocenteNivelDetalleCurso, updatedDocente).subscribe(
         () => {
           const index = this.docenteNivelDetalleCursos.findIndex(d => d.idDocenteNivelDetalleCurso === this.editingDocenteNivelCurso!.idDocenteNivelDetalleCurso);
           if (index !== -1) {
             this.docenteNivelDetalleCursos[index] = updatedDocente;
-            this.filteredData[index] = updatedDocente; 
-            this.updatePaginatedData();  
+            this.filteredData[index] = updatedDocente;
           }
-          this.resetForm();
-          this.snackBar.open('Docente actualizado exitosamente', 'Cerrar', {
-            duration: 3000,
-          });
+          this.snackBar.open('Docente actualizado exitosamente', 'Cerrar', { duration: 3000 });
+          this.toggleView(false);
         },
         (error) => {
           console.error('Error al actualizar docente:', error);
-          this.snackBar.open('Error al actualizar docente. Inténtalo de nuevo.', 'Cerrar', {
-            duration: 3000,
-          });
+          this.snackBar.open('Error al actualizar docente. Inténtalo de nuevo.', 'Cerrar', { duration: 3000 });
         }
       );
       this.subscriptions.add(updateSub);
@@ -190,20 +161,20 @@ export class DocenteNivelDetalleCursoComponent implements OnInit, OnDestroy {
   }
 
   delete(id: number): void {
-    const deleteSub = this.docenteNivelDetalleCursoService.delete(id).subscribe(
-      () => {
-        this.docenteNivelDetalleCursos = this.docenteNivelDetalleCursos.filter(docente => docente.idDocenteNivelDetalleCurso !== id);
-        this.filteredData = this.filteredData.filter(docente => docente.idDocenteNivelDetalleCurso !== id);  
-        this.updatePaginatedData(); 
-      },
-      (error) => {
-        console.error('Error al eliminar docente:', error);
-        this.snackBar.open('Error al eliminar docente. Inténtalo de nuevo.', 'Cerrar', {
-          duration: 3000,
-        });
-      }
-    );
-    this.subscriptions.add(deleteSub);
+    if (confirm('¿Estás seguro de eliminar este registro?')) {
+      const deleteSub = this.docenteNivelDetalleCursoService.delete(id).subscribe(
+        () => {
+          this.docenteNivelDetalleCursos = this.docenteNivelDetalleCursos.filter(docente => docente.idDocenteNivelDetalleCurso !== id);
+          this.filteredData = this.filteredData.filter(docente => docente.idDocenteNivelDetalleCurso !== id);
+          this.snackBar.open('Registro eliminado exitosamente', 'Cerrar', { duration: 3000 });
+        },
+        (error) => {
+          console.error('Error al eliminar docente:', error);
+          this.snackBar.open('Error al eliminar registro. Inténtalo de nuevo.', 'Cerrar', { duration: 3000 });
+        }
+      );
+      this.subscriptions.add(deleteSub);
+    }
   }
 
   resetForm(): void {

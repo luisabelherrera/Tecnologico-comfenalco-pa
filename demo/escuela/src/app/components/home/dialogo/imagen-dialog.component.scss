@@ -16,6 +16,8 @@
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   text-align: left;
   font-family: 'Roboto', sans-serif;
+  max-height: 70vh; /* Limit dialog content height to 70% of viewport */
+  overflow-y: auto; /* Enable scrolling if content overflows */
 }
 
 /* Encabezado del contenido */
@@ -41,16 +43,30 @@
   line-height: 1.6;
   margin-top: 12px;
   margin-bottom: 16px;
-  white-space: pre-wrap; /* Mantiene saltos de línea */
+  white-space: pre-wrap;
 }
 
 /* Imagen del diálogo */
 .imagen-dialog {
   width: 100%;
+  max-height: 400px; /* Limit image height */
   height: auto;
   margin-top: 16px;
   border-radius: 8px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  object-fit: contain; /* Ensure image scales properly */
+}
+
+/* Video del diálogo */
+.video-dialog {
+  width: 100%;
+  max-width: 600px; /* Reduce max width to fit dialog */
+  max-height: 300px; /* Reduce max height to fit dialog */
+  height: auto;
+  margin-top: 16px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  object-fit: contain; /* Ensure video scales properly */
 }
 
 /* Acciones del diálogo */

@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Curricular } from 'src/app/models/entity/curricular.model';
 import { environment } from 'src/environments/environment';
+import { UserDto } from 'src/app/models/models';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,12 @@ export class CurricularService {
       catchError(this.handleError)
     );
   }
-
+  getCurricularesPorDocente(idDocente: number): Observable<Curricular[]> {
+    const url = `${this.apiUrl}/docente/${idDocente}`;
+    return this.http.get<Curricular[]>(url, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
   createCurricular(curricular: Curricular): Observable<Curricular> {
     return this.http.post<Curricular>(this.apiUrl, curricular, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
@@ -44,7 +50,12 @@ export class CurricularService {
       catchError(this.handleError)
     );
   }
-
+  getEstudiantesPorCurricular(idCurricular: number): Observable<UserDto[]> {
+    const url = `${this.apiUrl}/${idCurricular}/estudiantes`;
+    return this.http.get<UserDto[]>(url, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
   deleteCurricular(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)

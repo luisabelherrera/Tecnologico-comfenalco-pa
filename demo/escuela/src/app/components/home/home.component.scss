@@ -1,53 +1,66 @@
 .header {
-  background-color: #f8f9fa;
-  padding: 20px;
+  padding: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: #ffffff; /* White background */
+  color: #000000; /* Black text */
+  border-bottom: 1px solid #e2e8f0; /* Light gray border for separation */
 }
+
 .chat-icon {
   position: fixed;
   bottom: 20px;
   right: 20px;
   z-index: 1000;
-  background-color: #6a1b9a;
   border-radius: 50%;
   padding: 10px;
-  color: white;
+  background-color: #4a90e2; /* Light blue for contrast */
+  color: #ffffff; /* White text */
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 .logo-text {
   font-size: 24px;
   font-weight: bold;
+  margin: 0;
+  color: #000000; /* Black text */
 }
 
 .user-info {
-  font-size: 16px;
-  color: #555;
+  font-size: 1rem;
+  color: #333333; /* Dark gray text for readability */
 }
 
 .noticias-container {
   padding: 20px;
+  background-color: #ffffff; /* White background */
 }
 
 .noticias-titulo {
   font-size: 22px;
   margin-bottom: 10px;
+  color: #000000; /* Black text for dark theme */
 }
 
 .noticias-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
+  align-items: start; /* Aligns items at the top to prevent stretching */
 }
 
 .noticia-card {
-  border: 1px solid #ddd;
+  border: 1px solid #e2e8f0; /* Light gray border */
   border-radius: 5px;
   padding: 15px;
-  background-color: #fff;
+  background-color: #ffffff; /* White background */
+  color: #000000; /* Black text for visibility */
+  display: flex; /* Use flex to stack content vertically */
+  flex-direction: column;
+  min-height: 0; /* Ensure no minimum height forces extra space */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
 .noticia-header {
@@ -57,35 +70,126 @@
 .noticia-titulo {
   font-size: 18px;
   margin: 0;
+  color: #000000; /* Black text */
 }
 
 .noticia-fecha {
   font-size: 14px;
-  color: #888;
+  color: #718096; /* Medium gray text for dates */
 }
 
 .noticia-texto {
   margin: 10px 0;
+  color: #000000; /* Black text */
+  overflow-wrap: break-word; /* Prevent long text from breaking layout */
 }
 
-.noticia-imagen {
+.noticia-imagen, .noticia-video {
   max-width: 100%;
   height: auto;
-  cursor: pointer;
+  object-fit: contain; /* Ensures images/videos fit without distorting */
+  margin-top: 10px;
+  border-radius: 5px; /* Optional: match card corners */
 }
 
 .btn-cargar-imagen {
-  background-color: #5e35b1;
+  background-color: #4a90e2; /* Light blue for buttons */
   color: white;
   border: none;
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 10px;
+}
+
+.btn-cargar-imagen:hover {
+  background-color: #357abd; /* Darker blue on hover */
+}
+
+.btn-ver-mas {
+  background: none;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  color: #4a90e2; /* Light blue to match theme */
+  font-size: 20px; /* Larger icon */
+  transition: transform 0.2s ease, color 0.2s ease;
+  margin-top: 10px;
+}
+
+.btn-ver-mas:hover {
+  color: #357abd; /* Darker blue on hover */
+  transform: scale(1.2); /* Slight scale-up effect */
+}
+
+.noticia-interacciones {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px; /* Space between buttons */
+  align-items: center;
+}
+
+.btn-like, .btn-toggle-comments {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.btn-like .heart-icon {
+  margin-right: 5px;
+  color: #ff0000; /* Red heart */
+  font-size: 22px; /* Larger heart icon */
+  transition: transform 0.2s;
+}
+
+.btn-like:hover .heart-icon {
+  transform: scale(1.2);
+}
+
+.btn-like[disabled] .heart-icon {
+  color: #a0aec0; /* Light gray when disabled */
+}
+
+.btn-like[disabled] {
+  cursor: not-allowed;
+}
+
+.btn-toggle-comments {
+  font-size: 16px;
+  color: #48bb78; /* Green for comments (or #4a90e2 for blue) */
+}
+
+.btn-toggle-comments:hover {
+  color: #38a169; /* Darker green on hover (or #357abd for blue) */
+}
+
+/* SVG Button Styles */
+.group {
+  position: relative;
+}
+
+.w-6 {
+  width: 24px; /* Matches the SVG width/height */
+}
+
+.hover\:scale-125:hover {
+  transform: scale(1.25); /* Matches hover:scale-125 */
+}
+
+.duration-200 {
+  transition-duration: 200ms; /* Matches duration-200 */
+}
+
+.hover\:stroke-blue-500:hover {
+  stroke: #4a90e2; /* Light blue for SVG hover */
 }
 
 .chat-container {
   position: fixed;
-  bottom: 20px;
+  bottom: 70px;
   right: 20px;
   width: 300px;
   z-index: 1000;
@@ -95,11 +199,70 @@
   width: 100%;
   max-height: 400px;
   overflow: hidden;
+  background-color: #ffffff; /* White background */
+  color: #000000; /* Black text */
+  border: 1px solid #e2e8f0; /* Light gray border */
+  border-radius: 5px;
 }
 
 .card-body {
   overflow-y: auto;
   max-height: 300px;
+  background-color: #ffffff; /* White background */
+  color: #000000; /* Black text */
+}
+
+.card-header {
+  background-color: #f7fafc; /* Very light gray */
+  color: #000000; /* Black text */
+}
+
+.card-footer {
+  background-color: #ffffff; /* White background */
+  color: #000000; /* Black text */
+}
+
+.chat-body {
+  max-height: 250px;
+  overflow-y: auto;
+  background-color: #ffffff; /* White background */
+  border: 1px solid #e2e8f0; /* Light gray border */
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.list-group-item-light {
+  background-color: #f7fafc; /* Very light gray for consistency */
+  color: #000000; /* Black text */
+}
+
+.btn-primary {
+  background-color: #4a90e2; /* Light blue */
+  border: none;
+  color: #ffffff; /* White text */
+}
+
+.btn-primary:hover {
+  background-color: #357abd; /* Darker blue on hover */
+}
+
+.btn-success {
+  background-color: #48bb78; /* Green */
+  color: #ffffff; /* White text */
+}
+
+.btn-success:hover {
+  background-color: #38a169; /* Darker green on hover */
+}
+
+.btn-light {
+  background-color: #f7fafc; /* Very light gray */
+  color: #000000; /* Black text */
+  border: 1px solid #e2e8f0; /* Light gray border */
+}
+
+.btn-light:hover {
+  background-color: #e2e8f0; /* Slightly darker gray on hover */
 }
 
 .emoji-picker {
@@ -107,53 +270,60 @@
   flex-wrap: wrap;
   max-height: 100px;
   overflow-y: auto;
-  background: white;
-  border: 1px solid #ccc;
+  background: #f7fafc; /* Very light gray */
+  border: 1px solid #e2e8f0; /* Light gray border */
   padding: 5px;
   border-radius: 5px;
+  color: #000000; /* Black text */
 }
 
-.card-header {
-  background-color: #6a1b9a;
-  color: white;
+.form-control {
+  background-color: #ffffff; /* White background */
+  color: #000000; /* Black text */
+  border: 1px solid #e2e8f0; /* Light gray border */
 }
 
-.card-footer {
-  background-color: #e1bee7;
+.form-control:focus {
+  background-color: #ffffff; /* Maintain white background on focus */
+  color: #000000; /* Black text */
+  border-color: #4a90e2; /* Light blue on focus */
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5); /* Subtle focus glow */
 }
 
-.chat-body {
-  max-height: 250px;
+.comentario-input-container {
+  margin-top: 10px;
+}
+
+.comentario-input {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #e2e8f0; /* Light gray border */
+  border-radius: 4px;
+  background-color: #ffffff; /* White background for input */
+  color: #000000; /* Black text */
+}
+
+.comentarios-lista {
+  margin-top: 10px;
+  max-height: 150px;
   overflow-y: auto;
-  background-color: #ffffff;
-  border: 1px solid #6a1b9a;
-  border-radius: 5px;
-  padding: 10px;
+  transition: all 0.3s ease;
+  background-color: #ffffff; /* White background */
+  color: #000000; /* Black text */
 }
 
-.list-group-item-light {
-  background-color: #f3e5f5;
-  color: #000;
+@media (max-width: 768px) {
+  .noticias-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Smaller cards on mobile */
+  }
+
+  .noticia-card {
+    padding: 10px; /* Reduce padding on mobile */
+  }
+
+  .chat-container {
+    width: 250px; /* Smaller chat on mobile */
+    right: 10px;
+    bottom: 60px;
+  }
 }
-
-.btn-primary {
-  background-color: #6a1b9a;
-  border: none;
-}
-
-.btn-primary:hover {
-  background-color: #4a148c;
-}
-
-.btn-success {
-  background-color: #4caf50;
-}
-
-.btn-warning {
-  background-color: #ff9800;
-}
-
-
-
-
-

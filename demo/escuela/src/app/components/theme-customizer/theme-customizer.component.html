@@ -1,0 +1,93 @@
+<div class="theme-customizer">
+  <section class="theme-creator">
+    <h3>Personalizar Tema</h3>
+    <div class="form-group">
+      <label for="theme-name">Nombre del Tema:</label>
+      <input
+        id="theme-name"
+        [(ngModel)]="selectedTheme.name"
+        placeholder="Ej: Navidad"
+        class="form-control"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>
+        <input type="checkbox" [(ngModel)]="useSplitColors" (change)="toggleSplitColors()" />
+        Usar colores divididos
+      </label>
+    </div>
+
+    <div class="form-group" *ngIf="!useSplitColors">
+      <label for="background-color">Color de Fondo:</label>
+      <input
+        id="background-color"
+        type="color"
+        [(ngModel)]="selectedTheme.backgroundColor"
+        class="color-picker"
+      />
+    </div>
+
+    <div class="form-group" *ngIf="useSplitColors">
+      <label for="background-color-left">Color de Fondo Izquierdo:</label>
+      <input
+        id="background-color-left"
+        type="color"
+        [(ngModel)]="selectedTheme.backgroundColorLeft"
+        class="color-picker"
+      />
+    </div>
+
+    <div class="form-group" *ngIf="useSplitColors">
+      <label for="background-color-right">Color de Fondo Derecho:</label>
+      <input
+        id="background-color-right"
+        type="color"
+        [(ngModel)]="selectedTheme.backgroundColorRight"
+        class="color-picker"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="text-color">Color de Texto:</label>
+      <input
+        id="text-color"
+        type="color"
+        [(ngModel)]="selectedTheme.textColor"
+        class="color-picker"
+      />
+    </div>
+
+    <button class="btn btn-save" (click)="saveTheme()">Guardar Tema</button>
+  </section>
+
+  <section class="predefined-themes">
+    <h4>Temas Predefinidos</h4>
+    <div class="theme-list">
+      <button
+        *ngFor="let theme of predefinedThemes"
+        (click)="selectPredefinedTheme(theme)"
+        [disabled]="theme.isActive"
+        class="btn btn-theme"
+        [ngClass]="{'active': theme.isActive}"
+      >
+        {{ theme.name }} <span *ngIf="theme.isActive">(Activo)</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="saved-themes">
+    <h4>Temas Guardados</h4>
+    <div class="theme-list">
+      <button
+        *ngFor="let theme of themes"
+        (click)="applyTheme(theme)"
+        [disabled]="theme.isActive"
+        class="btn btn-theme"
+        [ngClass]="{'active': theme.isActive}"
+      >
+        {{ theme.name }} <span *ngIf="theme.isActive">(Activo)</span>
+      </button>
+    </div>
+  </section>
+</div>

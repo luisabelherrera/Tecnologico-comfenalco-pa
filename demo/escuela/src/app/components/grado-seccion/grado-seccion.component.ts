@@ -1,5 +1,3 @@
-// src/app/components/grado-seccion/grado-seccion.component.ts
-
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -16,6 +14,8 @@ export class GradoSeccionComponent implements OnInit {
   gradoSecciones: GradoSeccion[] = [];
   displayedColumns: string[] = ['descripcionGrado', 'descripcionSeccion', 'activo', 'fechaRegistro', 'actions'];
   dataSource = new MatTableDataSource<GradoSeccion>([]);
+  showForm: boolean = false;
+  editingId: number | null = null;
 
   newGradoSeccion: GradoSeccion = {
     idGradoSeccion: 0,
@@ -25,7 +25,11 @@ export class GradoSeccionComponent implements OnInit {
     fechaRegistro: new Date()
   };
 
-  editingId: number | null = null;
+  gradoOptions: string[] = [
+    'Primero', 'Segundo', 'Tercero', 'Cuarto', 'Quinto',
+    'Sexto', 'Séptimo', 'Octavo', 'Noveno', 'Décimo', 'Undécimo'
+  ];
+  seccionOptions: string[] = ['A', 'B', 'C', 'D', 'E'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -36,7 +40,14 @@ export class GradoSeccionComponent implements OnInit {
     this.loadGradoSecciones();
   }
 
-  
+  toggleView(show: boolean): void {
+    this.showForm = show;
+    this.editingId = null;
+    if (!show) {
+      this.loadGradoSecciones();
+      this.resetForm();
+    }
+  }
 
   loadGradoSecciones(): void {
     this.gradoSeccionService.getAllGradoSecciones().subscribe(
@@ -53,32 +64,50 @@ export class GradoSeccionComponent implements OnInit {
   }
 
   createGradoSeccion(): void {
+    if (!this.newGradoSeccion.descripcionGrado || !this.newGradoSeccion.descripcionSeccion) {
+      console.error('Campos requeridos faltantes');
+      return;
+    }
     if (this.editingId) {
       this.updateGradoSeccion();
     } else {
-      this.gradoSeccionService.createGradoSeccion(this.newGradoSeccion).subscribe(() => {
-        this.loadGradoSecciones();
-        this.resetForm();
-      });
+      this.gradoSeccionService.createGradoSeccion(this.newGradoSeccion).subscribe(
+        () => {
+          this.loadGradoSecciones();
+          this.toggleView(false);
+        },
+        (error) => console.error('Error creating grado seccion', error)
+      );
     }
   }
 
   updateGradoSeccion(): void {
-    this.gradoSeccionService.updateGradoSeccion(this.editingId!, this.newGradoSeccion).subscribe(() => {
-      this.loadGradoSecciones();
-      this.resetForm();
-    });
+    if (!this.newGradoSeccion.descripcionGrado || !this.newGradoSeccion.descripcionSeccion) {
+      console.error('Campos requeridos faltantes');
+      return;
+    }
+    this.gradoSeccionService.updateGradoSeccion(this.editingId!, this.newGradoSeccion).subscribe(
+      () => {
+        this.loadGradoSecciones();
+        this.toggleView(false);
+      },
+      (error) => console.error('Error updating grado seccion', error)
+    );
   }
 
   editGradoSeccion(gradoSeccion: GradoSeccion): void {
     this.newGradoSeccion = { ...gradoSeccion };
     this.editingId = gradoSeccion.idGradoSeccion;
+    this.showForm = true;
   }
 
   deleteGradoSeccion(id: number): void {
-    this.gradoSeccionService.deleteGradoSeccion(id).subscribe(() => {
-      this.loadGradoSecciones();
-    });
+    if (confirm('¿Estás seguro de eliminar esta sección de grado?')) {
+      this.gradoSeccionService.deleteGradoSeccion(id).subscribe(
+        () => this.loadGradoSecciones(),
+        (error) => console.error('Error deleting grado seccion', error)
+      );
+    }
   }
 
   resetForm(): void {
@@ -93,8 +122,8 @@ export class GradoSeccionComponent implements OnInit {
   }
 
   applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.dataSource.filter = filterValue;
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }

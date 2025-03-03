@@ -9,8 +9,8 @@ public interface CalificacionService {
     List<Calificacion> findAll();
 
     Optional<Calificacion> findById(Integer id);
-
+    List<Calificacion> findByDocenteId(Integer idDocente);
     Calificacion save(Calificacion calificacion);
-
+    List<Calificacion> findByCurricularId(Integer idCurricular);
     void deleteById(Integer id);
 }

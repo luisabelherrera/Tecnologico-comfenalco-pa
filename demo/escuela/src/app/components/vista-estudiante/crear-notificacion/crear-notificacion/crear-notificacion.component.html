@@ -1,0 +1,57 @@
+<div class="notification-container">
+    <h2>Crear Nueva Notificación</h2>
+  
+    <form [formGroup]="notificacionForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="titulo">Título</label>
+        <input
+          id="titulo"
+          type="text"
+          formControlName="titulo"
+          class="form-control"
+          placeholder="Ingrese el título"
+          [class.invalid]="f['titulo'].touched && f['titulo'].invalid"
+        >
+        <div class="error-message" *ngIf="f['titulo'].touched && f['titulo'].invalid">
+          <span *ngIf="f['titulo'].errors?.['required']">
+            El título (incluyendo tu nombre de usuario "{{ username }}") es requerido
+          </span>
+          <span *ngIf="f['titulo'].errors?.['minlength']">
+            El título debe tener al menos 3 caracteres (incluyendo "{{ username }} - ")
+          </span>
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="mensaje">Mensaje</label>
+        <textarea
+          id="mensaje"
+          formControlName="mensaje"
+          class="form-control"
+          placeholder="Escriba su mensaje aquí"
+          rows="4"
+          [class.invalid]="f['mensaje'].touched && f['mensaje'].invalid"
+        ></textarea>
+        <div class="error-message" *ngIf="f['mensaje'].touched && f['mensaje'].invalid">
+          <span *ngIf="f['mensaje'].errors?.['required']">El mensaje es requerido</span>
+          <span *ngIf="f['mensaje'].errors?.['minlength']">Mínimo 5 caracteres</span>
+        </div>
+      </div>
+  
+      <div class="button-container">
+        <button
+          type="submit"
+          class="submit-btn"
+          [disabled]="notificacionForm.invalid || isSubmitting || !username"
+        >
+          <span *ngIf="isSubmitting">Enviando...</span>
+          <span *ngIf="!isSubmitting">Crear Notificación</span>
+        </button>
+      </div>
+    </form>
+  
+    <div class="messages">
+      <div class="success-message" *ngIf="successMessage">{{successMessage}}</div>
+      <div class="error-message" *ngIf="errorMessage">{{errorMessage}}</div>
+    </div>
+  </div>

@@ -11,7 +11,7 @@ import { InscripcionService } from 'src/app/services/matricula/matricula.service
 import { NivelDetalleService } from 'src/app/services/niveldetalle/NivelDetalle.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { IncripciondetalleComponent } from './dialog/incripciondetalle/incripciondetalle.component';
+import { InscripciondetalleComponent } from './dialog/incripciondetalle/incripciondetalle.component';
 import { ExportDialogComponent } from './dialog/export-dialog/export-dialog.component';
 import { AgregarEstudianteDialogComponent } from './dialog/agregar-estudiante-dialog/agregar-estudiante-dialog.component';
 import { MatricularAcudienteDialogComponent } from './dialog/matricular-acudiente-dialog/matricular-acudiente-dialog.component';
@@ -22,6 +22,7 @@ import { MatricularAcudienteDialogComponent } from './dialog/matricular-acudient
   styleUrls: ['./matricula.component.scss']
 })
 export class MatriculaComponent implements OnInit, OnDestroy {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   inscripciones: MatTableDataSource<Inscripcion> = new MatTableDataSource();
   nuevoInscripcion: Partial<Inscripcion> = {};
   estudiantes: Estudiante[] = [];
@@ -29,12 +30,12 @@ export class MatriculaComponent implements OnInit, OnDestroy {
   nivelesDetalle: any[] = [];
   loading: boolean = false;
   isEditing: boolean = false;
+  showForm: boolean = true;
   private subscriptions: Subscription = new Subscription();
-  totalElements: number = 0; // Total de elementos
-  totalPages: number = 0; 
-  @ViewChild(MatPaginator) paginator: MatPaginator; 
+  totalElements: number = 0;
+  totalPages: number = 0;
   estadosPago = Object.values(EstadoPago);
-  dataSource = new MatTableDataSource<any>([]);
+
   constructor(
     private inscripcionService: InscripcionService,
     private estudianteService: EstudianteService,
@@ -44,15 +45,11 @@ export class MatriculaComponent implements OnInit, OnDestroy {
     private dialog: MatDialog
   ) {}
 
-
-  
-
   ngOnInit(): void {
     this.loadData();
     this.resetForm();
-    
     this.inscripciones.filterPredicate = (data: Inscripcion, filter: string) => {
-      return data.codigo.toLowerCase().includes(filter) || 
+      return data.codigo.toLowerCase().includes(filter) ||
              (data.estudiante?.nombres + ' ' + data.estudiante?.apellidos).toLowerCase().includes(filter);
     };
   }
@@ -61,21 +58,19 @@ export class MatriculaComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-
-
-
-
-
-  
+  toggleView(showForm: boolean): void {
+    this.showForm = showForm;
+    if (!showForm) {
+      this.loadInscripciones();
+    }
+  }
 
   loadData(): void {
     this.loading = true;
-  
-    // Llamadas a las funciones asíncronas con forkJoin
     forkJoin([
       this.inscripcionService.getAllInscripciones(),
       this.estudianteService.getAllEstudiantes(),
-      this.acudienteService.getAcudientes(0, 10),  // Aquí deberías pasar los valores correctos de paginación
+      this.acudienteService.getAcudientes(0, 10),
       this.nivelDetalleService.getAll()
     ]).subscribe({
       next: ([inscripcionesData, estudiantesData, acudientesData, nivelesData]) => {
@@ -85,9 +80,9 @@ export class MatriculaComponent implements OnInit, OnDestroy {
         this.nivelesDetalle = nivelesData;
         this.totalElements = acudientesData.totalElements;
         this.totalPages = acudientesData.totalPages;
-  
         this.loading = false;
         this.inscripciones.paginator = this.paginator;
+        this.generateCodigo(); // Generate code after loading data
       },
       error: (error) => {
         this.handleError('Error cargando los datos:', error);
@@ -97,11 +92,12 @@ export class MatriculaComponent implements OnInit, OnDestroy {
   }
 
   loadInscripciones(): void {
+    this.loading = true;
     const loadSub = this.inscripcionService.getAllInscripciones().subscribe(
       (data: Inscripcion[]) => {
-        this.inscripciones.data = data; 
+        this.inscripciones.data = data;
         this.loading = false;
-        this.inscripciones.paginator = this.paginator; 
+        this.inscripciones.paginator = this.paginator;
       },
       (error) => {
         this.handleError('Error cargando inscripciones:', error);
@@ -111,110 +107,70 @@ export class MatriculaComponent implements OnInit, OnDestroy {
     this.subscriptions.add(loadSub);
   }
 
+  // Generate incremental code with leading zeros (e.g., "000010")
+  generateCodigo(): void {
+    if (this.isEditing) return; // Don't generate a new code when editing
+
+    const latestInscripcion = this.inscripciones.data
+      .map(ins => parseInt(ins.codigo, 10))
+      .sort((a, b) => b - a)[0] || 0;
+    const newCode = latestInscripcion + 1;
+    this.nuevoInscripcion.codigo = newCode.toString().padStart(6, '0'); // e.g., "000010"
+    this.nuevoInscripcion.valorCodigo = newCode; // Store the numeric value if needed
+  }
+
   openMatricularEstudiantesDialog(): void {
-    console.log(this.acudientes);  
     const dialogRef = this.dialog.open(AgregarEstudianteDialogComponent, {
       data: { estudiantes: this.estudiantes }
     });
-  
     dialogRef.afterClosed().subscribe((selectedEstudiante: Estudiante | null) => {
       if (selectedEstudiante) {
-        this.nuevoInscripcion.estudiante = selectedEstudiante; 
+        this.nuevoInscripcion.estudiante = selectedEstudiante;
       }
     });
   }
+
   openMatricularAcudienteDialog(): void {
-    // Asegúrate de que los acudientes están cargados antes de abrir el diálogo
-    console.log(this.acudientes);  // Verifica que los datos estén disponibles
     const dialogRef = this.dialog.open(MatricularAcudienteDialogComponent, {
-      data: { acudientes: this.acudientes }  // Asegúrate de pasar los datos completos
+      data: { acudientes: this.acudientes }
     });
-  
     dialogRef.afterClosed().subscribe((result: Acudiente | null) => {
       if (result) {
-        this.nuevoInscripcion.acudiente = result;  // Asigna el acudiente seleccionado
+        this.nuevoInscripcion.acudiente = result;
       }
     });
   }
-  
 
   openExportDialog(): void {
     const dialogRef = this.dialog.open(ExportDialogComponent, {
-      data: { inscripciones: this.inscripciones.data } 
+      data: { inscripciones: this.inscripciones.data }
     });
-    
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'excel') {
-        dialogRef.componentInstance.downloadExcel(); 
+        dialogRef.componentInstance.downloadExcel();
       }
     });
-  }
-  
-  loadEstudiantes(): void {
-    const estudiantesSub = this.estudianteService.getAllEstudiantes().subscribe(
-      (data: Estudiante[]) => {
-        this.estudiantes = data;
-      },
-      (error) => {
-        this.handleError('Error cargando estudiantes:', error);
-      }
-    );
-    this.subscriptions.add(estudiantesSub);
-  }
- 
-  loadAcudientes(page: number, size: number): void {
-    this.acudienteService.getAcudientes(page, size).subscribe(
-      (data: any) => {
-        this.acudientes = data.content;  // Lista de acudientes
-        this.totalElements = data.totalElements;  // Total de elementos
-        this.totalPages = data.totalPages;  // Total de páginas
-        this.dataSource.data = this.acudientes;  // Actualiza la fuente de datos de la tabla
-
-        // Asegurarse de que el paginador se actualice correctamente
-        if (this.paginator) {
-          this.paginator.pageIndex = page; // Actualiza el índice de página
-          this.paginator.pageSize = size;  // Asegura que el tamaño de página se mantenga
-        }
-      },
-      (error) => {
-        console.error('Error cargando acudientes:', error);
-        this.snackBar.open('Error cargando acudientes', 'Cerrar', {
-          duration: 3000,
-          verticalPosition: 'top',
-          panelClass: ['error-snackbar']
-        });
-      }
-    );
-  }
-  
-  loadNivelesDetalle(): void {
-    const nivelesSub = this.nivelDetalleService.getAll().subscribe(
-      (data: any[]) => {
-        this.nivelesDetalle = data;
-      },
-      (error) => {
-        this.handleError('Error cargando niveles de detalle:', error);
-      }
-    );
-    this.subscriptions.add(nivelesSub);
   }
 
   editInscripcion(inscripcion: Inscripcion): void {
     this.nuevoInscripcion = { ...inscripcion };
-    this.isEditing = true; 
+    this.isEditing = true;
+    this.showForm = true;
   }
 
   update(): void {
-    const updateSub = this.inscripcionService.updateInscripcion(this.nuevoInscripcion.idInscripcion, this.nuevoInscripcion as Inscripcion).subscribe(
+    const updateSub = this.inscripcionService.updateInscripcion(this.nuevoInscripcion.idInscripcion!, this.nuevoInscripcion as Inscripcion).subscribe(
       (updatedInscripcion) => {
         const index = this.inscripciones.data.findIndex(ins => ins.idInscripcion === updatedInscripcion.idInscripcion);
         if (index !== -1) {
           this.inscripciones.data[index] = updatedInscripcion;
-          this.inscripciones.data = [...this.inscripciones.data]; 
+          this.inscripciones.data = [...this.inscripciones.data];
           this.inscripciones.paginator = this.paginator;
           this.snackBar.open('Inscripción actualizada exitosamente', 'Cerrar', { duration: 3000 });
         }
         this.resetForm();
+        this.showForm = false;
+        this.loadInscripciones();
       },
       (error) => {
         this.handleError('Error al actualizar inscripción:', error);
@@ -223,23 +179,17 @@ export class MatriculaComponent implements OnInit, OnDestroy {
     this.subscriptions.add(updateSub);
   }
 
-  openDetail(inscripcion: Inscripcion): void {
-    const dialogRef = this.dialog.open(IncripciondetalleComponent, {
-      width: '400px',
-      data: inscripcion
-    });
-  
-    dialogRef.afterClosed().subscribe(result => {
-    
-    });
-  }
-
   create(): void {
+    console.log('Datos enviados al crear:', this.nuevoInscripcion);
     const createSub = this.inscripcionService.createInscripcion(this.nuevoInscripcion as Inscripcion).subscribe(
       (inscripcion) => {
         this.inscripciones.data = [...this.inscripciones.data, inscripcion];
         this.snackBar.open('Inscripción agregada exitosamente', 'Cerrar', { duration: 3000 });
         this.resetForm();
+        setTimeout(() => {
+          this.showForm = false;
+          this.loadInscripciones();
+        }, 500);
       },
       (error) => {
         this.handleError('Error al agregar inscripción:', error);
@@ -261,6 +211,14 @@ export class MatriculaComponent implements OnInit, OnDestroy {
     this.subscriptions.add(deleteSub);
   }
 
+  openDetail(inscripcion: Inscripcion): void {
+    const dialogRef = this.dialog.open(InscripciondetalleComponent, {
+      width: '400px',
+      data: inscripcion
+    });
+    dialogRef.afterClosed().subscribe(() => {});
+  }
+
   resetForm(): void {
     this.nuevoInscripcion = {
       valorCodigo: 0,
@@ -279,14 +237,16 @@ export class MatriculaComponent implements OnInit, OnDestroy {
       estadoPago: EstadoPago.PENDIENTE
     };
     this.isEditing = false;
+    if (!this.isEditing) {
+      this.generateCodigo(); // Generate new code when resetting form for creation
+    }
   }
-
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.inscripciones.filter = filterValue.trim().toLowerCase();
   }
-  
+
   private handleError(message: string, error: any): void {
     console.error(message, error);
     this.snackBar.open(message, 'Cerrar', { duration: 3000 });

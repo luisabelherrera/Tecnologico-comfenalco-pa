@@ -22,25 +22,18 @@ import { AcudienteDetailComponent } from './components/acudiente/acudiente-detai
 
 // calificacion
 import { CalificacionListComponent } from './components/calificacion/calificacion-list/calificacion-list.component';
-import { CalificacionCreateComponent } from './components/calificacion/calificacion-create/calificacion-create.component';
-import { CalificacionEditComponent } from './components/calificacion/calificacion-edit/calificacion-edit.component';
 
 // curricular
 import { CurricularListComponent } from './components/curricular/curricular-list/curricular-list.component';
-import { CurricularCreateComponent } from './components/curricular/curricular-create/curricular-create.component';
-import { CurricularEditComponent } from './components/curricular/curricular-edit/curricular-edit.component';
 
 // curso
 import { CursosListComponent } from './components/cursos/cursos-list/cursos-list.component';
-import { CursosCreateComponent } from './components/cursos/cursos-create/cursos-create.component';
-import { CursosEditComponent } from './components/cursos/cursos-edit/cursos-edit.component';
+
 //DOcenteNiveldetalle
 import { DocenteNivelDetalleCursoComponent } from './components/docente-nivel-detalle-curso/docente-nivel-detalle-curso.component';
 //Estudiante
 import { ListarEstudiantesComponent } from './components/estudiante/listar/listar.component';
-import { CrearEstudianteComponent } from './components/estudiante/crear/crear.component';
-import { EditarEstudianteComponent } from './components/estudiante/editar/editar.component';
-//GradoSeccion
+
 import { GradoSeccionComponent } from './components/grado-seccion/grado-seccion.component';
 //Horario
 import { HorarioListComponent } from './components/horario/horario-list/horario-list.component';
@@ -63,7 +56,7 @@ import { Ventana3Component } from './components/vista-estudiante/ventana3/ventan
 //matricula
 import { MatriculaComponent } from './components/matricula/matricula.component';
 import { Ventana2Component } from './components/vista-docente/ventana2/ventana2.component';
-import { CurricularComponent } from './components/vista-docente/curricular/curricular.component';
+import { CurricularDocenteComponent } from './components/vista-docente/curricular/curricular.component';
 import { HorarioComponent } from './components/vista-docente/horario/horario.component';
 import { CurricularEstudianteComponent } from './components/vista-estudiante/curricular-estudiante/curricular-estudiante.component';
 import { HorarioEstudianteComponent } from './components/vista-estudiante/horario-estudiante/horario-estudiante.component';
@@ -79,6 +72,10 @@ import { LibrosApiComponent } from './components/ventanas-para-invitados/libro/l
 import { VictorComponent } from './components/ventanas-para-invitados/victor/victor.component';
 import { FacturaComponent } from './components/matricula/dialog/incripciondetalle/factura/factura.component';
 import { PerfilEstudianteComponent } from './components/vista-estudiante/mi-perfil/perfil-estudiante/perfil-estudiante.component';
+import { ThemeCustomizerComponent } from './components/theme-customizer/theme-customizer.component';
+import { ChatGestionComponent } from './components/gestion-chat/chat-gestion/chat-gestion.component';
+import { ModificarHomeComponent } from './components/modificar-home/modificar-home.component';
+import { CrearNotificacionComponent } from './components/vista-estudiante/crear-notificacion/crear-notificacion/crear-notificacion.component';
 
 
 
@@ -97,7 +94,7 @@ const routes: Routes = [
     // vista Docente curricularDocente
   {
     path: 'curricularDocente',
-    component: CurricularComponent,
+    component: CurricularDocenteComponent,
     canActivate: [AuthGuard],
     data: { roles: ['Docente'] },
   },
@@ -190,47 +187,50 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Administracion']  },
   },
-  { path: 'curriculares/create', component: CurricularCreateComponent ,
-    canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
-  },
-  { path: 'curriculares/edit/:id', component: CurricularEditComponent ,
-    canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
-  },
+
 
   //curso
   { path: 'cursos', component: CursosListComponent ,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion']  },
   },
-  { path: 'cursos/create', component: CursosCreateComponent ,
-    canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
-  },
-  { path: 'cursos/edit/:id', component: CursosEditComponent ,
-    canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
-  },
+
   //estudiante
   { path: 'listar', component: ListarEstudiantesComponent ,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion']  },
   },
-  { path: 'crear', component: CrearEstudianteComponent ,
-    canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
-  },
-  { path: 'editar/:id', component: EditarEstudianteComponent,
-    canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
-  },
+
 
   //estudiante
   { path: 'grado-seccion', component: GradoSeccionComponent ,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion']  },
   },
+
+
+
+
+
+  { path: 'modifica-home', component: ModificarHomeComponent ,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion']  },
+  },
+
+
+  { path: 'header',
+    component: ThemeCustomizerComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion'] },
+  },
+
+  { path: 'chat-gestion',
+    component: ChatGestionComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion'] },
+  },
+
+
 
   //horario
   {
@@ -305,22 +305,18 @@ const routes: Routes = [
       data: { roles: ['Estudiante']  }, 
       },
 
-
+      { path: 'crear-notificacion', component: CrearNotificacionComponent ,
+        canActivate: [AuthGuard],
+        data: { roles: ['Estudiante']  }, 
+        },
+  
 
       
-  // calificacion
   { path: 'calificaciones', component: CalificacionListComponent ,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion']  },
   },
-  { path: 'calificaciones/create', component: CalificacionCreateComponent,
-    canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
-  },
-  { path: 'calificaciones/edit/:id', component: CalificacionEditComponent ,
-    canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
-  },
+
   { path: 'calificaciones/detail/:id', component: CalificacionDetailComponent ,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion']  },

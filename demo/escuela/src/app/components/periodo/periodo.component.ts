@@ -7,6 +7,7 @@ import { PeriodoService } from 'src/app/services/periodo/periodo.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-periodo',
@@ -17,38 +18,86 @@ export class PeriodoComponent implements OnInit, OnDestroy {
   periodos: Periodo[] = [];
   periodoForm: FormGroup;
   editingId: number | null = null;
+  showForm: boolean = false; // Toggle state
   dataSource: MatTableDataSource<Periodo>;
   loading: boolean = false;
   private destroy$: Subject<void> = new Subject<void>();
-  years: number[] = Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i); // Últimos 50 años
+  years: number[] = Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i);
 
   displayedColumns: string[] = ['descripcion', 'fechaInicio', 'fechaFin', 'activo', 'actions'];
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private periodoService: PeriodoService, private fb: FormBuilder) {
-     
+  constructor(
+    private periodoService: PeriodoService,
+    private fb: FormBuilder,
+    private route: ActivatedRoute
+  ) {
     this.periodoForm = this.fb.group({
       descripcion: ['', Validators.required],
       fechaInicio: ['', Validators.required],
       fechaFin: ['', Validators.required],
       activo: [true]
     });
+    this.dataSource = new MatTableDataSource(this.periodos);
   }
 
   ngOnInit(): void {
     this.loadPeriodos();
+    this.checkQueryParams();
   }
 
   ngOnDestroy(): void {
-     this.destroy$.next();
+    this.destroy$.next();
     this.destroy$.complete();
   }
 
+  toggleView(show: boolean): void {
+    this.showForm = show;
+    this.editingId = null;
+    if (!show) {
+      this.loadPeriodos();
+      this.periodoForm.reset({ activo: true });
+    }
+  }
+
+  checkQueryParams() {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      if (params['descripcion']) {
+        this.showForm = true; // Show form when query params are present
+        const periodoData = {
+          descripcion: params['descripcion'],
+          fechaInicio: new Date(params['fechaInicio']),
+          fechaFin: new Date(params['fechaFin']),
+          activo: params['activo'] === 'true'
+        };
+
+        if (isNaN(periodoData.fechaInicio.getTime()) || isNaN(periodoData.fechaFin.getTime())) {
+          console.error('Fechas inválidas en query params');
+          return;
+        }
+
+        this.periodoForm.patchValue(periodoData);
+        this.simulateCreation();
+      }
+    });
+  }
+
+  simulateCreation() {
+    if (this.periodoForm.valid) {
+      console.log('Simulando creación con:', this.periodoForm.value);
+      setTimeout(() => {
+        this.createPeriodo();
+      }, 2000);
+    } else {
+      console.warn('Formulario inválido al simular creación:', this.periodoForm.errors);
+    }
+  }
+
   applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.dataSource.filter = filterValue;
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -57,17 +106,17 @@ export class PeriodoComponent implements OnInit, OnDestroy {
   loadPeriodos(): void {
     this.loading = true;
     this.periodoService.getAll()
-      .pipe(takeUntil(this.destroy$))   
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
           this.periodos = data;
-          this.dataSource = new MatTableDataSource(this.periodos);
+          this.dataSource.data = this.periodos;
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
           this.loading = false;
         },
         error: (err) => {
-          console.error(err);
+          console.error('Error al cargar periodos:', err);
           this.loading = false;
         }
       });
@@ -75,7 +124,6 @@ export class PeriodoComponent implements OnInit, OnDestroy {
 
   createPeriodo(): void {
     if (this.editingId !== null) {
-     
       this.updatePeriodo();
     } else if (this.periodoForm.valid) {
       const nuevoPeriodo: Periodo = this.periodoForm.value;
@@ -86,51 +134,65 @@ export class PeriodoComponent implements OnInit, OnDestroy {
             this.periodos.push(data);
             this.dataSource.data = this.periodos;
             this.resetPeriodo();
+            console.log('Periodo creado:', data);
           },
-          error: (err) => console.error(err)
+          error: (err) => {
+            console.error('Error al crear periodo:', err);
+          }
         });
+    } else {
+      console.warn('Formulario inválido al crear:', this.periodoForm.errors);
     }
   }
-  
 
   editPeriodo(periodo: Periodo): void {
+    this.showForm = true; // Show form for editing
     this.periodoForm.patchValue(periodo);
     this.editingId = periodo.idPeriodo;
   }
 
   updatePeriodo(): void {
     if (this.editingId !== null && this.periodoForm.valid) {
-      const updatedPeriodo: Periodo = { ...this.periodoForm.value, idPeriodo: this.editingId }; 
+      const updatedPeriodo: Periodo = { ...this.periodoForm.value, idPeriodo: this.editingId };
       this.periodoService.update(this.editingId, updatedPeriodo)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (data) => {
             const index = this.periodos.findIndex(p => p.idPeriodo === this.editingId);
             if (index !== -1) {
-              this.periodos[index] = data;  
-              this.dataSource.data = this.periodos; 
+              this.periodos[index] = data;
+              this.dataSource.data = this.periodos;
             }
             this.resetPeriodo();
+            console.log('Periodo actualizado:', data);
           },
-          error: (err) => console.error(err)
+          error: (err) => {
+            console.error('Error al actualizar periodo:', err);
+          }
         });
     }
   }
-  
+
   deletePeriodo(id: number): void {
-    this.periodoService.delete(id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => {
-          this.periodos = this.periodos.filter(p => p.idPeriodo !== id);
-          this.dataSource.data = this.periodos;
-        },
-        error: (err) => console.error(err)
-      });
+    if (confirm('¿Estás seguro de eliminar este período?')) {
+      this.periodoService.delete(id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.periodos = this.periodos.filter(p => p.idPeriodo !== id);
+            this.dataSource.data = this.periodos;
+            console.log('Periodo eliminado:', id);
+          },
+          error: (err) => {
+            console.error('Error al eliminar periodo:', err);
+          }
+        });
+    }
   }
 
   resetPeriodo(): void {
     this.periodoForm.reset({ activo: true });
     this.editingId = null;
+    this.showForm = false;
   }
-}  
+}

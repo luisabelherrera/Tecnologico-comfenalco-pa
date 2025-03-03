@@ -1,31 +1,31 @@
 package com.example.demo.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Data
-@Builder
-@AllArgsConstructor
 @Document(collection = "noticias")
-public class Noticia implements Serializable {
-
+public class Noticia {
     @Id
     private String id;
     private String titulo;
     private String contenido;
-    private byte[] imagen;
-    private String tipoImagen;
-    private LocalDateTime fechaCreacion;
+    private String imagenPath; // Path to the image file
+    private String videoPath; // Path to the video file (optional)
+    private Date fechaCreacion;
+    private Integer likesCount = 0;
+    private List<String> likedBy = new ArrayList<>();
+    private List<Comentario> comentarios = new ArrayList<>();
 
-    public Noticia() {
-        this.fechaCreacion = LocalDateTime.now();
+    @Data
+    public static class Comentario {
+        private String autor;
+        private String contenido;
+        private Date fechaCreacion;
     }
-
-
 }

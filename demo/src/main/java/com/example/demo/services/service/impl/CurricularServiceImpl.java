@@ -25,7 +25,9 @@ public class CurricularServiceImpl implements CurricularService {
     public Optional<Curricular> findById(Integer id) {
         return curricularRepository.findById(id);
     }
-
+    public List<Curricular> findByDocenteId(Integer idDocente) {
+        return curricularRepository.findByDocenteNivelDetalleCursoDocenteIdDocente(idDocente);
+      }
     @Override
     public Curricular save(Curricular curricular) {
         return curricularRepository.save(curricular);

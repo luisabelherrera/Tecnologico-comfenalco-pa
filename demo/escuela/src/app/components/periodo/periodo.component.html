@@ -1,119 +1,124 @@
-<div class="container mat-elevation-z8">
-  <h2 class="title-with-icon">
-    <mat-icon>calendar_today</mat-icon> Gestión de Períodos
-  </h2>
-  
-  <p></p>
+<div class="container">
+  <!-- Toggle Buttons -->
+  <div class="toggle-buttons">
+    <button class="toggle-btn" [class.active]="showForm" (click)="toggleView(true)">Registrar Período</button>
+    <button class="toggle-btn" [class.active]="!showForm" (click)="toggleView(false)">Lista de Períodos</button>
+  </div>
 
-  <form [formGroup]="periodoForm" (ngSubmit)="createPeriodo()">
-    <div class="row">
-      <div class="col-lg-6">
-        <mat-label class="f-w-600 m-b-8 d-block">Año</mat-label>
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-select formControlName="descripcion" placeholder="Selecciona un año">
+  <!-- Form Section -->
+  <section class="form-section" *ngIf="showForm">
+    <form [formGroup]="periodoForm" (ngSubmit)="createPeriodo()" class="inscripcion-form">
+      <h2 class="section-title">{{ editingId ? 'Actualizar Período' : 'Registrar Nuevo Período' }}</h2>
+
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Año</mat-label>
+          <mat-select formControlName="descripcion" required>
             <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
           </mat-select>
-          <mat-error *ngIf="periodoForm.get('descripcion').hasError('required')">
+          <mat-error *ngIf="periodoForm.get('descripcion')?.hasError('required') && periodoForm.get('descripcion')?.touched">
             El año es obligatorio
           </mat-error>
         </mat-form-field>
-      </div>
- 
-  
-      <div class="col-lg-6">
-        <mat-label class="f-w-600 m-b-8 d-block">Fecha de Inicio</mat-label>
-        <mat-form-field appearance="outline" class="w-100">
-          <input matInput [matDatepicker]="pickerInicio" formControlName="fechaInicio" />
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha de Inicio</mat-label>
+          <input matInput [matDatepicker]="pickerInicio" formControlName="fechaInicio" required>
           <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
           <mat-datepicker #pickerInicio></mat-datepicker>
-          <mat-error *ngIf="periodoForm.get('fechaInicio').hasError('required')">
+          <mat-error *ngIf="periodoForm.get('fechaInicio')?.hasError('required') && periodoForm.get('fechaInicio')?.touched">
             La fecha de inicio es obligatoria
           </mat-error>
         </mat-form-field>
-      </div>
-  
-      <div class="col-lg-6">
-        <mat-label class="f-w-600 m-b-8 d-block">Fecha de Fin</mat-label>
-        <mat-form-field appearance="outline" class="w-100">
-          <input matInput [matDatepicker]="pickerFin" formControlName="fechaFin" />
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha de Fin</mat-label>
+          <input matInput [matDatepicker]="pickerFin" formControlName="fechaFin" required>
           <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
           <mat-datepicker #pickerFin></mat-datepicker>
-          <mat-error *ngIf="periodoForm.get('fechaFin').hasError('required')">
+          <mat-error *ngIf="periodoForm.get('fechaFin')?.hasError('required') && periodoForm.get('fechaFin')?.touched">
             La fecha de fin es obligatoria
           </mat-error>
         </mat-form-field>
+
+        <div class="checkbox-group">
+          <mat-checkbox formControlName="activo">Activo</mat-checkbox>
+        </div>
       </div>
-  
-      <div class="col-lg-6 d-flex align-items-center">
-        <mat-checkbox formControlName="activo">Activo</mat-checkbox>
-      </div>
-    </div>
-  
-    <div class="m-t-12">
-      <button mat-flat-button color="primary" [disabled]="periodoForm.invalid">
+
+      <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="periodoForm.invalid">
         {{ editingId ? 'Actualizar' : 'Crear' }}
       </button>
-      <button mat-stroked-button color="warn" type="button" (click)="resetPeriodo()">
-        Cancelar
-      </button>
+      <button mat-raised-button color="warn" type="button" class="submit-btn cancel-btn" (click)="resetPeriodo()">Cancelar</button>
+    </form>
+  </section>
+
+  <!-- List Section -->
+  <section class="list-section" *ngIf="!showForm">
+    <h2 class="section-title">Lista de Períodos</h2>
+
+    <div class="inscripcion-actions">
+      <mat-form-field appearance="outline" class="search-box">
+        <mat-label>Buscar períodos</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Buscar períodos">
+      </mat-form-field>
     </div>
-  </form>
-  
 
-  <!-- Buscador de períodos -->
-  <div class="header">
-    <mat-form-field class="search-box">
-      <mat-label>Buscar períodos</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Buscar períodos" />
-    </mat-form-field>
-  </div>
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="dataSource" matSort class="inscripcion-table mat-elevation-z8">
+        <ng-container matColumnDef="descripcion">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Descripción</th>
+          <td mat-cell *matCellDef="let periodo" data-label="Descripción">{{ periodo.descripcion }}</td>
+        </ng-container>
 
-  <!-- Tabla de períodos -->
-  <div class="table-container">
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width-table">
+        <ng-container matColumnDef="fechaInicio">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Inicio</th>
+          <td mat-cell *matCellDef="let periodo" data-label="Fecha Inicio">{{ periodo.fechaInicio | date: 'short' }}</td>
+        </ng-container>
 
-      <!-- Columnas de la tabla -->
-      <ng-container matColumnDef="descripcion">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Descripción</th>
-        <td mat-cell *matCellDef="let periodo">{{ periodo.descripcion }}</td>
-      </ng-container>
+        <ng-container matColumnDef="fechaFin">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Fin</th>
+          <td mat-cell *matCellDef="let periodo" data-label="Fecha Fin">{{ periodo.fechaFin | date: 'short' }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="fechaInicio">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Inicio</th>
-        <td mat-cell *matCellDef="let periodo">{{ periodo.fechaInicio | date: 'short' }}</td>
-      </ng-container>
+        <ng-container matColumnDef="activo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Activo</th>
+          <td mat-cell *matCellDef="let periodo" data-label="Activo">
+            <div class="estado-indicador" [ngClass]="periodo.activo ? 'activo' : 'inactivo'"></div>
+          </td>
+        </ng-container>
 
-    
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let periodo" data-label="Acciones">
+            <div class="action-buttons">
+              <button mat-icon-button class="action-btn edit-btn" (click)="editPeriodo(periodo)" matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="action-btn delete-btn" (click)="deletePeriodo(periodo.idPeriodo)" matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="fechaFin">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Fin</th>
-        <td mat-cell *matCellDef="let periodo">{{ periodo.fechaFin | date: 'short' }}</td>
-      </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
 
-      <ng-container matColumnDef="activo">
-        <th mat-header-cell *matHeaderCellDef> Activo </th>
-        <td mat-cell *matCellDef="let periodo">
-          <div class="estado-indicador" [ngClass]="periodo.activo ? 'activo' : 'inactivo'"></div>
-        </td>
-      </ng-container>
-      
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Acciones</th>
-        <td mat-cell *matCellDef="let periodo">
-          <button mat-icon-button (click)="editPeriodo(periodo)">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="deletePeriodo(periodo.idPeriodo)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
+      <div *ngIf="dataSource.data.length === 0 && !loading" class="no-data-message">
+        No hay períodos para mostrar.
+      </div>
+      <div *ngIf="loading" class="no-data-message">
+        Cargando períodos...
+      </div>
+    </div>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  </div>
-
-  <!-- Paginador -->
-  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+    <mat-paginator
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      [showFirstLastButtons]="true"
+      class="paginator"
+    ></mat-paginator>
+  </section>
 </div>

@@ -1,0 +1,92 @@
+.notification-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+  
+    h2 {
+      color: #333;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #555;
+      font-weight: 500;
+    }
+  
+    .form-control {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+  
+      &.invalid {
+        border-color: #dc3545;
+      }
+  
+      &:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+      }
+    }
+  
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+  }
+  
+  .error-message {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  
+  .button-container {
+    text-align: center;
+  }
+  
+  .submit-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  
+    &:hover:not(:disabled) {
+      background-color: #0056b3;
+    }
+  
+    &:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+  }
+  
+  .messages {
+    margin-top: 15px;
+    text-align: center;
+  
+    .success-message {
+      color: #28a745;
+      padding: 10px;
+    }
+  
+    .error-message {
+      color: #dc3545;
+      padding: 10px;
+    }
+  }

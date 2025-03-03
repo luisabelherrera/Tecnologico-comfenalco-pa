@@ -10,18 +10,19 @@ import * as XLSX from 'xlsx';
   templateUrl: './incripciondetalle.component.html',
   styleUrls: ['./incripciondetalle.component.scss']
 })
-export class IncripciondetalleComponent  {
+export class InscripciondetalleComponent {
   constructor(
-    public dialogRef: MatDialogRef<IncripciondetalleComponent>,
+    public dialogRef: MatDialogRef<InscripciondetalleComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Inscripcion,
     private route: ActivatedRoute,
     private router: Router
   ) {}
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-      console.log('Datos recibidos para el pago:', params);
-    });
+    console.log('Datos recibidos para la inscripción:', this.data);
+    if (!this.data || Object.keys(this.data).length === 0) {
+      console.error('No se recibieron datos para la inscripción');
+    }
   }
 
   /** Descarga un archivo Excel con los detalles de la inscripción */
@@ -32,8 +33,8 @@ export class IncripciondetalleComponent  {
         "Código": this.data?.codigo || 'No disponible',
         "Situación": this.data?.situacion || 'No disponible',
         "Nivel Detalle": this.data?.nivelDetalle?.nivel?.descripcionNivel || 'No disponible',
-        "Estudiante": `${this.data?.estudiante?.nombres || ''} ${this.data?.estudiante?.apellidos || ''}`,
-        "Acudiente": `${this.data?.acudiente?.nombres || ''} ${this.data?.acudiente?.apellidos || ''}`,
+        "Estudiante": `${this.data?.estudiante?.nombres || ''} ${this.data?.estudiante?.apellidos || ''}`.trim() || 'No disponible',
+        "Acudiente": `${this.data?.acudiente?.nombres || ''} ${this.data?.acudiente?.apellidos || ''}`.trim() || 'No disponible',
         "Institución de Procedencia": this.data?.institucionProcedencia || 'No disponible',
         "Es Repitente": this.data?.esRepitente ? 'Sí' : 'No',
         "Activo": this.data?.activo ? 'Sí' : 'No',
@@ -46,119 +47,135 @@ export class IncripciondetalleComponent  {
     XLSX.writeFile(wb, 'detalle_inscripcion.xlsx');
   }
 
-  /** Redirige a la factura con los datos del pago */
   realizarPago() {
     const pagoData = {
-      estudiante: `${this.data?.estudiante?.nombres || ''} ${this.data?.estudiante?.apellidos || ''}`,
+      estudiante: `${this.data?.estudiante?.nombres || ''} ${this.data?.estudiante?.apellidos || ''}`.trim() || 'No disponible',
       montoPago: this.data?.montoPago || 0,
       metodoPago: this.data?.metodoPago || 'No especificado',
       codigo: this.data?.codigo || 'N/A'
     };
 
+    // Cierra el diálogo antes de navegar
+    this.dialogRef.close();
+    
+    // Navega a la ruta /factura con los datos del pago
     this.router.navigate(['/factura'], { queryParams: pagoData });
   }
 
-  /** Genera un PDF con los detalles de la inscripción */
   downloadPDF() {
     const doc = new jsPDF();
 
-    // Establecer el fondo de color
-    doc.setFillColor(240, 240, 240);
-    doc.rect(0, 0, 210, 297, 'F');
+    // Fondo claro y elegante
+    doc.setFillColor(245, 245, 245); // Gris muy claro
+    doc.rect(0, 0, 210, 297, "F");
 
-    // Título
-    doc.setFontSize(22);
-    doc.setTextColor(40, 40, 40);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Detalles de Inscripción', 14, 20);
+    // Encabezado centrado
+    doc.setFontSize(24);
+    doc.setTextColor(33, 37, 41); // Gris oscuro elegante
+    doc.setFont("helvetica", "bold");
+    const title = "Detalles de Inscripción";
+    const titleWidth = doc.getTextWidth(title);
+    doc.text(title, (210 - titleWidth) / 2, 20); // Centrado
 
-    // Línea decorativa
-    doc.setDrawColor(100, 100, 100);
-    doc.setLineWidth(0.5);
-    doc.line(14, 25, 195, 25);
+    // Añadir encabezado con bandera de Colombia y escudo de la institución
+    const headerY = 30;
+    const imageWidth = 30;
+    const imageHeight = 20;
 
-    let startY = 35;
+    try {
+      // Asegúrate de que las imágenes existan en la carpeta 'assets/img/'
+      doc.addImage("assets/img/Colombia.png", "PNG", 20, headerY, imageWidth, imageHeight);
+      doc.addImage("assets/img/image-1.png", "PNG", 160, headerY, imageWidth, imageHeight);
+    } catch (error) {
+      console.error("Error al cargar las imágenes en el PDF:", error);
+      // Continúa generando el PDF sin las imágenes
+    }
+
+    // Línea decorativa después del encabezado
+    doc.setDrawColor(120, 120, 120);
+    doc.setLineWidth(0.7);
+    doc.line(20, headerY + imageHeight + 5, 190, headerY + imageHeight + 5);
+
+    // Detalles principales con márgenes ajustados (sin líneas divisorias)
+    let startY = headerY + imageHeight + 15;
+    const marginLeft = 20;  // Margen izquierdo
+    const marginRight = 20; // Margen derecho
+    const maxWidth = 210 - marginLeft - marginRight; // Ancho usable
+    const labelWidth = 60; // Ancho fijo para etiquetas
+
     const details = [
-      { label: 'Valor Código', value: this.data?.valorCodigo || 'N/A' },
-      { label: 'Código', value: this.data?.codigo || 'N/A' },
-      { label: 'Situación', value: this.data?.situacion || 'N/A' },
-      { label: 'Nivel Detalle', value: this.data?.nivelDetalle?.nivel?.descripcionNivel || 'N/A' },
-      { label: 'Estudiante', value: `${this.data?.estudiante?.nombres || ''} ${this.data?.estudiante?.apellidos || ''}` },
-      { label: 'Acudiente', value: `${this.data?.acudiente?.nombres || ''} ${this.data?.acudiente?.apellidos || ''}` },
-      { label: 'Institución de Procedencia', value: this.data?.institucionProcedencia || 'N/A', multiline: true },
-      { label: 'Es Repitente', value: this.data?.esRepitente ? 'Sí' : 'No', underline: true },
-      { label: 'Activo', value: this.data?.activo ? 'Sí' : 'No' },
-      { label: 'Fecha Registro', value: this.data?.fechaRegistro || 'N/A' }
+      { label: "Valor Código", value: this.data?.valorCodigo || "N/A" },
+      { label: "Código", value: this.data?.codigo || "N/A" },
+      { label: "Situación", value: this.data?.situacion || "N/A" },
+      { label: "Nivel Detalle", value: this.data?.nivelDetalle?.nivel?.descripcionNivel || "N/A" },
+      { label: "Estudiante", value: `${this.data?.estudiante?.nombres || ""} ${this.data?.estudiante?.apellidos || ""}`.trim() || "N/A" },
+      { label: "Acudiente", value: `${this.data?.acudiente?.nombres || ""} ${this.data?.acudiente?.apellidos || ""}`.trim() || "N/A" },
+      { label: "Institución de Procedencia", value: this.data?.institucionProcedencia || "N/A", multiline: true },
+      { label: "Es Repitente", value: this.data?.esRepitente ? "Sí" : "No" },
+      { label: "Activo", value: this.data?.activo ? "Sí" : "No" },
+      { label: "Fecha Registro", value: this.data?.fechaRegistro || "N/A" },
     ];
 
+    doc.setFontSize(11);
     details.forEach((detail) => {
-      doc.setFontSize(12);
-      const labelX = 14;
-      const valueX = 60;
-      doc.setDrawColor(200, 200, 200);
-      doc.line(labelX, startY + 3, 195, startY + 3);
+      // Etiqueta
+      doc.setTextColor(33, 37, 41);
+      doc.setFont("helvetica", "bold");
+      doc.text(`${detail.label}:`, marginLeft, startY);
 
-      doc.setTextColor(40, 40, 40);
-      doc.setFont('helvetica', 'bold');
-      doc.text(`${detail.label}:`, labelX, startY);
-
+      // Valor
+      doc.setFont("helvetica", "normal");
       const valueString = String(detail.value);
-      doc.setFont('helvetica', 'normal');
-
       if (detail.multiline) {
-        const textLines = doc.splitTextToSize(valueString, 130);
-        doc.text(textLines, labelX, startY + 10);
-        startY += 10 + (textLines.length * 5);
+        const textLines = doc.splitTextToSize(valueString, maxWidth - labelWidth - 5);
+        doc.text(textLines, marginLeft + labelWidth + 5, startY + 5);
+        startY += 5 + textLines.length * 5;
       } else {
-        doc.text(valueString, valueX, startY);
-        startY += 10;
-      }
-
-      if (detail.underline) {
-        startY += 5;
-        doc.line(labelX, startY, 195, startY);
-        startY += 5;
+        doc.text(valueString, marginLeft + labelWidth + 5, startY);
+        startY += 10; // Espaciado consistente
       }
     });
 
-    // Información del Pago
+    // Sección de Pago con colores (sin líneas divisorias), manejando datos vacíos
+    startY += 15;
     doc.setFontSize(16);
-    doc.text('Información del Pago', 14, startY + 10);
-    doc.setFontSize(12);
-    doc.line(14, startY + 15, 195, startY + 15);
+    doc.setTextColor(33, 37, 41);
+    doc.setFont("helvetica", "bold");
+    doc.text("Información del Pago", marginLeft, startY);
 
-    startY += 20;
+    startY += 10;
     const paymentDetails = [
-      { label: 'Monto Pagado', value: `$${this.data?.montoPago || '0.00'}` },
-      { label: 'Fecha de Pago', value: this.data?.fechaPago || 'N/A' },
-      { label: 'Estado del Pago', value: this.data?.estadoPago || 'Pendiente' }
+      { label: "Monto Pagado", value: `$${this.data?.montoPago || "0.00"}` },
+      { label: "Fecha de Pago", value: this.data?.fechaPago || "N/A" },
+      { label: "Estado del Pago", value: this.data?.estadoPago || "Pendiente" },
     ];
 
+    doc.setFontSize(11);
     paymentDetails.forEach((detail) => {
-      doc.setFontSize(12);
-      doc.setTextColor(40, 40, 40);
-      doc.setFont('helvetica', 'bold');
-      doc.text(`${detail.label}:`, 14, startY);
-      doc.setFont('helvetica', 'normal');
-      doc.text(String(detail.value), 60, startY);
+      doc.setTextColor(33, 37, 41);
+      doc.setFont("helvetica", "bold");
+      doc.text(`${detail.label}:`, marginLeft, startY);
+      doc.setFont("helvetica", "normal");
+      doc.text(String(detail.value), marginLeft + labelWidth + 5, startY);
       startY += 10;
     });
 
-    // Estado de Matrícula
+    // Sección de Validación con colores (sin líneas divisorias)
+    startY += 15;
     doc.setFontSize(16);
-    doc.text('Validación de Matrícula', 14, startY + 10);
-    doc.setFontSize(12);
-    doc.line(14, startY + 15, 195, startY + 15);
+    doc.setFont("helvetica", "bold");
+    doc.text("Validación de Matrícula", marginLeft, startY);
 
-    startY += 20;
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Estado de Matrícula:', 14, startY);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(0, 128, 0);
-    doc.text('Matriculado', 60, startY);
+    startY += 10;
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "bold");
+    doc.text("Estado de Matrícula:", marginLeft, startY);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(0, 135, 102); // Verde elegante
+    doc.text("Matriculado", marginLeft + labelWidth + 5, startY);
 
-    doc.save('detalle_inscripcion.pdf');
+    // Guardar el archivo
+    doc.save("detalle_inscripcion.pdf");
   }
 
   onClose(): void {

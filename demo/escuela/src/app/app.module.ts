@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -27,18 +27,11 @@ import { AcudienteDetailComponent } from './components/acudiente/acudiente-detai
 import { AcudienteFormComponent } from './components/acudiente/acudiente-form/acudiente-form.component';
 import { AcudienteListComponent } from './components/acudiente/acudiente-list/acudiente-list.component';
 import { CalificacionListComponent } from './components/calificacion/calificacion-list/calificacion-list.component';
-import { CalificacionCreateComponent } from './components/calificacion/calificacion-create/calificacion-create.component';
-import { CalificacionEditComponent } from './components/calificacion/calificacion-edit/calificacion-edit.component';
 import { CurricularListComponent } from './components/curricular/curricular-list/curricular-list.component';
-import { CurricularCreateComponent } from './components/curricular/curricular-create/curricular-create.component';
-import { CurricularEditComponent } from './components/curricular/curricular-edit/curricular-edit.component';
 import { CursosListComponent } from './components/cursos/cursos-list/cursos-list.component';
-import { CursosCreateComponent } from './components/cursos/cursos-create/cursos-create.component';
-import { CursosEditComponent } from './components/cursos/cursos-edit/cursos-edit.component';
+
 import { DocenteNivelDetalleCursoComponent } from './components/docente-nivel-detalle-curso/docente-nivel-detalle-curso.component';
 import { ListarEstudiantesComponent } from './components/estudiante/listar/listar.component';
-import { CrearEstudianteComponent } from './components/estudiante/crear/crear.component';
-import { EditarEstudianteComponent } from './components/estudiante/editar/editar.component';
 import { GradoSeccionComponent } from './components/grado-seccion/grado-seccion.component';
 import { HorarioListComponent } from './components/horario/horario-list/horario-list.component';
 import { HorarioAddComponent } from './components/horario/horario-add/horario-add.component';
@@ -52,7 +45,6 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { DocenteComponent } from './components/docente/docente.component';
 import { CalificacionDetailComponent } from './components/calificacion/calificacion-detail/calificacion-detail.component';
 import { Ventana2Component } from './components/vista-docente/ventana2/ventana2.component';
-import { CurricularComponent } from './components/vista-docente/curricular/curricular.component';
 import { HorarioComponent } from './components/vista-docente/horario/horario.component';
 import { Ventana3Component } from './components/vista-estudiante/ventana3/ventana3.component';
 import { CurricularEstudianteComponent } from './components/vista-estudiante/curricular-estudiante/curricular-estudiante.component';
@@ -60,7 +52,7 @@ import { HorarioEstudianteComponent } from './components/vista-estudiante/horari
 import { ErrorComponent } from './components/error/error.component';
 import { SuggestionsDialogComponent } from './components/generate-ia/suggestions-dialog/suggestions-dialog.component';
 import { MatIconModule } from '@angular/material/icon';
-import { IncripciondetalleComponent } from './components/matricula/dialog/incripciondetalle/incripciondetalle.component';
+import { InscripciondetalleComponent } from './components/matricula/dialog/incripciondetalle/incripciondetalle.component';
 import { ExportDialogComponent } from './components/matricula/dialog/export-dialog/export-dialog.component';
 import { NivelDetalleDialogoGraficoComponent } from './components/niveldetalle/nivel-detalle-dialogo-grafico/nivel-detalle-dialogo-grafico.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -81,6 +73,15 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FacturaComponent } from './components/matricula/dialog/incripciondetalle/factura/factura.component';
 import { PerfilEstudianteComponent } from './components/vista-estudiante/mi-perfil/perfil-estudiante/perfil-estudiante.component';
 import { CommonModule } from '@angular/common';
+import { DialogoComponent } from './components/docente/dialogo/dialogo/dialogo.component';
+import { ThemeCustomizerComponent } from './components/theme-customizer/theme-customizer.component';
+import { ChatGestionComponent } from './components/gestion-chat/chat-gestion/chat-gestion.component';
+import { ModificarHomeComponent } from './components/modificar-home/modificar-home.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CurricularDocenteComponent } from './components/vista-docente/curricular/curricular.component';
+import { FindCalificacionPipe } from './services/calificacion/find-calificacion.pipe';
+import { CrearNotificacionComponent } from './components/vista-estudiante/crear-notificacion/crear-notificacion/crear-notificacion.component';
+import { MatListModule } from '@angular/material/list';
 
 
 @NgModule({
@@ -113,8 +114,17 @@ import { CommonModule } from '@angular/common';
     MatIconModule,
     CommonModule,
     MatSnackBarModule,
+    DragDropModule,
+  
+    MatListModule,
+   
   ],
   declarations: [
+    CrearNotificacionComponent,
+        FindCalificacionPipe,
+    ChatGestionComponent,
+    ThemeCustomizerComponent,
+    DialogoComponent,
     FacturaComponent,
     PerfilEstudianteComponent,
     LibrosApiComponent,
@@ -127,7 +137,7 @@ import { CommonModule } from '@angular/common';
     ImagenDialogComponent,
     AgregarNoticiaComponent,
     Ventana2Component,
-    CurricularComponent,
+    CurricularDocenteComponent,
     HorarioComponent,
     AgregarEstudianteDialogComponent,
     MatricularAcudienteDialogComponent,
@@ -135,22 +145,18 @@ import { CommonModule } from '@angular/common';
     CurricularEstudianteComponent,
     HorarioEstudianteComponent,
     CursosListComponent,
-    CursosCreateComponent,
-    CursosEditComponent,
+
     AcudienteDetailComponent,
     AcudienteFormComponent,
     AcudienteListComponent,
     CalificacionListComponent,
-    CalificacionCreateComponent,
-    CalificacionEditComponent,
+
     CalificacionDetailComponent,
     CurricularListComponent,
-    CurricularCreateComponent,
-    CurricularEditComponent,
+ 
     DocenteComponent,
     ListarEstudiantesComponent,
-    CrearEstudianteComponent,
-    EditarEstudianteComponent,
+
     HorarioListComponent,
     HorarioAddComponent,
     HorarioUpdateComponent,
@@ -164,15 +170,17 @@ import { CommonModule } from '@angular/common';
     NivelDetalleDialogoGraficoComponent,
     ExportDialogComponent,
     RegisterComponent,
-    IncripciondetalleComponent,
+    InscripciondetalleComponent,
     SuggestionsDialogComponent,
     ErrorComponent,
     AppComponent,
     HomeComponent,
     LoginComponent,
-    
+    ModificarHomeComponent,
   ],
-  providers: [AuthService],
+  providers: [AuthService]  ,
+
+  
   bootstrap: [AppComponent],
 })
 export class AppModule { }
