@@ -31,12 +31,6 @@ export class GradoSeccionComponent implements OnInit {
   ];
   seccionOptions: string[] = ['A', 'B', 'C', 'D', 'E'];
 
-  // Predefined options for selectors
-  gradoOptions: string[] = [
-    'Primero', 'Segundo', 'Tercero', 'Cuarto', 'Quinto',
-    'Sexto', 'Séptimo', 'Octavo', 'Noveno', 'Décimo', 'Undécimo'
-  ];
-  seccionOptions: string[] = ['A', 'B', 'C', 'D', 'E'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -47,7 +41,6 @@ export class GradoSeccionComponent implements OnInit {
     this.loadGradoSecciones();
   }
 
-<<<<<<< HEAD
   toggleView(show: boolean): void {
     this.showForm = show;
     this.editingId = null;
@@ -57,8 +50,6 @@ export class GradoSeccionComponent implements OnInit {
     }
   }
 
-=======
->>>>>>> 3908c26819c8e31690db6a1a9d31dadc1ddd93ca
   loadGradoSecciones(): void {
     this.gradoSeccionService.getAllGradoSecciones().subscribe(
       (data) => {

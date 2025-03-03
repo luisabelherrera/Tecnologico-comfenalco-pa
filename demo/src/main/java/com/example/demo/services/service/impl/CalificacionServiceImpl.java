@@ -25,10 +25,11 @@ public class CalificacionServiceImpl implements CalificacionService {
     public Optional<Calificacion> findById(Integer id) {
         return calificacionRepository.findById(id);
     }
+
+    @Override
     public List<Calificacion> findByDocenteId(Integer idDocente) {
         return calificacionRepository.findByCurricularDocenteNivelDetalleCursoDocenteIdDocente(idDocente);
     }
- 
 
     @Override
     public List<Calificacion> findByCurricularId(Integer idCurricular) {
