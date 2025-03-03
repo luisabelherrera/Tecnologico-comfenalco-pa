@@ -25,12 +25,19 @@
   font-size: 24px;
   font-weight: bold;
   margin: 0;
+<<<<<<< HEAD
   color: #000000; /* Black text */
+=======
+>>>>>>> 3908c26819c8e31690db6a1a9d31dadc1ddd93ca
 }
 
 .user-info {
   font-size: 1rem;
+<<<<<<< HEAD
   color: #333333; /* Dark gray text for readability */
+=======
+  color: #555;
+>>>>>>> 3908c26819c8e31690db6a1a9d31dadc1ddd93ca
 }
 
 .noticias-container {
@@ -312,6 +319,7 @@
   color: #000000; /* Black text */
 }
 
+<<<<<<< HEAD
 @media (max-width: 768px) {
   .noticias-grid {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Smaller cards on mobile */
@@ -326,4 +334,188 @@
     right: 10px;
     bottom: 60px;
   }
+=======
+.list-group-item-light {
+  background-color: #f3e5f5;
+  color: #000;
+}
+
+.btn-primary {
+  background-color: #6a1b9a;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #4a148c;
+}
+
+.btn-success {
+  background-color: #4caf50;
+}
+
+.btn-warning {
+  background-color: #ff9800;
+}
+
+.noticia-interacciones {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-like {
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  background: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  
+  .heart-icon {
+    color: #ff0000; /* Corazón rojo cuando está liked */
+    font-size: 22px; /* Grande y bonito */
+    display: inline-block;
+    transition: transform 0.2s;
+  }
+  
+  &:hover .heart-icon {
+    transform: scale(1.2);
+  }
+  
+  &[disabled] .heart-icon {
+    color: #ccc; /* Gris cuando está deshabilitado */
+  }
+  
+  &[disabled] {
+    cursor: not-allowed;
+  }
+}
+
+.btn-toggle-comments {
+  padding: 5px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #4caf50;
+  
+  &:hover {
+    color: #45a049;
+  }
+}
+
+.comentario-input-container {
+  margin-top: 10px;
+}
+
+.comentario-input {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.comentarios-lista {
+  margin-top: 10px;
+  max-height: 150px;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background-color: #f3e5f5;
+  
+  strong {
+    color: #6a1b9a;
+  }
+}
+
+.comentario-fecha {
+  font-size: 12px;
+  color: #888;
+}.noticia-interacciones {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between buttons */
+}
+
+.btn-like, .btn-toggle-comments {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.btn-like .heart-icon {
+  margin-right: 5px;
+}
+
+/* SVG Button Styles */
+.group {
+  position: relative;
+}
+
+.w-6 {
+  width: 24px; /* Matches the SVG width/height */
+}
+
+.hover\:scale-125:hover {
+  transform: scale(1.25); /* Matches hover:scale-125 */
+}
+
+.duration-200 {
+  transition-duration: 200ms; /* Matches duration-200 */
+}
+
+.hover\:stroke-blue-500:hover {
+  stroke: #3b82f6; /* Matches hover:stroke-blue-500 */
+}
+
+/* Tooltip Styles */
+.group-hover\:scale-100:hover .scale-0 {
+  transform: scale(1); /* Matches group-hover:scale-100 */
+}
+
+.scale-0 {
+  transform: scale(0);
+}
+
+.transition-all {
+  transition-property: all;
+}
+
+.duration-300 {
+  transition-duration: 300ms;
+}
+.btn-ver-mas {
+  background: none;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  color: #3f51b5; /* Blue to match theme */
+  font-size: 20px; /* Larger icon */
+  transition: transform 0.2s ease, color 0.2s ease;
+  margin-top: 10px;
+}
+
+.btn-ver-mas:hover {
+  color: #303f9f; /* Darker blue on hover */
+  transform: scale(1.2); /* Slight scale-up effect */
+}
+.ease-in-out {
+  transition-timing-function: ease-in-out;
+}.noticia-video {
+  max-width: 100%;
+  height: auto;
+  cursor: pointer;
+  margin-top: 10px;
+>>>>>>> 3908c26819c8e31690db6a1a9d31dadc1ddd93ca
 }

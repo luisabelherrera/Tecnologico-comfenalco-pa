@@ -95,6 +95,7 @@ export class HomeComponent implements OnInit {
   
   darLike(noticia: Noticia): void {
     if (!this.isAuthenticated || !noticia.id || !this.mensaje.username) return;
+<<<<<<< HEAD
   
     if (!noticia.likedBy) {
       noticia.likedBy = [];
@@ -115,6 +116,22 @@ export class HomeComponent implements OnInit {
     this.noticias = [...this.noticias];
   
     // Enviar al backend
+=======
+
+    if (!noticia.likedBy) {
+      noticia.likedBy = [];
+    }
+
+    const userIndex = noticia.likedBy.indexOf(this.mensaje.username);
+    if (userIndex === -1) {
+      noticia.likedBy.push(this.mensaje.username);
+      noticia.likesCount = (noticia.likesCount || 0) + 1;
+    } else {
+      noticia.likedBy.splice(userIndex, 1);
+      noticia.likesCount = (noticia.likesCount || 0) - 1;
+    }
+
+>>>>>>> 3908c26819c8e31690db6a1a9d31dadc1ddd93ca
     this.noticiaService.actualizarLikes(noticia.id, noticia.likedBy).subscribe({
       next: (updatedNoticia) => {
         noticia.likesCount = updatedNoticia.likesCount;
@@ -122,6 +139,7 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al actualizar likes', error);
+<<<<<<< HEAD
         // Revertir el cambio local si falla
         if (userIndex === -1) {
           noticia.likedBy.splice(noticia.likedBy.indexOf(this.mensaje.username), 1);
@@ -134,6 +152,19 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+=======
+        if (userIndex === -1) {
+          noticia.likedBy.pop();
+          noticia.likesCount = (noticia.likesCount || 0) - 1;
+        } else {
+          noticia.likedBy.push(this.mensaje.username);
+          noticia.likesCount = (noticia.likesCount || 0) + 1;
+        }
+      }
+    });
+  }
+
+>>>>>>> 3908c26819c8e31690db6a1a9d31dadc1ddd93ca
   hasLiked(noticia: Noticia): boolean {
     return this.isAuthenticated && noticia.likedBy?.includes(this.mensaje.username) || false;
   }
@@ -149,12 +180,16 @@ export class HomeComponent implements OnInit {
         contenido: this.comentarioTexto[noticia.id],
         fechaCreacion: new Date()
       };
+<<<<<<< HEAD
   
       // Agregar comentario localmente para una respuesta inmediata
+=======
+>>>>>>> 3908c26819c8e31690db6a1a9d31dadc1ddd93ca
       if (!noticia.comentarios) {
         noticia.comentarios = [];
       }
       noticia.comentarios.push(comentario);
+<<<<<<< HEAD
   
       // Limpiar el input inmediatamente
       const comentarioTextoTemp = this.comentarioTexto[noticia.id];
@@ -173,6 +208,9 @@ export class HomeComponent implements OnInit {
           this.comentarioTexto[noticia.id] = comentarioTextoTemp; // Restaurar el texto si falla
         }
       });
+=======
+      this.comentarioTexto[noticia.id] = '';
+>>>>>>> 3908c26819c8e31690db6a1a9d31dadc1ddd93ca
     }
   }
 

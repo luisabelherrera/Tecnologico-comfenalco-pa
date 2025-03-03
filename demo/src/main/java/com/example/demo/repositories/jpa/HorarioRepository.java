@@ -11,5 +11,4 @@ import com.example.demo.model.entity.Horario;
 
 @Repository
 public interface HorarioRepository extends JpaRepository<Horario, Integer> {
-
 }
