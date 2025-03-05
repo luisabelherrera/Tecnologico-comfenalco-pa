@@ -1,130 +1,308 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { CurricularService } from 'src/app/services/curricular/curricular.service';
-import { CalificacionService } from 'src/app/services/calificacion/calificacion.service';
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { Curricular } from 'src/app/models/entity/curricular.model';
+import { MatSort } from '@angular/material/sort';
+import { ChangeDetectorRef } from '@angular/core';
 import { Calificacion } from 'src/app/models/entity/Calificacion.interface';
+import { Curricular } from 'src/app/models/entity/curricular.model';
 import { Estudiante } from 'src/app/models/entity/Estudiante.interface';
-import { AuthService } from 'src/app/services/auth/AuthService.service';
+import { DocenteNivelDetalleCurso } from 'src/app/models/entity/docente-nivel-detalle-curso.model';
+import { UserDto } from 'src/app/models/models';
+import { CalificacionService } from 'src/app/services/calificacion/calificacion.service';
+import { CurricularService } from 'src/app/services/curricular/curricular.service';
+import { DocenteNivelDetalleCursoService } from 'src/app/services/docente-detalle/docente-nivel-detalle-curso.service';
+import { InscripcionService } from 'src/app/services/matricula/matricula.service';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { DocentePerfilService } from 'src/app/services/Docente/Docente-perfil/docente-perfil.service';
+
+interface EstudianteCalificacion {
+  estudiante: Estudiante;
+  calificacion?: Calificacion;
+  nuevaNota?: number;
+}
 
 @Component({
   selector: 'app-curricular-docente',
   templateUrl: './curricular.component.html',
   styleUrls: ['./curricular.component.scss']
 })
-export class CurricularDocenteComponent implements OnInit {
+export class CurricularDocenteComponent implements OnInit, AfterViewInit {
+  docente?: UserDto;
   curriculares: Curricular[] = [];
-  dataSource = new MatTableDataSource<Curricular>();
-  displayedColumns: string[] = ['descripcion', 'activo', 'fechaRegistro', 'actions'];
-
-  estudiantesPorCurricular: { [key: number]: Estudiante[] } = {};
-  calificacionesPorCurricular: { [key: number]: Calificacion[] } = {};
-  showAssignGradeForm: { [key: number]: boolean } = {};
+  estudiantesPorCurricular: { [curricularId: number]: EstudianteCalificacion[] } = {};
+  calificaciones: Calificacion[] = [];
+  docentesNivelDetalleCurso: DocenteNivelDetalleCurso[] = [];
+  dataSource = new MatTableDataSource<EstudianteCalificacion>([]);
+  selectedCurricular: Curricular | null = null;
+  curricularForm: FormGroup;
+  showForm = false;
+  displayedColumns: string[] = ['estudiante', 'documento', 'nota', 'acciones'];
+  pageSize: number = 5;
+  pageIndex: number = 0;
+  today: Date = new Date();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('printReporteContent') printReporteContent!: ElementRef;
 
   constructor(
-    private curricularService: CurricularService,
     private calificacionService: CalificacionService,
-    private authService: AuthService, // Servicio para obtener datos del usuario logueado
-    private router: Router
-  ) {}
+    private curricularService: CurricularService,
+    private docentePerfilService: DocentePerfilService,
+    private docenteNivelDetalleCursoService: DocenteNivelDetalleCursoService,
+    private inscripcionService: InscripcionService,
+    private fb: FormBuilder,
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.curricularForm = this.fb.group({
+      idCurricular: [null],
+      descripcion: ['', Validators.required],
+      docenteNivelDetalleCurso: [null, Validators.required],
+      activo: [true],
+      fechaRegistro: [new Date()],
+    });
+  }
 
   ngOnInit(): void {
-    this.loadCurriculares();
+    this.loadDocenteYDatos();
   }
 
-  loadCurriculares(): void {
-    const idDocente = this.authService.getCurrentUserId(); // Obtener el ID del docente logueado
-    this.curricularService.getCurricularesPorDocente(idDocente).subscribe(
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.cdr.detectChanges();
+  }
+
+  loadDocenteYDatos(): void {
+    this.docentePerfilService.getPerfilDocente().subscribe(
       (data) => {
-        this.curriculares = data;
-        this.dataSource.data = this.curriculares;
-        this.dataSource.paginator = this.paginator;
+        this.docente = data;
+        console.log('Perfil del docente:', this.docente);
+        this.loadAsignacionesYDatos();
+      },
+      (error) => {
+        console.error('Error al obtener el perfil del docente:', error);
+      }
+    );
+  }
 
-        // Cargar estudiantes y calificaciones para cada curricular
-        this.curriculares.forEach(curricular => {
-          this.loadEstudiantesPorCurricular(curricular.idCurricular);
-          this.loadCalificacionesPorCurricular(curricular.idCurricular);
+  loadAsignacionesYDatos(): void {
+    if (!this.docente?.docente?.idDocente) return;
+
+    this.docenteNivelDetalleCursoService.getAll().subscribe(
+      (docentesData) => {
+        this.docentesNivelDetalleCurso = docentesData.filter(
+          (dndc) => dndc.docente.idDocente === this.docente?.docente?.idDocente
+        );
+        console.log('Asignaciones del docente:', this.docentesNivelDetalleCurso);
+
+        this.calificacionService.getCalificacionesByDocente(this.docente!.docente!.idDocente).subscribe(
+          (calificacionesData) => {
+            this.calificaciones = calificacionesData;
+            console.log('Calificaciones del docente:', this.calificaciones);
+            this.loadCurricularesYEstudiantes();
+          },
+          (error) => {
+            console.error('Error al obtener calificaciones:', error);
+          }
+        );
+      },
+      (error) => {
+        console.error('Error al obtener asignaciones:', error);
+      }
+    );
+  }
+
+  loadCurricularesYEstudiantes(): void {
+    this.curricularService.getCurricularesPorDocente(this.docente!.docente!.idDocente).subscribe(
+      (curricularesData) => {
+        this.curriculares = curricularesData;
+        console.log('Curriculares del docente:', this.curriculares);
+        this.loadEstudiantesInscritos();
+      },
+      (error) => {
+        console.error('Error al obtener curriculares:', error);
+      }
+    );
+  }
+
+  loadEstudiantesInscritos(): void {
+    this.inscripcionService.getAllInscripciones().subscribe(
+      (inscripciones) => {
+        console.log('Inscripciones:', inscripciones);
+        this.estudiantesPorCurricular = {};
+
+        this.curriculares.forEach((curricular) => {
+          if (!curricular.idCurricular || !curricular.docenteNivelDetalleCurso) return;
+
+          // Obtener el nivel_detalle_curso asociado al curricular
+          const nivelDetalleCursoId = curricular.docenteNivelDetalleCurso.nivelDetalleCurso.idNivelDetalleCurso;
+          const nivelDetalleId = curricular.docenteNivelDetalleCurso.nivelDetalleCurso?.nivelDetalle?.idNivelDetalle;
+
+          // Filtrar estudiantes inscritos en el nivel_detalle correspondiente
+          const estudiantesInscritos = inscripciones
+            .filter(ins => ins.nivelDetalle?.idNivelDetalle === nivelDetalleId)
+            .map(ins => ins.estudiante);
+
+          console.log(`Estudiantes inscritos para curricular ${curricular.idCurricular} (nivel_detalle ${nivelDetalleId}):`, estudiantesInscritos);
+
+          const calificacionesCurricular = this.calificaciones.filter(
+            (cal) => cal.curricular.idCurricular === curricular.idCurricular
+          );
+
+          this.estudiantesPorCurricular[curricular.idCurricular] = estudiantesInscritos.map((est) => {
+            const calificacion = calificacionesCurricular.find(
+              (cal) => cal.estudiante.idEstudiante === est.idEstudiante
+            );
+            return {
+              estudiante: est,
+              calificacion: calificacion,
+              nuevaNota: calificacion?.nota,
+            };
+          });
         });
+        console.log('Estudiantes por curricular:', this.estudiantesPorCurricular);
       },
       (error) => {
-        console.error('Error al cargar los curriculares', error);
-        alert('Ocurrió un error al cargar los curriculares.');
+        console.error('Error al obtener inscripciones:', error);
+        this.snackBar.open('Error al cargar estudiantes inscritos.', 'Cerrar', { duration: 5000 });
       }
     );
   }
 
-  loadEstudiantesPorCurricular(idCurricular: number): void {
-    this.curricularService.getEstudiantesPorCurricular(idCurricular).subscribe(
-      (userDtos) => {
-        this.estudiantesPorCurricular[idCurricular] = userDtos
-          .map(user => user.estudiante)
-          .filter((estudiante): estudiante is Estudiante => estudiante !== null);
-      },
-      (error) => {
-        console.error(`Error al cargar estudiantes para curricular ${idCurricular}`, error);
+  selectCurricular(curricular: Curricular): void {
+    this.selectedCurricular = curricular;
+    this.dataSource.data = this.estudiantesPorCurricular[curricular.idCurricular!] || [];
+    this.cdr.detectChanges();
+  }
+
+  toggleForm(show: boolean): void {
+    this.showForm = show;
+    if (show) {
+      this.curricularForm.reset({
+        activo: true,
+        fechaRegistro: new Date(),
+      });
+    }
+    this.cdr.detectChanges();
+  }
+
+  onSubmitCurricular(): void {
+    if (this.curricularForm.valid) {
+      const formValue = this.curricularForm.value;
+      if (formValue.idCurricular) {
+        this.curricularService.updateCurricular(formValue.idCurricular, formValue).subscribe(
+          () => {
+            this.loadCurricularesYEstudiantes();
+            this.toggleForm(false);
+            this.snackBar.open('Curricular actualizado con éxito', 'Cerrar', { duration: 2000 });
+          },
+          (error) => {
+            this.snackBar.open(`Error al actualizar curricular: ${error}`, 'Cerrar', { duration: 5000 });
+          }
+        );
+      } else {
+        this.curricularService.createCurricular(formValue).subscribe(
+          () => {
+            this.loadCurricularesYEstudiantes();
+            this.toggleForm(false);
+            this.snackBar.open('Curricular creado con éxito', 'Cerrar', { duration: 2000 });
+          },
+          (error) => {
+            this.snackBar.open(`Error al crear curricular: ${error}`, 'Cerrar', { duration: 5000 });
+          }
+        );
       }
-    );
+    }
   }
 
-  loadCalificacionesPorCurricular(idCurricular: number): void {
-    this.calificacionService.getCalificacionesPorCurricular(idCurricular).subscribe(
-      (calificaciones) => {
-        this.calificacionesPorCurricular[idCurricular] = calificaciones;
-      },
-      (error) => {
-        console.error(`Error al cargar calificaciones para curricular ${idCurricular}`, error);
-      }
-    );
-  }
-
-  toggleAssignGradeForm(idCurricular: number): void {
-    this.showAssignGradeForm[idCurricular] = !this.showAssignGradeForm[idCurricular];
-  }
-
-  assignGrade(idCurricular: number, idEstudiante: number, nota: number): void {
-    if (nota < 0 || nota > 5 || isNaN(nota)) {
-      alert('La nota debe estar entre 0 y 5.');
+  guardarCalificacion(estudianteCal: EstudianteCalificacion): void {
+    if (estudianteCal.nuevaNota === undefined || estudianteCal.nuevaNota < 0 || estudianteCal.nuevaNota > 5) {
+      this.snackBar.open('La nota debe estar entre 0 y 5.', 'Cerrar', { duration: 5000 });
       return;
     }
 
-    const estudiante = this.estudiantesPorCurricular[idCurricular]?.find(e => e.idEstudiante === idEstudiante);
-    if (!estudiante) {
-      alert('Estudiante no encontrado.');
+    if (!this.selectedCurricular || !this.selectedCurricular.idCurricular) {
+      this.snackBar.open('Selecciona un curricular primero.', 'Cerrar', { duration: 5000 });
       return;
     }
 
-    const calificacion: Calificacion = {
-      curricular: this.curriculares.find(c => c.idCurricular === idCurricular)!,
-      estudiante,
-      nota,
+    const nuevaCalificacion: Calificacion = {
+      idCalificacion: estudianteCal.calificacion?.idCalificacion,
+      estudiante: estudianteCal.estudiante,
+      curricular: this.selectedCurricular,
+      nota: estudianteCal.nuevaNota,
       activo: true,
-      fechaRegistro: new Date()
+      fechaRegistro: estudianteCal.calificacion?.fechaRegistro || new Date(),
     };
 
-    this.calificacionService.saveCalificacion(calificacion).subscribe(
-      () => {
-        alert('Nota asignada exitosamente.');
-        this.loadCalificacionesPorCurricular(idCurricular);
-      },
-      (error) => {
-        console.error('Error al asignar nota', error);
-        alert('Ocurrió un error al asignar la nota.');
+    if (estudianteCal.calificacion && estudianteCal.calificacion.idCalificacion) {
+      this.calificacionService.updateCalificacion(estudianteCal.calificacion.idCalificacion, nuevaCalificacion).subscribe(
+        () => {
+          this.snackBar.open('Calificación actualizada con éxito', 'Cerrar', { duration: 2000 });
+          this.loadAsignacionesYDatos();
+        },
+        (error) => {
+          this.snackBar.open(`Error al actualizar calificación: ${error}`, 'Cerrar', { duration: 5000 });
+        }
+      );
+    } else {
+      this.calificacionService.createCalificacion(nuevaCalificacion).subscribe(
+        (savedCalificacion) => {
+          estudianteCal.calificacion = savedCalificacion;
+          this.snackBar.open('Calificación guardada con éxito', 'Cerrar', { duration: 2000 });
+          this.loadAsignacionesYDatos();
+        },
+        (error) => {
+          this.snackBar.open(`Error al guardar calificación: ${error}`, 'Cerrar', { duration: 5000 });
+        }
+      );
+    }
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.cdr.detectChanges();
+  }
+
+  printReporte(): void {
+    if (!this.printReporteContent || !this.printReporteContent.nativeElement) {
+      this.snackBar.open('No hay contenido para imprimir.', 'Cerrar', { duration: 5000 });
+      return;
+    }
+
+    const printContent = this.printReporteContent.nativeElement;
+    html2canvas(printContent, { scale: 2, useCORS: true }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      const imgWidth = 210;
+      const pageHeight = 295;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, -pageHeight * (imgHeight / pageHeight - heightLeft / pageHeight), imgWidth, imgHeight);
+        heightLeft -= pageHeight;
       }
-    );
-  }
 
-  applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  getCalificacionNota(idCurricular: number, idEstudiante: number): string {
-    const calificaciones = this.calificacionesPorCurricular[idCurricular];
-    const calificacion = calificaciones?.find(c => c.estudiante.idEstudiante === idEstudiante);
-    return calificacion?.nota?.toString() || 'Sin asignar';
+      pdf.save('Reporte_Calificaciones_Docente.pdf');
+    }).catch((error) => {
+      console.error('Error al generar el PDF:', error);
+      this.snackBar.open('Error al generar el PDF.', 'Cerrar', { duration: 5000 });
+    });
   }
 }

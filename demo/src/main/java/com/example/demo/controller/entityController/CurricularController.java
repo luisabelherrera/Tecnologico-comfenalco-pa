@@ -23,9 +23,7 @@ public class CurricularController {
     private CurricularService curricularService;
 
     @Autowired
-        private CurricularServiceImpl curricularRepository;
-
-    
+    private CurricularServiceImpl curricularRepository;
 
     @GetMapping
     public ResponseEntity<List<Curricular>> getAllCurriculares() {
@@ -48,14 +46,16 @@ public class CurricularController {
         Curricular nuevoCurricular = curricularService.save(curricular);
         return ResponseEntity.ok(nuevoCurricular);
     }
-@GetMapping("/docente/{idDocente}")
-public ResponseEntity<List<Curricular>> getCurricularesPorDocente(@PathVariable Integer idDocente) {
-  List<Curricular> curriculares = curricularRepository.findByDocenteId(idDocente);
-  return new ResponseEntity<>(curriculares, HttpStatus.OK);
-}
+
+    @GetMapping("/docente/{idDocente}")
+    public ResponseEntity<List<Curricular>> getCurricularesPorDocente(@PathVariable Integer idDocente) {
+        List<Curricular> curriculares = curricularRepository.findByDocenteId(idDocente);
+        return new ResponseEntity<>(curriculares, HttpStatus.OK);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Curricular> updateCurricular(@PathVariable Integer id,
-                                                       @RequestBody Curricular curricularDetalles) {
+            @RequestBody Curricular curricularDetalles) {
         Optional<Curricular> curricularExistente = curricularService.findById(id);
         if (curricularExistente.isPresent()) {
             Curricular curricular = curricularExistente.get();

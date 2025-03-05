@@ -8,6 +8,8 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSort } from '@angular/material/sort';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-acudiente-list',
@@ -30,9 +32,12 @@ export class AcudienteListComponent implements OnInit, AfterViewInit {
   totalPages: number = 0;
   pageSize: number = 5;
   pageIndex: number = 0;
+  isLoading: boolean = false; // Estado de carga
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  private filterSubject = new Subject<string>(); // Para debounce
 
   constructor(
     private acudienteService: AcudienteService,
@@ -55,6 +60,10 @@ export class AcudienteListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.filterSubject.pipe(debounceTime(300)).subscribe(() => {
+      this.pageIndex = 0;
+      this.loadAcudientes(this.pageIndex, this.pageSize);
+    });
     this.loadAcudientes(0, this.pageSize);
   }
 
@@ -75,6 +84,8 @@ export class AcudienteListComponent implements OnInit, AfterViewInit {
   loadAcudientes(page: number, size: number): void {
     const filter = this.filterType === 'nombre' ? this.filterValue : '';
     const documento = this.filterType === 'documento' ? this.filterValue : '';
+    
+    this.isLoading = true; // Mostrar "Buscando..."
     this.acudienteService.getAcudientes(page, size, filter, documento).subscribe(
       (data) => {
         this.acudientes = data.content;
@@ -85,6 +96,7 @@ export class AcudienteListComponent implements OnInit, AfterViewInit {
           this.paginator.pageIndex = page;
           this.paginator.pageSize = size;
         }
+        this.isLoading = false; // Ocultar "Buscando..."
       },
       (error) => {
         console.error('Error cargando acudientes:', error);
@@ -93,6 +105,11 @@ export class AcudienteListComponent implements OnInit, AfterViewInit {
           verticalPosition: 'top',
           panelClass: ['error-snackbar']
         });
+        this.acudientes = [];
+        this.dataSource.data = [];
+        this.totalElements = 0;
+        this.totalPages = 0;
+        this.isLoading = false; // Ocultar "Buscando..."
       }
     );
   }
@@ -155,8 +172,7 @@ export class AcudienteListComponent implements OnInit, AfterViewInit {
 
   applyFilter(event: Event): void {
     this.filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-    this.pageIndex = 0;
-    this.loadAcudientes(this.pageIndex, this.pageSize);
+    this.filterSubject.next(this.filterValue);
   }
 
   onFilterTypeChange(event: MatSelectChange): void {

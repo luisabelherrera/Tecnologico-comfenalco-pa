@@ -17,7 +17,6 @@ import { AuthGuard } from './guards/auth.guard';
 
 // acudiente
 import { AcudienteListComponent } from './components/acudiente/acudiente-list/acudiente-list.component';
-import { AcudienteFormComponent } from './components/acudiente/acudiente-form/acudiente-form.component';
 import { AcudienteDetailComponent } from './components/acudiente/acudiente-detail/acudiente-detail.component';
 
 // calificacion
@@ -169,14 +168,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Administracion'] },
   },
-  { path: 'acudientes/create', component: AcudienteFormComponent,
-    canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
-  },
-  { path: 'acudientes/edit/:id', component: AcudienteFormComponent,
-    canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
-  },
+  
   { path: 'acudientes/details/:id', component: AcudienteDetailComponent,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion']  },
@@ -338,7 +330,40 @@ const routes: Routes = [
 
 
   { path: '**', redirectTo: '/venta-informacion' },
+
+
+
+
+  { path: 'juego', component: VentaInformacionComponent }, // Adjust as needed
+  { path: 'libros-api', component: VentaInformacionComponent }, // Adjust as needed
+  { path: 'victor', component: VentaInformacionComponent }, // Adjust as needed
+  { path: 'historia', component: VentaInformacionComponent },
+  { path: 'instalaciones', component: VentaInformacionComponent },
+  { path: 'docentes', component: VentaInformacionComponent },
+  { path: 'reglamento', component: VentaInformacionComponent },
+  { path: 'calendario', component: VentaInformacionComponent },
+  { path: 'libros', component: VentaInformacionComponent },
+  { path: 'videos', component: VentaInformacionComponent },
+  { path: 'documentos', component: VentaInformacionComponent },
+  { path: 'plataforma', component: VentaInformacionComponent },
+  { path: 'clases', component: VentaInformacionComponent },
+  { path: 'foros', component: VentaInformacionComponent },
+  { path: 'pruebas', component: VentaInformacionComponent },
+  { path: 'evaluaciones', component: VentaInformacionComponent },
+  { path: 'mision', component: VentaInformacionComponent },
+  { path: 'vision', component: VentaInformacionComponent },
+
+
+
+
 ];
+
+
+
+
+
+
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

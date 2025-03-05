@@ -28,9 +28,15 @@ public class GradoSeccionServiceImpl implements GradoSeccionService {
 
     @Override
     public GradoSeccion save(GradoSeccion gradoSeccion) {
-        return gradoSeccionRepository.save(gradoSeccion);
+        if (gradoSeccion == null) {
+            throw new IllegalArgumentException("El gradoSeccion no puede ser nulo");
+        }
+        try {
+            return gradoSeccionRepository.save(gradoSeccion);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al guardar el gradoSeccion: " + e.getMessage(), e);
+        }
     }
-
     @Override
     public void deleteById(Integer id) {
         gradoSeccionRepository.deleteById(id);

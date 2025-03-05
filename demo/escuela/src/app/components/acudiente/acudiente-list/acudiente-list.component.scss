@@ -160,7 +160,7 @@ mat-checkbox.mat-checkbox-checked .mat-checkbox-background {
   animation: fadeIn 0.5s ease;
 }
 
-.inscripcion-actions {
+.filter-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -169,23 +169,24 @@ mat-checkbox.mat-checkbox-checked .mat-checkbox-background {
   flex-wrap: wrap;
 }
 
-.search-box {
+.search-box, .filter-select {
   flex: 1;
   min-width: 200px;
 }
 
-.filter-select {
-  min-width: 150px;
+.search-box mat-icon, .filter-select mat-icon {
+  color: #4b5563;
+  cursor: pointer;
 }
 
-.filter-input {
-  font-size: 15px;
-  color: #1f2937;
+.search-box mat-icon:hover, .filter-select mat-icon:hover {
+  color: #1e40af;
 }
 
 .table-wrapper {
   border-radius: 8px;
   overflow: hidden;
+  position: relative;
 }
 
 .inscripcion-table {
@@ -258,6 +259,32 @@ td {
   justify-content: flex-end;
 }
 
+/* Loading Overlay */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  border-radius: 8px;
+}
+
+.spinner {
+  margin-bottom: 10px;
+}
+
+.loading-text {
+  color: #1f2937;
+  font-size: 16px;
+  font-weight: 500;
+}
+
 /* Animation */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
@@ -280,7 +307,7 @@ td {
   .form-section, .list-section { padding: 15px; }
   .section-title { font-size: 20px; }
   .form-grid { gap: 15px; }
-  .inscripcion-actions { flex-direction: column; align-items: stretch; }
+  .filter-actions { flex-direction: column; align-items: stretch; }
   .search-box, .filter-select { width: 100%; }
   .table-wrapper { overflow-x: visible; }
   .inscripcion-table { display: block; }
@@ -312,6 +339,7 @@ td {
   }
   .action-buttons { flex: 2; justify-content: flex-end; }
   .paginator { font-size: 12px; }
+  .loading-overlay { border-radius: 10px; }
 }
 
 @media (max-width: 480px) {
@@ -321,4 +349,5 @@ td {
   .form-grid { gap: 12px; }
   .inscripcion-table td { font-size: 13px; }
   .action-btn { padding: 4px; }
+  .loading-text { font-size: 14px; }
 }

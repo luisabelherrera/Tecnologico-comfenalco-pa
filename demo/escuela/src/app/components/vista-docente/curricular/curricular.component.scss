@@ -1,82 +1,329 @@
+/* Estilos generales del contenedor */
 .container {
-  padding: 20px;
+  padding: 30px;
+  max-width: 1280px;
+  margin: 0 auto;
+  font-family: 'Roboto', 'Segoe UI', Tahoma, sans-serif;
+  background: #f5f7fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
+/* Encabezado */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e0e4e8;
 }
 
-.filter-input {
-  padding: 8px;
-  width: 200px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+  letter-spacing: 0.5px;
 }
 
-.mat-elevation-z8 {
+.btn-add, .btn-print {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-add {
+  background: #3498db;
+  color: #fff;
+}
+
+.btn-add:hover {
+  background: #2980b9;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+.btn-print {
+  background: #2ecc71;
+  color: #fff;
+  margin-left: 15px;
+}
+
+.btn-print:hover {
+  background: #27ae60;
+  box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+}
+
+/* Formulario */
+.form-container {
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+  animation: fadeIn 0.5s ease;
+}
+
+mat-form-field {
   width: 100%;
   margin-bottom: 20px;
 }
 
-.btn-action {
-  padding: 5px 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+mat-form-field input, mat-form-field mat-select {
+  font-size: 14px;
+  color: #34495e;
+}
 
-  &:hover {
-    background-color: #0056b3;
+mat-checkbox {
+  margin-bottom: 20px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+}
+
+button[mat-raised-button] {
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+button[color="primary"] {
+  background: #3498db;
+}
+
+button[color="primary"]:hover {
+  background: #2980b9;
+}
+
+button[color="warn"] {
+  background: #e74c3c;
+}
+
+button[color="warn"]:hover {
+  background: #c0392b;
+}
+
+/* Lista de curriculares */
+.curricular-list {
+  margin-bottom: 30px;
+}
+
+mat-list {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+mat-list-item {
+  padding: 15px 20px;
+  border-bottom: 1px solid #eef2f6;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+mat-list-item:hover {
+  background: #f8f9fa;
+}
+
+mat-list-item span[matListItemTitle] {
+  font-size: 18px; /* Aumentado para destacar la descripción */
+  font-weight: 600; /* Más énfasis */
+  color: #2c3e50;
+}
+
+/* Tabla de estudiantes */
+.students-table {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  padding: 25px;
+  animation: fadeIn 0.5s ease;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 500;
+  color: #34495e;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 15px;
+  text-align: left;
+  font-size: 14px;
+  color: #34495e;
+}
+
+th {
+  background: #eef2f6;
+  font-weight: 600;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+td {
+  border-bottom: 1px solid #eef2f6;
+}
+
+input[type="number"] {
+  width: 80px;
+  padding: 8px;
+  border: 1px solid #d5dbde;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #34495e;
+  transition: border-color 0.3s ease;
+}
+
+input[type="number"]:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+button[mat-raised-button] {
+  padding: 6px 15px;
+  font-size: 13px;
+  border-radius: 6px;
+  background: #3498db;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+button[mat-raised-button]:hover {
+  background: #2980b9;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+mat-paginator {
+  margin-top: 20px;
+  background: transparent;
+}
+
+.no-students {
+  text-align: center;
+  padding: 20px;
+  color: #7f8c8d;
+  font-size: 16px;
+  font-style: italic;
+}
+
+/* Estilos para el PDF */
+.print-reporte {
+  display: none;
+}
+
+.reporte-header, .reporte-footer {
+  text-align: center;
+  margin: 25px 0;
+}
+
+.reporte-header h1 {
+  font-size: 24px;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.reporte-header p, .reporte-footer p {
+  font-size: 14px;
+  color: #34495e;
+}
+
+.reporte-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.reporte-table th, .reporte-table td {
+  border: 1px solid #d5dbde;
+  padding: 12px;
+  font-size: 13px;
+  color: #34495e;
+}
+
+.reporte-table th {
+  background: #eef2f6;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.grade-form {
-  margin-top: 20px;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #f9f9f9;
-}
+/* Responsividad */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
 
-.grade-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
+  h2 {
+    font-size: 24px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .btn-add, .btn-print {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .form-container {
+    padding: 20px;
+  }
+
+  .students-table {
+    padding: 15px;
+  }
 
   th, td {
     padding: 10px;
-    border: 1px solid #ddd;
-    text-align: left;
-  }
-
-  th {
-    background-color: #f5f5f5;
-    font-weight: bold;
+    font-size: 12px;
   }
 
   input[type="number"] {
     width: 60px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
   }
 }
 
-.btn-save {
-  background-color: #28a745;
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+@media (max-width: 480px) {
+  h3 {
+    font-size: 18px;
+  }
 
-  &:hover {
-    background-color: #218838;
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  mat-list-item span[matListItemTitle] {
+    font-size: 16px;
   }
 }

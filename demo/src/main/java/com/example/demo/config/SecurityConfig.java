@@ -47,6 +47,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/notificaciones").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/notificaciones").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/noticias").permitAll() // Add this line
+                        .requestMatchers(HttpMethod.GET, "/api/noticias/imagen/**").permitAll() // Optional: for images
                         .requestMatchers("/api/themes/active").permitAll()
                         .requestMatchers("/api/themes/**").authenticated()
                         .requestMatchers("/controller/**").permitAll()
@@ -54,11 +56,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/notificaciones/**").authenticated()
                         .requestMatchers("/api/register/**").hasAuthority("Administracion")
                         .requestMatchers("/chat-websocket/**").permitAll()
+                        .requestMatchers("/api/calificaciones/**").permitAll()
                         .requestMatchers("/api/fileManager/files/**").permitAll()
                         .requestMatchers("/admin").hasAuthority("Administracion")
                         .requestMatchers("/docente").hasAuthority("Docente")
                         .requestMatchers("/estudiante").hasAuthority("Estudiante")
-                        
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

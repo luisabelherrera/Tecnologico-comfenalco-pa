@@ -2,7 +2,9 @@
   max-height: 400px;
   overflow-y: auto;
 }
-
+.close-button {
+  color: #000000 !important; /* O cualquier color que contraste con el fondo */
+}
 .notification-item {
   cursor: pointer;
   border-bottom: 1px solid #eee;

@@ -12,14 +12,14 @@
 
       <div class="form-grid">
         <mat-form-field appearance="outline">
-          <mat-label>Año</mat-label>
-          <mat-select formControlName="descripcion" required>
-            <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
-          </mat-select>
+          <mat-label>Descripción</mat-label>
+          <input matInput formControlName="descripcion" required />
           <mat-error *ngIf="periodoForm.get('descripcion')?.hasError('required') && periodoForm.get('descripcion')?.touched">
-            El año es obligatorio
+            La descripción es obligatoria
           </mat-error>
         </mat-form-field>
+
+      
 
         <mat-form-field appearance="outline">
           <mat-label>Fecha de Inicio</mat-label>

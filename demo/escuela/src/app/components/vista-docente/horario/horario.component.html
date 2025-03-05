@@ -1,29 +1,35 @@
-<div class="horarios-container mat-elevation-z8">
-  <h2 class="title-with-icon">
-    <mat-icon>access_time</mat-icon> Horario de Clases
-  </h2>
-
-  <mat-form-field class="filter-field">
-    <mat-label>Filtrar</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Ejemplo: Lunes" />
-  </mat-form-field>
-
-  <div class="cards-container">
-    <div *ngFor="let horario of dataSource.filteredData" class="class-card">
-      <div class="card-header">
-        <h3>{{ horario.diaSemana }}</h3>
-        <mat-icon class="event-icon">event_available</mat-icon>
-      </div>
-      <div class="card-body">
-        <p><strong>Hora Inicio:</strong> {{ horario.horaInicio }}</p>
-        <p><strong>Hora Fin:</strong> {{ horario.horaFin }}</p>
-        <p><strong>Curso:</strong> {{ horario.nivelDetalleCurso.curso.descripcion }}</p>
-      </div>
-      <div class="card-footer">
-        <mat-icon color="primary">access_alarm</mat-icon>
-      </div>
-    </div>
+<div class="container">
+  <div class="header">
+    <h2>Mi Horario como Docente</h2>
   </div>
 
-  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+  <div class="schedule-container" *ngIf="timeSlots.length > 0; else noSchedule">
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th *ngFor="let day of daysOfWeek">{{ day }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let slot of timeSlots">
+          <td *ngFor="let day of daysOfWeek" [attr.data-day]="day">
+            <div class="schedule-cell" *ngIf="schedule[day][slot.inicio + '-' + slot.fin]" [ngClass]="{
+              'conflict': schedule[day][slot.inicio + '-' + slot.fin].hasConflict,
+              'no-conflict': !schedule[day][slot.inicio + '-' + slot.fin].hasConflict
+            }">
+              <p class="course">{{ schedule[day][slot.inicio + '-' + slot.fin].curso }}</p>
+              <p class="details">{{ schedule[day][slot.inicio + '-' + slot.fin].gradoSeccion }} - {{ schedule[day][slot.inicio + '-' + slot.fin].turno }}</p>
+              <p class="time">{{ slot.inicio }} - {{ slot.fin }}</p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noSchedule>
+    <div class="no-data">
+      <p>No tienes horarios asignados como docente.</p>
+    </div>
+  </ng-template>
 </div>

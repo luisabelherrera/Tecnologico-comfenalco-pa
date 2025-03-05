@@ -51,11 +51,11 @@ public class EstudianteController {
 
     
     @PutMapping("/{id}")
-    public ResponseEntity<EstudianteDTO> updateEstudiante(@PathVariable Integer id,
-                                                          @RequestBody EstudianteDTO estudianteDetalles) {
+    public ResponseEntity<EstudianteDTO> updateEstudiante(@PathVariable Integer id, @RequestBody EstudianteDTO estudianteDetalles) {
         Optional<EstudianteDTO> estudianteExistente = estudianteService.findById(id);
         if (estudianteExistente.isPresent()) {
             try {
+                estudianteDetalles.setIdEstudiante(id); // Asegurar que el ID coincida
                 EstudianteDTO estudianteActualizado = estudianteService.save(estudianteDetalles);
                 return ResponseEntity.ok(estudianteActualizado);
             } catch (Exception e) {

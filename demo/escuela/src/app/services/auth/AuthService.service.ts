@@ -12,8 +12,6 @@ import { environment } from 'src/environments/environment';
 export class AuthService {
   private apiUrl = `${environment.apiUrl}api`;
 
-
-  
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
@@ -33,7 +31,6 @@ export class AuthService {
     this.checkAuthenticationStatus();
   }
 
-
   register(registerDto: RegisterDto): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/register`, registerDto).pipe(
       catchError((error) => {
@@ -42,10 +39,14 @@ export class AuthService {
       })
     );
   }
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('accessToken'); // Simple check for token presence
+  }
   getCurrentUserId(): number {
     const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    return user.docente?.idDocente || 0; // Ajusta según tu estructura de usuario
+    return user.docente?.idDocente || 0;
   }
+
   getAllRoles(): Observable<RoleDto[]> {
     return this.http.get<RoleDto[]>(`${this.apiUrl}/roles`).pipe(
       catchError((error) => {
@@ -68,7 +69,7 @@ export class AuthService {
       })
     );
   }
-  
+
   logout() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('username');
@@ -82,30 +83,22 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-
   private handleLoginSuccess(response: JwtResponseDto) {
     const token = response.accessToken;
     localStorage.setItem('accessToken', token);
-  
-    // Aquí puedes ajustar el nombre de usuario si el backend devuelve el correo
-    const username = response.username.includes('@') 
-      ? response.username.split('@')[0] 
-      : response.username;
-  
-    localStorage.setItem('username', username); 
-    localStorage.setItem('roles', JSON.stringify(response.roles)); 
-    localStorage.setItem('email', response.email); 
-  
+
+    const username = response.username.includes('@') ? response.username.split('@')[0] : response.username;
+    localStorage.setItem('username', username);
+    localStorage.setItem('roles', JSON.stringify(response.roles));
+    localStorage.setItem('email', response.email);
+
     this.isAuthenticatedSubject.next(true);
-    this.userNameSubject.next(username); // Actualiza el observable con el nombre de usuario real
+    this.userNameSubject.next(username);
     this.userEmailSubject.next(response.email);
-  
     this.updateAdminStatus(response.roles);
     this.updateManagerStatus(response.roles);
-  
-    this.redirectUser(response.roles); 
+    this.redirectUser(response.roles);
   }
-  
 
   private checkAuthenticationStatus() {
     const token = localStorage.getItem('accessToken');
@@ -133,7 +126,7 @@ export class AuthService {
     if (roles.includes('Administracion')) {
       this.router.navigate(['/home']);
     } else if (roles.includes('Estudiante')) {
-      this.router.navigate(['/ventana3']); 
+      this.router.navigate(['/ventana3']);
     } else if (roles.includes('Docente')) {
       this.router.navigate(['/ventana2']);
     } else {

@@ -20,7 +20,10 @@ export class InscripcionService {
         'Authorization': `Bearer ${token}`
     });
 }
-
+getInscripcionesPorCurso(idCurso: number): Observable<Inscripcion[]> {
+  return this.http.get<Inscripcion[]>(`${this.apiUrl}/curso/${idCurso}`, { headers: this.getHeaders() })
+    .pipe(catchError(this.handleError));
+}
 getAllInscripciones(): Observable<Inscripcion[]> {
   return this.http.get<Inscripcion[]>(this.apiUrl, { headers: this.getHeaders() })
     .pipe(catchError(this.handleError));

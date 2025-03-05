@@ -27,6 +27,7 @@ export class PerfilEstudianteComponent implements OnInit {
     this.perfilService.getPerfilEstudiante().subscribe(
       (data) => {
         this.estudiante = data;
+        console.log('Perfil cargado:', this.estudiante);
       },
       (error) => {
         console.error('Error al obtener perfil:', error);
@@ -41,21 +42,29 @@ export class PerfilEstudianteComponent implements OnInit {
 
   cancelarEdicion(): void {
     this.editando = false;
-    this.estudiante = this.copiaEstudiante;
+    this.estudiante = JSON.parse(JSON.stringify(this.copiaEstudiante));
   }
 
   guardarCambios(): void {
     if (!this.estudiante || !this.estudiante.estudiante) return;
 
-    this.estudianteService.updateEstudiante(this.estudiante.estudiante.idEstudiante, this.estudiante.estudiante).subscribe(
+    const estudianteActualizado = {
+      ...this.estudiante.estudiante,
+      userId: this.estudiante.id // Incluir userId explícitamente
+    };
+
+    this.estudianteService.updateEstudiante(estudianteActualizado.idEstudiante, estudianteActualizado).subscribe(
       (response) => {
         console.log('Actualización exitosa:', response);
+        this.estudiante!.estudiante = { ...response };
         this.mensajeExito = 'Perfil del Estudiante Actualizado';
         this.editando = false;
         setTimeout(() => this.cerrarMensaje(), 3000);
       },
       (error) => {
         console.error('Error al actualizar estudiante:', error);
+        this.editando = false;
+        this.estudiante = JSON.parse(JSON.stringify(this.copiaEstudiante));
       }
     );
   }

@@ -87,10 +87,11 @@
   <section class="list-section" *ngIf="!showForm">
     <h2 class="section-title">Lista de Acudientes</h2>
 
-    <div class="inscripcion-actions">
+    <div class="filter-actions" *ngIf="!isLoading">
       <mat-form-field appearance="outline" class="search-box">
         <mat-label>Filtrar por {{ filterType === 'nombre' ? 'Nombre' : 'Documento' }}</mat-label>
         <input matInput [(ngModel)]="filterValue" (keyup)="applyFilter($event)" placeholder="Buscar...">
+        <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
       <mat-form-field appearance="outline" class="filter-select">
         <mat-label>Tipo de Filtro</mat-label>
@@ -98,7 +99,13 @@
           <mat-option value="nombre">Nombre</mat-option>
           <mat-option value="documento">Documento de Identidad</mat-option>
         </mat-select>
+        <mat-icon matSuffix>filter_list</mat-icon>
       </mat-form-field>
+    </div>
+
+    <div class="loading-overlay" *ngIf="isLoading">
+      <mat-spinner diameter="40" class="spinner"></mat-spinner>
+      <p class="loading-text">Buscando...</p>
     </div>
 
     <div class="table-wrapper">
@@ -151,8 +158,8 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
 
-      <div *ngIf="dataSource.data.length === 0" class="no-data-message">
-        No hay Acudientes para mostrar.
+      <div *ngIf="dataSource.data.length === 0 && !isLoading" class="no-data-message">
+        {{ filterValue ? 'No se encontraron acudientes con ese filtro.' : 'No hay acudientes para mostrar.' }}
       </div>
     </div>
 

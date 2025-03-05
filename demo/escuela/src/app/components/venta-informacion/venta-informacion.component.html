@@ -1,153 +1,189 @@
-<header class="main-header">
+<!-- Header -->
+<header class="main-header" [ngClass]="{'scrolled': isScrolled}">
   <div class="logo">
-    <img src="assets/iconos/inteligencia.png" alt="Logo de la institución">
+    <img src="assets/iconos/inteligencia.png" alt="Logo Colegio Innovación" class="logo-img">
+    <span>HOBO</span>
   </div>
-  <nav class="main-nav">
+
+  <button class="menu-toggle" (click)="toggleMenu()">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <nav class="main-nav" [ngClass]="{'active': menuOpen}">
     <ul>
       <!-- Institución -->
       <li>
-        <a mat-button [matMenuTriggerFor]="institucionMenu">INSTITUCIÓN <mat-icon>arrow_drop_down</mat-icon></a>
-        <mat-menu #institucionMenu="matMenu">
-          <a mat-menu-item (click)="victor()">Historia</a>
-          <a mat-menu-item href="#instalaciones">Instalaciones</a>
-          <a mat-menu-item href="#docentes">Cuerpo Docente</a>
-          <a mat-menu-item href="#reglamento">Reglamento</a>
-          <a mat-menu-item href="#calendario">Calendario Académico</a>
+        <a mat-button [matMenuTriggerFor]="institucionMenu" class="nav-link">
+          Institución <mat-icon>arrow_drop_down</mat-icon>
+        </a>
+        <mat-menu #institucionMenu="matMenu" class="custom-menu">
+          <a mat-menu-item [routerLink]="['/historia']" (click)="victor()">Historia</a>
+          <a mat-menu-item [routerLink]="['/instalaciones']">Instalaciones</a>
+          <a mat-menu-item [routerLink]="['/docentes']">Cuerpo Docente</a>
+          <a mat-menu-item [routerLink]="['/reglamento']">Reglamento</a>
+          <a mat-menu-item [routerLink]="['/calendario']">Calendario Académico</a>
         </mat-menu>
       </li>
-  
+
       <!-- Recursos Educativos -->
       <li>
-        <a mat-button [matMenuTriggerFor]="recursosMenu">RECURSOS EDUCATIVOS <mat-icon>arrow_drop_down</mat-icon></a>
-        <mat-menu #recursosMenu="matMenu">
-          <a mat-menu-item  (click)="libro()">Libros</a>
-          <a mat-menu-item href="#videos">Videos</a>
-          <a mat-menu-item href="#documentos">Documentos</a>
+        <a mat-button [matMenuTriggerFor]="recursosMenu" class="nav-link">
+          Recursos <mat-icon>arrow_drop_down</mat-icon>
+        </a>
+        <mat-menu #recursosMenu="matMenu" class="custom-menu">
+          <a mat-menu-item [routerLink]="['/libros']" (click)="libro()">Libros</a>
+          <a mat-menu-item [routerLink]="['/videos']">Videos</a>
+          <a mat-menu-item [routerLink]="['/documentos']">Documentos</a>
         </mat-menu>
       </li>
-  
-      <!-- Aula Virtual -->
-      <li>
-        <a mat-button [matMenuTriggerFor]="aulaMenu">AULA VIRTUAL <mat-icon>arrow_drop_down</mat-icon></a>
-        <mat-menu #aulaMenu="matMenu">
-          <a mat-menu-item href="#plataforma">Plataforma</a>
-          <a mat-menu-item href="#clases">Clases en Vivo</a>
-          <a mat-menu-item href="#foros">Foros de Discusión</a>
-        </mat-menu>
-      </li>
-  
-      <!-- Test -->
-      <li>
-        <a mat-button [matMenuTriggerFor]="testMenu">TEST <mat-icon>arrow_drop_down</mat-icon></a>
-        <mat-menu #testMenu="matMenu">
-          <a mat-menu-item href="#pruebas">Pruebas Online</a>
-          <a mat-menu-item href="#evaluaciones">Evaluaciones</a>
-        </mat-menu>
-      </li>
-  
+
+ 
+
       <!-- Misión y Visión -->
       <li>
-        <a mat-button [matMenuTriggerFor]="misionVisionMenu">MISIÓN Y VISIÓN <mat-icon>arrow_drop_down</mat-icon></a>
-        <mat-menu #misionVisionMenu="matMenu">
-          <a mat-menu-item href="#mision">Misión</a>
-          <a mat-menu-item href="#vision">Visión</a>
+        <a mat-button [matMenuTriggerFor]="misionVisionMenu" class="nav-link">
+          Misión y Visión <mat-icon>arrow_drop_down</mat-icon>
+        </a>
+        <mat-menu #misionVisionMenu="matMenu" class="custom-menu">
+          <a mat-menu-item [routerLink]="['/mision']">Misión</a>
+          <a mat-menu-item [routerLink]="['/vision']">Visión</a>
         </mat-menu>
+      </li>
+
+ 
+
+      <!-- Sobre Nosotros -->
+      <li>
+        <a class="nav-link" (click)="scrollToAbout()">Sobre Nosotros</a>
       </li>
     </ul>
   </nav>
-  
+
   <div class="login-button">
-    <button mat-raised-button color="primary" (click)="irAOtraVentana()">Iniciar Sesión</button>
+    <button mat-raised-button color="primary" *ngIf="!isAuthenticated" (click)="irAOtraVentana()">Iniciar Sesión</button>
   </div>
 </header>
 
-<section class="hero">
-  <img src="assets/img/cdc-GDokEYnOfnE-unsplash.jpg">
-  <div class="overlay">
-    <h2>Educación de Calidad para un Futuro Brillante</h2>
-    <p>Comprometidos con la excelencia académica y el desarrollo integral.</p>
-    <button mat-raised-button >Conócenos Más</button>
-  </div>
-</section>
+<!-- Main Content -->
+<main>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 [@fadeInAnimation]>Bienvenidos al Colegio HOBO</h1>
+      <p [@fadeInAnimation]>Formamos el futuro con educación de excelencia y valores sólidos</p>
+      <div class="hero-buttons">
+        <button mat-raised-button color="primary" (click)="scrollToAbout()">Descubre Más</button>
+        <button mat-raised-button color="accent" (click)="router.navigate(['/inscripciones'])">Inscríbete Ahora</button>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="assets/img/cdc-GDokEYnOfnE-unsplash.jpg" alt="Estudiantes en el Colegio Innovación" [@fadeInAnimation]>
+    </div>
+  </section>
 
-<section class="content">
-  <mat-card class="info-card">
-    <mat-card-title>Sobre Nosotros</mat-card-title>
-    <mat-card-content>
-      <p>Somos una institución con más de 20 años de experiencia en educación de calidad.</p>
-    </mat-card-content>
-  </mat-card>
-
-  <div class="cards">
-    <mat-card class="feature-card">
-      <mat-card-header>
-        <mat-card-title>📚 Educación Integral</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>Programas adaptados al mundo actual.</mat-card-content>
+  <!-- Feature Cards -->
+  <section class="features" [@fadeInStaggerAnimation]>
+    <mat-card class="feature-card" *ngFor="let card of featureCards">
+      <span class="emoji">{{card.emoji}}</span>
+      <mat-card-title>{{card.title}}</mat-card-title>
+      <mat-card-content>{{card.description}}</mat-card-content>
     </mat-card>
+  </section>
 
-    <mat-card class="feature-card">
-      <mat-card-header>
-        <mat-card-title>💡 Innovación y Tecnología</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>Salones modernos y educación digital.</mat-card-content>
-    </mat-card>
+  <!-- Welcome Section -->
+  <section class="welcome-section">
+    <h2 [@fadeInAnimation]>Nuestra Comunidad Educativa</h2>
+    <p [@fadeInAnimation]>Un espacio donde el aprendizaje y los valores se unen para formar líderes del mañana.</p>
+    <div class="stats" [@fadeInStaggerAnimation]>
+      <div class="stat-item">
+        <span class="stat-number">500+</span>
+        <p>Estudiantes Felices</p>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">30+</span>
+        <p>Docentes Capacitados</p>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">15+</span>
+        <p>Años de Excelencia</p>
+      </div>
+    </div>
+  </section>
 
-    <mat-card class="feature-card">
-      <mat-card-header>
-        <mat-card-title>🌎 Formación en Valores</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>Preparamos a los estudiantes con principios sólidos.</mat-card-content>
-    </mat-card>
-  </div>
-</section>
+  <!-- News Section -->
+  <section class="news-section" *ngIf="selectedSection === 'noticias'">
+    <h2 [@fadeInAnimation]>Noticias y Eventos</h2>
+    <div class="news-container" #newsTrack>
+      <mat-card class="news-card" *ngFor="let noticia of noticiasFiltradas; trackBy: trackByFn" [@fadeInAnimation]>
+        <img mat-card-image [src]="noticia.imagen" (error)="handleImageError($event)" (click)="mostrarImagen(noticia)" alt="{{noticia.titulo}}">
+        <mat-card-content>
+          <mat-card-title>{{noticia.titulo}}</mat-card-title>
+          <p class="date">{{formatDate(noticia.fechaCreacion)}}</p>
+          <p>{{noticia.titulo}}</p> <!-- Corregido: subtitulo en lugar de repetir titulo -->
+          <p>{{noticia.contenido | slice:0:100}}...</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-icon-button (click)="darLike(noticia.id!)">
+            <mat-icon [color]="noticia.likedBy?.includes(currentUserId!) ? 'warn' : ''">favorite</mat-icon>
+            {{noticia.likedBy?.length || 0}}
+          </button>
+        </mat-card-actions>
+      </mat-card>
+      <mat-card class="news-card static" *ngFor="let news of staticNews" [@fadeInAnimation]>
+        <img mat-card-image [src]="news.imagen" (error)="handleImageError($event)" (click)="mostrarImagen(news)" alt="{{news.titulo}}">
+        <mat-card-content>
+          <mat-card-title>{{news.titulo}}</mat-card-title>
+          <p class="date">{{formatDate(news.fechaCreacion)}}</p>
+          <p>{{news.subtitulo}}</p>
+          <p>{{news.contenido | slice:0:100}}...</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="primary">{{news.action}}</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <button class="scroll-arrow left" mat-fab (click)="scrollLeft()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button class="scroll-arrow right" mat-fab (click)="scrollRight()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+    <div class="error-message" *ngIf="newsError">
+      <mat-icon color="warn">error</mat-icon>
+      <p>No se pudieron cargar las noticias. Intenta de nuevo más tarde.</p>
+    </div>
+  </section>
 
-<section class="news">
-  <h2 class="section-title">📰 Últimas Noticias & Eventos</h2>
-  <p class="section-subtitle">Mantente informado sobre las actividades y eventos más recientes de nuestra institución.</p>
-  
-  <div class="news-container">
-    <mat-card class="news-card">
-      <img mat-card-image src="assets/img/IMG_2892-1536x2048.jpeg" alt="Semana Cultural">
-      <mat-card-header>
-        <mat-card-title>Semana Cultural 2024</mat-card-title>
-        <mat-card-subtitle>Del 15 al 20 de septiembre</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p>Disfruta de una semana llena de arte, música y tradición con presentaciones, concursos y mucho más.</p>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="primary">Leer más</button>
-      </mat-card-actions>
-    </mat-card>
+  <!-- About Section -->
+  <section id="about" class="about-section">
+    <h2 [@fadeInAnimation]>Sobre Nosotros</h2>
+    <p [@fadeInAnimation]>En el Colegio Innovación, combinamos tecnología, valores y educación de calidad para preparar a nuestros estudiantes para un mundo en constante cambio.</p>
+    <button mat-raised-button color="primary" (click)="router.navigate(['/historia'])">Conoce Nuestra Historia</button>
+  </section>
+</main>
 
-    <mat-card class="news-card">
-      <img mat-card-image src="assets/img/dengue.jpg" alt="Concurso de Lectura">
-      <mat-card-header>
-        <mat-card-title>Concurso de Lectura</mat-card-title>
-        <mat-card-subtitle>Inscripciones abiertas hasta el 10 de octubre</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p>Fomenta tu amor por la lectura participando en nuestro concurso anual. Premios y reconocimiento para los mejores.</p>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="primary">Participa aquí</button>
-      </mat-card-actions>
-    </mat-card>
-
-    <mat-card class="news-card">
-      <img mat-card-image src="assets/img/Documento-A4-Portada-de-Ciencias-Infantil-Multicolor.png" alt="Feria de Ciencias">
-      <mat-card-header>
-        <mat-card-title>Feria de Ciencias 2024</mat-card-title>
-        <mat-card-subtitle>Exhibición el 5 de noviembre</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p>Explora los proyectos innovadores de nuestros estudiantes en tecnología, medio ambiente y ciencias aplicadas.</p>
-      </mat-card-content>
-    </mat-card>
-  </div>
-</section>
-
+<!-- Footer -->
 <footer>
-  <p>&copy; 2024 Hobo. Todos los derechos reservados.</p>
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>Colegio Innovación</h3>
+      <p>Av. Educación 123, Ciudad Educativa</p>
+      <p>Email: <a href="mailto:info@colegioinnovacion.edu">info@colegioinnovacion.edu</a></p>
+      <p>Tel: <a href="tel:+1234567890">(123) 456-7890</a></p>
+    </div>
+    <div class="footer-section">
+      <h3>Enlaces Rápidos</h3>
+      <a [routerLink]="['/calendario']">Calendario Académico</a>
+      <a [routerLink]="['/reglamento']">Reglamento Escolar</a>
+      <a [routerLink]="['/contacto']">Contáctanos</a>
+    </div>
+    <div class="footer-section social">
+      <h3>Síguenos</h3>
+      <div class="social-icons">
+        <a href="https://facebook.com" target="_blank"><mat-icon>facebook</mat-icon></a>
+      
+      </div>
+    </div>
+  </div>
+  <p class="footer-bottom">© {{getCurrentYear()}} Colegio Innovación. Todos los derechos reservados.</p>
 </footer>

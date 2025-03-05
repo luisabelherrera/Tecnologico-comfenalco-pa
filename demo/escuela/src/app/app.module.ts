@@ -2,7 +2,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MaterialModule } from './material.module';
@@ -24,7 +24,6 @@ import { HomeComponent } from './components/home/home.component';
 import { AuthService } from './services/auth/AuthService.service';
 import { RegisterComponent } from './components/registro/register.component';
 import { AcudienteDetailComponent } from './components/acudiente/acudiente-detail/acudiente-detail.component';
-import { AcudienteFormComponent } from './components/acudiente/acudiente-form/acudiente-form.component';
 import { AcudienteListComponent } from './components/acudiente/acudiente-list/acudiente-list.component';
 import { CalificacionListComponent } from './components/calificacion/calificacion-list/calificacion-list.component';
 import { CurricularListComponent } from './components/curricular/curricular-list/curricular-list.component';
@@ -41,7 +40,7 @@ import { NivelComponent } from './components/nivel/nivel.component';
 import { NivelDetalleComponent } from './components/niveldetalle/niveldetalle.component';
 import { NivelDetalleCursoComponent } from './components/niveldetallecurso/niveldetallecurso.component';
 import { PeriodoComponent } from './components/periodo/periodo.component';
-import { NgxPaginationModule } from 'ngx-pagination'; 
+import { NgxPaginationModule } from 'ngx-pagination';
 import { DocenteComponent } from './components/docente/docente.component';
 import { CalificacionDetailComponent } from './components/calificacion/calificacion-detail/calificacion-detail.component';
 import { Ventana2Component } from './components/vista-docente/ventana2/ventana2.component';
@@ -82,6 +81,7 @@ import { CurricularDocenteComponent } from './components/vista-docente/curricula
 import { FindCalificacionPipe } from './services/calificacion/find-calificacion.pipe';
 import { CrearNotificacionComponent } from './components/vista-estudiante/crear-notificacion/crear-notificacion/crear-notificacion.component';
 import { MatListModule } from '@angular/material/list';
+import { NoticiaService } from './services/Menu/Menu.service';
 
 
 @NgModule({
@@ -109,19 +109,20 @@ import { MatListModule } from '@angular/material/list';
     MatCheckboxModule,
     MatIconModule,
     MatTooltipModule,
-    NgxPaginationModule ,
+    NgxPaginationModule,
     MatCarouselModule,
     MatIconModule,
     CommonModule,
     MatSnackBarModule,
     DragDropModule,
-  
+
     MatListModule,
-   
+    NoopAnimationsModule,
   ],
   declarations: [
+    
     CrearNotificacionComponent,
-        FindCalificacionPipe,
+    FindCalificacionPipe,
     ChatGestionComponent,
     ThemeCustomizerComponent,
     DialogoComponent,
@@ -132,7 +133,7 @@ import { MatListModule } from '@angular/material/list';
     VentaInformacionComponent,
     IconoIaComponent,
     FullMessageDialogComponent,
-    NotificacionesDialogComponent ,
+    NotificacionesDialogComponent,
     RecursoComponent,
     ImagenDialogComponent,
     AgregarNoticiaComponent,
@@ -147,13 +148,12 @@ import { MatListModule } from '@angular/material/list';
     CursosListComponent,
 
     AcudienteDetailComponent,
-    AcudienteFormComponent,
     AcudienteListComponent,
     CalificacionListComponent,
 
     CalificacionDetailComponent,
     CurricularListComponent,
- 
+
     DocenteComponent,
     ListarEstudiantesComponent,
 
@@ -177,10 +177,12 @@ import { MatListModule } from '@angular/material/list';
     HomeComponent,
     LoginComponent,
     ModificarHomeComponent,
-  ],
-  providers: [AuthService]  ,
-
   
+    
+  ],
+  providers: [AuthService,  NoticiaService],
+
+
   bootstrap: [AppComponent],
 })
 export class AppModule { }

@@ -1,74 +1,138 @@
 <div class="login-container">
+  <!-- Botón Volver como flecha animada -->
+  <button class="back-button" (click)="volver()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
   <div class="login-card">
-    <div class="login-left">
-    
-      <div class="illustration-container">
-        <img src="/assets/img/pngwing.com (3).png" alt="Login Illustration" class="illustration">
-      </div>
-    </div>
     <div class="login-right">
- 
-
       <div class="login-form">
-        <h1 class="sign-in-title">INICIAR SESIÓN</h1>
-        <p class="sign-in-subtitle">Ingresa tu email y contraseña para iniciar sesión</p>
+        <h1 class="sign-in-title">INICIO DE SESIÓN</h1>
+        <p class="sign-in-subtitle">Bienvenido a la plataforma</p>
 
-        <form (ngSubmit)="login()" #loginForm="ngForm">
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
           <div class="form-group">
-            <label>Email</label>
+            <label for="email">Correo electrónico</label>
             <div class="input-container">
               <mat-icon>email</mat-icon>
               <input
+                id="email"
                 type="email"
-                [(ngModel)]="loginDto.email"
-                name="email"
-                placeholder="admin@example.com"
-                required
-                #email="ngModel"
+                formControlName="email"
+                placeholder="admin@ejemplo.com"
+                class="input-field"
               />
             </div>
+            <small *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)" class="error-message">
+              <span *ngIf="loginForm.get('email')?.errors?.['required']">El correo electrónico es obligatorio.</span>
+              <span *ngIf="loginForm.get('email')?.errors?.['email']">El correo electrónico no es válido.</span>
+            </small>
           </div>
 
           <div class="form-group">
-            <label>Password</label>
+            <label for="password">Contraseña</label>
             <div class="input-container">
               <mat-icon>lock</mat-icon>
               <input
+                id="password"
                 type="password"
-                [(ngModel)]="loginDto.password"
-                name="password"
+                formControlName="password"
                 placeholder="••••••••••"
-                required
-                #password="ngModel"
+                class="input-field"
               />
+            </div>
+            <small *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)" class="error-message">
+              <span *ngIf="loginForm.get('password')?.errors?.['required']">La contraseña es obligatoria.</span>
+            </small>
+          </div>
+
+          <div class="remember-forgot">
+            <div class="remember">
+              <mat-checkbox formControlName="remember">Recordarme</mat-checkbox>
+            </div>
+            <div class="forgot">
+              <a href="javascript:void(0)" (click)="abrirModalRecuperacion()">¿Olvidaste tu contraseña?</a>
             </div>
           </div>
 
-   
+          <div *ngIf="errorMessage" class="error-alert">
+            {{ errorMessage }}
+          </div>
 
           <button 
             type="submit" 
             class="sign-in-button"
-            [disabled]="!loginForm.valid"
+            [disabled]="loginForm.invalid"
           >
-            SIGN IN
+            INICIAR SESIÓN
           </button>
+
+          <div class="create-account">
+            <p>Contacte a administración para crear una cuenta.</p>
+          </div>
 
           <div class="divider"></div>
 
-       
-
           <div class="copyright">
-            © 2024  Hobo. Todos los derechos reservados.
-          </div>
-          <div class="nav-arrow" (click)="irAOtraVentana()">
-            <mat-icon class="arrow-icon">arrow_forward</mat-icon>
-            <span class="nav-text">Más Información</span>
+            © 2024 Hobo. Todos los derechos reservados.
           </div>
         </form>
       </div>
     </div>
   </div>
+
+  <!-- Botón Más Información como flecha animada -->
+  <button class="info-button" (click)="abrirModalInformacion()">
+    <mat-icon>arrow_forward</mat-icon>
+  </button>
 </div>
 
+<!-- Modal de Recuperación de Cuenta -->
+<div class="modal-overlay" *ngIf="mostrarModal">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2>Recuperación de Cuenta</h2>
+      <button class="close-button" (click)="cerrarModal()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>Por favor, escribe un mensaje para el administrador:</p>
+      <textarea 
+        [(ngModel)]="mensajeUsuario" 
+        name="mensajeUsuario"
+        rows="4" 
+        placeholder="Escribe tu mensaje aquí..."
+      ></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-button" (click)="cerrarModal()">Cancelar</button>
+      <button class="send-button" (click)="enviarMensaje()">Enviar</button>
+    </div>
+  </div>
+</div>
 
+<!-- Modal de Información -->
+<div class="modal-overlay" *ngIf="mostrarModalInformacion">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2>Contactar con Administración</h2>
+      <button class="close-button" (click)="cerrarModalInformacion()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>Para obtener más información o crear una cuenta, por favor contacte al administrador:</p>
+      <textarea 
+        [(ngModel)]="mensajeInformacion" 
+        name="mensajeInformacion"
+        rows="4" 
+        placeholder="Escribe tu mensaje aquí..."
+      ></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-button" (click)="cerrarModalInformacion()">Cancelar</button>
+      <button class="send-button" (click)="enviarMensajeInformacion()">Enviar</button>
+    </div>
+  </div>
+</div>

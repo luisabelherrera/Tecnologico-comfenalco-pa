@@ -37,9 +37,9 @@
 <mat-dialog-actions align="end">
   <button
     mat-raised-button
+    class="close-button"
     [ngStyle]="{
-      'background-color': (currentTheme$ | async)?.backgroundColor,
-      'color': (currentTheme$ | async)?.textColor
+      'background-color': (currentTheme$ | async)?.backgroundColor
     }"
     (click)="close()"
     aria-label="Cerrar diálogo"

@@ -1,6 +1,8 @@
 package com.example.demo.services.service.impl;
 
 import com.example.demo.model.entity.dto.EstudianteDTO;
+import com.example.demo.model.login.UserEntity;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -31,7 +33,6 @@ public class EstudianteServiceImpl implements EstudianteService {
                 .collect(Collectors.toList());
     }
 
-
     @Override
     public Optional<EstudianteDTO> findById(Integer id) {
         return estudianteRepository.findById(id).map(this::convertToDTO);
@@ -40,27 +41,33 @@ public class EstudianteServiceImpl implements EstudianteService {
     @CacheEvict(value = "estudiantecache", allEntries = true)
     public EstudianteDTO save(EstudianteDTO estudianteDTO) {
         try {
-            // Set the registration date
-            estudianteDTO.setFechaRegistro(LocalDateTime.now());
-    
-            // Convert DTO to Entity
+            // Buscar el estudiante existente si es una actualización
+            Optional<Estudiante> existingOpt = estudianteDTO.getIdEstudiante() != null
+                ? estudianteRepository.findById(estudianteDTO.getIdEstudiante())
+                : Optional.empty();
+
             Estudiante estudiante = convertToEntity(estudianteDTO);
-    
-            // Save the Estudiante entity
+
+            if (existingOpt.isPresent()) {
+                Estudiante existing = existingOpt.get();
+                // Preservar user_id si no se proporciona en el DTO
+                if (estudianteDTO.getUserId() == null) {
+                    estudiante.setUser(existing.getUser());
+                } else {
+                    estudiante.setUser(existing.getUser()); // Mantener la relación existente
+                }
+            } else {
+                estudiante.setFechaRegistro(LocalDateTime.now());
+            }
+
             Estudiante savedEstudiante = estudianteRepository.save(estudiante);
-    
-            // Return the saved entity as DTO
             return convertToDTO(savedEstudiante);
         } catch (Exception e) {
-            // Log the error with relevant information
             System.err.println("Error occurred while saving Estudiante: " + e.getMessage());
-            e.printStackTrace();  // Print the stack trace for more details
-            
-            // You can throw a custom exception if needed
+            e.printStackTrace();
             throw new RuntimeException("Error saving Estudiante: " + e.getMessage(), e);
         }
     }
-    
 
     @CacheEvict(value = "estudiantecache", allEntries = true)
     public void deleteById(Integer id) {
@@ -81,11 +88,12 @@ public class EstudianteServiceImpl implements EstudianteService {
                 .direccion(estudiante.getDireccion())
                 .activo(estudiante.isActivo())
                 .fechaRegistro(estudiante.getFechaRegistro())
+                .userId(estudiante.getUser() != null ? estudiante.getUser().getId() : null) // Incluir userId
                 .build();
     }
 
     private Estudiante convertToEntity(EstudianteDTO estudianteDTO) {
-        return Estudiante.builder()
+        Estudiante estudiante = Estudiante.builder()
                 .idEstudiante(estudianteDTO.getIdEstudiante())
                 .valorCodigo(estudianteDTO.getValorCodigo())
                 .codigo(estudianteDTO.getCodigo())
@@ -99,6 +107,14 @@ public class EstudianteServiceImpl implements EstudianteService {
                 .activo(estudianteDTO.isActivo())
                 .fechaRegistro(estudianteDTO.getFechaRegistro())
                 .build();
-    }
 
+        // Si userId está presente, establecer la relación
+        if (estudianteDTO.getUserId() != null) {
+            UserEntity user = new UserEntity();
+            user.setId(estudianteDTO.getUserId());
+            estudiante.setUser(user);
+        }
+
+        return estudiante;
+    }
 }

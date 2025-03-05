@@ -43,7 +43,7 @@ export class NoticiaService {
 
   // Método para obtener todas las noticias
   obtenerNoticias(): Observable<Noticia[]> {
-    return this.http.get<Noticia[]>(this.apiUrl, { headers: this.getHeaders() });
+    return this.http.get<Noticia[]>(this.apiUrl); // No headers with token here
   }
 
   // Método para obtener la imagen de una noticia
