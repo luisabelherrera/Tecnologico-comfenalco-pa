@@ -1,189 +1,238 @@
-<!-- Header -->
-<header class="main-header" [ngClass]="{'scrolled': isScrolled}">
-  <div class="logo">
-    <img src="assets/iconos/inteligencia.png" alt="Logo Colegio Innovación" class="logo-img">
-    <span>HOBO</span>
+
+
+
+
+
+
+<div class="page-container">
+  <!-- Header Animado -->
+  <header class="header">
+    <div class="header-container">
+      <a href="#" class="logo">
+        <img src="assets/iconos/geminis.png" alt="EduPortal" />
+        <span>EduPortal</span>
+      </a>
+      <nav class="desktop-nav">
+        <ul class="nav-list">
+          <li><a href="#" [class.active]="selectedSection === 'noticias'">Inicio</a></li>
+          <li><a href="#about" (click)="scrollToAbout()">Nosotros</a></li>
+          <li><a href="#" (click)="libro()">Biblioteca</a></li>
+          <li><a href="#" (click)="accion4()">Juegos</a></li>
+          <li><a href="#" (click)="victor()">Recursos</a></li>
+          <li class="auth-button">
+            <a (click)="irAOtraVentana()" class="btn-login">Iniciar Sesión</a>
+          </li>
+        </ul>
+      </nav>
+      <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" aria-label="Menu">
+        <i class="material-icons">{{ isMobileMenuOpen ? 'close' : 'menu' }}</i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" *ngIf="isMobileMenuOpen">
+    <div class="mobile-menu-header">
+      <a href="#" class="logo">
+        
+        <span>EduPortal</span>
+      </a>
+
+    </div>
+    <nav>
+      <ul class="mobile-nav-list">
+        <li><a href="#" (click)="toggleMobileMenu()">Inicio</a></li>
+        <li><a href="#about" (click)="scrollToAbout(); toggleMobileMenu()">Nosotros</a></li>
+        <li><a href="#" (click)="libro(); toggleMobileMenu()">Biblioteca</a></li>
+        <li><a href="#" (click)="accion4(); toggleMobileMenu()">Juegos</a></li>
+        <li><a href="#" (click)="victor(); toggleMobileMenu()">Recursos</a></li>
+        <li><a (click)="irAOtraVentana(); toggleMobileMenu()" class="btn-login">Iniciar Sesión</a></li>
+      </ul>
+    </nav>
   </div>
 
-  <button class="menu-toggle" (click)="toggleMenu()">
-    <mat-icon>menu</mat-icon>
-  </button>
 
-  <nav class="main-nav" [ngClass]="{'active': menuOpen}">
-    <ul>
-      <!-- Institución -->
-      <li>
-        <a mat-button [matMenuTriggerFor]="institucionMenu" class="nav-link">
-          Institución <mat-icon>arrow_drop_down</mat-icon>
-        </a>
-        <mat-menu #institucionMenu="matMenu" class="custom-menu">
-          <a mat-menu-item [routerLink]="['/historia']" (click)="victor()">Historia</a>
-          <a mat-menu-item [routerLink]="['/instalaciones']">Instalaciones</a>
-          <a mat-menu-item [routerLink]="['/docentes']">Cuerpo Docente</a>
-          <a mat-menu-item [routerLink]="['/reglamento']">Reglamento</a>
-          <a mat-menu-item [routerLink]="['/calendario']">Calendario Académico</a>
-        </mat-menu>
-      </li>
 
-      <!-- Recursos Educativos -->
-      <li>
-        <a mat-button [matMenuTriggerFor]="recursosMenu" class="nav-link">
-          Recursos <mat-icon>arrow_drop_down</mat-icon>
-        </a>
-        <mat-menu #recursosMenu="matMenu" class="custom-menu">
-          <a mat-menu-item [routerLink]="['/libros']" (click)="libro()">Libros</a>
-          <a mat-menu-item [routerLink]="['/videos']">Videos</a>
-          <a mat-menu-item [routerLink]="['/documentos']">Documentos</a>
-        </mat-menu>
-      </li>
 
- 
-
-      <!-- Misión y Visión -->
-      <li>
-        <a mat-button [matMenuTriggerFor]="misionVisionMenu" class="nav-link">
-          Misión y Visión <mat-icon>arrow_drop_down</mat-icon>
-        </a>
-        <mat-menu #misionVisionMenu="matMenu" class="custom-menu">
-          <a mat-menu-item [routerLink]="['/mision']">Misión</a>
-          <a mat-menu-item [routerLink]="['/vision']">Visión</a>
-        </mat-menu>
-      </li>
-
- 
-
-      <!-- Sobre Nosotros -->
-      <li>
-        <a class="nav-link" (click)="scrollToAbout()">Sobre Nosotros</a>
-      </li>
-    </ul>
-  </nav>
-
-  <div class="login-button">
-    <button mat-raised-button color="primary" *ngIf="!isAuthenticated" (click)="irAOtraVentana()">Iniciar Sesión</button>
-  </div>
-</header>
-
-<!-- Main Content -->
-<main>
+  
   <!-- Hero Section -->
   <section class="hero">
-    <div class="hero-content">
-      <h1 [@fadeInAnimation]>Bienvenidos al Colegio HOBO</h1>
-      <p [@fadeInAnimation]>Formamos el futuro con educación de excelencia y valores sólidos</p>
-      <div class="hero-buttons">
-        <button mat-raised-button color="primary" (click)="scrollToAbout()">Descubre Más</button>
-        <button mat-raised-button color="accent" (click)="router.navigate(['/inscripciones'])">Inscríbete Ahora</button>
+    <div class="container">
+      <div class="hero-content">
+        <h1>¡Bienvenidos a EduPortal! <span class="emoji">📚✨</span></h1>
+        <p>Tu aventura escolar comienza aquí</p>
+        <div class="hero-buttons">
+          <a href="#about" class="btn btn-primary" (click)="scrollToAbout()">¡Explora! <span class="emoji">🚀</span></a>
+          <a href="#news" class="btn btn-secondary">Noticias <span class="emoji">📰</span></a>
+        </div>
       </div>
-    </div>
-    <div class="hero-image">
-      <img src="assets/img/cdc-GDokEYnOfnE-unsplash.jpg" alt="Estudiantes en el Colegio Innovación" [@fadeInAnimation]>
     </div>
   </section>
 
-  <!-- Feature Cards -->
-  <section class="features" [@fadeInStaggerAnimation]>
-    <mat-card class="feature-card" *ngFor="let card of featureCards">
-      <span class="emoji">{{card.emoji}}</span>
-      <mat-card-title>{{card.title}}</mat-card-title>
-      <mat-card-content>{{card.description}}</mat-card-content>
-    </mat-card>
-  </section>
-
-  <!-- Welcome Section -->
-  <section class="welcome-section">
-    <h2 [@fadeInAnimation]>Nuestra Comunidad Educativa</h2>
-    <p [@fadeInAnimation]>Un espacio donde el aprendizaje y los valores se unen para formar líderes del mañana.</p>
-    <div class="stats" [@fadeInStaggerAnimation]>
-      <div class="stat-item">
-        <span class="stat-number">500+</span>
-        <p>Estudiantes Felices</p>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">30+</span>
-        <p>Docentes Capacitados</p>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">15+</span>
-        <p>Años de Excelencia</p>
+  <!-- Features Section -->
+  <section class="features">
+    <div class="container">
+      <h2 class="section-title">¡Lo que ofrecemos! <span class="emoji">🌟</span></h2>
+      <div class="feature-cards">
+        <div class="feature-card" *ngFor="let card of featureCards; trackBy: trackByFeatureCard">
+          <div class="feature-icon">
+            <span class="emoji">{{ card.emoji }}</span>
+          </div>
+          <h3>{{ card.title }}</h3>
+          <p>{{ card.description }}</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- News Section -->
-  <section class="news-section" *ngIf="selectedSection === 'noticias'">
-    <h2 [@fadeInAnimation]>Noticias y Eventos</h2>
-    <div class="news-container" #newsTrack>
-      <mat-card class="news-card" *ngFor="let noticia of noticiasFiltradas; trackBy: trackByFn" [@fadeInAnimation]>
-        <img mat-card-image [src]="noticia.imagen" (error)="handleImageError($event)" (click)="mostrarImagen(noticia)" alt="{{noticia.titulo}}">
-        <mat-card-content>
-          <mat-card-title>{{noticia.titulo}}</mat-card-title>
-          <p class="date">{{formatDate(noticia.fechaCreacion)}}</p>
-          <p>{{noticia.titulo}}</p> <!-- Corregido: subtitulo en lugar de repetir titulo -->
-          <p>{{noticia.contenido | slice:0:100}}...</p>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-icon-button (click)="darLike(noticia.id!)">
-            <mat-icon [color]="noticia.likedBy?.includes(currentUserId!) ? 'warn' : ''">favorite</mat-icon>
-            {{noticia.likedBy?.length || 0}}
-          </button>
-        </mat-card-actions>
-      </mat-card>
-      <mat-card class="news-card static" *ngFor="let news of staticNews" [@fadeInAnimation]>
-        <img mat-card-image [src]="news.imagen" (error)="handleImageError($event)" (click)="mostrarImagen(news)" alt="{{news.titulo}}">
-        <mat-card-content>
-          <mat-card-title>{{news.titulo}}</mat-card-title>
-          <p class="date">{{formatDate(news.fechaCreacion)}}</p>
-          <p>{{news.subtitulo}}</p>
-          <p>{{news.contenido | slice:0:100}}...</p>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-button color="primary">{{news.action}}</button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
-    <button class="scroll-arrow left" mat-fab (click)="scrollLeft()">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-    <button class="scroll-arrow right" mat-fab (click)="scrollRight()">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
-    <div class="error-message" *ngIf="newsError">
-      <mat-icon color="warn">error</mat-icon>
-      <p>No se pudieron cargar las noticias. Intenta de nuevo más tarde.</p>
+  <section class="news-section" id="news">
+    <div class="container">
+      <h2 class="section-title">Últimas Noticias <span class="emoji">📰</span></h2>
+      <div class="news-container" *ngIf="newsItems.length > 0; else newsErrorTemplate">
+        <button class="scroll-btn scroll-left" (click)="scrollLeft()" aria-label="Scroll Left">
+          <i class="material-icons">chevron_left</i>
+        </button>
+        <div class="news-track" #newsTrack>
+          <div class="news-card" *ngFor="let noticia of newsItems; trackBy: trackByFn">
+            <div class="news-image" (click)="mostrarImagen(noticia)">
+              <img [src]="noticia.imagen" alt="{{ noticia.titulo }}" (error)="handleImageError($event)" />
+              <span class="news-date">{{ formatDate(noticia.fechaCreacion) }}</span>
+            </div>
+            <div class="news-content">
+              <h3 class="news-title">{{ noticia.titulo }}</h3>
+              <p class="news-excerpt">{{ noticia.contenido }}</p>
+              <div class="news-actions">
+      
+                <button class="btn-action1" (click)="mostrarImagen(noticia)">
+                  <i class="material-icons">visibility</i>
+                  {{ noticia.action }}
+                </button>
+                <button class="btn-like" (click)="darLike(noticia.id)" [disabled]="!isAuthenticated">
+                  <i class="material-icons">{{ noticia.likedBy?.includes(currentUserId) ? 'favorite' : 'favorite_border' }}</i>
+                  <span>{{ noticia.likedBy?.length || 0 }}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="scroll-btn scroll-right" (click)="scrollRight()" aria-label="Scroll Right">
+          <i class="material-icons">chevron_right</i>
+        </button>
+      </div>
+      <ng-template #newsErrorTemplate>
+        <div class="news-error">
+          <p>No se pudieron cargar las noticias. Mostrando contenido estático.</p>
+          <div class="news-container">
+            <div class="news-track">
+              <div class="news-card" *ngFor="let noticia of staticNews; trackBy: trackByFn">
+                <div class="news-image" (click)="mostrarImagen(noticia)">
+                  <img [src]="noticia.imagen" alt="{{ noticia.titulo }}" (error)="handleImageError($event)" />
+                  <span class="news-date">{{ formatDate(noticia.fechaCreacion) }}</span>
+                </div>
+                <div class="news-content">
+                  <h3 class="news-title">{{ noticia.titulo }}</h3>
+                  <p class="news-excerpt">{{ noticia.contenido }}</p>
+                  <div class="news-actions">
+                    <button class="btn-action" (click)="mostrarImagen(noticia)">
+                      <i class="material-icons">visibility</i> {{ noticia.action }}
+                    </button>
+                  </div>
+                  
+                </div>
+
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
     </div>
   </section>
 
   <!-- About Section -->
-  <section id="about" class="about-section">
-    <h2 [@fadeInAnimation]>Sobre Nosotros</h2>
-    <p [@fadeInAnimation]>En el Colegio Innovación, combinamos tecnología, valores y educación de calidad para preparar a nuestros estudiantes para un mundo en constante cambio.</p>
-    <button mat-raised-button color="primary" (click)="router.navigate(['/historia'])">Conoce Nuestra Historia</button>
-  </section>
-</main>
-
-<!-- Footer -->
-<footer>
-  <div class="footer-content">
-    <div class="footer-section">
-      <h3>Colegio Innovación</h3>
-      <p>Av. Educación 123, Ciudad Educativa</p>
-      <p>Email: <a href="mailto:info@colegioinnovacion.edu">info@colegioinnovacion.edu</a></p>
-      <p>Tel: <a href="tel:+1234567890">(123) 456-7890</a></p>
-    </div>
-    <div class="footer-section">
-      <h3>Enlaces Rápidos</h3>
-      <a [routerLink]="['/calendario']">Calendario Académico</a>
-      <a [routerLink]="['/reglamento']">Reglamento Escolar</a>
-      <a [routerLink]="['/contacto']">Contáctanos</a>
-    </div>
-    <div class="footer-section social">
-      <h3>Síguenos</h3>
-      <div class="social-icons">
-        <a href="https://facebook.com" target="_blank"><mat-icon>facebook</mat-icon></a>
-      
+  <section class="about-section" id="about">
+    <div class="container">
+      <div class="about-content">
+        <div class="about-text">
+          <h2>¿Quiénes Somos? <span class="emoji">👩‍🏫</span></h2>
+          <p>Somos una institución comprometida con la formación integral de nuestros estudiantes, combinando educación de calidad con valores sólidos.</p>
+          <ul>
+            <li>Excelencia académica.</li>
+            <li>Innovación tecnológica.</li>
+            <li>Desarrollo personal y social.</li>
+          </ul>
+        </div>
+        <div class="about-image">
+          <img src="assets/img/school-298680.jpg" alt="Sobre Nosotros" />
+        </div>
       </div>
     </div>
-  </div>
-  <p class="footer-bottom">© {{getCurrentYear()}} Colegio Innovación. Todos los derechos reservados.</p>
-</footer>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <img src="assets/iconos/geminis.png" alt="Logo Institucional" />
+          <h3>EduPortal  </h3>
+          <p>¡Tu aventura escolar comienza aquí! 📚</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Explora</h4>
+            <ul>
+              <li><a href="#"><i class="material-icons">home</i> Inicio</a></li>
+              <li><a href="#about" (click)="scrollToAbout()"><i class="material-icons">people</i> Nosotros</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Aventuras</h4>
+            <ul>
+              <li><a href="#" (click)="libro()"><i class="material-icons">local_library</i> Biblioteca</a></li>
+              <li><a href="#" (click)="accion4()"><i class="material-icons">videogame_asset</i> Juegos</a></li>
+              <li><a href="#" (click)="victor()"><i class="material-icons">school</i> Recursos</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Contáctanos</h4>
+            <ul class="contact-info">
+              <li><i class="material-icons">location_on</i> Av. Escuela #123, Ciudad</li>
+              <li><i class="material-icons">phone</i> (123) 456-7890</li>
+              <li><i class="material-icons">email</i> info@hobocolegio.edu</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© {{ getCurrentYear() }} EduPortal . ¡Todos felices aprendiendo! 🌈</p>
+        <div class="social-links">
+          <a href="#" aria-label="Facebook"><i class="material-icons">facebook</i></a>
+          <a href="#" aria-label="Twitter"><i class="material-icons">twitter</i></a>
+          <a href="#" aria-label="Instagram"><i class="material-icons">instagram</i></a>
+          <a href="#" aria-label="YouTube"><i class="material-icons">youtube_activity</i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

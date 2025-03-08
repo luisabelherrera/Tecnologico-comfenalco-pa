@@ -12,19 +12,17 @@
   <div class="content-wrapper">
     <div class="charts-wrapper">
       <div class="chart-section">
-        <h3 class="chart-title">Comparación de Vacantes (Bar)</h3>
+        <h3 class="chart-title">Comparación (Bar)</h3>
         <div class="chart-container">
           <canvas id="barChart"></canvas>
         </div>
       </div>
-
       <div class="chart-section">
-        <h3 class="chart-title">Distribución Total (Doughnut)</h3>
+        <h3 class="chart-title">Distribución (Doughnut)</h3>
         <div class="chart-container">
           <canvas id="doughnutChart"></canvas>
         </div>
       </div>
-
       <div class="chart-section">
         <h3 class="chart-title">Total por Sección (Pie)</h3>
         <div class="chart-container">
@@ -38,7 +36,7 @@
         <h3 class="info-title">Resumen</h3>
         <div class="vacant-item" *ngFor="let nd of filteredNivelDetalles">
           <span class="vacant-label">{{ nd.gradoSeccion.descripcionGrado }} - {{ nd.gradoSeccion.descripcionSeccion }}:</span>
-          <span class="vacant-value">Disp: {{ nd.vacantesDisponibles }} / Ocup: {{ nd.vacantesOcupadas }} / Total: {{ nd.totalVacantes }}</span>
+          <span class="vacant-value">D: {{ nd.vacantesDisponibles }} / O: {{ nd.vacantesOcupadas }} / T: {{ nd.totalVacantes }}</span>
         </div>
       </div>
     </div>

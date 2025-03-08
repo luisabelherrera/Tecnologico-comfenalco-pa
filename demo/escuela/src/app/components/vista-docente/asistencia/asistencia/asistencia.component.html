@@ -1,0 +1,56 @@
+<div class="container">
+    <div class="header">
+      <h2>Gestión de Asistencia</h2>
+    </div>
+  
+    <div class="curso-list">
+      <mat-list>
+        <mat-list-item *ngFor="let curso of cursosAsignados" (click)="selectCurso(curso)">
+          <span matListItemTitle>{{ curso.nivelDetalleCurso.curso?.descripcion }}</span>
+          <span matListItemLine>{{ curso.nivelDetalleCurso.nivelDetalle?.gradoSeccion?.descripcionSeccion }}</span>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  
+    <div class="students-table" *ngIf="selectedCurso">
+      <h3>Asistencia - {{ selectedCurso.nivelDetalleCurso.curso?.descripcion }} ({{ today | date: 'dd/MM/yyyy' }})</h3>
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="estudiante">
+          <th mat-header-cell *matHeaderCellDef>Estudiante</th>
+          <td mat-cell *matCellDef="let element">{{ element.estudiante.nombres }} {{ element.estudiante.apellidos }}</td>
+        </ng-container>
+        <ng-container matColumnDef="documento">
+          <th mat-header-cell *matHeaderCellDef>Documento</th>
+          <td mat-cell *matCellDef="let element">{{ element.estudiante.documentoIdentidad }}</td>
+        </ng-container>
+        <ng-container matColumnDef="asistenciaHoy">
+          <th mat-header-cell *matHeaderCellDef>Asistencia Hoy</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox [(ngModel)]="element.asistio">Asistió</mat-checkbox>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="historial">
+          <th mat-header-cell *matHeaderCellDef>Historial</th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button color="accent" (click)="verHistorial(element.estudiante.idEstudiante)">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button color="primary" (click)="guardarAsistencia(element)">
+              <mat-icon>save</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      <div class="no-students" *ngIf="dataSource.data.length === 0">
+        <p>No hay estudiantes registrados en este curso.</p>
+      </div>
+    </div>
+  </div>

@@ -13,7 +13,7 @@ export class NivelDetalleDialogoGraficoComponent implements OnInit, OnDestroy {
   nivelDetalles: any[];
   filteredNivelDetalles: any[];
   uniqueNiveles: string[] = [];
-  selectedNivel: string = ''; // Filter by Nivel
+  selectedNivel: string = '';
   chartLabels: string[] = [];
   disponiblesData: number[] = [];
   ocupadasData: number[] = [];
@@ -45,7 +45,7 @@ export class NivelDetalleDialogoGraficoComponent implements OnInit, OnDestroy {
 
   extractUniqueNiveles() {
     this.uniqueNiveles = [...new Set(this.nivelDetalles.map(nd => nd.nivel.descripcionNivel))];
-    this.selectedNivel = this.uniqueNiveles[0] || ''; // Default to first Nivel
+    this.selectedNivel = this.uniqueNiveles[0] || '';
   }
 
   applyNivelFilter() {
@@ -64,7 +64,6 @@ export class NivelDetalleDialogoGraficoComponent implements OnInit, OnDestroy {
   }
 
   createCharts() {
-    // Bar Chart
     const barCtx = (document.getElementById('barChart') as HTMLCanvasElement)?.getContext('2d');
     if (barCtx) {
       const barConfig: ChartConfiguration<'bar', number[], string> = {
@@ -72,45 +71,21 @@ export class NivelDetalleDialogoGraficoComponent implements OnInit, OnDestroy {
         data: {
           labels: this.chartLabels,
           datasets: [
-            {
-              label: 'Vacantes Disponibles',
-              data: this.disponiblesData,
-              backgroundColor: '#36A2EB',
-              hoverBackgroundColor: '#1E90FF',
-              borderWidth: 1,
-            },
-            {
-              label: 'Vacantes Ocupadas',
-              data: this.ocupadasData,
-              backgroundColor: '#FF6384',
-              hoverBackgroundColor: '#FF4500',
-              borderWidth: 1,
-            },
-            {
-              label: 'Total Vacantes',
-              data: this.totalesData,
-              backgroundColor: '#FFCE56',
-              hoverBackgroundColor: '#FFD700',
-              borderWidth: 1,
-            }
+            { label: 'Vacantes Disponibles', data: this.disponiblesData, backgroundColor: '#36A2EB', hoverBackgroundColor: '#1E90FF', borderWidth: 1 },
+            { label: 'Vacantes Ocupadas', data: this.ocupadasData, backgroundColor: '#FF6384', hoverBackgroundColor: '#FF4500', borderWidth: 1 },
+            { label: 'Total Vacantes', data: this.totalesData, backgroundColor: '#FFCE56', hoverBackgroundColor: '#FFD700', borderWidth: 1 }
           ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          scales: {
-            y: { beginAtZero: true, title: { display: true, text: 'Número de Vacantes' } }
-          },
-          plugins: {
-            legend: { position: 'bottom' },
-            tooltip: { callbacks: { label: (item) => `${item.dataset.label}: ${item.raw}` } }
-          }
+          scales: { y: { beginAtZero: true, title: { display: true, text: 'Número de Vacantes' } } },
+          plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: (item) => `${item.dataset.label}: ${item.raw}` } } }
         }
       };
       this.barChart = new Chart(barCtx, barConfig);
     }
 
-    // Doughnut Chart (Aggregated)
     const doughnutCtx = (document.getElementById('doughnutChart') as HTMLCanvasElement)?.getContext('2d');
     if (doughnutCtx) {
       const aggregatedData = {
@@ -121,54 +96,28 @@ export class NivelDetalleDialogoGraficoComponent implements OnInit, OnDestroy {
         type: 'doughnut',
         data: {
           labels: ['Vacantes Disponibles', 'Vacantes Ocupadas'],
-          datasets: [{
-            data: [aggregatedData.disponibles, aggregatedData.ocupadas],
-            backgroundColor: ['#36A2EB', '#FF6384'],
-            hoverBackgroundColor: ['#1E90FF', '#FF4500'],
-            borderWidth: 2,
-          }]
+          datasets: [{ data: [aggregatedData.disponibles, aggregatedData.ocupadas], backgroundColor: ['#36A2EB', '#FF6384'], hoverBackgroundColor: ['#1E90FF', '#FF4500'], borderWidth: 2 }]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { position: 'bottom' },
-            tooltip: { callbacks: { label: (item) => `${item.label}: ${item.raw}` } }
-          }
-        }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: (item) => `${item.label}: ${item.raw}` } } } }
       };
       this.doughnutChart = new Chart(doughnutCtx, doughnutConfig);
     }
 
-    // Pie Chart
     const pieCtx = (document.getElementById('pieChart') as HTMLCanvasElement)?.getContext('2d');
     if (pieCtx) {
       const pieConfig: ChartConfiguration<'pie', number[], string> = {
         type: 'pie',
         data: {
           labels: this.chartLabels.map(label => `${label} (Total)`),
-          datasets: [{
-            data: this.totalesData,
-            backgroundColor: this.chartLabels.map((_, i) => `#${Math.floor(Math.random()*16777215).toString(16)}`),
-            hoverBackgroundColor: this.chartLabels.map((_, i) => `#${Math.floor(Math.random()*16777215).toString(16)}`),
-            borderWidth: 2,
-          }]
+          datasets: [{ data: this.totalesData, backgroundColor: this.chartLabels.map((_, i) => `#${Math.floor(Math.random()*16777215).toString(16)}`), hoverBackgroundColor: this.chartLabels.map((_, i) => `#${Math.floor(Math.random()*16777215).toString(16)}`), borderWidth: 2 }]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { position: 'bottom' },
-            tooltip: { callbacks: { label: (item) => `${item.label}: ${item.raw}` } }
-          }
-        }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: (item) => `${item.label}: ${item.raw}` } } } }
       };
       this.pieChart = new Chart(pieCtx, pieConfig);
     }
   }
 
   updateCharts() {
-    // Update Bar Chart
     if (this.barChart) {
       this.barChart.data.labels = this.chartLabels;
       this.barChart.data.datasets[0].data = this.disponiblesData;
@@ -177,7 +126,6 @@ export class NivelDetalleDialogoGraficoComponent implements OnInit, OnDestroy {
       this.barChart.update();
     }
 
-    // Update Doughnut Chart
     if (this.doughnutChart) {
       const aggregatedData = {
         disponibles: this.disponiblesData.reduce((sum, val) => sum + val, 0),
@@ -187,7 +135,6 @@ export class NivelDetalleDialogoGraficoComponent implements OnInit, OnDestroy {
       this.doughnutChart.update();
     }
 
-    // Update Pie Chart
     if (this.pieChart) {
       this.pieChart.data.labels = this.chartLabels.map(label => `${label} (Total)`);
       this.pieChart.data.datasets[0].data = this.totalesData;

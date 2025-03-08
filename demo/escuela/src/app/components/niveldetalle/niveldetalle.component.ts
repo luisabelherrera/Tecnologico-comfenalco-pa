@@ -215,12 +215,11 @@ export class NivelDetalleComponent implements OnInit {
     const relatedNivelDetalles = this.nivelDetalles.filter(nd => nd.nivel.idNivel === nivelDetalle.nivel.idNivel);
     console.log('Datos del nivel detalle a pasar al gráfico:', relatedNivelDetalles);
     this.dialog.open(NivelDetalleDialogoGraficoComponent, {
-      width: '1000px',
+      width: '1400px', // Aumentar el ancho
       height: 'auto',
-      maxHeight: '90vh',
+      maxHeight: '95vh', // Más espacio vertical
       data: relatedNivelDetalles // Pass array of related entries
     });
-  
   }
 
   applyFilter(event: Event): void {

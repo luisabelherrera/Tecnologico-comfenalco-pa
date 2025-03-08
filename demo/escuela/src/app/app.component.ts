@@ -16,7 +16,7 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy {
-  title = ' HOBO';
+  title = ' EduPortal ';
 
   @ViewChild('sidenav') sidenav!: MatSidenav;
   toolbarColor: string | SafeStyle = 'rgb(0, 0, 0)';
@@ -50,6 +50,7 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/docentes', icon: 'person', title: 'Docentes' },
     { path: '/curriculares', icon: 'assignment', title: 'Curriculares' },
     { path: '/calificaciones', icon: 'grade', title: 'Calificaciones' },
+
   ];
   Curso = [
     { path: '/cursos', icon: 'school', title: 'Cursos' },
@@ -80,6 +81,7 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/ventana2', icon: 'grade', title: 'Calificaciones' },
     { path: '/curricularDocente', icon: 'book', title: 'Curricular' },
     { path: '/horarioDocente', icon: 'schedule', title: 'Horario' },
+    { path: '/asistencia', icon: 'grade', title: 'asistencia' },
   ];
   Ventana3Links = [
     { path: '/perfil-estudiante', icon: 'schedule', title: 'Mi Perfil' },

@@ -26,6 +26,7 @@ mat-toolbar {
 mat-sidenav-container {
   flex: 1; /* Takes remaining space */
   overflow: hidden; /* Prevents double scrollbars (both x and y) */
+  
 }
 /* Resto del CSS sin cambios hasta el sidenav */
 .app-sidenav {
@@ -260,8 +261,10 @@ button.mat-mini-fab {
   }
 
   .title {
-    display: none;
-  }
+    display: inline-block;
+    margin-left: 15px; 
+}
+
 
   .user-info {
     display: none;

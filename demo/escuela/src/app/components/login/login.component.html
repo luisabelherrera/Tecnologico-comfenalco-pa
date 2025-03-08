@@ -1,5 +1,5 @@
 <div class="login-container">
-  <!-- Botón Volver como flecha animada -->
+  <!-- Botón Volver -->
   <button class="back-button" (click)="volver()">
     <mat-icon>arrow_back</mat-icon>
   </button>
@@ -7,25 +7,25 @@
   <div class="login-card">
     <div class="login-right">
       <div class="login-form">
-        <h1 class="sign-in-title">INICIO DE SESIÓN</h1>
-        <p class="sign-in-subtitle">Bienvenido a la plataforma</p>
+        <h1 class="sign-in-title">Inicio de Sesión</h1>
+        <p class="sign-in-subtitle">Bienvenido a tu plataforma educativa</p>
 
         <form [formGroup]="loginForm" (ngSubmit)="login()">
           <div class="form-group">
-            <label for="email">Correo electrónico</label>
+            <label for="email">Correo Electrónico</label>
             <div class="input-container">
               <mat-icon>email</mat-icon>
               <input
                 id="email"
                 type="email"
                 formControlName="email"
-                placeholder="admin@ejemplo.com"
+                placeholder="tucorreo@escuela.com"
                 class="input-field"
               />
             </div>
             <small *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)" class="error-message">
-              <span *ngIf="loginForm.get('email')?.errors?.['required']">El correo electrónico es obligatorio.</span>
-              <span *ngIf="loginForm.get('email')?.errors?.['email']">El correo electrónico no es válido.</span>
+              <span *ngIf="loginForm.get('email')?.errors?.['required']">El correo es obligatorio.</span>
+              <span *ngIf="loginForm.get('email')?.errors?.['email']">Formato de correo inválido.</span>
             </small>
           </div>
 
@@ -37,7 +37,7 @@
                 id="password"
                 type="password"
                 formControlName="password"
-                placeholder="••••••••••"
+                placeholder="••••••••"
                 class="input-field"
               />
             </div>
@@ -64,24 +64,24 @@
             class="sign-in-button"
             [disabled]="loginForm.invalid"
           >
-            INICIAR SESIÓN
+            Iniciar Sesión
           </button>
 
           <div class="create-account">
-            <p>Contacte a administración para crear una cuenta.</p>
+            <p>¿No tienes cuenta? Contacta a administración.</p>
           </div>
 
           <div class="divider"></div>
 
           <div class="copyright">
-            © 2024 Hobo. Todos los derechos reservados.
+            © 2024 EduPortal. Todos los derechos reservados.
           </div>
         </form>
       </div>
     </div>
   </div>
 
-  <!-- Botón Más Información como flecha animada -->
+  <!-- Botón Más Información -->
   <button class="info-button" (click)="abrirModalInformacion()">
     <mat-icon>arrow_forward</mat-icon>
   </button>
@@ -91,18 +91,18 @@
 <div class="modal-overlay" *ngIf="mostrarModal">
   <div class="modal-container">
     <div class="modal-header">
-      <h2>Recuperación de Cuenta</h2>
+      <h2>Recuperar Contraseña</h2>
       <button class="close-button" (click)="cerrarModal()">
         <mat-icon>close</mat-icon>
       </button>
     </div>
     <div class="modal-body">
-      <p>Por favor, escribe un mensaje para el administrador:</p>
+      <p>Envía un mensaje al administrador para recuperar tu cuenta:</p>
       <textarea 
         [(ngModel)]="mensajeUsuario" 
         name="mensajeUsuario"
         rows="4" 
-        placeholder="Escribe tu mensaje aquí..."
+        placeholder="Hola, necesito ayuda con mi contraseña..."
       ></textarea>
     </div>
     <div class="modal-footer">
@@ -116,18 +116,18 @@
 <div class="modal-overlay" *ngIf="mostrarModalInformacion">
   <div class="modal-container">
     <div class="modal-header">
-      <h2>Contactar con Administración</h2>
+      <h2>Contactar Administración</h2>
       <button class="close-button" (click)="cerrarModalInformacion()">
         <mat-icon>close</mat-icon>
       </button>
     </div>
     <div class="modal-body">
-      <p>Para obtener más información o crear una cuenta, por favor contacte al administrador:</p>
+      <p>Envía un mensaje para más información o para crear una cuenta:</p>
       <textarea 
         [(ngModel)]="mensajeInformacion" 
         name="mensajeInformacion"
         rows="4" 
-        placeholder="Escribe tu mensaje aquí..."
+        placeholder="Hola, me gustaría saber más sobre..."
       ></textarea>
     </div>
     <div class="modal-footer">

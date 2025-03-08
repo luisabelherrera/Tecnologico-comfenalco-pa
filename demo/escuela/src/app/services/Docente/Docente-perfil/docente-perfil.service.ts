@@ -25,6 +25,9 @@ export class DocentePerfilService {
       .pipe(catchError(this.handleError));
   }
 
+
+  
+
   private handleError(error: any) {
     console.error('Error en la petición:', error);
     return throwError(() => new Error('Hubo un problema al obtener el perfil del docente.'));

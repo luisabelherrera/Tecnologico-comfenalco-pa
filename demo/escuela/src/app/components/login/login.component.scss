@@ -1,753 +1,409 @@
+// Variables del Home
+$primary-color: #3f51b5;    // Azul principal
+$secondary-color: #ff4081;  // Rosa secundario
+$accent-color: #00bcd4;     // Cian de acento
+$text-color: #2d2d2d;       // Texto oscuro
+$light-text: #fff;          // Texto claro
+$dark-text: #1a1a1a;        // Texto más oscuro
+$light-bg: #f8fafc;         // Fondo claro
+$shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+$transition: all 0.3s ease;
+
 :host {
-	display: block;
-	height: 100%;
-  }
-  
+  display: block;
+  height: 100%;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  position: relative;
+  gap: 20px; /* Espacio moderado entre elementos */
+  background-color: $light-bg; /* Fondo claro del home */
+}
+
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/assets/img/th.jpg') no-repeat center center fixed;
+  background-size: cover;
+  filter: blur(8px) brightness(0.9); /* Fondo suave y profesional */
+  z-index: -1;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 480px; /* Más compacto */
+  min-height: 540px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: $shadow;
+  border: 1px solid lighten($primary-color, 45%);
+}
+
+.login-right {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 360px;
+}
+
+.sign-in-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: $primary-color; /* Azul del home */
+  text-align: center;
+  margin-bottom: 8px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.sign-in-subtitle {
+  font-size: 15px;
+  color: lighten($text-color, 25%);
+  text-align: center;
+  margin-bottom: 25px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: $dark-text;
+  font-family: 'Poppins', sans-serif;
+}
+
+.input-container {
+  position: relative;
+}
+
+.input-container mat-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $accent-color; /* Cian del home */
+  font-size: 20px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: 1px solid lighten($primary-color, 40%);
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif;
+  background-color: white;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: $primary-color;
+  box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+}
+
+.input-field::placeholder {
+  color: lighten($text-color, 35%);
+}
+
+.remember-forgot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: $text-color;
+  font-family: 'Poppins', sans-serif;
+}
+
+.remember-forgot .forgot a {
+  color: $secondary-color; /* Rosa del home */
+  text-decoration: none;
+  font-weight: 500;
+  transition: $transition;
+}
+
+.remember-forgot .forgot a:hover {
+  color: darken($secondary-color, 10%);
+}
+
+.error-message {
+  color: $secondary-color;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+  font-family: 'Poppins', sans-serif;
+}
+
+.error-alert {
+  background-color: lighten($secondary-color, 40%);
+  color: darken($secondary-color, 15%);
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  border-left: 3px solid $secondary-color;
+  font-family: 'Poppins', sans-serif;
+}
+
+.sign-in-button {
+  width: 100%;
+  padding: 12px;
+  background-color: $primary-color; /* Azul del home */
+  color: $light-text;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  transition: $transition;
+  box-shadow: $shadow;
+}
+
+.sign-in-button:hover {
+  background-color: darken($primary-color, 10%);
+  transform: translateY(-1px);
+}
+
+.sign-in-button:disabled {
+  background-color: lighten($primary-color, 25%);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.create-account {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 13px;
+  color: lighten($text-color, 20%);
+  font-family: 'Poppins', sans-serif;
+}
+
+.create-account p {
+  margin: 0;
+}
+
+.divider {
+  height: 1px;
+  background-color: lighten($primary-color, 50%);
+  margin: 20px 0;
+}
+
+.copyright {
+  text-align: center;
+  font-size: 12px;
+  color: lighten($text-color, 30%);
+  margin-bottom: 15px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Botones Laterales (más profesionales) */
+.back-button, .info-button {
+  padding: 10px;
+  width: 40px; /* Más pequeños y discretos */
+  height: 40px;
+  border: none;
+  border-radius: 8px; /* Bordes cuadrados suaves, no círculos */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: $transition;
+  position: relative;
+  z-index: 1;
+  background-color: white; /* Fondo blanco para profesionalismo */
+  box-shadow: $shadow;
+}
+
+.back-button {
+  color: $accent-color; /* Cian del home */
+}
+
+.back-button:hover {
+  background-color: lighten($accent-color, 40%);
+  color: $dark-text;
+  transform: translateX(-2px); /* Movimiento sutil */
+}
+
+.info-button {
+  color: $primary-color; /* Azul del home */
+}
+
+.info-button:hover {
+  background-color: lighten($primary-color, 45%);
+  color: $dark-text;
+  transform: translateX(2px); /* Movimiento sutil */
+}
+
+.back-button mat-icon, .info-button mat-icon {
+  font-size: 20px;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background-color: white;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 460px;
+  box-shadow: $shadow;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background-color: $light-bg;
+  border-bottom: 1px solid lighten($primary-color, 50%);
+}
+
+.modal-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: $primary-color;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.modal-header .close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $text-color;
+  transition: $transition;
+}
+
+.modal-header .close-button:hover {
+  color: $primary-color;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-body p {
+  margin: 0 0 15px;
+  color: $text-color;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.modal-body textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid lighten($primary-color, 40%);
+  border-radius: 6px;
+  resize: vertical;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.modal-body textarea:focus {
+  outline: none;
+  border-color: $primary-color;
+}
+
+.modal-footer {
+  padding: 12px 20px;
+  border-top: 1px solid lighten($primary-color, 50%);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-footer button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  transition: $transition;
+}
+
+.modal-footer .cancel-button {
+  background-color: transparent;
+  color: $text-color;
+  border: 1px solid lighten($primary-color, 40%);
+}
+
+.modal-footer .cancel-button:hover {
+  background-color: lighten($primary-color, 50%);
+}
+
+.modal-footer .send-button {
+  background-color: $primary-color;
+  color: $light-text;
+  border: none;
+}
+
+.modal-footer .send-button:hover {
+  background-color: darken($primary-color, 10%);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
   .login-container {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	min-height: 100vh;
-	padding: 20px;
-	position: relative;
+    flex-direction: column;
+    padding: 30px 15px;
+    gap: 15px;
   }
-  
-  .login-container::before {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: url('/assets/img/th.jpg') no-repeat center center fixed;
-	background-size: cover;
-	filter: blur(8px); /* Fondo desenfocado */
-	z-index: -1;
-  }
-  
+
   .login-card {
-	display: flex;
-	width: 100%;
-	max-width: 1000px;
-	min-height: 600px;
-	background-color: rgba(255, 255, 255, 0.9);
-	border-radius: 12px;
-	overflow: hidden;
-	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-	position: relative;
+    max-width: 100%;
+    min-height: auto;
   }
-  
-  .login-left {
-	flex: 1;
-	padding: 40px;
-	color: rgb(0, 0, 0);
-	background: rgba(0, 0, 0, 0.3); /* Fondo semitransparente para legibilidad */
-  }
-  
-  .illustration-container {
-	width: 100%;
-	height: 100%;
-	position: relative; /* Necesario para posicionar la imagen y el texto */
-  }
-  
-  .education-content {
-	position: relative; /* Para que el texto se superponga */
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-start; /* Texto arriba */
-	align-items: center; /* Centrado horizontal */
-	text-align: center;
-	width: 100%;
-	height: 100%; /* Ocupa todo el contenedor */
-  }
-  
-  .education-content h2 {
-	font-size: 28px;
-	font-weight: 700;
-	margin-bottom: 15px;
-	position: relative; /* Encima de la imagen */
-	z-index: 2; /* Asegura que el texto esté sobre la imagen */
-  }
-  
-  .education-content p {
-	font-size: 16px;
-	opacity: 0.9;
-	line-height: 1.5;
-	margin-bottom: 20px;
-	position: relative; /* Encima de la imagen */
-	z-index: 2; /* Asegura que el texto esté sobre la imagen */
-  }
-  
-  .education-content img {
-	position: absolute; /* La imagen se posiciona absolutamente dentro de education-content */
-	top: 0;
-	left: 0;
-	width: 100%; /* Cubre todo el ancho */
-	height: 100%; /* Cubre toda la altura */
-	object-fit: cover; /* Asegura que la imagen llene el contenedor sin distorsionarse */
-	z-index: 1; /* Debajo del texto */
-	border-radius: 8px; /* Opcional: bordes redondeados */
-  }
-  
-  /* Resto del CSS sin cambios */
+
   .login-right {
-	flex: 1;
-	padding: 40px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+    padding: 30px;
   }
-  
-  .login-form {
-	width: 100%;
-	max-width: 400px;
-  }
-  
+
   .sign-in-title {
-	font-size: 24px;
-	font-weight: 700;
-	color: #333;
-	text-align: center;
-	margin-bottom: 8px;
-  }
-  
-  .sign-in-subtitle {
-	font-size: 16px;
-	color: #666;
-	text-align: center;
-	margin-bottom: 30px;
-  }
-  
-  .form-group {
-	margin-bottom: 20px;
-  }
-  
-  .form-group label {
-	display: block;
-	font-size: 14px;
-	font-weight: 500;
-	margin-bottom: 8px;
-	color: #555;
-  }
-  
-  .input-container {
-	position: relative;
-  }
-  
-  .input-container mat-icon {
-	position: absolute;
-	left: 12px;
-	top: 50%;
-	transform: translateY(-50%);
-	color: #999;
-  }
-  
-  .input-field {
-	width: 100%;
-	padding: 12px 12px 12px 40px;
-	border: 1px solid #ddd;
-	border-radius: 6px;
-	font-size: 14px;
-	transition: border-color 0.3s;
-  }
-  
-  .input-field:focus {
-	outline: none;
-	border-color: #9333ea;
-	box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.2);
-  }
-  
-  .input-field::placeholder {
-	color: #aaa;
-  }
-  
-  .remember-forgot {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 20px;
-	font-size: 14px;
-  }
-  
-  .remember-forgot .forgot a {
-	color: #9333ea;
-	text-decoration: none;
-  }
-  
-  .remember-forgot .forgot a:hover {
-	text-decoration: underline;
-  }
-  
-  .error-message {
-	color: #e53e3e;
-	font-size: 12px;
-	margin-top: 5px;
-	display: block;
-  }
-  
-  .error-alert {
-	background-color: #fff5f5;
-	color: #e53e3e;
-	padding: 10px;
-	border-radius: 6px;
-	margin-bottom: 20px;
-	font-size: 14px;
-	border-left: 3px solid #e53e3e;
-  }
-  
-  .sign-in-button {
-	width: 100%;
-	padding: 12px;
-	background-color: #9333ea;
-	color: white;
-	border: none;
-	border-radius: 6px;
-	font-size: 16px;
-	font-weight: 600;
-	cursor: pointer;
-	transition: background-color 0.3s;
-  }
-  
-  .sign-in-button:hover {
-	background-color: #7e22ce;
-  }
-  
-  .sign-in-button:disabled {
-	background-color: #d8b4fe;
-	cursor: not-allowed;
-  }
-  
-  .create-account {
-	text-align: center;
-	margin-top: 20px;
-	font-size: 14px;
-	color: #666;
-  }
-  
-  .create-account a {
-	color: #9333ea;
-	text-decoration: none;
-	font-weight: 500;
-  }
-  
-  .create-account a:hover {
-	text-decoration: underline;
-  }
-  
-  .divider {
-	height: 1px;
-	background-color: #eee;
-	margin: 25px 0;
-  }
-  
-  .copyright {
-	text-align: center;
-	font-size: 12px;
-	color: #999;
-	margin-bottom: 20px;
-  }
-  
-  .nav-arrow {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	color: #9333ea;
-	font-size: 14px;
-  }
-  
-  .nav-arrow .arrow-icon {
-	margin-right: 8px;
-  }
-  
-  .nav-arrow:hover {
-	text-decoration: underline;
-  }
-  
-  /* Modal styles */
-  .modal-overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: rgba(0, 0, 0, 0.5);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	z-index: 1000;
-  }
-  
-  .modal-container {
-	background-color: white;
-	border-radius: 8px;
-	width: 90%;
-	max-width: 500px;
-	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-	overflow: hidden;
-  }
-  
-  .modal-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 15px 20px;
-	border-bottom: 1px solid #eee;
-  }
-  
-  .modal-header h2 {
-	font-size: 18px;
-	font-weight: 600;
-	margin: 0;
-  }
-  
-  .modal-header .close-button {
-	background: none;
-	border: none;
-	cursor: pointer;
-	color: #666;
-  }
-  
-  .modal-header .close-button:hover {
-	color: #333;
-  }
-  
-  .modal-body {
-	padding: 20px;
-  }
-  
-  .modal-body p {
-	margin-top: 0;
-	margin-bottom: 15px;
-  }
-  
-  .modal-body textarea {
-	width: 100%;
-	padding: 12px;
-	border: 1px solid #ddd;
-	border-radius: 6px;
-	resize: vertical;
-	font-family: inherit;
-  }
-  
-  .modal-body textarea:focus {
-	outline: none;
-	border-color: #9333ea;
-  }
-  
-  .modal-footer {
-	padding: 15px 20px;
-	border-top: 1px solid #eee;
-	display: flex;
-	justify-content: flex-end;
-	gap: 10px;
-  }
-  
-  .modal-footer button {
-	padding: 8px 16px;
-	border-radius: 6px;
-	font-size: 14px;
-	font-weight: 500;
-	cursor: pointer;
-  }
-  
-  .modal-footer .cancel-button {
-	background-color: #f3f4f6;
-	color: #4b5563;
-	border: 1px solid #e5e7eb;
-  }
-  
-  .modal-footer .cancel-button:hover {
-	background-color: #e5e7eb;
-  }
-  
-  .modal-footer .send-button {
-	background-color: #9333ea;
-	color: white;
-	border: none;
-  }
-  
-  .modal-footer .send-button:hover {
-	background-color: #7e22ce;
-  }
-  
-  /* Responsive styles */
-  @media (max-width: 768px) {
-	.login-card {
-	  flex-direction: column;
-	  max-height: none;
-	}
-	
-	.login-left {
-	  padding: 30px;
-	}
-	
-	.login-right {
-	  padding: 30px;
-	}
-	
-	.education-content h2 {
-	  font-size: 24px;
-	}
-	
-	.education-content p {
-	  font-size: 14px;
-	}
+    font-size: 22px;
   }
 
-  
+  .back-button, .info-button {
+    width: 36px;
+    height: 36px;
+  }
 
-
-  :host {
-	display: block;
-	height: 100%;
+  .back-button mat-icon, .info-button mat-icon {
+    font-size: 18px;
   }
-  
-  .login-container {
-	display: flex;
-	justify-content: center; /* Centra el login-card horizontalmente */
-	align-items: center; /* Centra verticalmente */
-	min-height: 100vh;
-	padding: 20px;
-	position: relative;
-	gap: 20px; /* Espacio entre los botones y el login-card */
-  }
-  
-  .login-card {
-	display: flex;
-	width: 100%;
-	max-width: 500px; /* Reduje el ancho para dejar espacio a los botones laterales */
-	min-height: 600px;
-	background-color: rgba(255, 255, 255, 0.9);
-	border-radius: 12px;
-	overflow: hidden;
-	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-	position: relative;
-  }
-  
-  .login-right {
-	flex: 1;
-	padding: 40px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-  }
-  
-  .login-form {
-	width: 100%;
-	max-width: 400px;
-  }
-  
-  .back-button {
-	padding: 12px;
-	background-color: #666;
-	color: white;
-	border: none;
-	border-radius: 50%; /* Círculo */
-	width: 50px; /* Tamaño fijo */
-	height: 50px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	transition: background-color 0.3s;
-	position: relative;
-	z-index: 1;
-	animation: bounceLeft 1.5s infinite; /* Animación de rebote */
-  }
-  
-  .back-button:hover {
-	background-color: #555;
-  }
-  
-  .back-button mat-icon {
-	font-size: 24px; /* Tamaño del ícono */
-  }
-  
-  /* Animación de rebote hacia la izquierda */
-  @keyframes bounceLeft {
-	0%, 100% {
-	  transform: translateX(0);
-	}
-	50% {
-	  transform: translateX(-10px); /* Se mueve a la izquierda */
-	}
-  }
-  /* Estilo para el botón Más Información (derecha) */
-  .info-button {
-	padding: 12px;
-	background-color: #9333ea;
-	color: white;
-	border: none;
-	border-radius: 50%;
-	width: 50px;
-	height: 50px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	transition: background-color 0.3s;
-	position: relative;
-	z-index: 1;
-	animation: bounceRight 1.5s infinite; /* Animación hacia la derecha */
-  }
-  
-  .info-button:hover {
-	background-color: #7e22ce;
-  }
-  
-  .info-button mat-icon {
-	font-size: 24px;
-  }
-  
-  /* Animación de rebote hacia la derecha */
-  @keyframes bounceRight {
-	0%, 100% {
-	  transform: translateX(0);
-	}
-	50% {
-	  transform: translateX(10px); /* Se mueve a la derecha */
-	}
-  }
-  
-  /* Resto del CSS sin cambios (solo incluyo lo relevante para el formulario) */
-  .sign-in-title {
-	font-size: 24px;
-	font-weight: 700;
-	color: #333;
-	text-align: center;
-	margin-bottom: 8px;
-  }
-  
-  .sign-in-subtitle {
-	font-size: 16px;
-	color: #666;
-	text-align: center;
-	margin-bottom: 30px;
-  }
-  
-  .form-group {
-	margin-bottom: 20px;
-  }
-  
-  .form-group label {
-	display: block;
-	font-size: 14px;
-	font-weight: 500;
-	margin-bottom: 8px;
-	color: #555;
-  }
-  
-  .input-container {
-	position: relative;
-  }
-  
-  .input-container mat-icon {
-	position: absolute;
-	left: 12px;
-	top: 50%;
-	transform: translateY(-50%);
-	color: #999;
-  }
-  
-  .input-field {
-	width: 100%;
-	padding: 12px 12px 12px 40px;
-	border: 1px solid #ddd;
-	border-radius: 6px;
-	font-size: 14px;
-	transition: border-color 0.3s;
-  }
-  
-  .input-field:focus {
-	outline: none;
-	border-color: #9333ea;
-	box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.2);
-  }
-  
-  .input-field::placeholder {
-	color: #aaa;
-  }
-  
-  .remember-forgot {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 20px;
-	font-size: 14px;
-  }
-  
-  .remember-forgot .forgot a {
-	color: #9333ea;
-	text-decoration: none;
-  }
-  
-  .remember-forgot .forgot a:hover {
-	text-decoration: underline;
-  }
-  
-  .error-message {
-	color: #e53e3e;
-	font-size: 12px;
-	margin-top: 5px;
-	display: block;
-  }
-  
-  .error-alert {
-	background-color: #fff5f5;
-	color: #e53e3e;
-	padding: 10px;
-	border-radius: 6px;
-	margin-bottom: 20px;
-	font-size: 14px;
-	border-left: 3px solid #e53e3e;
-  }
-  
-  .sign-in-button {
-	width: 100%;
-	padding: 12px;
-	background-color: #9333ea;
-	color: white;
-	border: none;
-	border-radius: 6px;
-	font-size: 16px;
-	font-weight: 600;
-	cursor: pointer;
-	transition: background-color 0.3s;
-  }
-  
-  .sign-in-button:hover {
-	background-color: #7e22ce;
-  }
-  
-  .sign-in-button:disabled {
-	background-color: #d8b4fe;
-	cursor: not-allowed;
-  }
-  
-  .create-account {
-	text-align: center;
-	margin-top: 20px;
-	font-size: 14px;
-	color: #666;
-  }
-  
-  .divider {
-	height: 1px;
-	background-color: #eee;
-	margin: 25px 0;
-  }
-  
-  .copyright {
-	text-align: center;
-	font-size: 12px;
-	color: #999;
-	margin-bottom: 20px;
-  }
-  
-  /* Modal styles (sin cambios) */
-  .modal-overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: rgba(0, 0, 0, 0.5);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	z-index: 1000;
-  }
-  
-  .modal-container {
-	background-color: white;
-	border-radius: 8px;
-	width: 90%;
-	max-width: 500px;
-	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-	overflow: hidden;
-  }
-  
-  .modal-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 15px 20px;
-	border-bottom: 1px solid #eee;
-  }
-  
-  .modal-header h2 {
-	font-size: 18px;
-	font-weight: 600;
-	margin: 0;
-  }
-  
-  .modal-header .close-button {
-	background: none;
-	border: none;
-	cursor: pointer;
-	color: #666;
-  }
-  
-  .modal-header .close-button:hover {
-	color: #333;
-  }
-  
-  .modal-body {
-	padding: 20px;
-  }
-  
-  .modal-body p {
-	margin-top: 0;
-	margin-bottom: 15px;
-  }
-  
-  .modal-body textarea {
-	width: 100%;
-	padding: 12px;
-	border: 1px solid #ddd;
-	border-radius: 6px;
-	resize: vertical;
-	font-family: inherit;
-  }
-  
-  .modal-body textarea:focus {
-	outline: none;
-	border-color: #9333ea;
-  }
-  
-  .modal-footer {
-	padding: 15px 20px;
-	border-top: 1px solid #eee;
-	display: flex;
-	justify-content: flex-end;
-	gap: 10px;
-  }
-  
-  .modal-footer button {
-	padding: 8px 16px;
-	border-radius: 6px;
-	font-size: 14px;
-	font-weight: 500;
-	cursor: pointer;
-  }
-  
-  .modal-footer .cancel-button {
-	background-color: #f3f4f6;
-	color: #4b5563;
-	border: 1px solid #e5e7eb;
-  }
-  
-  .modal-footer .cancel-button:hover {
-	background-color: #e5e7eb;
-  }
-  
-  .modal-footer .send-button {
-	background-color: #9333ea;
-	color: white;
-	border: none;
-  }
-  
-  .modal-footer .send-button:hover {
-	background-color: #7e22ce;
-  }
+}

@@ -1,0 +1,27 @@
+.container {
+    padding: 20px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .curso-list {
+    margin-top: 20px;
+  }
+  
+  .students-table {
+    margin-top: 20px;
+  }
+  
+  table {
+    width: 100%;
+  }
+  
+  .no-students {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+  }

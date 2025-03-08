@@ -18,4 +18,5 @@ export interface Noticia {
     likesCount?: number;
     likedBy?: string[];
     comentarios?: Comentario[];
+    action?: string;
 }

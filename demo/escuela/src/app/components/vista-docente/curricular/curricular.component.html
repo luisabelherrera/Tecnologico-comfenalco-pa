@@ -30,8 +30,8 @@
   <div class="curricular-list">
     <mat-list>
       <mat-list-item *ngFor="let curricular of curriculares" (click)="selectCurricular(curricular)">
-        <span matListItemTitle>{{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.curso.descripcion }} - {{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionSeccion }}</span>
-        <span matListItemLine>{{ curricular.descripcion }}</span>
+        <span matListItemTitle>{{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.curso.descripcion }} - {{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionSeccion }} - {{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionGrado }} - </span>
+        <span matListItemLine>  {{ curricular.descripcion }}</span>
       </mat-list-item>
     </mat-list>
   </div>

@@ -1,7 +1,7 @@
 <header class="header" [style.background]="headerBackground" [style.color]="(currentTheme$ | async)?.textColor">
   <nav class="navbar">
     <div class="logo">
-      <h1 class="logo-text" [ngStyle]="{'color': (currentTheme$ | async)?.textColor}">HOBO</h1>
+      <h1 class="logo-text" [ngStyle]="{'color': (currentTheme$ | async)?.textColor}">EduPortal </h1>
       <div class="user-info">
         <span *ngIf="userName$ | async as userName; else loading" [ngStyle]="{'color': (currentTheme$ | async)?.textColor}">
           <i class="fas fa-user-circle"></i> Bienvenido, {{ userName }}. Aquí podrás encontrar las noticias y eventos de la institución.

@@ -1,0 +1,68 @@
+<div class="historial-container">
+    <div class="header">
+      <h2>Historial de Asistencia</h2>
+      <div class="header-actions">
+        <mat-form-field appearance="outline" class="filtro">
+          <mat-label>Buscar por fecha o estado</mat-label>
+          <input matInput [(ngModel)]="filtro" (input)="aplicarFiltro()" placeholder="Ej. 06/03/2025 o Asistió">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        <button mat-icon-button class="close-btn" (click)="cerrarDialogo()" aria-label="Cerrar">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="fecha">
+          <th mat-header-cell *matHeaderCellDef>Fecha</th>
+          <td mat-cell *matCellDef="let asistencia">{{ asistencia.fecha | date: 'dd/MM/yyyy' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="asistio">
+          <th mat-header-cell *matHeaderCellDef>Estado</th>
+          <td mat-cell *matCellDef="let asistencia">
+            <ng-container *ngIf="editingRow === asistencia.idAsistencia; else displayMode">
+              <mat-checkbox [(ngModel)]="asistencia.asistio">Asistió</mat-checkbox>
+            </ng-container>
+            <ng-template #displayMode>
+              <span [ngClass]="{'asistio': asistencia.asistio, 'falto': !asistencia.asistio}">
+                {{ asistencia.asistio ? 'Asistió' : 'Faltó' }}
+              </span>
+            </ng-template>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let asistencia">
+            <ng-container *ngIf="editingRow === asistencia.idAsistencia; else showEditButton">
+              <button mat-icon-button color="primary" (click)="guardarAsistencia(asistencia)">
+                <mat-icon>save</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="cancelarEdicion()">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </ng-container>
+            <ng-template #showEditButton>
+              <button mat-icon-button color="accent" (click)="startEditing(asistencia)">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </ng-template>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  
+    <div class="footer" *ngIf="dataSource.data.length > 0">
+      <div class="contadores">
+        <span><strong>Asistencias:</strong> {{ totalAsistencias }}</span>
+        <span><strong>Faltas:</strong> {{ totalFaltas }}</span>
+      </div>
+    </div>
+  
+    <div *ngIf="dataSource.data.length === 0" class="no-data">
+      No hay registros de asistencia.
+    </div>
+  </div>

@@ -82,6 +82,8 @@ import { FindCalificacionPipe } from './services/calificacion/find-calificacion.
 import { CrearNotificacionComponent } from './components/vista-estudiante/crear-notificacion/crear-notificacion/crear-notificacion.component';
 import { MatListModule } from '@angular/material/list';
 import { NoticiaService } from './services/Menu/Menu.service';
+import { AsistenciaComponent } from './components/vista-docente/asistencia/asistencia/asistencia.component';
+import { HistorialAsistenciaComponent } from './components/vista-docente/asistencia/historial-asistencia/historial-asistencia/historial-asistencia.component';
 
 
 @NgModule({
@@ -121,6 +123,8 @@ import { NoticiaService } from './services/Menu/Menu.service';
   ],
   declarations: [
     
+    HistorialAsistenciaComponent,
+    AsistenciaComponent,
     CrearNotificacionComponent,
     FindCalificacionPipe,
     ChatGestionComponent,

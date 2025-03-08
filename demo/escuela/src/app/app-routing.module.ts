@@ -75,6 +75,7 @@ import { ThemeCustomizerComponent } from './components/theme-customizer/theme-cu
 import { ChatGestionComponent } from './components/gestion-chat/chat-gestion/chat-gestion.component';
 import { ModificarHomeComponent } from './components/modificar-home/modificar-home.component';
 import { CrearNotificacionComponent } from './components/vista-estudiante/crear-notificacion/crear-notificacion/crear-notificacion.component';
+import { AsistenciaComponent } from './components/vista-docente/asistencia/asistencia/asistencia.component';
 
 
 
@@ -103,7 +104,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Docente'] },
   },
+ 
 
+  {
+    path: 'asistencia',
+    component: AsistenciaComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Docente'] },
+  },
   {
     path: 'error',
     component: ErrorComponent,
