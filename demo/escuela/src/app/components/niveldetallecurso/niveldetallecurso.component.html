@@ -16,7 +16,8 @@
             <mat-select [(ngModel)]="selectedCurso.nivelDetalle.idNivelDetalle" name="nivelDetalle" required>
               <mat-option value="" disabled>Selecciona un Nivel Detalle</mat-option>
               <mat-option *ngFor="let nivel of nivelesDetalles" [value]="nivel.idNivelDetalle">
-                {{ nivel.nivel.descripcionNivel }} || {{ nivel.nivel.descripcionTurno }} || {{ nivel.gradoSeccion.descripcionSeccion }}
+                {{ nivel.nivel.descripcionNivel }} || {{ nivel.nivel.descripcionTurno }}|| {{ nivel.gradoSeccion.descripcionGrado }}
+                 || {{ nivel.gradoSeccion.descripcionSeccion }} 
               </mat-option>
             </mat-select>
             <mat-error *ngIf="cursoForm.controls['nivelDetalle']?.invalid && cursoForm.submitted">El nivel detalle es obligatorio.</mat-error>
@@ -53,7 +54,9 @@
           <ng-container matColumnDef="nivelDetalle">
             <th mat-header-cell *matHeaderCellDef>Nivel Detalle</th>
             <td mat-cell *matCellDef="let curso" data-label="Nivel Detalle">
-              {{ curso.nivelDetalle.nivel.descripcionNivel }}
+              {{ curso.nivelDetalle.nivel.descripcionNivel }}  
+              {{ curso.nivelDetalle.gradoSeccion.descripcionGrado }} 
+              {{ curso.nivelDetalle.gradoSeccion.descripcionSeccion }}
             </td>
           </ng-container>
   

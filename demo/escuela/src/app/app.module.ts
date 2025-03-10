@@ -84,6 +84,7 @@ import { MatListModule } from '@angular/material/list';
 import { NoticiaService } from './services/Menu/Menu.service';
 import { AsistenciaComponent } from './components/vista-docente/asistencia/asistencia/asistencia.component';
 import { HistorialAsistenciaComponent } from './components/vista-docente/asistencia/historial-asistencia/historial-asistencia/historial-asistencia.component';
+import { PreguntasJuegosComponent } from './components/ventanas-para-invitados/juegos/juegos/preguntas/preguntas-juegos/preguntas-juegos.component';
 
 
 @NgModule({
@@ -122,7 +123,7 @@ import { HistorialAsistenciaComponent } from './components/vista-docente/asisten
     NoopAnimationsModule,
   ],
   declarations: [
-    
+    PreguntasJuegosComponent,
     HistorialAsistenciaComponent,
     AsistenciaComponent,
     CrearNotificacionComponent,

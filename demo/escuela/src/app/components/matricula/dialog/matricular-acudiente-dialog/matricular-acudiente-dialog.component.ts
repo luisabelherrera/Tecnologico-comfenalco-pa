@@ -19,7 +19,7 @@ export class MatricularAcudienteDialogComponent implements OnInit {
   acudientes: Acudiente[] = [];
   filteredAcudientes: Acudiente[] = [];
   totalElements: number = 0;
-  pageSize: number = 10;
+  pageSize: number = 5;
   pageIndex: number = 0;
   dataSource = new MatTableDataSource<Acudiente>([]);
   filterType: string = 'nombre';

@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
   showComments: { [key: string]: boolean } = {};
   comentarioTexto: { [key: string]: string } = {};
   headerBackground: string | SafeStyle = '#ffffff';
-
+  emojis: string[] = ['😊', '🏫', '📚', '✏️', '🎓', '✨', '❤️', '👍'];
   recursosEducativos: Array<any> = [
     {
       titulo: 'Curso de Matemáticas',
@@ -357,11 +357,11 @@ export class HomeComponent implements OnInit {
         video: noticia.video,
         fechaCreacion: noticia.fechaCreacion
       },
-      width: '1000px', 
-      maxHeight: '90vh' 
+      width: '600px',  
+      maxHeight: '90vh' // Evita que el modal sea demasiado alto en pantallas grandes
     });
   }
-
+  
   mostrarImagen(noticia: Noticia): void {
     this.dialog.open(ImagenDialogComponent, {
       data: {

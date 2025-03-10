@@ -2,6 +2,13 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
+  "cli": {
+    "cache": {
+      "enabled": true,
+      "path": ".angular/cache",
+      "environment": "all"
+    }
+  },
   "projects": {
     "escuela": {
       "projectType": "application",
@@ -27,15 +34,20 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": [
-              "src/styles.scss"
-        
-            ],
+            "styles": ["src/styles.scss"],
             "scripts": [],
             "allowedCommonJsDependencies": ["canvg", "dompurify"]
           },
           "configurations": {
             "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "aot": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -53,12 +65,11 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
-              ],
-              "outputHashing": "all"
+              ]
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
+              "buildOptimizer": false,
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
@@ -67,19 +78,22 @@
           },
           "defaultConfiguration": "production"
         },
-       "serve": {
-  "builder": "@angular-devkit/build-angular:dev-server",
-  "configurations": {
-    "production": {
-      "browserTarget": "escuela:build:production"
-    },
-    "development": {
-      "browserTarget": "escuela:build:development"
-    }
-  },
-  "defaultConfiguration": "development"
-}
-,
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "hmr": true
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "escuela:build:production"
+            },
+            "development": {
+              "browserTarget": "escuela:build:development",
+              "hmr": true
+            }
+          },
+          "defaultConfiguration": "development"
+        },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {

@@ -213,7 +213,7 @@ export class MatriculaComponent implements OnInit, OnDestroy {
 
   openDetail(inscripcion: Inscripcion): void {
     const dialogRef = this.dialog.open(InscripciondetalleComponent, {
-      width: '400px',
+      width: '700px',
       data: inscripcion
     });
     dialogRef.afterClosed().subscribe(() => {});

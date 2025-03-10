@@ -1,17 +1,12 @@
 package com.example.demo.controller.entityController;
 
 import com.example.demo.exceptions.customexceptions.exceptionsEntity.AcudienteNotFoundException;
-import com.example.demo.model.entity.Acudiente;
 import com.example.demo.model.entity.dto.AcudienteDTO;
-import com.example.demo.model.entity.dto.PaginatedResponse;
 import com.example.demo.services.service.AcudienteService;
 import org.springframework.beans.factory.annotation.Autowired;
-
-
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedModel;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,18 +22,17 @@ public class AcudienteController {
 
     @GetMapping("/acudientes")
     public ResponseEntity<Page<AcudienteDTO>> getAcudientes(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(required = false) String nombres,
             @RequestParam(required = false) String documentoIdentidad,
-            Pageable pageable) {
-
-        Page<AcudienteDTO> acudientesPage = acudienteService.findByFilters(nombres, documentoIdentidad, pageable);
+            @RequestParam(required = false) String parentesco,
+            @RequestParam(required = false) String ciudad,
+            @RequestParam(required = false) Boolean activo) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<AcudienteDTO> acudientesPage = acudienteService.findByFilters(nombres, documentoIdentidad, parentesco, ciudad, activo, pageable);
         return ResponseEntity.ok(acudientesPage);
     }
-
-
-
-
-
 
     @GetMapping("/{id}")
     public ResponseEntity<AcudienteDTO> getAcudienteById(@PathVariable Integer id) {

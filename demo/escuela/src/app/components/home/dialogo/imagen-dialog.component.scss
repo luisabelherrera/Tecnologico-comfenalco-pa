@@ -1,92 +1,108 @@
-/* Título del diálogo */
-.dialog-title {
-  color: #3f51b5;
-  font-weight: bold;
-  font-size: 22px;
-  text-align: center;
-  margin: 0 0 20px;
+/* Ajuste del tamaño del modal */
+.modal-dialog {
+  max-width: 700px;
+  width: 90%;
+}
+
+/* Modal en pantallas grandes */
+@media (min-width: 992px) {
+  .modal-lg {
+    max-width: 600px;
+  }
+}
+
+/* Modal en pantallas pequeñas */
+@media (max-width: 768px) {
+  .modal-dialog {
+    max-width: 90%;
+  }
+}
+
+/* Estilos generales */
+.modal-header {
+  background: linear-gradient(135deg, #007bff, #6610f2);
+  border-bottom: none;
+  padding: 12px 16px;
+}
+
+.modal-title {
+  font-size: 1.2rem;
   text-transform: uppercase;
 }
 
-/* Contenedor principal */
-.dialog-content {
-  padding: 16px;
-  background-color: #fafafa;
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  text-align: left;
-  font-family: 'Roboto', sans-serif;
-  max-height: 70vh; /* Limit dialog content height to 70% of viewport */
-  overflow-y: auto; /* Enable scrolling if content overflows */
+.card {
+  transition: transform 0.2s ease-in-out;
 }
 
-/* Encabezado del contenido */
-.dialog-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 16px;
+.card:hover {
+  transform: translateY(-3px);
 }
 
-.dialog-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: #6a1b9a;
-  font-weight: 500;
-}
-
-/* Texto descriptivo */
-.dialog-text {
-  color: #424242;
-  font-size: 16px;
-  line-height: 1.6;
-  margin-top: 12px;
-  margin-bottom: 16px;
-  white-space: pre-wrap;
-}
-
-/* Imagen del diálogo */
-.imagen-dialog {
+/* Ajuste de imágenes y videos */
+.modal-image, .video-responsive {
+  max-height: 320px;
   width: 100%;
-  max-height: 400px; /* Limit image height */
-  height: auto;
-  margin-top: 16px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-  object-fit: contain; /* Ensure image scales properly */
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out;
 }
 
-/* Video del diálogo */
-.video-dialog {
+.modal-image:hover, .video-responsive:hover {
+  transform: scale(1.02);
+}
+
+/* Ajuste para móviles */
+@media (max-width: 576px) {
+  .modal-title {
+    font-size: 1rem;
+  }
+
+  .modal-body {
+    padding: 12px;
+  }
+
+  .modal-image, .video-responsive {
+    max-height: 200px;
+  }
+
+  .btn-lg {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+}
+/* Ajustar el tamaño máximo del modal */
+.modal-dialog {
+  max-width: 600px;
+  width: 90%;
+}
+
+/* Hacer que el contenido sea desplazable si es muy largo */
+.modal-body {
+  max-height: 65vh; /* Limitar la altura del contenido */
+  overflow-y: auto; /* Agregar scroll si el contenido es muy largo */
+  padding: 15px;
+}
+
+/* Ajustar el tamaño de imágenes y videos */
+.modal-image, .video-responsive {
+  max-height: 250px; /* Reducir altura para que no ocupen mucho espacio */
   width: 100%;
-  max-width: 600px; /* Reduce max width to fit dialog */
-  max-height: 300px; /* Reduce max height to fit dialog */
-  height: auto;
-  margin-top: 16px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-  object-fit: contain; /* Ensure video scales properly */
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out;
 }
 
-/* Acciones del diálogo */
-.dialog-actions {
-  display: flex;
-  justify-content: center;
-  padding: 16px 0;
+/* Evitar que imágenes y videos crezcan demasiado en pantallas pequeñas */
+@media (max-width: 768px) {
+  .modal-body {
+    max-height: 60vh; /* Un poco menos en móviles */
+  }
+  
+  .modal-image, .video-responsive {
+    max-height: 180px;
+  }
 }
 
-.dialog-button {
-  font-size: 14px;
-  font-weight: bold;
-  padding: 8px 20px;
-  border-radius: 24px;
-  text-transform: capitalize;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.dialog-button:hover {
-  transform: translateY(-2px);
-  background-color: #5e35b1;
+/* Ajuste del botón */
+.btn-lg {
+  font-size: 0.95rem;
+  padding: 10px 20px;
 }

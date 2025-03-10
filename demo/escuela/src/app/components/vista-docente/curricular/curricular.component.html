@@ -15,7 +15,10 @@
         <mat-label>Asignación Docente</mat-label>
         <mat-select formControlName="docenteNivelDetalleCurso" required>
           <mat-option *ngFor="let dndc of docentesNivelDetalleCurso" [value]="dndc">
-            {{ dndc.nivelDetalleCurso.curso.descripcion }} - {{ dndc.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionSeccion }}
+            {{ dndc.nivelDetalleCurso.curso.descripcion }} - {{ dndc.nivelDetalleCurso.nivelDetalle.nivel.descripcionNivel }}
+             - {{ dndc.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionGrado}}
+            - {{ dndc.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionSeccion }}    
+        
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -30,14 +33,18 @@
   <div class="curricular-list">
     <mat-list>
       <mat-list-item *ngFor="let curricular of curriculares" (click)="selectCurricular(curricular)">
-        <span matListItemTitle>{{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.curso.descripcion }} - {{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionSeccion }} - {{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionGrado }} - </span>
+        <span matListItemTitle>{{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.curso.descripcion }} 
+          - {{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionGrado}}
+          - {{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionSeccion }} - </span>
         <span matListItemLine>  {{ curricular.descripcion }}</span>
       </mat-list-item>
     </mat-list>
   </div>
 
   <div class="students-table" *ngIf="selectedCurricular">
-    <h3>Estudiantes en {{ selectedCurricular.docenteNivelDetalleCurso?.nivelDetalleCurso.curso.descripcion }} - {{ selectedCurricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionSeccion }}</h3>
+    <h3>Estudiantes en {{ selectedCurricular.docenteNivelDetalleCurso?.nivelDetalleCurso.curso.descripcion }} 
+      - {{ selectedCurricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionGrado}}
+      - {{ selectedCurricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionSeccion }}</h3>
     <table mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="estudiante">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Estudiante</th>

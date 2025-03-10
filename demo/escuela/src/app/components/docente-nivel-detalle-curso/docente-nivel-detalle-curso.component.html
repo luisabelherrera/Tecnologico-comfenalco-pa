@@ -24,9 +24,18 @@
         <mat-form-field appearance="outline">
           <mat-label>Nivel Detalle Curso</mat-label>
           <mat-select [(ngModel)]="nuevoDocenteNivelCurso.nivelDetalleCurso!.idNivelDetalleCurso" name="nivelDetalleCurso" required>
-            <mat-option *ngFor="let nivel of nivelesDetalle" [value]="nivel.idNivelDetalleCurso">
-              Nivel {{ nivel.nivelDetalle.nivel.descripcionNivel }} - Materia {{ nivel.curso.descripcion }}
-            </mat-option>
+            <mat-option *ngFor="let nivel of nivelesDetalle" 
+            [value]="nivel.idNivelDetalleCurso"
+            [matTooltip]="'Nivel ' + nivel.nivelDetalle.nivel.descripcionNivel +
+                         ' - Materia ' + nivel.curso.descripcion +
+                         ' - Grado ' + nivel.nivelDetalle.gradoSeccion.descripcionGrado +
+                         ' - Sección ' + nivel.nivelDetalle.gradoSeccion.descripcionSeccion">
+  Nivel {{ nivel.nivelDetalle.nivel.descripcionNivel }} - 
+  Materia {{ nivel.curso.descripcion }} - 
+  Grado {{ nivel.nivelDetalle.gradoSeccion.descripcionGrado }} - 
+  Sección {{ nivel.nivelDetalle.gradoSeccion.descripcionSeccion }}
+</mat-option>
+
           </mat-select>
           <mat-error *ngIf="docenteNivelCursoForm.controls['nivelDetalleCurso']?.errors?.['required']">El nivel detalle curso es obligatorio</mat-error>
         </mat-form-field>

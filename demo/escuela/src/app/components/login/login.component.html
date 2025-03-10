@@ -1,4 +1,4 @@
-<div class="login-container">
+<div class="login-container" [@fadeSlideInOut]="isLoggingIn ? 'void' : '*'" *ngIf="!isLoggingIn || isLoggingIn">
   <!-- Botón Volver -->
   <button class="back-button" (click)="volver()">
     <mat-icon>arrow_back</mat-icon>
@@ -23,7 +23,10 @@
                 class="input-field"
               />
             </div>
-            <small *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)" class="error-message">
+            <small
+              *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)"
+              class="error-message"
+            >
               <span *ngIf="loginForm.get('email')?.errors?.['required']">El correo es obligatorio.</span>
               <span *ngIf="loginForm.get('email')?.errors?.['email']">Formato de correo inválido.</span>
             </small>
@@ -41,7 +44,10 @@
                 class="input-field"
               />
             </div>
-            <small *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)" class="error-message">
+            <small
+              *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)"
+              class="error-message"
+            >
               <span *ngIf="loginForm.get('password')?.errors?.['required']">La contraseña es obligatoria.</span>
             </small>
           </div>
@@ -59,11 +65,7 @@
             {{ errorMessage }}
           </div>
 
-          <button 
-            type="submit" 
-            class="sign-in-button"
-            [disabled]="loginForm.invalid"
-          >
+          <button type="submit" class="sign-in-button" [disabled]="loginForm.invalid">
             Iniciar Sesión
           </button>
 
@@ -88,7 +90,7 @@
 </div>
 
 <!-- Modal de Recuperación de Cuenta -->
-<div class="modal-overlay" *ngIf="mostrarModal">
+<div class="modal-overlay" *ngIf="mostrarModal" [@fadeSlideInOut]>
   <div class="modal-container">
     <div class="modal-header">
       <h2>Recuperar Contraseña</h2>
@@ -98,10 +100,10 @@
     </div>
     <div class="modal-body">
       <p>Envía un mensaje al administrador para recuperar tu cuenta:</p>
-      <textarea 
-        [(ngModel)]="mensajeUsuario" 
+      <textarea
+        [(ngModel)]="mensajeUsuario"
         name="mensajeUsuario"
-        rows="4" 
+        rows="4"
         placeholder="Hola, necesito ayuda con mi contraseña..."
       ></textarea>
     </div>
@@ -113,7 +115,7 @@
 </div>
 
 <!-- Modal de Información -->
-<div class="modal-overlay" *ngIf="mostrarModalInformacion">
+<div class="modal-overlay" *ngIf="mostrarModalInformacion" [@fadeSlideInOut]>
   <div class="modal-container">
     <div class="modal-header">
       <h2>Contactar Administración</h2>
@@ -123,10 +125,10 @@
     </div>
     <div class="modal-body">
       <p>Envía un mensaje para más información o para crear una cuenta:</p>
-      <textarea 
-        [(ngModel)]="mensajeInformacion" 
+      <textarea
+        [(ngModel)]="mensajeInformacion"
         name="mensajeInformacion"
-        rows="4" 
+        rows="4"
         placeholder="Hola, me gustaría saber más sobre..."
       ></textarea>
     </div>

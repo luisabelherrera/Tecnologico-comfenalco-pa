@@ -262,7 +262,14 @@ button.mat-mini-fab {
 
   .title {
     display: inline-block;
-    margin-left: 15px; 
+    margin-left: 2px;
+}
+
+/* Ocultar en pantallas pequeñas (máximo 600px de ancho) */
+@media (max-width: 600px) {
+    .title {
+        display: none;
+    }
 }
 
 

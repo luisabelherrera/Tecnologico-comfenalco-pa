@@ -1,17 +1,47 @@
-<h2 mat-dialog-title class="dialog-title">{{ data.titulo }}</h2>
-<div mat-dialog-content class="dialog-content">
-  <div class="dialog-header">
-    <p class="dialog-label">
-      <mat-icon color="accent">event</mat-icon>
-      <span>Fecha de Creación:</span> {{ data.fechaCreacion | date: 'longDate' }}
-    </p>
+<div class="modal-dialog modal-dialog-centered modal-lg modal-responsive">
+  <div class="modal-content border-0 shadow-lg rounded-3">
+    <!-- Encabezado -->
+    <div class="modal-header bg-gradient text-white">
+      <h5 class="modal-title fw-bold">
+        <i class="bi bi-newspaper me-2"></i> {{ data.titulo }}
+      </h5>
+      <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="onNoClick()"></button>
+    </div>
+
+    <!-- Cuerpo -->
+    <div class="modal-body">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body">
+          <!-- Fecha de Creación -->
+          <div class="d-flex align-items-center mb-3">
+            <i class="bi bi-calendar-event text-primary fs-5 me-2"></i>
+            <span class="text-muted fw-semibold">Fecha de Creación:</span>
+            <strong class="ms-1">{{ data.fechaCreacion | date: 'longDate' }}</strong>
+          </div>
+
+          <!-- Contenido de la Noticia -->
+          <p class="text-dark fs-6 lh-lg text-justify">{{ data.contenido }}</p>
+
+          <!-- Imagen -->
+          <div *ngIf="data.imagen" class="text-center my-3">
+            <img [src]="data.imagen" alt="Imagen de Noticia" class="img-fluid rounded-3 shadow modal-image">
+          </div>
+
+          <!-- Video -->
+          <div *ngIf="data.video" class="text-center my-3">
+            <video [src]="data.video" controls class="video-responsive rounded-3 shadow-lg">
+              Tu navegador no soporta el video.
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón de cierre -->
+    <div class="modal-footer d-flex justify-content-center">
+      <button type="button" class="btn btn-primary btn-lg px-4 rounded-pill shadow-sm" (click)="onNoClick()">
+        <i class="bi bi-x-circle me-2"></i> Cerrar
+      </button>
+    </div>
   </div>
-  <p class="dialog-text">{{ data.contenido }}</p>
-  <img *ngIf="data.imagen" [src]="data.imagen" alt="Imagen de Noticia" class="imagen-dialog" />
-  <video *ngIf="data.video" [src]="data.video" controls class="video-dialog">
-    Tu navegador no soporta el elemento de video.
-  </video>
-</div>
-<div mat-dialog-actions class="dialog-actions">
-  <button mat-raised-button color="accent" class="dialog-button" (click)="onNoClick()">Cerrar</button>
 </div>
