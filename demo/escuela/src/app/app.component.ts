@@ -60,6 +60,7 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/matricula', icon: 'assignment_ind', title: 'Matrícula' },
   ];
   configuraciones = [
+    { path: '/dashboard', icon: 'insights', title: 'Dashboard Prediccion' },
     { path: '/periodo', icon: 'calendar_today', title: 'Crear Periodo' },
     { path: '/nivel', icon: 'school', title: 'Nivel Académico' },
     { path: '/grado-seccion', icon: 'class', title: 'Grado y Sección' },
@@ -78,7 +79,7 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/registro', icon: 'person_add', title: 'Registrar' },
   ];
   userLinks = [
-    { path: '/ventana2', icon: 'grade', title: 'Calificaciones' },
+    { path: '/ventana2', icon: 'grade', title: 'Mi Perfil' },
     { path: '/curricularDocente', icon: 'book', title: 'Curricular' },
     { path: '/horarioDocente', icon: 'schedule', title: 'Horario' },
     { path: '/asistencia', icon: 'grade', title: 'asistencia' },

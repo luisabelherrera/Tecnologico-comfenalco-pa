@@ -2,100 +2,76 @@
   max-width: 800px;
   margin: 20px auto;
   padding: 20px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 .factura-header {
   text-align: center;
-  margin-bottom: 20px;
-
-  h2 {
-    font-size: 1.8rem;
-    color: #333;
-  }
-
-  .fecha {
-    font-size: 1rem;
-    color: #555;
-  }
 }
 
 .factura-info {
   margin-bottom: 20px;
-
-  p {
-    margin: 5px 0;
-    strong {
-      color: #333;
-    }
-  }
 }
 
 .factura-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px;
+  margin: 20px 0;
+}
 
-  th, td {
-    padding: 10px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-  }
+.factura-table th, .factura-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
 
-  th {
-    background-color: #007bff;
-    color: #fff;
-  }
+.factura-table th {
+  background-color: #007bff;
+  color: white;
+}
 
-  .total-label {
-    text-align: right;
-    font-weight: bold;
-  }
-
-  .total-amount {
-    font-weight: bold;
-    color: #007bff;
-  }
+.total-label {
+  text-align: right;
 }
 
 .mensaje {
   text-align: center;
   font-style: italic;
   color: #666;
-  margin-bottom: 20px;
+}
+
+.feedback {
+  text-align: center;
+  color: #333;
+  margin: 20px 0;
+  font-size: 14px;
 }
 
 .button-container {
   display: flex;
+  gap: 10px;
   justify-content: center;
-  gap: 15px;
 }
 
-.btn-pdf, .btn-volver {
+.btn-save, .btn-pdf, .btn-local-pdf, .btn-volver {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
 }
 
-.btn-pdf {
-  background-color: #007bff;
-  color: #fff;
+.btn-save {
+  background-color: #28a745;
+  color: white;
+}
 
-  &:hover {
-    background-color: #0056b3;
-  }
+.btn-pdf, .btn-local-pdf {
+  background-color: #dc3545;
+  color: white;
 }
 
 .btn-volver {
   background-color: #6c757d;
-  color: #fff;
-
-  &:hover {
-    background-color: #5a6268;
-  }
+  color: white;
 }

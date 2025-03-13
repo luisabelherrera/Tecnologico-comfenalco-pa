@@ -211,17 +211,18 @@ export class NivelDetalleComponent implements OnInit {
   }
 
   openDialogGrafico(nivelDetalle: NivelDetalle): void {
-    // Filter all NivelDetalle entries for the same "Nivel"
     const relatedNivelDetalles = this.nivelDetalles.filter(nd => nd.nivel.idNivel === nivelDetalle.nivel.idNivel);
     console.log('Datos del nivel detalle a pasar al gráfico:', relatedNivelDetalles);
     this.dialog.open(NivelDetalleDialogoGraficoComponent, {
-      width: '1400px', // Aumentar el ancho
-      height: 'auto',
-      maxHeight: '95vh', // Más espacio vertical
-      data: relatedNivelDetalles // Pass array of related entries
+      width: '96vw', // Full viewport width
+      height: '96vh', // Full viewport height
+      maxWidth: '96vw', // Override Material's default max-width
+      maxHeight: '96vh', // Full height
+      panelClass: 'full-screen-dialog', // Custom class for styling
+      data: relatedNivelDetalles
     });
+  
   }
-
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
     this.dataSource.filter = filterValue;

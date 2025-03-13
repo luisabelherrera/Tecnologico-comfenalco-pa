@@ -76,7 +76,12 @@
     <h2 class="section-title">Lista de Usuarios Registrados</h2>
 
     <div class="filter-container">
-      <input type="text" [(ngModel)]="filterValue" (input)="applyFilter()" placeholder="Filtrar por usuario, email o rol" class="filter-input">
+      <input
+        type="text"
+        [(ngModel)]="filterValue"
+        (input)="applyFilter()"
+        placeholder="Filtrar por usuario, email, rol, estudiante o docente"
+        class="filter-input">
     </div>
 
     <div class="status-box" *ngIf="loading || errorMessage">
@@ -141,7 +146,7 @@
     <p class="no-data" *ngIf="users.length === 0 && !loading">No hay usuarios registrados.</p>
 
     <mat-paginator
-      [length]="filteredUsers.data.length"
+      [length]="filteredUsers.filteredData.length"
       [pageSize]="pageSize"
       [pageSizeOptions]="pageSizeOptions"
       (page)="handlePageEvent($event)"

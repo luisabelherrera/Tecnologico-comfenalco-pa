@@ -19,12 +19,13 @@ export class ListarEstudiantesComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<Estudiante>([]);
   selectedEstudiante: Estudiante | null = null;
   estudianteForm: FormGroup;
-  showForm = false;
+  showForm: boolean = true;
   pageSize: number = 5;
   pageIndex: number = 0;
   filterValue: string = '';
   displayedColumns: string[] = ['codigo', 'nombres', 'apellidos', 'documentoIdentidad', 'activo', 'acciones'];
-
+  loading: boolean = false;
+  isEditing: boolean = false;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(

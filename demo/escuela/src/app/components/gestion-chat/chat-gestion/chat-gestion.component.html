@@ -1,1 +1,102 @@
-<p>chat-gestion works!</p>
+<div class="chat-gestion-container">
+    <h2 class="title">Gestión de Chats</h2>
+  
+    <div *ngIf="!isAuthenticated" class="alert alert-warning animate__animated animate__fadeIn">
+      <i class="fas fa-exclamation-circle"></i> Por favor, inicia sesión para acceder al chat y comentarios.
+    </div>
+  
+    <div *ngIf="isAuthenticated" class="chat-wrapper">
+      <!-- Tabs -->
+      <div class="tabs">
+        <button
+          class="tab-button"
+          [ngClass]="{'active': activeTab === 'chat'}"
+          (click)="activeTab = 'chat'"
+        >
+          <i class="fas fa-comments"></i> Chat General
+        </button>
+        <button
+          class="tab-button"
+          [ngClass]="{'active': activeTab === 'comments'}"
+          (click)="activeTab = 'comments'"
+        >
+          <i class="fas fa-newspaper"></i> Comentarios de Noticias
+        </button>
+      </div>
+  
+      <!-- Tab Content -->
+      <div class="tab-content animate__animated animate__fadeIn">
+        <!-- Chat General Tab -->
+        <div *ngIf="activeTab === 'chat'" class="chat-section">
+          <div class="chat-header">
+            <button class="btn btn-success" (click)="conectar()" *ngIf="!conectado">
+              <i class="fas fa-sign-in-alt"></i> Conectar
+            </button>
+            <button class="btn btn-danger" (click)="desconectar()" *ngIf="conectado">
+              <i class="fas fa-sign-out-alt"></i> Desconectar
+            </button>
+          </div>
+  
+          <div class="chat-box" *ngIf="conectado">
+            <div #scrollChat class="messages">
+              <ul class="message-list">
+                <li *ngFor="let mensaje of mensajes" class="message-item animate__animated animate__fadeInUp">
+                  <span *ngIf="mensaje.tipo === 'NUEVO_USUARIO'" class="new-user">
+                    <i class="fas fa-user-plus"></i> {{ mensaje.fecha | date:'shortTime' }} @ {{ mensaje.texto }}
+                    <span [ngStyle]="{'color': mensaje.color}">{{ mensaje.username }}</span>
+                  </span>
+                  <span *ngIf="mensaje.tipo === 'MENSAJE'" class="message">
+                    <i class="fas fa-comment-dots"></i> {{ mensaje.fecha | date:'shortTime' }}
+                    <span [ngStyle]="{'color': mensaje.color}">{{ mensaje.username }}</span> dice: {{ mensaje.texto }}
+                  </span>
+                </li>
+              </ul>
+            </div>
+            <form (ngSubmit)="enviarMensaje()" class="message-form">
+              <input
+                type="text"
+                [(ngModel)]="mensaje.texto"
+                name="texto"
+                class="form-control"
+                placeholder="Escribe un mensaje..."
+                (keyup.enter)="enviarMensaje()"
+              />
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+  
+        <!-- News Comments Tab -->
+        <div *ngIf="activeTab === 'comments'" class="comments-section">
+          <div class="comments-box">
+            <div *ngFor="let noticia of noticias" class="noticia-comments">
+              <h4 class="noticia-title">{{ noticia.titulo }}</h4>
+              <div #scrollComments class="comments-list">
+                <ul class="comment-list">
+                  <li *ngFor="let comentario of noticia.comentarios" class="comment-item animate__animated animate__fadeInUp">
+                    <strong>{{ comentario.autor }}</strong>: {{ comentario.contenido }}
+                    <span class="comment-date">{{ comentario.fechaCreacion | date:'short' }}</span>
+                  </li>
+                </ul>
+              </div>
+              <form (ngSubmit)="agregarComentario(noticia)" class="comment-form">
+                <input
+                  type="text"
+                  [(ngModel)]="mensaje.texto"
+                  name="comentario"
+                  class="form-control"
+                  placeholder="Escribe un comentario..."
+                  (keyup.enter)="agregarComentario(noticia)"
+                />
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-comment"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

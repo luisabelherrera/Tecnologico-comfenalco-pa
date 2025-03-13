@@ -35,6 +35,7 @@ export class ExportDialogComponent {
       'Activo': inscripcion.activo ? 'Sí' : 'No',
       'Fecha Registro': inscripcion.fechaRegistro ? new Date(inscripcion.fechaRegistro).toLocaleDateString() : 'N/A'
     }));
+  
 
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
     const workbook: XLSX.WorkBook = XLSX.utils.book_new();

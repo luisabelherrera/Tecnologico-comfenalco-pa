@@ -9,7 +9,7 @@
   <section class="form-section" *ngIf="showForm">
     <form (ngSubmit)="createOrUpdate()" #cursoForm="ngForm" class="inscripcion-form">
       <h2 class="section-title">{{ isEditing ? 'Actualizar Curso' : 'Crear Nuevo Curso' }}</h2>
-
+    
       <div class="form-grid">
         <mat-form-field appearance="outline">
           <mat-label>Descripción</mat-label>

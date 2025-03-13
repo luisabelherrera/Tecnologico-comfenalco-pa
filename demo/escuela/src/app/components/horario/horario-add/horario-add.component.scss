@@ -12,9 +12,27 @@
   flex-direction: column;
 }
 
+/* Reduce the size of the form-field */
 .form-field {
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 20px; /* Reduced from 30px to 20px for less vertical spacing */
+}
+
+/* Reduce the size of the time input */
+.form-field input[type="time"] {
+  padding: 8px;        /* Smaller padding */
+  font-size: 16px;     /* Slightly smaller text */
+  height: 40px;        /* Reduced height from 50px to 40px */
+  width: 100%;
+}
+
+/* Keep the time picker button reasonably sized */
+.form-field input[type="time"]::-webkit-calendar-picker-indicator {
+  padding: 10px;       /* Moderate clickable area */
+  font-size: 20px;     /* Moderate icon size */
+  width: 20px;         /* Smaller button width */
+  height: 20px;        /* Smaller button height */
+  background-size: 20px; /* Match icon size to button */
 }
 
 .button-group {

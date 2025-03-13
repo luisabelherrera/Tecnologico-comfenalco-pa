@@ -150,7 +150,15 @@
           <td mat-cell *matCellDef="let inscripcion" data-label="Documento">{{ inscripcion.estudiante?.documentoIdentidad }}</td>
         </ng-container>
 
-  
+        <ng-container matColumnDef="Sección">
+          <th mat-header-cell *matHeaderCellDef>Sección</th>
+          <td mat-cell *matCellDef="let inscripcion" data-label="Documento"> {{inscripcion.nivelDetalle.gradoSeccion.descripcionGrado}}   {{inscripcion.nivelDetalle.gradoSeccion.descripcionSeccion}}
+
+          </td>
+        </ng-container>
+
+
+     
         <ng-container matColumnDef="Estado">
           <th mat-header-cell *matHeaderCellDef>Estado</th>
           <td mat-cell *matCellDef="let inscripcion" data-label="Estado">
@@ -175,14 +183,14 @@
           </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="['codigo', 'Documento','estudiante','Estado', 'acciones']"></tr>
-        <tr mat-row *matRowDef="let row; columns: [ 'codigo' ,'Documento', 'estudiante',  'Estado', 'acciones'];"></tr>
+        <tr mat-header-row *matHeaderRowDef="['codigo', 'Documento','estudiante','Sección','Estado', 'acciones']"></tr>
+        <tr mat-row *matRowDef="let row; columns: [ 'codigo' ,'Documento', 'estudiante', 'Sección', 'Estado', 'acciones'];"></tr>
       </table>
     </div>
 
     <mat-paginator
       [length]="inscripciones.data.length"
-      [pageSize]="10"
+      [pageSize]="5"
       [pageSizeOptions]="[5, 10, 20]"
       (page)="inscripciones.paginator.pageIndex = $event.pageIndex; inscripciones.paginator.pageSize = $event.pageSize">
     </mat-paginator>

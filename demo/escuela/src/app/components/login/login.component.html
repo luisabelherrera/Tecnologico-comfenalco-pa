@@ -23,13 +23,11 @@
                 class="input-field"
               />
             </div>
-            <small
-              *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)"
-              class="error-message"
-            >
+            <small *ngIf="loginForm.get('email')?.invalid">
               <span *ngIf="loginForm.get('email')?.errors?.['required']">El correo es obligatorio.</span>
-              <span *ngIf="loginForm.get('email')?.errors?.['email']">Formato de correo inválido.</span>
+              <span *ngIf="loginForm.get('email')?.errors?.['email']">El formato del correo no es válido: {{ loginForm.get('email')?.value }}</span>
             </small>
+            
           </div>
 
           <div class="form-group">

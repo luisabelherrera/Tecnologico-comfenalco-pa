@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/notificaciones").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/notificaciones").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/noticias").permitAll() // Add this line
+                        .requestMatchers(HttpMethod.GET, "/api/noticias").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/noticias/imagen/**").permitAll() // Optional: for images
                         .requestMatchers("/api/themes/active").permitAll()
                         .requestMatchers("/api/themes/**").authenticated()

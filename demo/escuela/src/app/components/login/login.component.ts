@@ -42,10 +42,15 @@ export class LoginComponent implements OnInit {
   ) {
     this.currentTheme$ = this.temaHeaderService.currentTheme$;
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [
+        Validators.required, 
+        Validators.pattern(/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+      ]],
+      
       password: ['', Validators.required],
       remember: [false],
     });
+    
   }
 
   ngOnInit(): void {}

@@ -68,7 +68,6 @@ import {  QuizComponent } from './components/ventanas-para-invitados/eventos/eve
 import { PreguntasJuegosComponent } from './components/ventanas-para-invitados/juegos/juegos/preguntas/preguntas-juegos/preguntas-juegos.component';
 import { JuegosComponent } from './components/ventanas-para-invitados/juegos/juegos/juegos.component';
 import { LibrosApiComponent } from './components/ventanas-para-invitados/libro/libros-api/libros-api.component';
-import { VictorComponent } from './components/ventanas-para-invitados/victor/victor.component';
 import { FacturaComponent } from './components/matricula/dialog/incripciondetalle/factura/factura.component';
 import { PerfilEstudianteComponent } from './components/vista-estudiante/mi-perfil/perfil-estudiante/perfil-estudiante.component';
 import { ThemeCustomizerComponent } from './components/theme-customizer/theme-customizer.component';
@@ -76,6 +75,7 @@ import { ChatGestionComponent } from './components/gestion-chat/chat-gestion/cha
 import { ModificarHomeComponent } from './components/modificar-home/modificar-home.component';
 import { CrearNotificacionComponent } from './components/vista-estudiante/crear-notificacion/crear-notificacion/crear-notificacion.component';
 import { AsistenciaComponent } from './components/vista-docente/asistencia/asistencia/asistencia.component';
+import { DashboardComponent } from './components/dashboard/dashboard/dashboard.component';
 
 
 
@@ -327,6 +327,15 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Administracion'] },
   },
+
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthGuard],
+    data: { icon: 'insights', title: 'Dashboard Predicción',roles: ['Administracion'] },
+  },
+ 
+  
  
   
   // Login route

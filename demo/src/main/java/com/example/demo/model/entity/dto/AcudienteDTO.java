@@ -25,6 +25,9 @@ public class AcudienteDTO  implements Serializable {
     private String estadoCivil;
     private String ciudad;
     private String direccion;
+    private String email;
+    private String telefono;
+
     private boolean activo;
     private LocalDateTime fechaRegistro;
 }

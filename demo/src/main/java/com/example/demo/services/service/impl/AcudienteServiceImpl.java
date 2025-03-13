@@ -82,7 +82,10 @@ public class AcudienteServiceImpl implements AcudienteService {
                 .estadoCivil(acudiente.getEstadoCivil())
                 .ciudad(acudiente.getCiudad())
                 .direccion(acudiente.getDireccion())
+                .email(acudiente.getEmail())
                 .activo(acudiente.isActivo())
+                .telefono(acudiente.getTelefono())
+
                 .fechaRegistro(acudiente.getFechaRegistro())
                 .build();
     }
@@ -99,6 +102,8 @@ public class AcudienteServiceImpl implements AcudienteService {
                 .estadoCivil(dto.getEstadoCivil())
                 .ciudad(dto.getCiudad())
                 .direccion(dto.getDireccion())
+                .email(dto.getEmail())
+                .telefono(dto.getTelefono())
                 .activo(dto.isActivo())
                 .fechaRegistro(dto.getFechaRegistro())
                 .build();

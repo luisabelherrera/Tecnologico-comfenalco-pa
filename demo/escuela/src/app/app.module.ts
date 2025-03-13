@@ -19,6 +19,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatListModule } from '@angular/material/list';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { AuthService } from './services/auth/AuthService.service';
@@ -28,7 +32,6 @@ import { AcudienteListComponent } from './components/acudiente/acudiente-list/ac
 import { CalificacionListComponent } from './components/calificacion/calificacion-list/calificacion-list.component';
 import { CurricularListComponent } from './components/curricular/curricular-list/curricular-list.component';
 import { CursosListComponent } from './components/cursos/cursos-list/cursos-list.component';
-
 import { DocenteNivelDetalleCursoComponent } from './components/docente-nivel-detalle-curso/docente-nivel-detalle-curso.component';
 import { ListarEstudiantesComponent } from './components/estudiante/listar/listar.component';
 import { GradoSeccionComponent } from './components/grado-seccion/grado-seccion.component';
@@ -50,11 +53,8 @@ import { CurricularEstudianteComponent } from './components/vista-estudiante/cur
 import { HorarioEstudianteComponent } from './components/vista-estudiante/horario-estudiante/horario-estudiante.component';
 import { ErrorComponent } from './components/error/error.component';
 import { SuggestionsDialogComponent } from './components/generate-ia/suggestions-dialog/suggestions-dialog.component';
-import { MatIconModule } from '@angular/material/icon';
-import { InscripciondetalleComponent } from './components/matricula/dialog/incripciondetalle/incripciondetalle.component';
 import { ExportDialogComponent } from './components/matricula/dialog/export-dialog/export-dialog.component';
 import { NivelDetalleDialogoGraficoComponent } from './components/niveldetalle/nivel-detalle-dialogo-grafico/nivel-detalle-dialogo-grafico.component';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { AgregarEstudianteDialogComponent } from './components/matricula/dialog/agregar-estudiante-dialog/agregar-estudiante-dialog.component';
 import { MatricularAcudienteDialogComponent } from './components/matricula/dialog/matricular-acudiente-dialog/matricular-acudiente-dialog.component';
 import { AgregarNoticiaComponent } from './components/agregar-noticia/agregar-noticia.component';
@@ -67,9 +67,6 @@ import { IconoIaComponent } from './components/icono-ia/icono-ia.component';
 import { VentaInformacionComponent } from './components/venta-informacion/venta-informacion.component';
 import { QuizComponent } from './components/ventanas-para-invitados/eventos/eventos/eventos.component';
 import { LibrosApiComponent } from './components/ventanas-para-invitados/libro/libros-api/libros-api.component';
-import { VictorComponent } from './components/ventanas-para-invitados/victor/victor.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { FacturaComponent } from './components/matricula/dialog/incripciondetalle/factura/factura.component';
 import { PerfilEstudianteComponent } from './components/vista-estudiante/mi-perfil/perfil-estudiante/perfil-estudiante.component';
 import { CommonModule } from '@angular/common';
 import { DialogoComponent } from './components/docente/dialogo/dialogo/dialogo.component';
@@ -80,88 +77,59 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CurricularDocenteComponent } from './components/vista-docente/curricular/curricular.component';
 import { FindCalificacionPipe } from './services/calificacion/find-calificacion.pipe';
 import { CrearNotificacionComponent } from './components/vista-estudiante/crear-notificacion/crear-notificacion/crear-notificacion.component';
-import { MatListModule } from '@angular/material/list';
 import { NoticiaService } from './services/Menu/Menu.service';
 import { AsistenciaComponent } from './components/vista-docente/asistencia/asistencia/asistencia.component';
 import { HistorialAsistenciaComponent } from './components/vista-docente/asistencia/historial-asistencia/historial-asistencia/historial-asistencia.component';
 import { PreguntasJuegosComponent } from './components/ventanas-para-invitados/juegos/juegos/preguntas/preguntas-juegos/preguntas-juegos.component';
-
+import { DashboardComponent } from './components/dashboard/dashboard/dashboard.component';
+import { InscripciondetalleComponent } from './components/matricula/dialog/incripciondetalle/incripciondetalle.component';
+import { FacturaComponent } from './components/matricula/dialog/incripciondetalle/factura/factura.component';
 
 @NgModule({
   imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    MaterialModule,
     MatFormFieldModule,
     MatInputModule,
     MatSortModule,
     MatDialogModule,
     MatTableModule,
     MatButtonModule,
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    MaterialModule,
-    HttpClientModule,
     MatPaginatorModule,
-    ReactiveFormsModule,
     MatMenuModule,
     MatSelectModule,
     MatProgressSpinnerModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatProgressSpinnerModule,
     MatCheckboxModule,
     MatIconModule,
     MatTooltipModule,
+    MatSnackBarModule,
+    MatListModule,
     NgxPaginationModule,
     MatCarouselModule,
-    MatIconModule,
     CommonModule,
-    MatSnackBarModule,
     DragDropModule,
-
-    MatListModule,
-    NoopAnimationsModule,
+    NoopAnimationsModule
   ],
   declarations: [
-    PreguntasJuegosComponent,
-    HistorialAsistenciaComponent,
-    AsistenciaComponent,
-    CrearNotificacionComponent,
-    FindCalificacionPipe,
-    ChatGestionComponent,
-    ThemeCustomizerComponent,
-    DialogoComponent,
-    FacturaComponent,
-    PerfilEstudianteComponent,
-    LibrosApiComponent,
-    QuizComponent,
-    VentaInformacionComponent,
-    IconoIaComponent,
-    FullMessageDialogComponent,
-    NotificacionesDialogComponent,
-    RecursoComponent,
-    ImagenDialogComponent,
-    AgregarNoticiaComponent,
-    Ventana2Component,
-    CurricularDocenteComponent,
-    HorarioComponent,
-    AgregarEstudianteDialogComponent,
-    MatricularAcudienteDialogComponent,
-    Ventana3Component,
-    CurricularEstudianteComponent,
-    HorarioEstudianteComponent,
-    CursosListComponent,
-
+    AppComponent,
+    HomeComponent,
+    LoginComponent,
+    RegisterComponent,
     AcudienteDetailComponent,
     AcudienteListComponent,
     CalificacionListComponent,
-
     CalificacionDetailComponent,
     CurricularListComponent,
-
+    CursosListComponent,
     DocenteComponent,
     ListarEstudiantesComponent,
-
     HorarioListComponent,
     HorarioAddComponent,
     HorarioUpdateComponent,
@@ -174,20 +142,40 @@ import { PreguntasJuegosComponent } from './components/ventanas-para-invitados/j
     NivelDetalleComponent,
     NivelDetalleDialogoGraficoComponent,
     ExportDialogComponent,
-    RegisterComponent,
-    InscripciondetalleComponent,
+    InscripciondetalleComponent, // Corregido el typo
     SuggestionsDialogComponent,
     ErrorComponent,
-    AppComponent,
-    HomeComponent,
-    LoginComponent,
+    Ventana2Component,
+    CurricularDocenteComponent,
+    HorarioComponent,
+    AgregarEstudianteDialogComponent,
+    MatricularAcudienteDialogComponent,
+    Ventana3Component,
+    CurricularEstudianteComponent,
+    HorarioEstudianteComponent,
+    FacturaComponent, // Ruta corregida
+    PerfilEstudianteComponent,
+    DialogoComponent,
+    ThemeCustomizerComponent,
+    ChatGestionComponent,
     ModificarHomeComponent,
-  
-    
+    FindCalificacionPipe,
+    CrearNotificacionComponent,
+    AsistenciaComponent,
+    HistorialAsistenciaComponent,
+    PreguntasJuegosComponent,
+    DashboardComponent,
+    AgregarNoticiaComponent,
+    ImagenDialogComponent,
+    RecursoComponent,
+    NotificacionesDialogComponent,
+    FullMessageDialogComponent,
+    IconoIaComponent,
+    VentaInformacionComponent,
+    QuizComponent,
+    LibrosApiComponent
   ],
-  providers: [AuthService,  NoticiaService],
-
-
-  bootstrap: [AppComponent],
+  providers: [AuthService, NoticiaService],
+  bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

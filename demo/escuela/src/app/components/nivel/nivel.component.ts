@@ -28,8 +28,9 @@ export class NivelComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   nivelSuggestions: string[] = [
-    'Primero', 'Segundo', 'Tercero', 'Cuarto', 'Quinto',
-    'Sexto', 'Séptimo', 'Octavo', 'Noveno', 'Décimo', 'Undécimo'
+    'Primaria',
+    'Secundaria',
+    'Bachillerato'
   ];
   turnoSuggestions: string[] = ['Mañana', 'Tarde', 'Noche'];
 

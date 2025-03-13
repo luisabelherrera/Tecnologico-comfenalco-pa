@@ -1,1 +1,104 @@
-<p>dashboard works!</p>
+<div class="main-container animate__animated animate__fadeIn">
+  <div class="dashboard-container">
+    <!-- Encabezado -->
+    <header class="dashboard-header">
+      <h1>Dashboard de Predicciones Educativas</h1>
+      <p>Análisis Predictivo con JRip (Weka) - proyectodeaula</p>
+    </header>
+
+    <!-- Filtro y Resumen -->
+    <div class="filter-summary">
+      <mat-form-field appearance="outline" class="classroom-select">
+        <mat-label>Selecciona Nivel/Sección</mat-label>
+        <mat-select [(ngModel)]="selectedClassroom" (selectionChange)="changeClassroom($event)">
+          <mat-option *ngFor="let classroom of classrooms" [value]="classroom">
+            {{ classroom }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div class="summary-stats">
+        <div class="stat-card" matTooltip="Número total de estudiantes">
+          <i class="fas fa-users"></i>
+          <span class="label">Estudiantes</span>
+          <span class="value">{{ getCurrentData().estudiantesTotales }}</span>
+        </div>
+        <div class="stat-card" matTooltip="Precisión del modelo predictivo">
+          <i class="fas fa-chart-line"></i>
+          <span class="label">Precisión</span>
+          <span class="value">{{ getCurrentData().precisionModelo * 100 | number:'1.0-0' }}%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <main class="dashboard-content">
+      <section class="prediction-card animate__animated animate__fadeInUp" *ngFor="let section of predictionSections">
+        <h2>{{ section.title }}</h2>
+        <p class="description">{{ section.description }}</p>
+        <div class="prediction-visual">
+          <div class="progress-circle">
+            <svg class="progress-ring" width="140" height="140">
+              <circle class="progress-ring__background" cx="70" cy="70" r="60" />
+              <circle class="progress-ring__fill" cx="70" cy="70" r="60"
+                      [style.strokeDashoffset]="getProgressOffset(section.percentage)" />
+            </svg>
+            <span class="progress-value">{{ section.percentage }}%</span>
+          </div>
+          <div class="prediction-legend">
+            <p *ngFor="let item of section.legend">
+              <span class="dot" [ngClass]="item.class"></span> {{ item.label }}: {{ item.value }}%
+            </p>
+          </div>
+        </div>
+        <div class="extra-info" *ngIf="section.extra">
+          <p>{{ section.extra.label }}: <strong>{{ section.extra.value }}</strong></p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Información Adicional -->
+    <section class="additional-info animate__animated animate__fadeInUp">
+      <h2>Detalles del Modelo</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <i class="fas fa-child"></i>
+          <span class="label">Edad Promedio</span>
+          <span class="value">{{ getCurrentData().edadPromedio | number:'1.1-1' }} años</span>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-users"></i>
+          <span class="label">Estudiantes</span>
+          <span class="value">{{ getCurrentData().estudiantesTotales }}</span>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-chart-line"></i>
+          <span class="label">Precisión</span>
+          <span class="value">{{ getCurrentData().precisionModelo * 100 | number:'1.0-0' }}%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Resumen del Informe -->
+    <section class="report-summary animate__animated animate__fadeInUp">
+      <h2>Evaluación del Modelo JRip</h2>
+      <div class="summary-details">
+        <p><strong>Base de Datos:</strong> inscripcion (1106 instancias, 15 atributos)</p>
+        <p><strong>Algoritmo:</strong> JRip (Weka) - 4 reglas</p>
+        <p><strong>Reglas:</strong></p>
+        <ul>
+          <li>1. (fecha_pago = NULL) ∧ (metodo_pago = Efectivo) => EN_PROCESO (190)</li>
+          <li>2. (metodo_pago = Tarjeta) ∧ (fecha_pago = NULL) => EN_PROCESO (160)</li>
+          <li>3. (fecha_pago = NULL) => PENDIENTE (375)</li>
+          <li>4. Default => PAGADO (381)</li>
+        </ul>
+        <p><strong>Precisión:</strong> 100% (Cross-validation 10-fold)</p>
+      </div>
+    </section>
+
+    <!-- Pie de página -->
+    <footer class="dashboard-footer">
+      <p>Última actualización: {{ currentDate | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+      <p>Generado con Weka - JRip</p>
+    </footer>
+  </div>
+</div>

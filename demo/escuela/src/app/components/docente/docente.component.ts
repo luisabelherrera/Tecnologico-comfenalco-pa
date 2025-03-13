@@ -19,12 +19,13 @@ export class DocenteComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<Docente>([]);
   selectedDocente: Docente | null = null;
   docenteForm: FormGroup;
-  showForm = false;
+  showForm: boolean = true;
   pageSize: number = 5;
   pageIndex: number = 0;
   filterValue: string = '';
   displayedColumns: string[] = ['codigo', 'nombres', 'apellidos', 'email', 'activo', 'acciones'];
-
+  loading: boolean = false;
+  isEditing: boolean = false;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(

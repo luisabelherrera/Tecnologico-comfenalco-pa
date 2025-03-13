@@ -30,6 +30,7 @@ export class HorarioEstudianteComponent implements OnInit {
   constructor(
     private horarioService: HorarioService,
     private estudiantePerfilService: EstudiantePerfilService,
+    
     private inscripcionService: InscripcionService,
     private docenteNivelDetalleCursoService: DocenteNivelDetalleCursoService
   ) {}

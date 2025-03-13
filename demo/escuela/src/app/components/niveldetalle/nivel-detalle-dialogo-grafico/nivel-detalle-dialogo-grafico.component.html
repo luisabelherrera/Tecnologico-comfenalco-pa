@@ -1,46 +1,62 @@
-<div class="dialog-container">
-  <h2 class="dialog-title">Detalles de Vacantes por Grado y Sección</h2>
+<div class="dialog-container animate__animated animate__fadeIn">
+  <div class="dialog-header">
+    <h2 class="dialog-title">Análisis de Vacantes por Nivel</h2>
+    <button class="close-icon" mat-icon-button (click)="close()" matTooltip="Cerrar">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
 
-  <mat-form-field appearance="outline" class="filter-select">
-    <mat-label>Filtrar por Nivel</mat-label>
-    <mat-select [(value)]="selectedNivel" (selectionChange)="applyNivelFilter()">
-      <mat-option value="">Todos</mat-option>
-      <mat-option *ngFor="let nivel of uniqueNiveles" [value]="nivel">{{ nivel }}</mat-option>
-    </mat-select>
-  </mat-form-field>
+  <div class="dialog-toolbar">
+    <mat-form-field appearance="outline" class="filter-select">
+      <mat-label>Filtrar por Nivel</mat-label>
+      <mat-select [(value)]="selectedNivel" (selectionChange)="applyNivelFilter()">
+        <mat-option value="">Todos los Niveles</mat-option>
+        <mat-option *ngFor="let nivel of uniqueNiveles" [value]="nivel">{{ nivel }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 
-  <div class="content-wrapper">
-    <div class="charts-wrapper">
-      <div class="chart-section">
-        <h3 class="chart-title">Comparación (Bar)</h3>
-        <div class="chart-container">
+  <div class="dialog-content">
+    <div class="charts-container">
+      <div class="chart-card animate__animated animate__fadeInUp">
+        <h3 class="chart-title">Comparación</h3>
+        <div class="chart-wrapper">
           <canvas id="barChart"></canvas>
         </div>
       </div>
-      <div class="chart-section">
-        <h3 class="chart-title">Distribución (Doughnut)</h3>
-        <div class="chart-container">
+      <div class="chart-card animate__animated animate__fadeInUp" [style.animation-delay]="'0.1s'">
+        <h3 class="chart-title">Distribución</h3>
+        <div class="chart-wrapper">
           <canvas id="doughnutChart"></canvas>
         </div>
       </div>
-      <div class="chart-section">
-        <h3 class="chart-title">Total por Sección (Pie)</h3>
-        <div class="chart-container">
+      <div class="chart-card animate__animated animate__fadeInUp" [style.animation-delay]="'0.2s'">
+        <h3 class="chart-title">Totales</h3>
+        <div class="chart-wrapper">
           <canvas id="pieChart"></canvas>
         </div>
       </div>
     </div>
 
-    <div class="info-wrapper">
-      <div class="vacant-info">
-        <h3 class="info-title">Resumen</h3>
-        <div class="vacant-item" *ngFor="let nd of filteredNivelDetalles">
-          <span class="vacant-label">{{ nd.gradoSeccion.descripcionGrado }} - {{ nd.gradoSeccion.descripcionSeccion }}:</span>
-          <span class="vacant-value">D: {{ nd.vacantesDisponibles }} / O: {{ nd.vacantesOcupadas }} / T: {{ nd.totalVacantes }}</span>
+    <div class="summary-card animate__animated animate__fadeInUp" [style.animation-delay]="'0.3s'">
+      <h3 class="summary-title">Resumen</h3>
+      <div class="summary-list">
+        <div class="summary-item" *ngFor="let nd of filteredNivelDetalles">
+          <div class="summary-label">
+            <i class="fas fa-school"></i>
+            {{ nd.gradoSeccion.descripcionGrado }} - {{ nd.gradoSeccion.descripcionSeccion }}
+          </div>
+          <div class="summary-values">
+            <span class="value disponible" matTooltip="Disponibles">{{ nd.vacantesDisponibles }}</span>
+            <span class="value ocupada" matTooltip="Ocupadas">{{ nd.vacantesOcupadas }}</span>
+            <span class="value total" matTooltip="Total">{{ nd.totalVacantes }}</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <button class="close-button" mat-raised-button color="primary" (click)="close()">Cerrar</button>
+  <div class="dialog-footer">
+    <button class="close-button" mat-raised-button color="primary" (click)="close()">Cerrar</button>
+  </div>
 </div>

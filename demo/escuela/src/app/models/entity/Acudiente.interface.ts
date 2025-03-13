@@ -8,6 +8,9 @@ export interface Acudiente {
   estadoCivil: string;
   sexo: string;
   fechaNacimiento?: Date;  
+  email?: string;  
+
+  telefono: string;
   activo: boolean;
   parentesco?: string;  
   

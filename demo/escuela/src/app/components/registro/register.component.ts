@@ -39,6 +39,26 @@ export class RegisterComponent implements OnInit {
     this.loadDocentes();
     this.loadUsers();
     this.loadRoles();
+
+    // Set custom filter predicate
+    this.filteredUsers.filterPredicate = (data: UserDto, filter: string) => {
+      const searchStr = filter.toLowerCase();
+      const rolesStr = data.roles.map(r => r.name).join(', ').toLowerCase();
+      const estudianteStr = data.estudiante
+        ? `${data.estudiante.nombres} ${data.estudiante.apellidos}`.toLowerCase()
+        : '';
+      const docenteStr = data.docente
+        ? `${data.docente.nombres} ${data.docente.apellidos}`.toLowerCase()
+        : '';
+
+      return (
+        data.username.toLowerCase().includes(searchStr) ||
+        data.email.toLowerCase().includes(searchStr) ||
+        rolesStr.includes(searchStr) ||
+        estudianteStr.includes(searchStr) ||
+        docenteStr.includes(searchStr)
+      );
+    };
   }
 
   toggleView(showForm: boolean): void {
@@ -50,6 +70,9 @@ export class RegisterComponent implements OnInit {
   applyFilter(): void {
     this.filteredUsers.filter = this.filterValue.trim().toLowerCase();
     this.updatePagedUsers();
+    if (this.paginator) {
+      this.paginator.firstPage(); // Reset to first page after filtering
+    }
   }
 
   loadUsers(): void {

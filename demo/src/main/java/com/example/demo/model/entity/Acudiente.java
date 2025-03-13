@@ -39,6 +39,23 @@ public class Acudiente implements Serializable {
     private String ciudad;
     private String direccion;
     private boolean activo = true;
+    private String email;
+    private String telefono;
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     @Column(name = "FechaRegistro")
     private LocalDateTime fechaRegistro = LocalDateTime.now();

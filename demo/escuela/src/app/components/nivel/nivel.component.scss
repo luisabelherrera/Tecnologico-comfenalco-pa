@@ -244,7 +244,25 @@ td {
 .action-btn.delete-btn {
   color: #dc2626;
 }
+mat-form-field {
+  width: 100%;
+  margin-bottom: 20px; /* Consistent spacing */
+}
 
+mat-form-field input[type="time"] {
+  padding: 8px;
+  font-size: 16px;
+  height: 40px;
+  width: 100%;
+}
+
+mat-form-field input[type="time"]::-webkit-calendar-picker-indicator {
+  padding: 12px;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  background-size: 24px;
+}
 .action-btn.delete-btn:hover {
   background-color: rgba(220, 38, 38, 0.1);
 }

@@ -33,12 +33,11 @@
           Este campo es obligatorio.
         </mat-error>
       </mat-form-field>
-      
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Nivel Detalle Curso</mat-label>
         <mat-select [(ngModel)]="nuevoHorario.nivelDetalleCurso" name="nivelDetalleCurso" required>
           <mat-option *ngFor="let nivel of nivelesDetalleCurso" [value]="nivel">
-            {{ nivel.curso.descripcion }}  {{ nivel.nivelDetalle.gradoSeccion.descripcionGrado }}
+            {{ nivel.curso.descripcion }}  {{ nivel.nivelDetalle.gradoSeccion.descripcionGrado }} {{ nivel.nivelDetalle.gradoSeccion.descripcionSeccion }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="horarioForm.submitted && !nuevoHorario.nivelDetalleCurso">
