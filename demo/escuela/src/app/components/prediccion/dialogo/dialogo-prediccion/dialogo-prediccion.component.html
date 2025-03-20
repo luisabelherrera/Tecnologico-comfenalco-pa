@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>Buscar Estudiante</h2>
+<mat-dialog-content>
+  <mat-form-field appearance="outline" style="width: 100%;">
+    <mat-label>Buscar</mat-label>
+    <input matInput [(ngModel)]="searchTerm" (input)="filterStudents()" placeholder="Nombre o ID">
+  </mat-form-field>
+  <div class="student-list">
+    <div *ngFor="let d of filteredDesempenos" class="student-item" (click)="selectStudent(d)">
+      <span class="status-dot" [ngClass]="{'risk': willLoseCourse(d), 'safe': !willLoseCourse(d)}"></span>
+      {{d.estudiante.nombres}} {{d.estudiante.apellidos || ''}} (ID: {{d.estudiante.idEstudiante}})
+      <span *ngIf="d.inscripcion?.nivelDetalle?.idNivelDetalle"> - {{getCursoDescripcion(d.inscripcion.nivelDetalle.idNivelDetalle)}}</span>
+    </div>
+    <div *ngIf="filteredDesempenos.length === 0" class="no-results">
+      No se encontraron estudiantes
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancelar</button>
+</mat-dialog-actions>

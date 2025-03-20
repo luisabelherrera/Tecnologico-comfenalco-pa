@@ -1,0 +1,36 @@
+.student-list {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  
+  .student-item {
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
+  
+  .status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  
+    &.risk {
+      background-color: #ff6384; // Red for "perderá"
+    }
+  
+    &.safe {
+      background-color: #36a2eb; // Greenish-blue for "ganará" (adjusted to match chart colors)
+    }
+  }
+  
+  .no-results {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+  }

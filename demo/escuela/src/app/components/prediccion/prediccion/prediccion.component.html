@@ -1,0 +1,157 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <h1>Dashboard de Predicción de Desempeño Estudiantil</h1>
+    <div>
+      <button mat-raised-button color="accent" (click)="refreshData()" style="margin-right: 10px;">
+        Actualizar Datos
+      </button>
+      <button mat-raised-button color="primary" class="export-button" (click)="exportToExcel()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Exportar a Excel
+      </button>
+    </div>
+  </header>
+
+  <div class="dashboard-grid" *ngIf="!loading; else loadingTemplate">
+    <div class="stats-card">
+      <div class="stat-item">
+        <div class="stat-value">{{total}}</div>
+        <div class="stat-label">Total Estudiantes</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">{{prediccionSi}}</div>
+        <div class="stat-label">Riesgo Alto</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">{{promedioAsistencia | number:'1.0-0'}}%</div>
+        <div class="stat-label">Promedio Asistencia</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">{{promedioParciales | number:'1.1-1'}}</div>
+        <div class="stat-label">Promedio Parciales</div>
+      </div>
+    </div>
+
+    <div class="charts-container">
+      <div class="chart-card">
+        <h2>Distribución de Predicciones</h2>
+        <div class="chart-wrapper">
+          <canvas #donutChart></canvas>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <span class="color-dot risk"></span>
+            <span>En Riesgo: {{prediccionSi}} ({{getPorcentajeSi() | number:'1.0-0'}}%)</span>
+          </div>
+          <div class="legend-item">
+            <span class="color-dot safe"></span>
+            <span>Sin Riesgo: {{prediccionNo}} ({{getPorcentajeNo() | number:'1.0-0'}}%)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h2>Métricas de Desempeño</h2>
+        <div class="chart-wrapper">
+          <canvas #barChart></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="student-card">
+      <h2>Predicción Individual</h2>
+      <div class="student-selector">
+        <mat-form-field appearance="outline" class="curso-selector">
+          <mat-label>Seleccionar Curso</mat-label>
+          <mat-select [(ngModel)]="selectedCursoId" (selectionChange)="onCursoChange()">
+            <mat-option [value]="null">Todos los cursos</mat-option>
+            <mat-option *ngFor="let curso of cursos" [value]="curso.idCurso">
+              {{ curso.descripcion }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="openStudentSearchDialog()">
+          Buscar Estudiante
+        </button>
+      </div>
+
+      <div class="student-result" *ngIf="selectedEstudiante">
+        <div class="student-header">
+          <h3>{{selectedEstudiante.estudiante.nombres}} {{selectedEstudiante.estudiante.apellidos || ''}}</h3>
+          <div class="student-id">ID: {{selectedEstudiante.estudiante.idEstudiante}}</div>
+        </div>
+
+        <div class="individual-chart">
+          <canvas #individualRadarChart></canvas>
+        </div>
+
+        <div class="prediction-result" [ngClass]="{'risk': prediccionIndividual === 'Sí', 'safe': prediccionIndividual === 'No'}">
+          <div class="prediction-label">Predicción de Pérdida:</div>
+          <div class="prediction-value">{{prediccionIndividual}}</div>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <div class="metric-value">{{selectedEstudiante.asistencia}}%</div>
+            <div class="metric-label">Asistencia</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value">{{selectedEstudiante.promedioParciales}}</div>
+            <div class="metric-label">Promedio Parciales</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value">{{selectedEstudiante.participacionClases}}</div>
+            <div class="metric-label">Participación</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value">{{selectedEstudiante.antecedentesPerdida}}</div>
+            <div class="metric-label">Antecedentes</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value">{{selectedEstudiante.horasEstudioSemanal}}</div>
+            <div class="metric-label">Horas Estudio</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value">{{selectedEstudiante.usoPlataformaVirtual}}</div>
+            <div class="metric-label">Uso Plataforma</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value">{{calcularEdad(selectedEstudiante.estudiante.fechaNacimiento) || 'N/A'}}</div>
+            <div class="metric-label">Edad</div>
+          </div>
+        </div>
+
+        <div class="decision-tree">
+          <h4>Ruta de Decisión (J48-like):</h4>
+          <div class="tree-output">
+            <pre>{{ decisionPath.join('\n|   ') }}</pre>
+            <p>Resultado: {{ prediccionIndividual === 'Sí' ? 'Perderá la asignatura' : 'No perderá la asignatura' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-selection" *ngIf="!selectedEstudiante">
+        <div class="empty-state">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <p>Selecciona un estudiante para ver su predicción</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #loadingTemplate>
+    <div class="loading-state">
+      <mat-spinner></mat-spinner>
+      <p>Cargando datos...</p>
+    </div>
+  </ng-template>
+</div>

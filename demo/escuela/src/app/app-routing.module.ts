@@ -76,6 +76,7 @@ import { ModificarHomeComponent } from './components/modificar-home/modificar-ho
 import { CrearNotificacionComponent } from './components/vista-estudiante/crear-notificacion/crear-notificacion/crear-notificacion.component';
 import { AsistenciaComponent } from './components/vista-docente/asistencia/asistencia/asistencia.component';
 import { DashboardComponent } from './components/dashboard/dashboard/dashboard.component';
+import { PrediccionComponent } from './components/prediccion/prediccion/prediccion.component';
 
 
 
@@ -291,9 +292,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Administracion']  },
   }, 
-
-
   { path: 'factura', component: FacturaComponent ,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion']  }, 
+
+    },
+
+
+  { path: 'predicciones', component: PrediccionComponent ,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion']  }, 
 

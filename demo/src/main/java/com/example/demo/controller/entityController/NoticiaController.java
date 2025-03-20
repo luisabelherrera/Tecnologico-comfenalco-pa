@@ -18,6 +18,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
+
+@CrossOrigin(origins = "/**")
 @RestController
 @RequestMapping("/api/noticias")
 public class NoticiaController {

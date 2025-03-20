@@ -84,6 +84,8 @@ import { PreguntasJuegosComponent } from './components/ventanas-para-invitados/j
 import { DashboardComponent } from './components/dashboard/dashboard/dashboard.component';
 import { InscripciondetalleComponent } from './components/matricula/dialog/incripciondetalle/incripciondetalle.component';
 import { FacturaComponent } from './components/matricula/dialog/incripciondetalle/factura/factura.component';
+import { PrediccionComponent } from './components/prediccion/prediccion/prediccion.component';
+import { StudentSearchDialog } from './components/prediccion/dialogo/dialogo-prediccion/dialogo-prediccion.component';
 
 @NgModule({
   imports: [
@@ -118,6 +120,7 @@ import { FacturaComponent } from './components/matricula/dialog/incripciondetall
     NoopAnimationsModule
   ],
   declarations: [
+    PrediccionComponent,
     AppComponent,
     HomeComponent,
     LoginComponent,
@@ -173,7 +176,8 @@ import { FacturaComponent } from './components/matricula/dialog/incripciondetall
     IconoIaComponent,
     VentaInformacionComponent,
     QuizComponent,
-    LibrosApiComponent
+    LibrosApiComponent,
+    StudentSearchDialog
   ],
   providers: [AuthService, NoticiaService],
   bootstrap: [AppComponent]

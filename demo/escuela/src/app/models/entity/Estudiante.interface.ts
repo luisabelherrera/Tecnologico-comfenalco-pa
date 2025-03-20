@@ -1,11 +1,11 @@
 export interface Estudiante {
   idEstudiante: number;
-  valorCodigo?: string; // Changed to string
+  valorCodigo?: string;
   codigo?: string;
   nombres?: string;
   apellidos?: string;
   documentoIdentidad?: string;
-  fechaNacimiento?: Date; // Changed to Date
+  fechaNacimiento?: Date; // Ajustado a string para JSON
   sexo?: string;
   ciudad?: string;
   direccion?: string;
