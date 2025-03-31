@@ -79,15 +79,23 @@
   <section class="saved-themes">
     <h4>Temas Guardados</h4>
     <div class="theme-list">
-      <button
-        *ngFor="let theme of themes"
-        (click)="applyTheme(theme)"
-        [disabled]="theme.isActive"
-        class="btn btn-theme"
-        [ngClass]="{'active': theme.isActive}"
-      >
-        {{ theme.name }} <span *ngIf="theme.isActive">(Activo)</span>
-      </button>
+      <div *ngFor="let theme of themes" class="theme-item">
+        <button
+          (click)="applyTheme(theme)"
+          [disabled]="theme.isActive"
+          class="btn btn-theme"
+          [ngClass]="{'active': theme.isActive}"
+        >
+          {{ theme.name }} <span *ngIf="theme.isActive">(Activo)</span>
+        </button>
+        <button
+          (click)="deleteTheme(theme.id!)"
+          class="btn btn-delete"
+          *ngIf="theme.id"
+        >
+          Eliminar
+        </button>
+      </div>
     </div>
   </section>
 </div>

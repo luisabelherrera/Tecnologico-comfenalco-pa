@@ -75,8 +75,9 @@ import { ChatGestionComponent } from './components/gestion-chat/chat-gestion/cha
 import { ModificarHomeComponent } from './components/modificar-home/modificar-home.component';
 import { CrearNotificacionComponent } from './components/vista-estudiante/crear-notificacion/crear-notificacion/crear-notificacion.component';
 import { AsistenciaComponent } from './components/vista-docente/asistencia/asistencia/asistencia.component';
-import { DashboardComponent } from './components/dashboard/dashboard/dashboard.component';
 import { PrediccionComponent } from './components/prediccion/prediccion/prediccion.component';
+import { WekaComponent } from './components/prediciones/weka/weka.component';
+import { DocenteAnalizaComponent } from './components/vista-docente/docente-analiza/docente-analiza.component';
 
 
 
@@ -90,6 +91,15 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Docente'] },
   },
+ 
+
+  {
+    path: 'docente-weka',
+    component:  DocenteAnalizaComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Docente'] },
+  },
+
 
   
     // vista Docente curricularDocente
@@ -278,6 +288,10 @@ const routes: Routes = [
     data: { roles: ['Administracion'] },
   },
 
+  { path: 'weka', component: WekaComponent ,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion'] },
+  },
   //docente
   {
     path: 'docentes',
@@ -334,13 +348,7 @@ const routes: Routes = [
     data: { roles: ['Administracion'] },
   },
 
-  {
-    path: 'dashboard',
-    component: DashboardComponent,
-    canActivate: [AuthGuard],
-    data: { icon: 'insights', title: 'Dashboard Predicción',roles: ['Administracion'] },
-  },
- 
+
   
  
   

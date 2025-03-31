@@ -12,5 +12,6 @@ import com.example.demo.model.login.UserEntity;
 @Repository
 public interface EstudianteRepository extends JpaRepository<Estudiante, Integer> {
     Optional<Estudiante> findByUser(UserEntity user);
+    Optional<Estudiante> findByDocumentoIdentidad(String documentoIdentidad);
 
 }

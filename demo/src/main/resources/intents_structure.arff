@@ -1,0 +1,82 @@
+% Intents dataset
+@RELATION intents
+
+@ATTRIBUTE texto STRING
+@ATTRIBUTE class {crear_periodo, consultar_periodos, crear_estudiante, consultar_estudiantes}
+
+@DATA
+'crear un nuevo periodo',crear_periodo
+'quiero crear un periodo',crear_periodo
+'crear periodo',crear_periodo
+'agregar periodo',crear_periodo
+'nuevo periodo',crear_periodo
+'añadir periodo',crear_periodo
+'necesito crear un periodo',crear_periodo
+'cómo crear un periodo',crear_periodo
+'hacer un periodo',crear_periodo
+'generar periodo',crear_periodo
+'periodo nuevo',crear_periodo
+'crear un periodo escolar',crear_periodo
+'registrar un periodo',crear_periodo
+'añadir un periodo nuevo',crear_periodo
+'crear año académico',crear_periodo
+'cual periodo',crear_periodo
+periodo?,crear_periodo
+'cual año',crear_periodo
+etc,crear_periodo
+'empezar periodo',crear_periodo
+'cuántos periodos activos hay',consultar_periodos
+'mostrar todos los periodos',consultar_periodos
+'ver periodos',consultar_periodos
+'listar periodos',consultar_periodos
+'mostrar periodos',consultar_periodos
+'quiero ver los periodos',consultar_periodos
+'dime los periodos',consultar_periodos
+'consultar periodos',consultar_periodos
+'ver lista de periodos',consultar_periodos
+'cuáles son los periodos',consultar_periodos
+'tengo periodos?',consultar_periodos
+'hay algún periodo activo',consultar_periodos
+'periodos activos',consultar_periodos
+'muestra los periodos',consultar_periodos
+'ver periodos actuales',consultar_periodos
+'consultar periodos escolares',consultar_periodos
+'mostrarme los periodos',consultar_periodos
+'periodos disponibles',consultar_periodos
+'hay periodos?',consultar_periodos
+'registrar estudiante',crear_estudiante
+'crear nuevo estudiante',crear_estudiante
+'agregar estudiante',crear_estudiante
+'añadir estudiante',crear_estudiante
+'quiero registrar un estudiante',crear_estudiante
+'cómo crear un estudiante',crear_estudiante
+'nuevo estudiante',crear_estudiante
+'crear estudiante',crear_estudiante
+'necesito un estudiante nuevo',crear_estudiante
+'matricular estudiante',crear_estudiante
+'inscribir estudiante',crear_estudiante
+'registrar un estudiante nuevo',crear_estudiante
+'guardar estudiante',crear_estudiante
+'registrar alumno',crear_estudiante
+'crear alumno',crear_estudiante
+'añadir alumno',crear_estudiante
+'nuevo alumno',crear_estudiante
+'mostrar estudiantes',consultar_estudiantes
+'cuántos estudiantes tengo',consultar_estudiantes
+'ver estudiantes',consultar_estudiantes
+'consultar estudiantes',consultar_estudiantes
+'listar estudiantes',consultar_estudiantes
+'mostrar lista de estudiantes',consultar_estudiantes
+'quiero ver los estudiantes',consultar_estudiantes
+'tengo estudiantes?',consultar_estudiantes
+'hay estudiantes?',consultar_estudiantes
+'ver alumnos',consultar_estudiantes
+'cuántos alumnos hay',consultar_estudiantes
+'dime los estudiantes',consultar_estudiantes
+'consultar alumnos',consultar_estudiantes
+'mostrar alumnos',consultar_estudiantes
+'ver lista de estudiantes',consultar_estudiantes
+'quienes son los estudiantes',consultar_estudiantes
+'listado de estudiantes',consultar_estudiantes
+'listado de alumnos',consultar_estudiantes
+'mostrar los estudiantes',consultar_estudiantes

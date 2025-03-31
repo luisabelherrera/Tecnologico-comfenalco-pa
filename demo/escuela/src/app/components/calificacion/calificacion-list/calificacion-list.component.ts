@@ -214,124 +214,90 @@ export class CalificacionListComponent implements OnInit, AfterViewInit {
     const logo = new Image();
     logo.src = logoPath;
 
-    const marginX = 20;
-    const marginY = 20;
-    const logoWidth = 50;
-    const logoHeight = 20;
-    const lineSpacing = 30;
+    const marginX = 40;
+    const marginY = 40;
+    const logoWidth = 80;
+    const logoHeight = 40;
+    const lineSpacing = 25;
 
     logo.onload = () => {
       try {
-        doc.addImage(logo, 'JPEG', marginX, marginY, logoWidth, logoHeight);
+      // Header Section
+      doc.addImage(logo, 'JPEG', marginX, marginY, logoWidth, logoHeight);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(16);
+      doc.setTextColor(0, 51, 102);
+      doc.text('INSTITUCION EDUCATIVA EL HOBO', doc.internal.pageSize.width / 2, marginY + 20, { align: 'center' });
+      doc.setFontSize(12);
+      doc.text('NIT: 123456789', doc.internal.pageSize.width / 2, marginY + 40, { align: 'center' });
+      doc.text('CARMEN DE BOLIVAR', doc.internal.pageSize.width / 2, marginY + 60, { align: 'center' });
 
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.setTextColor(0, 0, 0);
-        doc.text('NIT: 123456789', 70, marginY + 5);
-        doc.text('Nombre de la Institución: INSTITUCION EDUCATIVA EL HOBO', 70, marginY + 25);
-        doc.text('Dirección de la Institución: CARMEN DE BOLIVAR', 70, marginY + 45);
+      // Title
+      doc.setFontSize(22);
+      doc.setTextColor(0, 102, 204);
+      doc.text('BOLETÍN DE CALIFICACIONES', doc.internal.pageSize.width / 2, marginY + 100, { align: 'center' });
+      doc.line(marginX, marginY + 110, doc.internal.pageSize.width - marginX, marginY + 110);
 
-        doc.setFontSize(18);
-        doc.setTextColor(40, 100, 200);
-        doc.text('Boletín de Calificación', marginX, 80);
-        doc.setDrawColor(40, 100, 200);
-        doc.line(marginX, 83, 580, 83);
+      let currentY = marginY + 150;
 
-        let currentY = 100;
-        doc.setFontSize(14);
-        doc.setTextColor(0, 0, 0);
-        doc.text('Detalles de la Calificación:', marginX, currentY);
-        currentY += lineSpacing;
-        doc.setFontSize(12);
-        doc.setTextColor(60, 60, 60);
-        doc.text(`1. ID de Calificación: ${calificacion.idCalificacion}`, marginX, currentY);
-        currentY += lineSpacing;
-        doc.text(`2. Nota: ${calificacion.nota.toString()}`, marginX, currentY);
+      // Student Information Section
+      doc.setFontSize(14);
+      doc.setTextColor(0, 51, 102);
+      doc.setFont('helvetica', 'bold');
+      doc.text('INFORMACIÓN DEL ESTUDIANTE', marginX, currentY);
+      currentY += lineSpacing;
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Nombre Completo: ${calificacion.estudiante.nombres} ${calificacion.estudiante.apellidos}`, marginX, currentY);
+      currentY += lineSpacing;
+      doc.text(`Documento: ${calificacion.estudiante.documentoIdentidad}`, marginX, currentY);
+      currentY += lineSpacing;
+      doc.text(`Ciudad: ${calificacion.estudiante.ciudad}`, marginX, currentY);
 
-        currentY += lineSpacing;
-        doc.setFontSize(14);
-        doc.setTextColor(0, 0, 0);
-        doc.text('Detalles del Estudiante:', marginX, currentY);
-        currentY += lineSpacing;
-        doc.setFontSize(12);
-        doc.setTextColor(60, 60, 60);
-        doc.text(`1. Nombre: ${calificacion.estudiante.nombres} ${calificacion.estudiante.apellidos}`, marginX, currentY);
-        currentY += lineSpacing;
-        doc.text(`2. Documento de Identidad: ${calificacion.estudiante.documentoIdentidad}`, marginX, currentY);
-        currentY += lineSpacing;
-        const birthDate = calificacion.estudiante.fechaNacimiento instanceof Date
-          ? calificacion.estudiante.fechaNacimiento.toLocaleDateString()
-          : calificacion.estudiante.fechaNacimiento;
-        doc.text(`3. Fecha de Nacimiento: ${birthDate}`, marginX, currentY);
-        currentY += lineSpacing;
-        doc.text(`4. Sexo: ${calificacion.estudiante.sexo}`, marginX, currentY);
-        currentY += lineSpacing;
-        doc.text(`5. Ciudad: ${calificacion.estudiante.ciudad}`, marginX, currentY);
+      currentY += lineSpacing * 2;
 
-        currentY += lineSpacing;
-        doc.setFontSize(14);
-        doc.setTextColor(0, 0, 0);
-        doc.text('Detalles Curriculares:', marginX, currentY);
-        currentY += lineSpacing;
-        doc.setFontSize(12);
-        doc.setTextColor(60, 60, 60);
-        doc.text(`1. Descripción: ${calificacion.curricular.descripcion}`, marginX, currentY);
-        currentY += lineSpacing;
-        doc.text(`2. Activo: ${calificacion.curricular.activo ? 'Sí' : 'No'}`, marginX, currentY);
+      // Academic Information
+      doc.setFontSize(14);
+      doc.setTextColor(0, 51, 102);
+      doc.setFont('helvetica', 'bold');
+      doc.text('INFORMACIÓN ACADÉMICA', marginX, currentY);
+      currentY += lineSpacing;
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Curso: ${calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.descripcion}`, marginX, currentY);
+      currentY += lineSpacing;
+      doc.text(`Docente: ${calificacion.curricular.docenteNivelDetalleCurso.docente.nombres} ${calificacion.curricular.docenteNivelDetalleCurso.docente.apellidos}`, marginX, currentY);
 
-        currentY += lineSpacing;
-        doc.setFontSize(14);
-        doc.setTextColor(0, 0, 0);
-        doc.text('Detalles del Docente:', marginX, currentY);
-        currentY += lineSpacing;
-        doc.setFontSize(12);
-        doc.setTextColor(60, 60, 60);
-        doc.text(`1. Nombre: ${calificacion.curricular.docenteNivelDetalleCurso.docente.nombres}`, marginX, currentY);
-        currentY += lineSpacing;
-        doc.text(`2. Apellido: ${calificacion.curricular.docenteNivelDetalleCurso.docente.apellidos}`, marginX, currentY);
+      currentY += lineSpacing * 2;
 
-        currentY += lineSpacing;
-        doc.setFontSize(14);
-        doc.setTextColor(0, 0, 0);
-        doc.text('Detalles del Curso:', marginX, currentY);
-        currentY += lineSpacing;
-        doc.setFontSize(12);
-        doc.setTextColor(60, 60, 60);
-        doc.text(`1. Nombre del Curso: ${calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.descripcion}`, marginX, currentY);
-        currentY += lineSpacing;
-        doc.text(`2. Activo: ${calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.activo ? 'Sí' : 'No'}`, marginX, currentY);
-        currentY += lineSpacing;
-        const cursoFecha = calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.fechaRegistro instanceof Date
-          ? calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.fechaRegistro.toLocaleDateString()
-          : calificacion.curricular.docenteNivelDetalleCurso.nivelDetalleCurso.curso.fechaRegistro;
-        doc.text(`3. Fecha de Registro: ${cursoFecha}`, marginX, currentY);
+      // Grade Information
+      doc.setFontSize(16);
+      doc.setTextColor(0, 51, 102);
+      doc.setFont('helvetica', 'bold');
+      doc.text('CALIFICACIÓN', doc.internal.pageSize.width / 2, currentY, { align: 'center' });
+      currentY += lineSpacing;
+      doc.setFontSize(24);
+      doc.setTextColor(0, 102, 0);
+      doc.text(`${calificacion.nota}`, doc.internal.pageSize.width / 2, currentY, { align: 'center' });
 
-        currentY += lineSpacing;
-        doc.setFontSize(14);
-        doc.setTextColor(0, 0, 0);
-        doc.text('Fechas Importantes:', marginX, currentY);
-        currentY += lineSpacing;
-        doc.setFontSize(12);
-        doc.setTextColor(60, 60, 60);
-        const regDate = calificacion.curricular.fechaRegistro instanceof Date
-          ? calificacion.curricular.fechaRegistro.toLocaleDateString()
-          : calificacion.curricular.fechaRegistro;
-        doc.text(`1. Fecha de Registro Curricular: ${regDate}`, marginX, currentY);
-        currentY += lineSpacing;
-        const califRegDate = calificacion.fechaRegistro instanceof Date
-          ? calificacion.fechaRegistro.toLocaleDateString()
-          : calificacion.fechaRegistro;
-        doc.text(`2. Fecha de Registro de Calificación: ${califRegDate}`, marginX, currentY);
+      currentY += lineSpacing * 2;
 
-        doc.setDrawColor(40, 100, 200);
-        currentY += lineSpacing;
-        doc.line(marginX, currentY, 580, currentY);
+      // Footer
+      doc.setFontSize(10);
+      doc.setTextColor(128, 128, 128);
+      doc.setFont('helvetica', 'italic');
+      const fecha = new Date().toLocaleDateString();
+      doc.text(`Fecha de emisión: ${fecha}`, marginX, doc.internal.pageSize.height - 40);
+      doc.text('Este documento es de carácter informativo', doc.internal.pageSize.width - marginX, doc.internal.pageSize.height - 40, { align: 'right' });
 
-        doc.save(`boletin_calificacion_${calificacion.idCalificacion}.pdf`);
+      // Save the PDF
+      doc.save(`boletin_${calificacion.estudiante.apellidos}_${calificacion.estudiante.nombres}.pdf`);
       } catch (error) {
-        console.error('Error generating PDF:', error);
-        doc.text('Error al generar el PDF.', marginX, marginY);
-        doc.save('boletin_calificaciones_error.pdf');
+      console.error('Error al generar PDF:', error);
+      doc.text('Error al generar el PDF.', marginX, marginY);
+      doc.save('boletin_error.pdf');
       }
     };
 

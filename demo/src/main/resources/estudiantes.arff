@@ -1,0 +1,18 @@
+@relation estudiantes
+
+@attribute Documento numeric
+@attribute ID_Estudiante numeric
+@attribute Edad numeric
+@attribute Género {Masculino, Femenino, Otro}
+@attribute Horas_Estudio_Semanal numeric
+@attribute Asistencia numeric
+@attribute Promedio_Parciales numeric
+@attribute Participación_Clases {Baja, Media, Alta}
+@attribute Uso_Plataforma_Virtual {Bajo, Medio, Alto}
+@attribute Antecedentes_Pérdida {Sí, No}
+@attribute Apoyo_Familiar {Bajo, Medio, Alto}
+@attribute Carga_Académica numeric
+@attribute Problemas_Personales {Ninguno, Leves, Graves}
+@attribute Perderá_Asignatura {tested_positive, tested_negative}
+
+@data

@@ -1,4 +1,9 @@
-<div class="ai-interface">
+<div class="ai-interface" [class.expanded]="isExpanded">
+  <!-- Botón para alternar el tamaño con ícono -->
+  <button class="toggle-size-button" (click)="toggleChatSize()">
+    <span [class.expand-icon]="!isExpanded" [class.collapse-icon]="isExpanded"></span>
+  </button>
+
   <div class="ai-core">
     <div class="ai-ring"></div>
     <div class="ai-face">
@@ -10,12 +15,10 @@
     </div>
   </div>
 
-  <!-- Sección para mostrar el último mensaje de la IA -->
   <div class="response-output">
     <p class="ai-text">{{ responseText }}</p>
   </div>
 
-  <!-- Minichat con el historial de la conversación -->
   <div class="chat-history">
     <div class="chat-container">
       <div *ngFor="let message of chatHistory" class="chat-message" [class.user]="message.sender === 'user'" [class.ai]="message.sender === 'ai'">
@@ -26,5 +29,18 @@
     </div>
   </div>
 
-  <button (click)="stopAI()" *ngIf="isRecording" class="stop-button">Detener IA</button>
+  <div class="text-input-container">
+    <input 
+      type="text" 
+      [(ngModel)]="userInput" 
+      (keyup.enter)="submitTextInput()" 
+      placeholder="Escribe tu comando..." 
+      class="text-input"
+    >
+    <!-- Nuevo contenedor para los botones -->
+    <div class="button-container">
+      <button (click)="submitTextInput()" class="submit-button">Enviar</button>
+      <button (click)="stopAI()" *ngIf="isRecording" class="stop-button">Detener IA</button>
+    </div>
+  </div>
 </div>

@@ -1,0 +1,212 @@
+<div class="container">
+  <div class="toggle-buttons">
+    <button class="toggle-btn" [class.active]="showForm" (click)="toggleView(true)">Predicción</button>
+    <button class="toggle-btn" [class.active]="!showForm" (click)="toggleView(false)">Historial de Predicciones</button>
+  </div>
+  <p></p>
+  <div *ngIf="showForm" class="form-section">
+    <h2 class="section-title">Registro Pérdida de Asignatura</h2>
+    <div class="button-group">
+      <button mat-raised-button color="primary" (click)="openStudentSelectionDialog()">Seleccionar Estudiante</button>
+    </div>
+    <p></p>
+    <p></p>
+    <form [formGroup]="studentForm" (ngSubmit)="enviarDatos()" class="form-grid">
+      <mat-form-field>
+        <mat-label>Documento</mat-label>
+        <input matInput type="text" formControlName="documento" placeholder="Ej: 9094811">
+        <mat-error *ngIf="studentForm.get('documento')?.hasError('required')">Campo requerido</mat-error>
+        <mat-error *ngIf="studentForm.get('documento')?.hasError('pattern')">Debe ser un número de 7 a 10 dígitos</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Edad</mat-label>
+        <input matInput type="number" formControlName="edad" placeholder="Ej: 18" step="1">
+        <mat-error *ngIf="studentForm.get('edad')?.hasError('required')">Campo requerido</mat-error>
+        <mat-error *ngIf="studentForm.get('edad')?.hasError('min')">Edad mínima: 5</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Género</mat-label>
+        <mat-select formControlName="genero">
+          <mat-option value="">Selecciona una opción</mat-option>
+          <mat-option value="Masculino">Masculino</mat-option>
+          <mat-option value="Femenino">Femenino</mat-option>
+          <mat-option value="Otro">Otro</mat-option>
+        </mat-select>
+        <mat-error *ngIf="studentForm.get('genero')?.hasError('required')">Campo requerido</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Horas de Estudio Semanal</mat-label>
+        <input matInput type="number" formControlName="horasEstudioSemanal" placeholder="Ej: 10" step="1">
+        <mat-error *ngIf="studentForm.get('horasEstudioSemanal')?.hasError('required')">Campo requerido</mat-error>
+        <mat-error *ngIf="studentForm.get('horasEstudioSemanal')?.hasError('min')">Mínimo: 0</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Asistencia (%)</mat-label>
+        <input matInput type="number" formControlName="asistencia" placeholder="Ej: 66.02" step="0.01">
+        <mat-error *ngIf="studentForm.get('asistencia')?.hasError('required')">Campo requerido</mat-error>
+        <mat-error *ngIf="studentForm.get('asistencia')?.hasError('min') || studentForm.get('asistencia')?.hasError('max')">Entre 0 y 100</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Promedio de Parciales</mat-label>
+        <input matInput type="number" formControlName="promedioParciales" placeholder="Ej: 2.99" step="0.01">
+        <mat-error *ngIf="studentForm.get('promedioParciales')?.hasError('required')">Campo requerido</mat-error>
+        <mat-error *ngIf="studentForm.get('promedioParciales')?.hasError('min') || studentForm.get('promedioParciales')?.hasError('max')">Entre 0 y 5</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Participación en Clases</mat-label>
+        <mat-select formControlName="participacionClases">
+          <mat-option value="">Selecciona una opción</mat-option>
+          <mat-option value="Baja">Baja</mat-option>
+          <mat-option value="Media">Media</mat-option>
+          <mat-option value="Alta">Alta</mat-option>
+        </mat-select>
+        <mat-error *ngIf="studentForm.get('participacionClases')?.hasError('required')">Campo requerido</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Uso de Plataforma Virtual</mat-label>
+        <mat-select formControlName="usoPlataformaVirtual">
+          <mat-option value="">Selecciona una opción</mat-option>
+          <mat-option value="Bajo">Bajo</mat-option>
+          <mat-option value="Medio">Medio</mat-option>
+          <mat-option value="Alto">Alto</mat-option>
+        </mat-select>
+        <mat-error *ngIf="studentForm.get('usoPlataformaVirtual')?.hasError('required')">Campo requerido</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Antecedentes de Pérdida</mat-label>
+        <mat-select formControlName="antecedentesPerdida">
+          <mat-option value="">Selecciona una opción</mat-option>
+          <mat-option value="Sí">Sí</mat-option>
+          <mat-option value="No">No</mat-option>
+        </mat-select>
+        <mat-error *ngIf="studentForm.get('antecedentesPerdida')?.hasError('required')">Campo requerido</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Apoyo Familiar</mat-label>
+        <mat-select formControlName="apoyoFamiliar">
+          <mat-option value="">Selecciona una opción</mat-option>
+          <mat-option value="Bajo">Bajo</mat-option>
+          <mat-option value="Medio">Medio</mat-option>
+          <mat-option value="Alto">Alto</mat-option>
+        </mat-select>
+        <mat-error *ngIf="studentForm.get('apoyoFamiliar')?.hasError('required')">Campo requerido</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Carga Académica</mat-label>
+        <input matInput type="number" formControlName="cargaAcademica" placeholder="Ej: 3" step="1">
+        <mat-error *ngIf="studentForm.get('cargaAcademica')?.hasError('required')">Campo requerido</mat-error>
+        <mat-error *ngIf="studentForm.get('cargaAcademica')?.hasError('min') || studentForm.get('cargaAcademica')?.hasError('max')">Entre 1 y 5</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Problemas Personales</mat-label>
+        <mat-select formControlName="problemasPersonales">
+          <mat-option value="">Selecciona una opción</mat-option>
+          <mat-option value="Ninguno">Ninguno</mat-option>
+          <mat-option value="Leves">Leves</mat-option>
+          <mat-option value="Graves">Graves</mat-option>
+        </mat-select>
+        <mat-error *ngIf="studentForm.get('problemasPersonales')?.hasError('required')">Campo requerido</mat-error>
+      </mat-form-field>
+      <div class="button-group">
+        <button type="submit" class="submit-btn" [disabled]="!studentForm.valid">Registrar</button>
+      </div>
+    </form>
+
+    <div class="result-container" *ngIf="resultado">
+      <p class="result-text">{{ resultado }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="!showForm" class="list-section">
+    <h2 class="section-title">Historial de Predicciones</h2>
+    <div class="toggle-view-buttons">
+      <button class="toggle-btn" [class.active]="!showChart" (click)="toggleChartView()">Tabla</button>
+      <button class="toggle-btn" [class.active]="showChart" (click)="toggleChartView()">Gráfico</button>
+    </div>
+
+    <!-- Controles de filtro -->
+    <div class="filter-section">
+      <mat-form-field appearance="fill">
+        <mat-label>Filtrar por Resultado</mat-label>
+        <mat-select [value]="filterResultado" (selectionChange)="onFilterResultadoChange($event.value)">
+          <mat-option value="">Todos</mat-option>
+          <mat-option value="tested_positive">Perderá (tested_positive)</mat-option>
+          <mat-option value="tested_negative">No Perderá (tested_negative)</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Filtrar por Documento</mat-label>
+        <input matInput type="text" [value]="filterDocumento" (input)="onFilterDocumentoChange($event)" placeholder="Ej: 123456">
+      </mat-form-field>
+    </div>
+
+    <div *ngIf="!showChart" class="historial-container" [ngClass]="{'hidden': showChart}">
+      <div class="table-wrapper" *ngIf="paginatedHistorial.length > 0; else noHistorial">
+        <table class="inscripcion-table">
+          <thead>
+            <tr>
+              <th>Documento</th>
+              <th>Edad</th>
+              <th>Género</th>
+              <th>Horas de Estudio</th>
+              <th>Asistencia (%)</th>
+              <th>Promedio</th>
+              <th>Participación</th>
+              <th>Uso Plataforma</th>
+              <th>Antecedentes</th>
+              <th>Apoyo Familiar</th>
+              <th>Carga Académica</th>
+              <th>Problemas Personales</th>
+              <th>Resultado</th>
+              <th>Confianza</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let registro of paginatedHistorial">
+              <td data-label="Documento">{{ registro.documento }}</td>
+              <td data-label="Edad">{{ registro.edad }}</td>
+              <td data-label="Género">{{ registro.genero }}</td>
+              <td data-label="Horas de Estudio">{{ registro.horasEstudioSemanal }}</td>
+              <td data-label="Asistencia (%)">{{ registro.asistencia }}</td>
+              <td data-label="Promedio">{{ registro.promedioParciales }}</td>
+              <td data-label="Participación">{{ registro.participacionClases }}</td>
+              <td data-label="Uso Plataforma">{{ registro.usoPlataformaVirtual }}</td>
+              <td data-label="Antecedentes">{{ registro.antecedentesPerdida }}</td>
+              <td data-label="Apoyo Familiar">{{ registro.apoyoFamiliar }}</td>
+              <td data-label="Carga Académica">{{ registro.cargaAcademica }}</td>
+              <td data-label="Problemas Personales">{{ registro.problemasPersonales }}</td>
+              <td data-label="Resultado" [ngClass]="{
+                'resultado-positivo': registro.perderaAsignatura === 'tested_positive',
+                'resultado-negativo': registro.perderaAsignatura === 'tested_negative'
+              }">
+                {{ registro.perderaAsignatura }}
+              </td>
+              <td data-label="Confianza">{{ registro.confianza }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="paginator">
+          <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">Anterior</button>
+          <span>Página {{ currentPage }} de {{ totalPages }}</span>
+          <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">Siguiente</button>
+        </div>
+      </div>
+      <ng-template #noHistorial>
+        <p class="no-data-message">No hay predicciones en el historial o no coinciden con los filtros.</p>
+      </ng-template>
+    </div>
+
+    <div *ngIf="showChart" class="chart-container" [ngClass]="{'hidden': !showChart}">
+      <div class="bar-chart">
+        <div class="bar-item">
+          <div class="bar" [style.height.px]="getBarHeight(positiveCount)" style="background-color: #FF6384;"></div>
+          <span class="bar-label">tested_positive: {{ positiveCount }}</span>
+        </div>
+        <div class="bar-item">
+          <div class="bar" [style.height.px]="getBarHeight(negativeCount)" style="background-color: #36A2EB;"></div>
+          <span class="bar-label">tested_negative: {{ negativeCount }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

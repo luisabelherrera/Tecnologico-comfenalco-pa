@@ -10,7 +10,7 @@ export class ThemeCustomizerComponent implements OnInit {
   themes: Theme[] = [];
   selectedTheme: Theme = {
     name: '',
-    backgroundColor: '#ffffff',  // Default single color
+    backgroundColor: '#ffffff',
     textColor: '#333333',
     isActive: true
   };
@@ -44,6 +44,18 @@ export class ThemeCustomizerComponent implements OnInit {
       delete this.selectedTheme.backgroundColor;
       this.selectedTheme.backgroundColorLeft = '#f0f0f0';
       this.selectedTheme.backgroundColorRight = '#ffffff';
+    }
+  }
+
+  deleteTheme(themeId: string) {
+    if (confirm('¿Estás seguro de que deseas eliminar este tema?')) {
+      this.temaHeaderService.deleteTheme(themeId).subscribe({
+        next: () => {
+          console.log('Tema eliminado exitosamente');
+          this.themes = this.themes.filter(theme => theme.id !== themeId);
+        },
+        error: (err) => console.error('Error al eliminar el tema:', err)
+      });
     }
   }
 

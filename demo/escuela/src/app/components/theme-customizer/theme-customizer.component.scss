@@ -1,86 +1,136 @@
 .theme-customizer {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #ffffff, #f0f0f0);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+
+  section {
+    background: white;
+    padding: 1.5rem;
     border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
   }
-  
-  .theme-creator, .predefined-themes, .saved-themes {
-    margin-bottom: 30px;
+
+  h3 {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 0.5rem;
   }
-  
-  h3, h4 {
-    color: #333;
-    margin-bottom: 15px;
+
+  h4 {
+    font-size: 1.4rem;
+    color: #34495e;
+    margin-bottom: 1rem;
   }
-  
+
   .form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
+    margin-bottom: 1.2rem;
+
+    label {
+      font-weight: 500;
+      color: #4a5568;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .form-control {
+      padding: 0.8rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+
+      &:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        outline: none;
+      }
+    }
+
+    .color-picker {
+      width: 120px;
+      height: 45px;
+      border-radius: 6px;
+      border: 2px solid #e2e8f0;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
   }
-  
-  .form-group label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #555;
-  }
-  
-  .form-control {
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
-  .color-picker {
-    width: 100px;
-    height: 40px;
-    border: none;
-    cursor: pointer;
-  }
-  
+
   .btn {
-    padding: 8px 16px;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
     border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
+
+    &-save {
+      background: linear-gradient(145deg, #2ecc71, #27ae60);
+      color: white;
+      
+      &:hover {
+        background: linear-gradient(145deg, #27ae60, #219a52);
+        transform: translateY(-2px);
+      }
+    }
+
+    &-theme {
+      background: linear-gradient(145deg, #3498db, #2980b9);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      
+      &:hover:not(:disabled) {
+        background: linear-gradient(145deg, #2980b9, #2472a4);
+        transform: translateY(-1px);
+      }
+
+      &.active {
+        background: #95a5a6;
+      }
+
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+    }
+
+    &-delete {
+      background: linear-gradient(145deg, #e74c3c, #c0392b);
+      color: white;
+      padding: 0.6rem 1rem;
+      margin-left: 0.5rem;
+
+      &:hover {
+        background: linear-gradient(145deg, #c0392b, #a93226);
+        transform: translateY(-1px);
+      }
+    }
   }
-  
-  .btn-save {
-    background-color: #28a745;
-    color: white;
-  }
-  
-  .btn-save:hover {
-    background-color: #218838;
-  }
-  
+
   .theme-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+
+    .theme-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
   }
-  
-  .btn-theme {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  .btn-theme:hover:not(:disabled) {
-    background-color: #0056b3;
-  }
-  
-  .btn-theme.active {
-    background-color: #6c757d;
-    cursor: default;
-  }
-  
-  .btn-theme:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+}

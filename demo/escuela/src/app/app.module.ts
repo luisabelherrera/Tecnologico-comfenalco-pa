@@ -81,11 +81,14 @@ import { NoticiaService } from './services/Menu/Menu.service';
 import { AsistenciaComponent } from './components/vista-docente/asistencia/asistencia/asistencia.component';
 import { HistorialAsistenciaComponent } from './components/vista-docente/asistencia/historial-asistencia/historial-asistencia/historial-asistencia.component';
 import { PreguntasJuegosComponent } from './components/ventanas-para-invitados/juegos/juegos/preguntas/preguntas-juegos/preguntas-juegos.component';
-import { DashboardComponent } from './components/dashboard/dashboard/dashboard.component';
 import { InscripciondetalleComponent } from './components/matricula/dialog/incripciondetalle/incripciondetalle.component';
 import { FacturaComponent } from './components/matricula/dialog/incripciondetalle/factura/factura.component';
 import { PrediccionComponent } from './components/prediccion/prediccion/prediccion.component';
 import { StudentSearchDialog } from './components/prediccion/dialogo/dialogo-prediccion/dialogo-prediccion.component';
+import { WekaComponent } from './components/prediciones/weka/weka.component';
+import { StudentSelectionDialogComponent } from './components/prediciones/weka/dialogo/student-selection-dialog.component';
+import { DocenteAnalizaComponent } from './components/vista-docente/docente-analiza/docente-analiza.component';
+import { WekaEstudiantesComponent } from './components/vista-docente/docente-analiza/estudiante-weka/weka-estudiantes/weka-estudiantes.component';
 
 @NgModule({
   imports: [
@@ -120,6 +123,11 @@ import { StudentSearchDialog } from './components/prediccion/dialogo/dialogo-pre
     NoopAnimationsModule
   ],
   declarations: [
+    WekaComponent,
+    WekaEstudiantesComponent,
+    DocenteAnalizaComponent,
+    StudentSelectionDialogComponent,
+    WekaComponent,
     PrediccionComponent,
     AppComponent,
     HomeComponent,
@@ -167,7 +175,7 @@ import { StudentSearchDialog } from './components/prediccion/dialogo/dialogo-pre
     AsistenciaComponent,
     HistorialAsistenciaComponent,
     PreguntasJuegosComponent,
-    DashboardComponent,
+  
     AgregarNoticiaComponent,
     ImagenDialogComponent,
     RecursoComponent,

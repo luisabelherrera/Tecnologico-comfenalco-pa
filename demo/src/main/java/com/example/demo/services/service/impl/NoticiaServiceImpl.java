@@ -26,7 +26,7 @@ public class NoticiaServiceImpl implements NoticiaService {
     @Autowired
     private NoticiaRepository noticiaRepository;
 
-    private static final String UPLOAD_DIR = "upload/"; // Directory to store files
+    private static final String UPLOAD_DIR = "/upload/"; // Directory to store files
 
     @Override
 public Noticia crearNoticia(NoticiaDTO noticiaDTO) {

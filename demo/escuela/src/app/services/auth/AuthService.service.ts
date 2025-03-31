@@ -122,6 +122,9 @@ export class AuthService {
     this.isManagerSubject.next(isManager);
   }
 
+
+
+
   private redirectUser(roles: string[]) {
     if (roles.includes('Administracion')) {
       this.router.navigate(['/home']);

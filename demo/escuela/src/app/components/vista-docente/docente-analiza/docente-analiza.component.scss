@@ -1,0 +1,180 @@
+body {
+  background: linear-gradient(135deg, #eceff1 0%, #b0bec5 100%);
+  min-height: 100vh;
+}
+
+.container-fluid {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.curricular-card {
+  background: #ffffff;
+  border-radius: 10px;
+}
+
+.form-card {
+  background: #f8f9fa;
+}
+
+.card-header {
+  padding: 1rem;
+  border-bottom: none;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.table {
+  margin: 0;
+  width: 100%;
+}
+
+.table th, .table td {
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.table thead th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.table tbody tr:hover {
+  background: #f1f3f5;
+}
+
+.progress {
+  height: 8px;
+  border-radius: 4px;
+  background: #e9ecef;
+}
+
+.badge {
+  font-size: 0.85rem;
+  padding: 0.4rem 0.6rem;
+}
+
+.btn-custom {
+  padding: 0.6rem 1.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.btn-custom:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-lg {
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+}
+
+.form-control, .form-select {
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  padding: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+}
+
+.input-group-text {
+  border: none;
+  background: #e9ecef;
+  border-radius: 8px 0 0 8px;
+}
+
+.invalid-feedback {
+  font-size: 0.8rem;
+  color: #dc3545;
+}
+
+.alert {
+  border-radius: 10px;
+  background: #e7f1ff;
+  border: 1px solid #b8daff;
+  color: #004085;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .table th, .table td {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .btn-custom {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .d-flex.gap-3 {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .container-fluid {
+    padding: 1rem;
+  }
+
+  .card-header h2, .card-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .table {
+    font-size: 0.85rem;
+  }
+
+  .form-control, .form-select {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+
+  .btn-lg {
+    width: 100%;
+    padding: 0.7rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .table th, .table td {
+    padding: 0.4rem;
+    font-size: 0.8rem;
+  }
+
+  .progress {
+    height: 6px;
+  }
+
+  .badge {
+    font-size: 0.75rem;
+  }
+
+  .input-group-text {
+    padding: 0.5rem;
+  }
+}

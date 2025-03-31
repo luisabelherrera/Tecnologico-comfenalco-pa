@@ -13,7 +13,7 @@ export class AcudienteService {
   private apiUrl = `${environment.apiUrl}api/acudientes`;
 
   constructor(private http: HttpClient, private authService: AuthService) {}
-
+  
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('accessToken');
     return new HttpHeaders({

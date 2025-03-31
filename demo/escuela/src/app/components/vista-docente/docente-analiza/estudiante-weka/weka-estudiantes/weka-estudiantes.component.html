@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Seleccionar Estudiante</h2>
+    <mat-dialog-content>
+      <mat-list>
+        <mat-list-item *ngFor="let estudiante of data.estudiantes" (click)="selectStudent(estudiante)">
+          <span matListItemTitle>{{ estudiante.nombres }} {{ estudiante.apellidos }}</span>
+          <span matListItemLine>Documento: {{ estudiante.documentoIdentidad }}</span>
+        </mat-list-item>
+        <mat-list-item *ngIf="data.estudiantes.length === 0">
+          <span matListItemTitle>No hay estudiantes inscritos en este curso.</span>
+        </mat-list-item>
+      </mat-list>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-button (click)="dialogRef.close()">Cancelar</button>
+    </mat-dialog-actions>

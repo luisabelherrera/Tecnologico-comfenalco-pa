@@ -50,7 +50,19 @@ export class TemaHeaderService {
       tap(savedTheme => this.applyTheme(savedTheme))
     );
   }
-
+  deleteTheme(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() }).pipe(
+      tap(() => {
+        // If the deleted theme was the current theme, reset to default
+        const currentTheme = this.getCurrentTheme();
+        if (currentTheme.id === id) {
+          this.loadActiveTheme(); // This will load the new active theme
+        }
+      }),
+      retry(2)
+    );
+  }
+  
   applyTheme(theme: Theme) {
     console.log('Aplicando tema en el frontend:', theme);
     this.currentThemeSubject.next(theme);

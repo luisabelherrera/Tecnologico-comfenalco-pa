@@ -60,19 +60,18 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/matricula', icon: 'assignment_ind', title: 'Matrícula' },
   ];
   configuraciones = [
-    { path: '/dashboard', icon: 'insights', title: 'Dashboard Prediccion' },
+
     { path: '/periodo', icon: 'calendar_today', title: 'Crear Periodo' },
     { path: '/nivel', icon: 'school', title: 'Nivel Académico' },
-    { path: '/grado-seccion', icon: 'class', title: 'Grado y Sección' },
-    { path: '/niveldetalle', icon: 'list', title: 'Cupos' },
+    { path: '/grado-seccion', icon: 'groups', title: 'Grado y Sección' },
+    { path: '/niveldetalle', icon: 'people_outline', title: 'Cupos' },
     { path: '/horario', icon: 'schedule', title: 'Horario' },
     { path: '/docentes/detalle', icon: 'assignment_ind', title: 'Docentes y Cursos' },
-    { path: '/predicciones', icon: 'assignment_ind', title: 'predicciones' },
+    { path: '/weka', icon: 'bar_chart', title: 'weka' },
   ];
   Menu = [
     { path: '/agregar-noticia', icon: 'post_add', title: 'Agregar Noticia' },
     { path: '/chat-gestion', icon: 'chat', title: 'Gestionar Chat' },
-    { path: '/Descripcion', icon: 'edit_note', title: 'Modificar Descripción' },
     { path: '/header', icon: 'web', title: 'Personalizar Header' },
   ];
   
@@ -80,16 +79,22 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/registro', icon: 'person_add', title: 'Registrar' },
   ];
   userLinks = [
-    { path: '/ventana2', icon: 'grade', title: 'Mi Perfil' },
-    { path: '/curricularDocente', icon: 'book', title: 'Curricular' },
-    { path: '/horarioDocente', icon: 'schedule', title: 'Horario' },
-    { path: '/asistencia', icon: 'grade', title: 'asistencia' },
+    { path: '/ventana2', icon: 'person', title: 'Mi Perfil' },
+    { path: '/curricularDocente', icon: 'school', title: 'Calificaciones' },
+    { path: '/horarioDocente', icon: 'schedule', title: 'Mi Horario' },
+    { path: '/asistencia', icon: 'fact_check', title: 'Control de Asistencia' },
+
+
+
+    
+    { path: '/docente-weka', icon: 'analytics', title: 'Rendimiento Estudiantil' },
   ];
   Ventana3Links = [
-    { path: '/perfil-estudiante', icon: 'schedule', title: 'Mi Perfil' },
-    { path: '/ventana3', icon: 'grade', title: 'Calificación' },
-  
+    { path: '/perfil-estudiante', icon: 'account_circle', title: 'Mi Perfil' },
+    { path: '/ventana3', icon: 'assessment', title: 'Mis Calificaciones' },
     { path: '/horarioEstudiante', icon: 'schedule', title: 'Mi Horario' },
+    { path: '/encuesta-estudiante', icon: 'edit_note', title: 'Encuesta Estudiantil' },
+    { path: '/material-estudio', icon: 'import_contacts', title: 'Material de Estudio' },
   ];
 
   notifications: string[] = [];

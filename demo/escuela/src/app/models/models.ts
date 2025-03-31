@@ -33,7 +33,7 @@ export interface UserDto {
   username: string;
   email: string;
   roles: RoleDto[];
-  password?: string; // Optional as it’s not always returned
+  password?: string;
   estudiante: Estudiante | null;
-  docente: Docente | null; // Renamed from docenteInfo for consistency
+  docente: Docente | null; 
 }

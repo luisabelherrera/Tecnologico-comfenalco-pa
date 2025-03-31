@@ -116,10 +116,10 @@ body {
   top: 0;
   left: 0;
   z-index: 1000;
-  background-color: white;
+  background-color: #ffffff;
   padding: 1rem 0;
-  box-shadow: $shadow;
-  border-bottom: 1px solid $border-color;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid #e5e7eb;
   
   .header-container {
     @include flex(row, space-between, center);

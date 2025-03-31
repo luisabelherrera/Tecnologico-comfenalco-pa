@@ -59,6 +59,35 @@ public class ThemeController {
         }
     }
 
+    @DeleteMapping("/{id}")
+public ResponseEntity<?> deleteTheme(@PathVariable String id) {
+    try {
+        Theme theme = themeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Theme not found"));
+        
+
+        if (theme.isActive()) {
+            List<Theme> themes = themeRepository.findAll();
+            if (themes.size() > 1) {
+                Theme newActiveTheme = themes.stream()
+                        .filter(t -> !t.getId().equals(id))
+                        .findFirst()
+                        .orElse(null);
+                if (newActiveTheme != null) {
+                    newActiveTheme.setActive(true);
+                    themeRepository.save(newActiveTheme);
+                }
+            }
+        }
+
+        themeRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    } catch (Exception e) {
+        return ResponseEntity.badRequest().body("Error deleting theme: " + e.getMessage());
+    }
+}
+
+
     @PostMapping
     public Theme saveTheme(@RequestBody Theme theme) {
         List<Theme> existingThemes = themeRepository.findAll();
