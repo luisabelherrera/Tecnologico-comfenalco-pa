@@ -7,7 +7,7 @@ import { PeriodoService } from 'src/app/services/periodo/periodo.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-periodo',
@@ -32,7 +32,8 @@ export class PeriodoComponent implements OnInit, OnDestroy {
   constructor(
     private periodoService: PeriodoService,
     private fb: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router // Inject Router
   ) {
     this.periodoForm = this.fb.group({
       descripcion: ['', Validators.required],
@@ -64,35 +65,14 @@ export class PeriodoComponent implements OnInit, OnDestroy {
 
   checkQueryParams() {
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
-      if (params['descripcion']) {
-        this.showForm = true; // Show form when query params are present
-        const periodoData = {
-          descripcion: params['descripcion'],
-          fechaInicio: new Date(params['fechaInicio']),
-          fechaFin: new Date(params['fechaFin']),
-          activo: params['activo'] === 'true'
-        };
+      const action = params['action'];
 
-        if (isNaN(periodoData.fechaInicio.getTime()) || isNaN(periodoData.fechaFin.getTime())) {
-          console.error('Fechas inválidas en query params');
-          return;
-        }
-
-        this.periodoForm.patchValue(periodoData);
-        this.simulateCreation();
+      if (action === 'crear') {
+        this.showForm = true; // Show the form
+      } else if (action === 'consultar') {
+        this.showForm = false; // Show the list
       }
     });
-  }
-
-  simulateCreation() {
-    if (this.periodoForm.valid) {
-      console.log('Simulando creación con:', this.periodoForm.value);
-      setTimeout(() => {
-        this.createPeriodo();
-      }, 2000);
-    } else {
-      console.warn('Formulario inválido al simular creación:', this.periodoForm.errors);
-    }
   }
 
   applyFilter(event: Event): void {

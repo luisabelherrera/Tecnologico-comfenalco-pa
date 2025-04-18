@@ -1,0 +1,135 @@
+<div class="container">
+    <h1>Información Institucional</h1>
+  
+    <!-- Indicador de carga -->
+    <div class="loading" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Cargando...</p>
+    </div>
+  
+    <!-- Mensaje de error -->
+    <div class="error" *ngIf="errorMessage && !isLoading">
+      <p>{{ errorMessage }}</p>
+      <button class="retry-btn" (click)="loadInformacion()">Reintentar</button>
+    </div>
+  
+    <!-- Vista de información o formulario -->
+    <div class="content" *ngIf="!isLoading && !errorMessage">
+      <!-- Vista de información -->
+      <div class="info-view" *ngIf="!isEditing">
+        <div class="info-card" *ngIf="informacion">
+          <h2>{{ informacion.nombreInstitucion }}</h2>
+          <p><strong>Misión:</strong> {{ informacion.mision }}</p>
+          <p><strong>Visión:</strong> {{ informacion.vision }}</p>
+          <p><strong>Historia:</strong> {{ informacion.historia || 'No disponible' }}</p>
+          <p><strong>Valores:</strong> {{ informacion.valores || 'No disponible' }}</p>
+          <p><strong>Objetivos:</strong> {{ informacion.objetivos || 'No disponible' }}</p>
+          <p><strong>Contacto:</strong> {{ informacion.contacto || 'No disponible' }}</p>
+          <p><strong>Niveles Educativos:</strong> {{ informacion.nivelesEducativos || 'No disponible' }}</p>
+          <p><strong>Énfasis:</strong> {{ informacion.enfasisInstitucional || 'No disponible' }}</p>
+          <p><strong>Preparación ICFES:</strong> {{ informacion.preparacionIcfes || 'No disponible' }}</p>
+          <p><strong>Programas Especiales:</strong> {{ informacion.programasEspeciales || 'No disponible' }}</p>
+          <p><strong>Convenios:</strong> {{ informacion.convenios || 'No disponible' }}</p>
+          <p><strong>Actividades Extracurriculares:</strong> {{ informacion.actividadesExtracurriculares || 'No disponible' }}</p>
+          <p><strong>Pastoral/Catequesis:</strong> {{ informacion.pastoralOCatequesis || 'No disponible' }}</p>
+          <p *ngIf="informacion.manualConvivenciaPath"><strong>Manual de Convivencia:</strong> <a [href]="informacion.manualConvivenciaPath" target="_blank">Ver</a></p>
+          <p *ngIf="informacion.reglamentoInternoPath"><strong>Reglamento Interno:</strong> <a [href]="informacion.reglamentoInternoPath" target="_blank">Ver</a></p>
+          <p *ngIf="informacion.planDeEstudiosPath"><strong>Plan de Estudios:</strong> <a [href]="informacion.planDeEstudiosPath" target="_blank">Ver</a></p>
+          <p *ngIf="informacion.calendarioAcademicoPath"><strong>Calendario Académico:</strong> <a [href]="informacion.calendarioAcademicoPath" target="_blank">Ver</a></p>
+          <p *ngIf="informacion.logoPath"><strong>Logo:</strong> <img [src]="informacion.logoPath" alt="Logo" class="logo-preview"></p>
+          <button class="edit-btn" (click)="startEditingOrCreating()">Editar</button>
+        </div>
+        <div class="no-data" *ngIf="!informacion">
+          <p>No hay información institucional registrada.</p>
+          <button class="create-btn" (click)="startEditingOrCreating()">Crear Información</button>
+        </div>
+      </div>
+  
+      <!-- Formulario para crear o editar -->
+      <div class="form-container" *ngIf="isEditing">
+        <h2>{{ informacion ? 'Editar Información' : 'Crear Información' }}</h2>
+        <form class="info-form">
+          <div class="form-group">
+            <label for="nombreInstitucion">Nombre de la Institución *</label>
+            <input id="nombreInstitucion" [(ngModel)]="editedInfo.nombreInstitucion" name="nombreInstitucion" required placeholder="Ej: Colegio San Juan">
+          </div>
+          <div class="form-group">
+            <label for="mision">Misión *</label>
+            <textarea id="mision" [(ngModel)]="editedInfo.mision" name="mision" required placeholder="Describe la misión..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="vision">Visión *</label>
+            <textarea id="vision" [(ngModel)]="editedInfo.vision" name="vision" required placeholder="Describe la visión..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="historia">Historia</label>
+            <textarea id="historia" [(ngModel)]="editedInfo.historia" name="historia" placeholder="Breve historia..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="valores">Valores</label>
+            <textarea id="valores" [(ngModel)]="editedInfo.valores" name="valores" placeholder="Ej: Respeto, Integridad..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="objetivos">Objetivos</label>
+            <textarea id="objetivos" [(ngModel)]="editedInfo.objetivos" name="objetivos" placeholder="Objetivos principales..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="contacto">Contacto</label>
+            <input id="contacto" [(ngModel)]="editedInfo.contacto" name="contacto" placeholder="Ej: info@colegio.com">
+          </div>
+          <div class="form-group">
+            <label for="nivelesEducativos">Niveles Educativos</label>
+            <input id="nivelesEducativos" [(ngModel)]="editedInfo.nivelesEducativos" name="nivelesEducativos" placeholder="Ej: Preescolar, Primaria...">
+          </div>
+          <div class="form-group">
+            <label for="enfasisInstitucional">Énfasis Institucional</label>
+            <input id="enfasisInstitucional" [(ngModel)]="editedInfo.enfasisInstitucional" name="enfasisInstitucional" placeholder="Ej: Arte, Ciencias...">
+          </div>
+          <div class="form-group">
+            <label for="preparacionIcfes">Preparación ICFES</label>
+            <input id="preparacionIcfes" [(ngModel)]="editedInfo.preparacionIcfes" name="preparacionIcfes" placeholder="Detalles...">
+          </div>
+          <div class="form-group">
+            <label for="programasEspeciales">Programas Especiales</label>
+            <input id="programasEspeciales" [(ngModel)]="editedInfo.programasEspeciales" name="programasEspeciales" placeholder="Ej: Robótica...">
+          </div>
+          <div class="form-group">
+            <label for="convenios">Convenios</label>
+            <input id="convenios" [(ngModel)]="editedInfo.convenios" name="convenios" placeholder="Ej: Universidades...">
+          </div>
+          <div class="form-group">
+            <label for="actividadesExtracurriculares">Actividades Extracurriculares</label>
+            <input id="actividadesExtracurriculares" [(ngModel)]="editedInfo.actividadesExtracurriculares" name="actividadesExtracurriculares" placeholder="Ej: Deportes...">
+          </div>
+          <div class="form-group">
+            <label for="pastoralOCatequesis">Pastoral o Catequesis</label>
+            <input id="pastoralOCatequesis" [(ngModel)]="editedInfo.pastoralOCatequesis" name="pastoralOCatequesis" placeholder="Detalles...">
+          </div>
+          <div class="form-group">
+            <label for="manualConvivenciaPath">Manual de Convivencia (URL)</label>
+            <input id="manualConvivenciaPath" [(ngModel)]="editedInfo.manualConvivenciaPath" name="manualConvivenciaPath" placeholder="URL...">
+          </div>
+          <div class="form-group">
+            <label for="reglamentoInternoPath">Reglamento Interno (URL)</label>
+            <input id="reglamentoInternoPath" [(ngModel)]="editedInfo.reglamentoInternoPath" name="reglamentoInternoPath" placeholder="URL...">
+          </div>
+          <div class="form-group">
+            <label for="planDeEstudiosPath">Plan de Estudios (URL)</label>
+            <input id="planDeEstudiosPath" [(ngModel)]="editedInfo.planDeEstudiosPath" name="planDeEstudiosPath" placeholder="URL...">
+          </div>
+          <div class="form-group">
+            <label for="calendarioAcademicoPath">Calendario Académico (URL)</label>
+            <input id="calendarioAcademicoPath" [(ngModel)]="editedInfo.calendarioAcademicoPath" name="calendarioAcademicoPath" placeholder="URL...">
+          </div>
+          <div class="form-group">
+            <label for="logoPath">Logo (URL)</label>
+            <input id="logoPath" [(ngModel)]="editedInfo.logoPath" name="logoPath" placeholder="URL del logo...">
+          </div>
+          <div class="form-actions">
+            <button type="button" (click)="saveInformacion()" [disabled]="isLoading">Guardar</button>
+            <button type="button" (click)="cancelEditing()" [disabled]="isLoading">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

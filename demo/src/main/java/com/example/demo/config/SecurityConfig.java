@@ -48,7 +48,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/notificaciones").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/notificaciones").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/noticias").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/noticias/imagen/**").permitAll() // Optional: for images
+                        .requestMatchers(HttpMethod.GET, "/api/noticias/imagen/**").permitAll()
                         .requestMatchers("/api/themes/active").permitAll()
                         .requestMatchers("/api/themes/**").authenticated()
                         .requestMatchers("/controller/**").permitAll()
@@ -57,8 +57,15 @@ public class SecurityConfig {
                         .requestMatchers("/api/register/**").hasAuthority("Administracion")
                         .requestMatchers("/chat-websocket/**").permitAll()
                         .requestMatchers("/api/calificaciones/**").permitAll()
-                        
                         .requestMatchers("/api/fileManager/files/**").permitAll()
+                        // NUEVOS: permisos para /api/institucion
+
+                        .requestMatchers("/api/institucion").permitAll()
+                        // Nuevos endpoints públicos para precios
+                        .requestMatchers(HttpMethod.GET, "/api/precios/public").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/precios/imagen/public/**").permitAll()
+                        // Endpoints protegidos para administradores
+                        .requestMatchers("/api/precios/**").authenticated()
                         .requestMatchers("/admin").hasAuthority("Administracion")
                         .requestMatchers("/docente").hasAuthority("Docente")
                         .requestMatchers("/estudiante").hasAuthority("Estudiante")

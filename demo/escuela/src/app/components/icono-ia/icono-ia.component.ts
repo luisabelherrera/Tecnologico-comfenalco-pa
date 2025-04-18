@@ -3,6 +3,10 @@ import { ChatMessage } from './models-ia/chat-message.interface';
 import { ChatHistoryService } from './services-ia/chat-history.service';
 import { PlatformHandlerService } from './services-ia/platform-handler.service';
 import { StudentHandlerService } from './services-ia/student-handler.service';
+import { Router } from '@angular/router';
+import { WekaService } from './WekaService/weka.service';
+import { GeminiService } from './constants-ia/constants-ia';
+import { PeriodoHandlerService } from './services-ia/periodo-handler.service';
 
 @Component({
   selector: 'app-icono-ia',
@@ -23,7 +27,11 @@ export class IconoIaComponent {
   constructor(
     private chatHistoryService: ChatHistoryService,
     private studentHandlerService: StudentHandlerService,
-    private platformHandlerService: PlatformHandlerService
+    private platformHandlerService: PlatformHandlerService,
+    private wekaService: WekaService,
+    private geminiService: GeminiService, // Inject GeminiService
+    private router: Router,
+    private periodoHandlerService: PeriodoHandlerService // Inject PeriodoHandlerService
   ) {
     this.chatHistory = this.chatHistoryService.getChatHistory();
     if ('webkitSpeechRecognition' in window) {
@@ -85,17 +93,112 @@ export class IconoIaComponent {
       this.userInput = '';
     }
   }
+private handleQuery(transcript: string) {
+  const periodKeywords = ['periodo', 'periodos', 'año', 'semestre'];
+  const studentKeywords = ['estudiante', 'estudiantes', 'alumno', 'alumnos'];
 
-  private handleQuery(transcript: string) {
-    if (this.isInStudentPlatform && this.studentHandlerService.handleStudentPlatformQuery(transcript, this.isInHoboPlatform, this.speak.bind(this))) {
-      // La consulta fue manejada por el StudentHandlerService
-      console.log('Consulta manejada por StudentHandlerService');
-    } else if (this.platformHandlerService.handlePlatformQuery(transcript, this.isInHoboPlatform, this.userRole, this.speak.bind(this))) {
-      // La consulta fue manejada por el PlatformHandlerService
-      console.log('Consulta manejada por PlatformHandlerService');
+  if (periodKeywords.some(keyword => transcript.includes(keyword)) ||
+      studentKeywords.some(keyword => transcript.includes(keyword))) {
+    // Use Weka for period-related or student-related queries
+    this.wekaService.predictIntention(transcript).subscribe({
+      next: (response) => {
+        const predictedIntention = response.intencion;
+        console.log('Weka - 🎯 Intención predicha por Weka:', predictedIntention);
+
+        switch (predictedIntention) {
+          case 'crear_periodo':
+          case 'periodo': {
+            // Start the period creation flow
+            if (!this.periodoHandlerService.handlePeriodoCreationFlow(transcript, this.speak.bind(this))) {
+              // If the creation flow is not complete, do nothing
+              break;
+            }
+
+            // If the creation flow is complete, navigate to the period creation page with the data
+            const periodoData = this.periodoHandlerService.periodoData;
+            this.responseText = 'Dirigiéndote a la página de periodos...';
+            this.speak(this.responseText);
+            this.router.navigate(['/periodo'], {
+              queryParams: {
+                action: 'crear',
+                descripcion: periodoData.descripcion,
+                fechaInicio: periodoData.fechaInicio?.toISOString(),
+                fechaFin: periodoData.fechaFin?.toISOString(),
+                activo: periodoData.activo,
+              },
+            });
+            break;
+          }
+          case 'consultar_periodos':
+            this.responseText = 'Mostrando los periodos...';
+            this.speak(this.responseText);
+            this.router.navigate(['/periodo'], { queryParams: { action: 'consultar' } });
+            break;
+          case 'crear_estudiante':
+            this.responseText = 'Dirigiéndote a la página de creación de estudiantes...';
+            this.speak(this.responseText);
+            this.router.navigate(['/estudiante/crear'], { queryParams: { action: 'crear' } });
+            break;
+          case 'consultar_estudiantes':
+            this.responseText = 'Mostrando la lista de estudiantes...';
+            this.speak(this.responseText);
+            this.router.navigate(['/estudiante/listar'], { queryParams: { action: 'consultar' } });
+            break;
+          default:
+            // If Weka doesn't recognize the intent, use Gemini
+            this.geminiService.generateContent(transcript).subscribe({
+              next: (geminiResponse: any) => {
+                this.responseText = geminiResponse.candidates[0].content.parts[0].text;
+                this.speak(this.responseText);
+              },
+              error: (geminiError: any) => {
+                console.error('Gemini - ❌ Error al comunicarse con Gemini:', geminiError);
+                this.responseText = 'Lo siento, no pude obtener una respuesta.';
+                this.speak(this.responseText);
+              }
+            });
+        }
+      },
+      error: (wekaError) => {
+        console.error('Weka - ❌ Error al comunicarse con Weka:', wekaError);
+        this.responseText = 'Hubo un error al procesar tu solicitud.';
+        this.speak(this.responseText);
+      }
+    });
+  } else {
+    // Use Gemini for greetings and general conversation
+    if (this.isGreeting(transcript)) {
+      this.geminiService.generateContent(transcript).subscribe({
+        next: (geminiResponse: any) => {
+          this.responseText = geminiResponse.candidates[0].content.parts[0].text;
+          this.speak(this.responseText);
+        },
+        error: (geminiError: any) => {
+          console.error('Gemini - ❌ Error al comunicarse con Gemini:', geminiError);
+          this.responseText = 'Lo siento, no pude obtener una respuesta.';
+          this.speak(this.responseText);
+        }
+      });
     } else {
-      this.speak('Lo siento, no entendí tu solicitud.');
+      // If it's not a greeting, use Gemini
+      this.geminiService.generateContent(transcript).subscribe({
+        next: (geminiResponse: any) => {
+          this.responseText = geminiResponse.candidates[0].content.parts[0].text;
+          this.speak(this.responseText);
+        },
+        error: (geminiError: any) => {
+          console.error('Gemini - ❌ Error al comunicarse con Gemini:', geminiError);
+          this.responseText = 'Lo siento, no pude obtener una respuesta.';
+          this.speak(this.responseText);
+        }
+      });
     }
+  }
+}
+  // Helper function to check if the input is a greeting
+  private isGreeting(text: string): boolean {
+    const greetings = ['hola', 'buenos dias', 'buenas tardes', 'buenas noches', 'que tal', 'como estas', 'como te va'];
+    return greetings.some(greeting => text.includes(greeting));
   }
 
   enterStudentPlatform() {
@@ -143,7 +246,7 @@ export class IconoIaComponent {
       const voiceIndicator = document.querySelector('.voice-indicator');
       if (voiceIndicator) voiceIndicator.classList.remove('active');
     }
-    this.responseText = 'IA detenida en El Hobo.';
+    this.responseText = 'IA detenida en Eduportal.';
     this.chatHistoryService.addToChatHistory('ai', this.responseText);
   }
 

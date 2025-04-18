@@ -353,7 +353,7 @@ button.mat-mini-fab {
   box-shadow:
     inset 0 2px rgba(255, 255, 255, 0.25), /* Proporcional a 40px */
     inset 0 -2px rgba(0, 0, 0, 0.25);
-  border: solid 1px white; /* Reducido proporcionalmente */
+  border: solid 1px rgb(0, 0, 0); /* Reducido proporcionalmente */
   animation: startround 1s;
   animation-iteration-count: 1;
 }

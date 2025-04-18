@@ -1,0 +1,138 @@
+.material-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.no-curriculares {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.form {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+
+  .curricular-field {
+    flex: 1;
+  }
+
+  .generate-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+
+  .loading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+}
+
+.content {
+  display: flex;
+  gap: 20px;
+
+  .temas-nav {
+    width: 250px;
+    flex-shrink: 0;
+
+    .tema-item {
+      padding: 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.2s;
+
+      &.selected,
+      &:hover {
+        background-color: #f5f5f5;
+      }
+
+      .tema-icon {
+        font-size: 20px;
+      }
+
+      .tema-title {
+        flex: 1;
+      }
+    }
+  }
+
+  .content-area {
+    flex: 1;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  .tema-content {
+    h3 {
+      margin-top: 0;
+    }
+  }
+
+  .videos {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio (9/16 = 0.5625) */
+    height: 0;
+    overflow: hidden;
+
+    iframe.youtube-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  }
+
+  .error {
+    color: red;
+    font-style: italic;
+  }
+
+  .text-content {
+    white-space: pre-wrap;
+    line-height: 1.6;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}

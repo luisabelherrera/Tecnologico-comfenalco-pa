@@ -1,17 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { Estudiante } from 'src/app/models/entity/Estudiante.interface';
 import { EstudianteService } from 'src/app/services/estudiante/estudiante.service';
 import { StudentSelectionDialogComponent } from './dialogo/student-selection-dialog.component';
+import Chart from 'chart.js/auto';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-weka',
   templateUrl: './weka.component.html',
   styleUrls: ['./weka.component.scss']
 })
-export class WekaComponent implements OnInit {
+export class WekaComponent implements OnInit, AfterViewInit {
+  @ViewChild('barChart') barChart!: ElementRef<HTMLCanvasElement>;
   studentForm: FormGroup;
   resultado: string = '';
   showForm: boolean = true;
@@ -22,13 +25,15 @@ export class WekaComponent implements OnInit {
   itemsPerPage: number = 5;
   totalPages: number = 1;
   showChart: boolean = false;
+  chart: any;
 
   positiveCount: number = 0;
   negativeCount: number = 0;
-  maxBarHeight: number = 200;
 
   filterResultado: string = '';
   filterDocumento: string = '';
+
+  confidenceVisibility: { [key: number]: boolean } = {};
 
   constructor(
     private fb: FormBuilder,
@@ -42,18 +47,22 @@ export class WekaComponent implements OnInit {
       genero: ['', Validators.required],
       horasEstudioSemanal: ['', [Validators.required, Validators.min(0)]],
       asistencia: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
-      promedioParciales: ['', [Validators.required, Validators.min(0), Validators.max(5)]], // Ajustado a 0-5 como en ARFF
+      promedioParciales: ['', [Validators.required, Validators.min(0), Validators.max(5)]],
       participacionClases: ['', Validators.required],
       usoPlataformaVirtual: ['', Validators.required],
       antecedentesPerdida: ['', Validators.required],
-      apoyoFamiliar: ['', Validators.required],        // Nuevo
-      cargaAcademica: ['', [Validators.required, Validators.min(1), Validators.max(5)]], // Nuevo
-      problemasPersonales: ['', Validators.required]   // Nuevo
+      apoyoFamiliar: ['', Validators.required],
+      cargaAcademica: ['', [Validators.required, Validators.min(1), Validators.max(5)]],
+      problemasPersonales: ['', Validators.required]
     });
   }
 
   ngOnInit() {
     this.cargarHistorial();
+  }
+
+  ngAfterViewInit() {
+    this.createChart();
   }
 
   private getHeaders(): HttpHeaders {
@@ -109,9 +118,7 @@ export class WekaComponent implements OnInit {
   enviarDatos() {
     if (this.studentForm.valid) {
       const datos = this.studentForm.value;
-      console.log('Datos enviados al backend:', datos);
       const headers = this.getHeaders();
-
       this.http.post('http://localhost:9098/api/predecir', datos, { headers })
         .subscribe({
           next: (response: any) => {
@@ -119,7 +126,6 @@ export class WekaComponent implements OnInit {
             this.cargarHistorial();
           },
           error: (err) => {
-            console.error('Error completo:', err);
             this.resultado = `Error: ${err.status} - ${err.error?.error || 'Error desconocido'}`;
           }
         });
@@ -140,6 +146,7 @@ export class WekaComponent implements OnInit {
     this.showChart = !this.showChart;
     if (this.showChart) {
       this.updateChartData();
+      setTimeout(() => this.createChart(), 100);
     } else {
       this.updatePaginatedHistorial();
     }
@@ -151,11 +158,11 @@ export class WekaComponent implements OnInit {
       .subscribe({
         next: (data: any) => {
           this.historial = data;
-          console.log('Datos recibidos del backend:', this.historial);
           this.applyFilters();
+          this.confidenceVisibility = {};
+          this.historial.forEach((_, index) => this.confidenceVisibility[index] = false);
         },
         error: (err) => {
-          console.error('Error al cargar historial:', err);
           this.resultado = `Error al cargar historial: ${err.message}`;
         }
       });
@@ -169,8 +176,6 @@ export class WekaComponent implements OnInit {
         (item.documento && item.documento.toString().toLowerCase().includes(this.filterDocumento.toLowerCase()));
       return matchesResultado && matchesDocumento;
     });
-
-    console.log('Historial filtrado:', this.filteredHistorial);
     this.totalPages = Math.ceil(this.filteredHistorial.length / this.itemsPerPage);
     this.currentPage = 1;
     this.updatePaginatedHistorial();
@@ -181,7 +186,6 @@ export class WekaComponent implements OnInit {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
     this.paginatedHistorial = this.filteredHistorial.slice(start, end);
-    console.log('Historial paginado:', this.paginatedHistorial);
   }
 
   previousPage() {
@@ -200,27 +204,104 @@ export class WekaComponent implements OnInit {
 
   updateChartData() {
     this.positiveCount = this.filteredHistorial.filter(item => 
-      item.perderaAsignatura && item.perderaAsignatura.toLowerCase().trim() === 'tested_positive').length;
+      item.perderaAsignatura?.toLowerCase().trim() === 'tested_positive').length;
     this.negativeCount = this.filteredHistorial.filter(item => 
-      item.perderaAsignatura && item.perderaAsignatura.toLowerCase().trim() === 'tested_negative').length;
-    console.log(`Conteo para barras - Positive: ${this.positiveCount}, Negative: ${this.negativeCount}`);
+      item.perderaAsignatura?.toLowerCase().trim() === 'tested_negative').length;
+    this.updateChart();
+  }
+
+  createChart() {
+    if (this.barChart && this.barChart.nativeElement) {
+      if (this.chart) {
+        this.chart.destroy();
+      }
+      this.chart = new Chart(this.barChart.nativeElement, {
+        type: 'bar',
+        data: {
+          labels: ['Perderá', 'No Perderá'],
+          datasets: [{
+            label: 'Predicciones',
+            data: [this.positiveCount, this.negativeCount],
+            backgroundColor: ['#e57373', '#81c784'],
+            borderColor: ['#d32f2f', '#388e3c'],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Cantidad',
+                font: { size: 12 }
+              },
+              ticks: { font: { size: 10 } }
+            },
+            x: {
+              ticks: { font: { size: 12 } }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: { enabled: true }
+          }
+        }
+      });
+    }
+  }
+
+  updateChart() {
+    if (this.chart) {
+      this.chart.data.datasets[0].data = [this.positiveCount, this.negativeCount];
+      this.chart.update();
+    }
   }
 
   getBarHeight(count: number): number {
-    const total = this.positiveCount + this.negativeCount;
-    return total > 0 ? (count / total) * this.maxBarHeight : 0;
+    const maxHeight = 200; // Altura máxima en píxeles
+    const maxCount = Math.max(this.positiveCount, this.negativeCount, 1); // Evitar división por 0
+    return (count / maxCount) * maxHeight;
   }
 
   onFilterResultadoChange(value: string) {
     this.filterResultado = value;
-    console.log('Filtro resultado cambiado a:', this.filterResultado);
     this.applyFilters();
   }
 
   onFilterDocumentoChange(event: Event) {
     const input = event.target as HTMLInputElement;
     this.filterDocumento = input.value;
-    console.log('Filtro documento cambiado a:', this.filterDocumento);
     this.applyFilters();
+  }
+
+  toggleConfidence(index: number) {
+    this.confidenceVisibility[index] = !this.confidenceVisibility[index];
+  }
+
+  exportToExcel() {
+    const exportData = this.historial.map((item, index) => ({
+      Documento: item.documento,
+      Edad: item.edad,
+      Género: item.genero,
+      'Horas Estudio': item.horasEstudioSemanal,
+      'Asistencia (%)': item.asistencia,
+      Promedio: item.promedioParciales,
+      Participación: item.participacionClases,
+      'Plataforma Virtual': item.usoPlataformaVirtual,
+      Antecedentes: item.antecedentesPerdida,
+      'Apoyo Familiar': item.apoyoFamiliar,
+      'Carga Académica': item.cargaAcademica,
+      'Problemas Personales': item.problemasPersonales,
+      Resultado: item.perderaAsignatura,
+      Confianza: item.confianza
+    }));
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Predicciones');
+    XLSX.writeFile(wb, `Historial_Predicciones_${new Date().toISOString().split('T')[0]}.xlsx`);
   }
 }

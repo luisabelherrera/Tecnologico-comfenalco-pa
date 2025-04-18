@@ -21,7 +21,7 @@
       </label>
       <span class="logo">
         <div class="earth-container">
-          <div class="earth" [style.filter]="'brightness(' + (isButtonPressed ? '2' : '1') + ')'">
+          <div class="earth">
             <div class="earth-loader"> 
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
                 <path
@@ -243,7 +243,7 @@
       <ng-container *ngIf="isAdmin$ | async">
         <h4 mat-subheader class="sidenav-header" (click)="isMenu = !isMenu" [attr.aria-expanded]="isMenu">
           <img src="assets/iconos/informacion.png" alt="Icono Noticias" style="width: 24px; height: 24px;" />
-          <span>Eventos</span>
+          <span>Gestionar</span>
         </h4>
         <div *ngIf="isMenu">
           <nav>

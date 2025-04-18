@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { PeriodoCreationData } from '../models-ia/periodo-creation-data.interface';
 import { ChatHistoryService } from './chat-history.service';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -31,7 +30,10 @@ export class PeriodoHandlerService {
 
   handlePeriodoCreationFlow(transcript: string, speak: (text: string) => void): boolean {
     console.log('Estado actual del flujo:', this.periodoCreationState);
-    if (this.periodoCreationState === 'askingYear') {
+    if (this.periodoCreationState === 'none') {
+      this.startPeriodoCreation(speak);
+      return false;
+    } else if (this.periodoCreationState === 'askingYear') {
       const yearMatch = transcript.match(/\d{4}/);
       if (yearMatch) {
         this.periodoData.descripcion = `Periodo ${yearMatch[0]} en El Hobo`;

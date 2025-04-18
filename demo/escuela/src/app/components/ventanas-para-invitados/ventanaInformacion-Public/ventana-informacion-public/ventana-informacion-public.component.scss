@@ -1,0 +1,436 @@
+// Variables
+$primary-color: #3f51b5;
+$secondary-color: #ff4081;
+$accent-color: #00bcd4;
+$text-color: #2d2d2d;
+$light-text: #fff;
+$dark-text: #1a1a1a;
+$light-bg: #f8fafc;
+$dark-bg: #1f2a30;
+$border-color: #e5e7eb;
+$shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+$transition: all 0.3s ease;
+
+// Mixins
+@mixin flex($direction: row, $justify: center, $align: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin button($bg-color, $text-color, $hover-bg: darken($bg-color, 10%)) {
+  background-color: $bg-color;
+  color: $text-color;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: $transition;
+  @include flex(row, center, center);
+  gap: 0.5rem;
+  &:hover {
+    background-color: $hover-bg;
+    transform: translateY(-2px);
+    box-shadow: $shadow;
+  }
+}
+
+// Reset and Base Styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', 'Roboto', sans-serif;
+  color: $text-color;
+  line-height: 1.7;
+  background-color: $light-bg;
+  overflow-x: hidden;
+  &.mobile-menu-open {
+    overflow: hidden;
+    height: 100vh;
+  }
+}
+
+// Header (sin cambios)
+.header {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: #ffffff;
+  padding: 1rem 0;
+  box-shadow: $shadow;
+  border-bottom: 1px solid $border-color;
+  
+  .header-container {
+    @include flex(row, space-between, center);
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  
+  .logo {
+    @include flex(row, flex-start, center);
+    text-decoration: none;
+    img {
+      height: 40px;
+      transition: transform 0.3s ease;
+      animation: bounceLogo 2s infinite ease-in-out;
+      &:hover { transform: rotate(15deg); }
+    }
+    span {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: $primary-color;
+      margin-left: 0.75rem;
+      animation: waveText 1.5s infinite ease-in-out;
+    }
+  }
+  
+  .desktop-nav {
+    @include flex(row, flex-end, center);
+    @media (max-width: 992px) { display: none; }
+    
+    .nav-list {
+      @include flex(row, center, center);
+      list-style: none;
+      gap: 1.75rem;
+      a {
+        color: $dark-text;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 1rem;
+        transition: $transition;
+        position: relative;
+        &:hover, &.active {
+          color: $primary-color;
+          transform: scale(1.1);
+          &:after { width: 100%; }
+        }
+        &:after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background-color: $accent-color;
+          transition: width 0.3s ease;
+        }
+      }
+      .auth-button a.btn-login {
+        @include button($primary-color, $light-text);
+        border: 1px solid $primary-color;
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+        &:before {
+          content: '✨';
+          position: absolute;
+          left: -20px;
+          opacity: 0;
+          transition: all 0.3s ease;
+        }
+        &:hover:before {
+          left: 5px;
+          opacity: 1;
+        }
+      }
+    }
+  }
+  
+  .mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: $dark-text;
+    font-size: 1.75rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: transform 0.3s ease;
+    @media (max-width: 992px) { display: block; }
+    &:hover {
+      color: $primary-color;
+      transform: rotate(90deg);
+    }
+  }
+}
+
+// Mobile Menu (sin cambios)
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: white;
+  z-index: 999;
+  padding: 4rem 1.5rem 2rem;
+  animation: slideIn 0.3s ease-out;
+  overflow-y: auto;
+  
+  .mobile-menu-header {
+    @include flex(row, space-between, center);
+    margin-bottom: 2rem;
+  }
+  
+  nav {
+    .mobile-nav-list {
+      list-style: none;
+      li {
+        margin-bottom: 1.5rem;
+        a {
+          color: $dark-text;
+          text-decoration: none;
+          font-size: 1.25rem;
+          font-weight: 500;
+          transition: $transition;
+          display: block;
+          padding: 0.5rem 0;
+          &:hover {
+            color: $primary-color;
+            transform: translateX(10px) scale(1.05);
+          }
+          &.btn-login {
+            @include button($primary-color, $light-text);
+            width: auto;
+            border: 1px solid $primary-color;
+            margin-top: 1rem;
+            &:before {
+              content: '✨';
+              position: absolute;
+              left: -20px;
+              opacity: 0;
+              transition: all 0.3s ease;
+            }
+            &:hover:before {
+              left: 5px;
+              opacity: 1;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Animaciones
+@keyframes bounceLogo {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes waveText {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// Contenido principal
+.public-container {
+  max-width: 1200px;
+  margin: 100px auto 40px;
+  padding: 30px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 20px;
+  box-shadow: $shadow;
+}
+
+.title {
+  text-align: center;
+  color: $primary-color;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  .emoji {
+    font-size: 2rem;
+    animation: bounceLogo 2s infinite ease-in-out;
+  }
+}
+
+.loading {
+  @include flex(column, center, center);
+  padding: 40px;
+  .spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba($primary-color, 0.2);
+    border-top: 6px solid $primary-color;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+  }
+  p {
+    color: $text-color;
+    font-size: 1.2rem;
+    font-style: italic;
+  }
+}
+
+.error {
+  @include flex(column, center, center);
+  padding: 30px;
+  background: linear-gradient(135deg, #f8d7da, #f1b0b7);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  color: #721c24;
+  .retry-btn {
+    @include button(#e74c3c, $light-text);
+    margin-top: 15px;
+  }
+}
+
+// Navegación de pestañas
+.tab-nav {
+  @include flex(row, center, center);
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 40px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  box-shadow: $shadow;
+  
+  .tab {
+    @include flex(row, center, center);
+    gap: 8px;
+    padding: 12px 20px;
+    background: #fff;
+    border-radius: 10px;
+    color: $dark-text;
+    font-weight: 500;
+    cursor: pointer;
+    transition: $transition;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    &:hover {
+      background: $primary-color;
+      color: $light-text;
+      transform: translateY(-3px);
+    }
+    &.active {
+      background: linear-gradient(135deg, $primary-color, $accent-color);
+      color: $light-text;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transform: scale(1.05);
+    }
+    i {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.info-public {
+  .content-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: $shadow;
+    animation: fadeIn 0.3s ease-out;
+    .section {
+      h3 {
+        color: $primary-color;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        border-bottom: 3px solid $accent-color;
+        padding-bottom: 10px;
+        position: relative;
+        &:after {
+          content: '✨';
+          position: absolute;
+          right: 0;
+          font-size: 1.5rem;
+          animation: spin 2s infinite linear;
+        }
+      }
+      p {
+        font-size: 1.2rem;
+        line-height: 1.8;
+        color: $text-color;
+      }
+    }
+    .documents {
+      h3 {
+        color: $primary-color;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        border-bottom: 3px solid $accent-color;
+        padding-bottom: 10px;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+        li {
+          margin: 15px 0;
+          a {
+            color: $secondary-color;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            transition: $transition;
+            &:hover {
+              color: darken($secondary-color, 10%);
+              text-decoration: underline;
+              transform: translateX(5px);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: $text-color;
+  font-size: 1.5rem;
+  font-style: italic;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  box-shadow: $shadow;
+}
+
+@media (max-width: 768px) {
+  .public-container {
+    margin: 80px 20px 20px;
+    padding: 20px;
+  }
+  .title {
+    font-size: 2.5rem;
+  }
+  .tab-nav {
+    @include flex(column, center, center);
+    padding: 5px;
+  }
+  .info-public .content-card {
+    padding: 20px;
+    .section h3 {
+      font-size: 1.5rem;
+    }
+    .documents h3 {
+      font-size: 1.5rem;
+    }
+  }
+}

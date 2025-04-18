@@ -1,3 +1,5 @@
+import { EncuestaEstudiante } from "./EncuestaEstudiante.interface";
+
 export interface Estudiante {
   idEstudiante: number;
   valorCodigo?: string;
@@ -10,4 +12,5 @@ export interface Estudiante {
   ciudad?: string;
   direccion?: string;
   activo?: boolean;
+  encuesta?: EncuestaEstudiante; 
 }

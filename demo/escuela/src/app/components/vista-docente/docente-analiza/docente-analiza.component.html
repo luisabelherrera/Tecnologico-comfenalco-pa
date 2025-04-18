@@ -1,22 +1,50 @@
 <div class="container-fluid p-3 p-md-4">
   <!-- Selección de curricular -->
   <div class="row mb-4 justify-content-center">
-    <div class="col-12 col-md-6 col-lg-4">
-      <div class="card shadow-sm p-3 curricular-card">
-        <label for="curricularSelect" class="form-label fw-bold text-muted">Seleccionar Curricular</label>
-        <select class="form-select border-0 shadow-sm" id="curricularSelect" [(ngModel)]="selectedCurricular" (ngModelChange)="selectCurricular($event)">
-          <option *ngFor="let curricular of curriculares" [ngValue]="curricular">
-            {{ curricular.descripcion }}
-          </option>
-        </select>
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="curricular-selector card shadow-lg p-4">
+        <h5 class="card-title text-center mb-3 fw-bold text-primary">Elige un Curricular</h5>
+        <div class="input-group curricular-input-group">
+          <span class="input-group-text bg-gradient-primary text-white">
+            <i class="fas fa-book-open"></i>
+          </span>
+          <select
+            class="form-select curricular-select"
+            id="curricularSelect"
+            [(ngModel)]="selectedCurricular"
+            (ngModelChange)="selectCurricular($event)"
+          >
+            <option [ngValue]="null" disabled selected>Selecciona un curricular...</option>
+            <option *ngFor="let curricular of curriculares" [ngValue]="curricular">
+              {{ curricular.descripcion }}
+            </option>
+          </select>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Contenido principal (Tabla y Formulario) -->
+  <!-- Contenido principal -->
   <div class="row" *ngIf="selectedCurricular">
-    <!-- Tabla de estudiantes inscritos -->
+    <!-- Toggle Buttons -->
     <div class="col-12 mb-4">
+      <div class="d-flex flex-wrap gap-3 justify-content-center">
+        <div class="toggle-buttons">
+          <button class="toggle-btn" [class.active]="showForm" (click)="toggleView(true)">
+            <i class="fas fa-plus-circle me-2"></i>Registrar Datos
+          </button>
+          <button class="toggle-btn" [class.active]="!showForm" (click)="toggleView(false)">
+            <i class="fas fa-list me-2"></i>Lista de Estudiantes
+          </button>
+        </div>
+        <button class="btn btn-outline-primary btn-custom" (click)="openStudentSelectionDialog()">
+          <i class="fas fa-user-plus me-2"></i>Seleccionar Estudiante
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabla de estudiantes inscritos -->
+    <div class="col-12 mb-4" *ngIf="!showForm">
       <div class="card shadow-sm">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
           <h2 class="h5 mb-0">Estudiantes Inscritos</h2>
@@ -34,6 +62,7 @@
                   <th class="py-3 px-2">Nota</th>
                   <th class="py-3 px-2">Predicción</th>
                   <th class="py-3 px-2">Confianza</th>
+                  <th class="py-3 px-2">Acción</th>
                 </tr>
               </thead>
               <tbody>
@@ -41,31 +70,69 @@
                   <td class="py-3 px-2">{{ element.estudiante.nombres }} {{ element.estudiante.apellidos }}</td>
                   <td class="py-3 px-2">{{ element.estudiante.documentoIdentidad }}</td>
                   <td class="py-3 px-2">
-                    <span class="badge bg-info text-dark me-2">{{ element.nota !== undefined ? (element.nota | number: '1.2-2') : 'N/A' }}</span>
+                    <span class="badge bg-info text-dark me-2">{{
+                      element.nota !== undefined ? (element.nota | number: '1.2-2') : 'N/A'
+                    }}</span>
                     <div class="progress" style="height: 8px;">
-                      <div class="progress-bar bg-success" role="progressbar" 
-                           [style.width]="(element.nota ? (element.nota / 5 * 100) : 0) + '%'" 
-                           [attr.aria-valuenow]="element.nota || 0" 
-                           aria-valuemin="0" 
-                           aria-valuemax="5"></div>
+                      <div
+                        class="progress-bar bg-success"
+                        role="progressbar"
+                        [style.width]="(element.nota ? (element.nota / 5) * 100 : 0) + '%'"
+                        [attr.aria-valuenow]="element.nota || 0"
+                        aria-valuemin="0"
+                        aria-valuemax="5"
+                      ></div>
                     </div>
                   </td>
                   <td class="py-3 px-2">
-                    <span class="badge" [ngClass]="{'bg-success': element.prediccion === 'tested_negative', 'bg-danger': element.prediccion === 'tested_positive'}">
-                      {{ element.prediccion || 'Sin predecir' }}
+                    <span
+                      class="badge"
+                      [ngClass]="{
+                        'bg-success': element.prediccion === 'tested_negative',
+                        'bg-danger': element.prediccion === 'tested_positive'
+                      }"
+                    >
+                      {{
+                        element.prediccion === 'tested_positive'
+                          ? 'Necesita Ayuda'
+                          : element.prediccion === 'tested_negative'
+                          ? 'Tiene Posibilidades de Ganar'
+                          : 'Sin predecir'
+                      }}
                     </span>
                   </td>
                   <td class="py-3 px-2">
-                    <span class="badge bg-warning text-dark me-2">{{ element.confianza ? (element.confianza * 100 | number: '1.0-1') + '%' : '-' }}</span>
-                    <div class="progress" style="height: 8px;">
-                      <div class="progress-bar" 
-                           [ngClass]="{'bg-success': element.confianza >= 0.8, 'bg-warning': element.confianza >= 0.5 && element.confianza < 0.8, 'bg-danger': element.confianza < 0.5}" 
-                           role="progressbar" 
-                           [style.width]="(element.confianza ? (element.confianza * 100) : 0) + '%'" 
-                           [attr.aria-valuenow]="element.confianza ? (element.confianza * 100) : 0" 
-                           aria-valuemin="0" 
-                           aria-valuemax="100"></div>
+                    <button class="btn btn-sm btn-outline-info" (click)="toggleConfidence(element)">
+                      <i class="fas" [ngClass]="{'fa-eye-slash': element.showConfidence, 'fa-eye': !element.showConfidence}"></i>
+                      Ver Confianza
+                    </button>
+                    <span *ngIf="element.showConfidence" class="badge bg-warning text-dark me-2">
+                      {{ element.confianza ? (element.confianza * 100 | number: '1.0-1') + '%' : '-' }}
+                    </span>
+                    <div *ngIf="element.showConfidence" class="progress" style="height: 8px;">
+                      <div
+                        class="progress-bar"
+                        [ngClass]="{
+                          'bg-success': element.confianza >= 0.8,
+                          'bg-warning': element.confianza >= 0.5 && element.confianza < 0.8,
+                          'bg-danger': element.confianza < 0.5
+                        }"
+                        role="progressbar"
+                        [style.width]="(element.confianza ? element.confianza * 100 : 0) + '%'"
+                        [attr.aria-valuenow]="element.confianza ? element.confianza * 100 : 0"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
                     </div>
+                  </td>
+                  <td class="py-3 px-2">
+                    <button
+                      *ngIf="element.prediccion === 'tested_positive'"
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="openMaterialPanel(element)"
+                    >
+                      <i class="fas fa-book me-1"></i> Enviar Material
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -75,16 +142,27 @@
       </div>
     </div>
 
-    <!-- Botones -->
-    <div class="col-12 mb-4">
-      <div class="d-flex flex-wrap gap-3 justify-content-center">
-        <button class="btn btn-outline-primary btn-custom" (click)="openStudentSelectionDialog()">
-          <i class="fas fa-user-plus me-2"></i>Seleccionar Estudiante
-        </button>
-        <button class="btn btn-outline-info btn-custom" (click)="toggleForm()">
-          <i class="fas" [ngClass]="showForm ? 'fa-minus-circle' : 'fa-plus-circle'"></i>
-          <span class="ms-2">{{ showForm ? 'Cerrar' : 'Agregar Datos' }}</span>
-        </button>
+    <!-- Gráfico de notas -->
+    <div class="col-12 mb-4" *ngIf="!showForm && showTable && dataSource.data.length > 0">
+      <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
+          <h2 class="h5 mb-0">Gráfico de Notas</h2>
+        </div>
+        <div class="card-body">
+          <canvas id="gradeChart" style="max-height: 300px;"></canvas>
+          <div class="mt-3 text-center">
+            <p>
+              <strong>Promedio del Curso:</strong>
+              {{ promedioNotas !== null ? (promedioNotas | number: '1.2-2') : 'N/A' }}
+            </p>
+            <p>
+              <strong>Estado del Curso:</strong>
+              Aprobados: <span class="badge bg-success">{{ prediccionStats.aprobados }}</span> |
+              Reprobados: <span class="badge bg-danger">{{ prediccionStats.reprobados }}</span> |
+              Sin Predecir: <span class="badge bg-secondary">{{ prediccionStats.sinPredecir }}</span>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -100,13 +178,26 @@
               <div class="col-12 col-md-6 col-lg-4">
                 <div class="input-group">
                   <span class="input-group-text bg-light"><i class="fas fa-id-card text-muted"></i></span>
-                  <input id="documento" class="form-control" placeholder="Documento" formControlName="documento" readonly>
+                  <input
+                    id="documento"
+                    class="form-control"
+                    placeholder="Documento"
+                    formControlName="documento"
+                    readonly
+                  />
                 </div>
               </div>
               <div class="col-12 col-md-6 col-lg-4">
                 <div class="input-group">
                   <span class="input-group-text bg-light"><i class="fas fa-child text-muted"></i></span>
-                  <input id="edad" type="number" class="form-control" placeholder="Edad" formControlName="edad" required>
+                  <input
+                    id="edad"
+                    type="number"
+                    class="form-control"
+                    placeholder="Edad"
+                    formControlName="edad"
+                    required
+                  />
                   <div class="invalid-feedback">Edad es requerida (mínimo 5)</div>
                 </div>
               </div>
@@ -125,21 +216,43 @@
               <div class="col-12 col-md-6 col-lg-4">
                 <div class="input-group">
                   <span class="input-group-text bg-light"><i class="fas fa-clock text-muted"></i></span>
-                  <input id="horasEstudio" type="number" class="form-control" placeholder="Horas de Estudio" formControlName="horasEstudioSemanal" required>
+                  <input
+                    id="horasEstudio"
+                    type="number"
+                    class="form-control"
+                    placeholder="Horas de Estudio"
+                    formControlName="horasEstudioSemanal"
+                    required
+                  />
                   <div class="invalid-feedback">Horas son requeridas (no negativas)</div>
                 </div>
               </div>
               <div class="col-12 col-md-6 col-lg-4">
                 <div class="input-group">
                   <span class="input-group-text bg-light"><i class="fas fa-check-circle text-muted"></i></span>
-                  <input id="asistencia" type="number" class="form-control" placeholder="Asistencia (%)" formControlName="asistencia" required>
+                  <input
+                    id="asistencia"
+                    type="number"
+                    class="form-control"
+                    placeholder="Asistencia (%)"
+                    formControlName="asistencia"
+                    required
+                  />
                   <div class="invalid-feedback">Asistencia debe estar entre 0 y 100</div>
                 </div>
               </div>
               <div class="col-12 col-md-6 col-lg-4">
                 <div class="input-group">
                   <span class="input-group-text bg-light"><i class="fas fa-star text-muted"></i></span>
-                  <input id="promedioParciales" type="number" step="0.01" class="form-control" placeholder="Promedio (0-5)" formControlName="promedioParciales" required>
+                  <input
+                    id="promedioParciales"
+                    type="number"
+                    step="0.01"
+                    class="form-control"
+                    placeholder="Promedio (0-5)"
+                    formControlName="promedioParciales"
+                    required
+                  />
                   <div class="invalid-feedback">Promedio debe estar entre 0 y 5</div>
                 </div>
               </div>
@@ -193,7 +306,14 @@
               <div class="col-12 col-md-6 col-lg-4">
                 <div class="input-group">
                   <span class="input-group-text bg-light"><i class="fas fa-book text-muted"></i></span>
-                  <input id="cargaAcademica" type="number" class="form-control" placeholder="Carga Académica (1-5)" formControlName="cargaAcademica" required>
+                  <input
+                    id="cargaAcademica"
+                    type="number"
+                    class="form-control"
+                    placeholder="Carga Académica (1-5)"
+                    formControlName="cargaAcademica"
+                    required
+                  />
                   <div class="invalid-feedback">Carga debe estar entre 1 y 5</div>
                 </div>
               </div>
@@ -210,7 +330,11 @@
                 </div>
               </div>
               <div class="col-12 text-center mt-4">
-                <button type="submit" class="btn btn-success btn-custom btn-lg" [disabled]="!studentForm.valid">
+                <button
+                  type="submit"
+                  class="btn btn-success btn-custom btn-lg"
+                  [disabled]="!studentForm.valid"
+                >
                   <i class="fas fa-rocket me-2"></i>Predecir
                 </button>
               </div>

@@ -1,0 +1,189 @@
+<div class="page-container">
+    <!-- Header Animado -->
+    <header class="header">
+        <div class="header-container">
+          <a href="#" class="logo">
+            <img src="assets/iconos/eduportal.png" alt="EduPortal" />
+            <span>EduPortal</span>
+          </a>
+          <nav class="desktop-nav">
+            <ul class="nav-list">
+              <li><a href="#">Inicio</a></li>
+              <li><a href="#about" (click)="scrollToAbout()">Nosotros</a></li>
+              <li><a href="ventana-informacion-public" (click)="accion3()">Institucion</a></li>
+              <li><a href="consultar-precios"  (click)="accion4()">Precios</a></li>
+              <li><a href="#">Recursos</a></li>
+              <li class="auth-button">
+                <a (click)="irAOtraVentana()" class="btn-login">Iniciar Sesión</a>
+              </li>
+            </ul>
+          </nav>
+          <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" aria-label="Menu">
+            <i class="material-icons">{{ isMobileMenuOpen ? 'close' : 'menu' }}</i>
+          </button>
+        </div>
+      </header>
+    
+  
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" *ngIf="isMobileMenuOpen">
+      <div class="mobile-menu-header">
+        <a href="#" class="logo">
+          <span>EduPortal</span>
+        </a>
+      </div>
+      <nav>
+        <ul class="mobile-nav-list">
+          <li><a href="#" (click)="toggleMobileMenu()">Inicio</a></li>
+          <li><a href="#about" (click)="scrollToAbout(); toggleMobileMenu()">Nosotros</a></li>
+          <li><a href="#" (click)="libro(); toggleMobileMenu()">Biblioteca</a></li>
+          <li><a href="#" (click)="accion4(); toggleMobileMenu()">Juegos</a></li>
+          <li><a href="#" (click)="victor(); toggleMobileMenu()">Recursos</a></li>
+          <li><a (click)="irAOtraVentana(); toggleMobileMenu()" class="btn-login">Iniciar Sesión</a></li>
+        </ul>
+      </nav>
+    </div>
+  
+   <!-- Contenido principal -->
+  <div class="public-container">
+    <h1 class="title">Información Institucional <span class="emoji">✨</span></h1>
+
+    <!-- Indicador de carga -->
+    <div class="loading" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Cargando información...</p>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div class="error" *ngIf="errorMessage && !isLoading">
+      <p>{{ errorMessage }}</p>
+      <button class="retry-btn" (click)="loadInformacion()">Reintentar</button>
+    </div>
+
+    <!-- Navegación de pestañas -->
+    <div class="tab-nav" *ngIf="informacion && !isLoading && !errorMessage">
+      <div class="tab" (click)="setActiveSection('mision')" [class.active]="activeSection === 'mision'">
+        <i class="material-icons">flag</i> Misión
+      </div>
+      <div class="tab" (click)="setActiveSection('vision')" [class.active]="activeSection === 'vision'">
+        <i class="material-icons">visibility</i> Visión
+      </div>
+      <div class="tab" (click)="setActiveSection('historia')" [class.active]="activeSection === 'historia'" *ngIf="informacion.historia">
+        <i class="material-icons">history</i> Historia
+      </div>
+      <div class="tab" (click)="setActiveSection('valores')" [class.active]="activeSection === 'valores'" *ngIf="informacion.valores">
+        <i class="material-icons">favorite</i> Valores
+      </div>
+      <div class="tab" (click)="setActiveSection('objetivos')" [class.active]="activeSection === 'objetivos'" *ngIf="informacion.objetivos">
+        <i class="material-icons">check_circle</i> Objetivos
+      </div>
+      <div class="tab" (click)="setActiveSection('contacto')" [class.active]="activeSection === 'contacto'" *ngIf="informacion.contacto">
+        <i class="material-icons">phone</i> Contacto
+      </div>
+      <div class="tab" (click)="setActiveSection('nivelesEducativos')" [class.active]="activeSection === 'nivelesEducativos'" *ngIf="informacion.nivelesEducativos">
+        <i class="material-icons">school</i> Niveles Educativos
+      </div>
+      <div class="tab" (click)="setActiveSection('enfasisInstitucional')" [class.active]="activeSection === 'enfasisInstitucional'" *ngIf="informacion.enfasisInstitucional">
+        <i class="material-icons">star</i> Énfasis Institucional
+      </div>
+      <div class="tab" (click)="setActiveSection('preparacionIcfes')" [class.active]="activeSection === 'preparacionIcfes'" *ngIf="informacion.preparacionIcfes">
+        <i class="material-icons">assignment</i> Preparación ICFES
+      </div>
+      <div class="tab" (click)="setActiveSection('programasEspeciales')" [class.active]="activeSection === 'programasEspeciales'" *ngIf="informacion.programasEspeciales">
+        <i class="material-icons">extension</i> Programas Especiales
+      </div>
+      <div class="tab" (click)="setActiveSection('convenios')" [class.active]="activeSection === 'convenios'" *ngIf="informacion.convenios">
+        <i class="material-icons">handshake</i> Convenios
+      </div>
+      <div class="tab" (click)="setActiveSection('actividadesExtracurriculares')" [class.active]="activeSection === 'actividadesExtracurriculares'" *ngIf="informacion.actividadesExtracurriculares">
+        <i class="material-icons">sports</i> Actividades Extracurriculares
+      </div>
+      <div class="tab" (click)="setActiveSection('pastoralOCatequesis')" [class.active]="activeSection === 'pastoralOCatequesis'" *ngIf="informacion.pastoralOCatequesis">
+        <i class="material-icons">church</i> Pastoral o Catequesis
+      </div>
+      <div class="tab" (click)="setActiveSection('documentos')" [class.active]="activeSection === 'documentos'">
+        <i class="material-icons">description</i> Documentos
+      </div>
+    </div>
+
+    <!-- Contenido de la sección activa -->
+    <div class="info-public" *ngIf="informacion && !isLoading && !errorMessage">
+      <div class="content-card" [@fadeIn]="activeSection">
+        <div class="section" *ngIf="activeSection === 'mision'">
+          <h3>Misión</h3>
+          <p>{{ informacion.mision }}</p>
+        </div>
+        <div class="section" *ngIf="activeSection === 'vision'">
+          <h3>Visión</h3>
+          <p>{{ informacion.vision }}</p>
+        </div>
+        <div class="section" *ngIf="activeSection === 'historia' && informacion.historia">
+          <h3>Historia</h3>
+          <p>{{ informacion.historia }}</p>
+        </div>
+        <div class="section" *ngIf="activeSection === 'valores' && informacion.valores">
+          <h3>Valores</h3>
+          <p>{{ informacion.valores }}</p>
+        </div>
+        <div class="section" *ngIf="activeSection === 'objetivos' && informacion.objetivos">
+          <h3>Objetivos</h3>
+          <p>{{ informacion.objetivos }}</p>
+        </div>
+        <div class="section" *ngIf="activeSection === 'contacto' && informacion.contacto">
+          <h3>Contacto</h3>
+          <p>{{ informacion.contacto }}</p>
+        </div>
+        <div class="section" *ngIf="activeSection === 'nivelesEducativos' && informacion.nivelesEducativos">
+          <h3>Niveles Educativos</h3>
+          <p>{{ informacion.nivelesEducativos }}</p>
+        </div>
+        <div class="section" *ngIf="activeSection === 'enfasisInstitucional' && informacion.enfasisInstitucional">
+          <h3>Énfasis Institucional</h3>
+          <p>{{ informacion.enfasisInstitucional }}</p>
+        </div>
+        <div class="section" *ngIf="activeSection === 'preparacionIcfes' && informacion.preparacionIcfes">
+          <h3>Preparación ICFES</h3>
+          <p>{{ informacion.preparacionIcfes }}</p>
+        </div>
+        <div class="section" *ngIf="activeSection === 'programasEspeciales' && informacion.programasEspeciales">
+          <h3>Programas Especiales</h3>
+          <p>{{ informacion.programasEspeciales }}</p>
+        </div>
+        <div class="section" *ngIf="activeSection === 'convenios' && informacion.convenios">
+          <h3>Convenios</h3>
+          <p>{{ informacion.convenios }}</p>
+        </div>
+        <div class="section" *ngIf="activeSection === 'actividadesExtracurriculares' && informacion.actividadesExtracurriculares">
+          <h3>Actividades Extracurriculares</h3>
+          <p>{{ informacion.actividadesExtracurriculares }}</p>
+        </div>
+        <div class="section" *ngIf="activeSection === 'pastoralOCatequesis' && informacion.pastoralOCatequesis">
+          <h3>Pastoral o Catequesis</h3>
+          <p>{{ informacion.pastoralOCatequesis }}</p>
+        </div>
+        <div class="documents" *ngIf="activeSection === 'documentos'">
+          <h3>Documentos Institucionales</h3>
+          <ul>
+            <li *ngIf="informacion.manualConvivenciaPath">
+              <a [href]="informacion.manualConvivenciaPath" target="_blank">Manual de Convivencia</a>
+            </li>
+            <li *ngIf="informacion.reglamentoInternoPath">
+              <a [href]="informacion.reglamentoInternoPath" target="_blank">Reglamento Interno</a>
+            </li>
+            <li *ngIf="informacion.planDeEstudiosPath">
+              <a [href]="informacion.planDeEstudiosPath" target="_blank">Plan de Estudios</a>
+            </li>
+            <li *ngIf="informacion.calendarioAcademicoPath">
+              <a [href]="informacion.calendarioAcademicoPath" target="_blank">Calendario Académico</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensaje si no hay información -->
+    <div class="no-data" *ngIf="!informacion && !isLoading && !errorMessage">
+      <p>No hay información institucional disponible en este momento.</p>
+    </div>
+  </div>
+</div>

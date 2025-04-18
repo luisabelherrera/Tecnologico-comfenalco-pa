@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @RestController
@@ -58,9 +59,17 @@ public class PredictionController {
                 throw new IllegalStateException("Modelo o estructura no inicializados");
             }
 
-            // Buscar el estudiante por documentoIdentidad y asignarlo (opcional)
-            estudianteRepository.findByDocumentoIdentidad(String.valueOf(datos.getDocumento()))
-                .ifPresent(estudiante -> datos.setEstudiante(estudiante));
+            // Buscar el estudiante por documentoIdentidad y asignarlo
+            Optional<Estudiante> estudianteOpt = estudianteRepository.findByDocumentoIdentidad(String.valueOf(datos.getDocumento()));
+            if (estudianteOpt.isPresent()) {
+                datos.setEstudiante(estudianteOpt.get());
+            } else {
+                LOGGER.warning("No se encontró estudiante con documento: " + datos.getDocumento());
+            }
+
+            // Verificar si ya existe un registro para este estudiante en DatosEstudiante
+            Optional<DatosEstudiante> existingDatosOpt = datosEstudianteRepository.findByDocumento(datos.getDocumento());
+            DatosEstudiante datosToSave = existingDatosOpt.orElse(datos);
 
             // Crear instancia con 14 atributos (13 + clase)
             Instance instance = new DenseInstance(dataStructure.numAttributes());
@@ -97,11 +106,24 @@ public class PredictionController {
             DecimalFormat df = new DecimalFormat("#.#");
             String confidencePercentage = df.format(confidence * 100) + "%";
 
-            // Guardar resultados en la entidad
-            datos.setPerderaAsignatura(resultado);
-            datos.setConfianza(confidencePercentage);
-            LOGGER.info("ID antes de guardar: " + datos.getId());
-            DatosEstudiante savedDatos = datosEstudianteRepository.save(datos);
+            // Actualizar o establecer los valores en datosToSave
+            datosToSave.setPerderaAsignatura(resultado);
+            datosToSave.setConfianza(confidencePercentage);
+            datosToSave.setEdad(datos.getEdad());
+            datosToSave.setGenero(datos.getGenero());
+            datosToSave.setHorasEstudioSemanal(datos.getHorasEstudioSemanal());
+            datosToSave.setAsistencia(datos.getAsistencia());
+            datosToSave.setPromedioParciales(datos.getPromedioParciales());
+            datosToSave.setParticipacionClases(datos.getParticipacionClases());
+            datosToSave.setUsoPlataformaVirtual(datos.getUsoPlataformaVirtual());
+            datosToSave.setAntecedentesPerdida(datos.getAntecedentesPerdida());
+            datosToSave.setApoyoFamiliar(datos.getApoyoFamiliar());
+            datosToSave.setCargaAcademica(datos.getCargaAcademica());
+            datosToSave.setProblemasPersonales(datos.getProblemasPersonales());
+
+            // Guardar o actualizar en la base de datos
+            LOGGER.info("ID antes de guardar: " + datosToSave.getId());
+            DatosEstudiante savedDatos = datosEstudianteRepository.save(datosToSave);
             LOGGER.info("Datos guardados en la base de datos con id: " + savedDatos.getId());
 
             // Respuesta al frontend

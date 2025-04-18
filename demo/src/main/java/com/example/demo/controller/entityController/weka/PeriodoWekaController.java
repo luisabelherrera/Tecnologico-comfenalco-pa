@@ -73,4 +73,4 @@ public class PeriodoWekaController {
         response.put("intencion", predictedClass);
         return ResponseEntity.ok(response);
     }
-}    
+}

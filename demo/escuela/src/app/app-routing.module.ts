@@ -1,58 +1,27 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
-
-// home ventana para todos los usuario
 import { HomeComponent } from './components/home/home.component';
-
-// login inicio de seccion
 import { LoginComponent } from './components/login/login.component';
-
-// acudiente
 import { RegisterComponent } from './components/registro/register.component';
-
-// ventana 2 para el Docente
-// El authGuard 
 import { AuthGuard } from './guards/auth.guard';
-
-// acudiente
 import { AcudienteListComponent } from './components/acudiente/acudiente-list/acudiente-list.component';
 import { AcudienteDetailComponent } from './components/acudiente/acudiente-detail/acudiente-detail.component';
-
-// calificacion
 import { CalificacionListComponent } from './components/calificacion/calificacion-list/calificacion-list.component';
-
-// curricular
 import { CurricularListComponent } from './components/curricular/curricular-list/curricular-list.component';
-
-// curso
 import { CursosListComponent } from './components/cursos/cursos-list/cursos-list.component';
-
-//DOcenteNiveldetalle
 import { DocenteNivelDetalleCursoComponent } from './components/docente-nivel-detalle-curso/docente-nivel-detalle-curso.component';
-//Estudiante
 import { ListarEstudiantesComponent } from './components/estudiante/listar/listar.component';
-
 import { GradoSeccionComponent } from './components/grado-seccion/grado-seccion.component';
-//Horario
 import { HorarioListComponent } from './components/horario/horario-list/horario-list.component';
 import { HorarioAddComponent } from './components/horario/horario-add/horario-add.component';
 import { HorarioUpdateComponent } from './components/horario/horario-update/horario-update.component';
-//nivel 1
 import { NivelComponent } from './components/nivel/nivel.component';
-//nivel 2
 import { NivelDetalleComponent } from './components/niveldetalle/niveldetalle.component';
-//nivel 3
 import { NivelDetalleCursoComponent } from './components/niveldetallecurso/niveldetallecurso.component';
-//periodo
 import { PeriodoComponent } from './components/periodo/periodo.component';
-//Docente
 import { DocenteComponent } from './components/docente/docente.component';
-//calificacion
 import { CalificacionDetailComponent } from './components/calificacion/calificacion-detail/calificacion-detail.component';
-//ventana del estudiante
 import { Ventana3Component } from './components/vista-estudiante/ventana3/ventana3.component';
-//matricula
 import { MatriculaComponent } from './components/matricula/matricula.component';
 import { Ventana2Component } from './components/vista-docente/ventana2/ventana2.component';
 import { CurricularDocenteComponent } from './components/vista-docente/curricular/curricular.component';
@@ -64,7 +33,7 @@ import { AgregarNoticiaComponent } from './components/agregar-noticia/agregar-no
 import { RecursoComponent } from './components/recurso/recurso.component';
 import { LunaComponent } from './components/vista-de-etapa/luna/luna.component';
 import { VentaInformacionComponent } from './components/venta-informacion/venta-informacion.component';
-import {  QuizComponent } from './components/ventanas-para-invitados/eventos/eventos/eventos.component';
+import { QuizComponent } from './components/ventanas-para-invitados/eventos/eventos/eventos.component';
 import { PreguntasJuegosComponent } from './components/ventanas-para-invitados/juegos/juegos/preguntas/preguntas-juegos/preguntas-juegos.component';
 import { JuegosComponent } from './components/ventanas-para-invitados/juegos/juegos/juegos.component';
 import { LibrosApiComponent } from './components/ventanas-para-invitados/libro/libros-api/libros-api.component';
@@ -78,31 +47,27 @@ import { AsistenciaComponent } from './components/vista-docente/asistencia/asist
 import { PrediccionComponent } from './components/prediccion/prediccion/prediccion.component';
 import { WekaComponent } from './components/prediciones/weka/weka.component';
 import { DocenteAnalizaComponent } from './components/vista-docente/docente-analiza/docente-analiza.component';
-
-
+import { EncuestaEstudianteComponent } from './components/vista-estudiante/encuenta-estudiante/encuenta-estudiante.component';
+import { ConsultarPreciosComponent } from './components/ventanas-para-invitados/consultar-precios/consultar-precios/consultar-precios.component';
+import { PreciosNiveleducativoComponent } from './components/precios-niveleducativo/precios-niveleducativo.component';
+import { InformacionEducativaComponent } from './components/ventanas-para-invitados/ventana-informacion-educativa/ADMIN-informacion-educativa/informacion-educativa.component';
+import { VentanaInformacionPublicComponent } from './components/ventanas-para-invitados/ventanaInformacion-Public/ventana-informacion-public/ventana-informacion-public.component';
+import { SedesComponent } from './components/ventanas-para-invitados/sedes/sedes/sedes.component';
+import { MaterialDocenteComponent } from './components/vista-docente/docente-analiza/docente-crea-material/material-docente/material-docente.component';
 
 const routes: Routes = [
-
-
-  // vista docente  ventana2
   {
     path: 'ventana2',
     component: Ventana2Component,
     canActivate: [AuthGuard],
     data: { roles: ['Docente'] },
   },
- 
-
   {
     path: 'docente-weka',
-    component:  DocenteAnalizaComponent,
+    component: DocenteAnalizaComponent,
     canActivate: [AuthGuard],
     data: { roles: ['Docente'] },
   },
-
-
-  
-    // vista Docente curricularDocente
   {
     path: 'curricularDocente',
     component: CurricularDocenteComponent,
@@ -115,8 +80,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Docente'] },
   },
- 
-
   {
     path: 'asistencia',
     component: AsistenciaComponent,
@@ -126,220 +89,229 @@ const routes: Routes = [
   {
     path: 'error',
     component: ErrorComponent,
-    
   },
-
   {
     path: 'venta-informacion',
     component: VentaInformacionComponent,
-    
   },
-
-
   {
     path: 'preguntas',
     component: PreguntasJuegosComponent,
-    
   },
-
   {
     path: 'juego',
     component: JuegosComponent,
-    
   },
-
-
   {
     path: 'ventana3',
     component: Ventana3Component,
     canActivate: [AuthGuard],
     data: { roles: ['Estudiante'] },
   },
-
   {
     path: 'curricularEstudiante',
     component: CurricularEstudianteComponent,
     canActivate: [AuthGuard],
     data: { roles: ['Estudiante'] },
   },
-
+  {
+    path: 'EncuestaEstudiante',
+    component: EncuestaEstudianteComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Estudiante'] },
+  },
   {
     path: 'horarioEstudiante',
     component: HorarioEstudianteComponent,
     canActivate: [AuthGuard],
     data: { roles: ['Estudiante'] },
   },
-
   { path: 'eventos', component: QuizComponent },
-
-  // Home route
   { path: 'home', component: HomeComponent },
-
-  // Registrar  Usuario
-  { path: 'registro', component: RegisterComponent,
-      canActivate: [AuthGuard],
+  {
+    path: 'registro',
+    component: RegisterComponent,
+    canActivate: [AuthGuard],
     data: { roles: ['Administracion'] },
   },
-  // acudiente routes
   {
     path: 'acudientes',
     component: AcudienteListComponent,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion'] },
   },
-  
-  { path: 'acudientes/details/:id', component: AcudienteDetailComponent,
+  {
+    path: 'acudientes/details/:id',
+    component: AcudienteDetailComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
-  },
-
-  //curriculares
-  { path: 'curriculares', component: CurricularListComponent,
-    canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
+    data: { roles: ['Administracion'] },
   },
 
 
-  //curso
-  { path: 'cursos', component: CursosListComponent ,
+  {
+    path: 'preciosniveleducativo',
+    component:   PreciosNiveleducativoComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
+    data: { roles: ['Administracion'] },
   },
+ 
 
-  //estudiante
-  { path: 'listar', component: ListarEstudiantesComponent ,
+  {
+    path: 'informacion-educativa',
+    component:    InformacionEducativaComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
+    data: { roles: ['Administracion'] },
   },
-
-
-  //estudiante
-  { path: 'grado-seccion', component: GradoSeccionComponent ,
+  {
+    path: 'curriculares',
+    component: CurricularListComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
+    data: { roles: ['Administracion'] },
   },
-
-
-
-
-
-  { path: 'modifica-home', component: ModificarHomeComponent ,
+  {
+    path: 'cursos',
+    component: CursosListComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
+    data: { roles: ['Administracion'] },
   },
-
-
-  { path: 'header',
+  {
+    path: 'listar',
+    component: ListarEstudiantesComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion'] },
+  },
+  {
+    path: 'grado-seccion',
+    component: GradoSeccionComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion'] },
+  },
+  {
+    path: 'modifica-home',
+    component: ModificarHomeComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion'] },
+  },
+  {
+    path: 'header',
     component: ThemeCustomizerComponent,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion'] },
   },
-
-  { path: 'chat-gestion',
+  {
+    path: 'chat-gestion',
     component: ChatGestionComponent,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion'] },
   },
-
-
-
-  //horario
   {
     path: 'horario',
     component: HorarioListComponent,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion'] },
   },
-  { path: 'horario/add', component: HorarioAddComponent ,
+  {
+    path: 'horario/add',
+    component: HorarioAddComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
+    data: { roles: ['Administracion'] },
   },
-  { path: 'horario/update/:id', component: HorarioUpdateComponent,
+  {
+    path: 'horario/update/:id',
+    component: HorarioUpdateComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
+    data: { roles: ['Administracion'] },
   },
-
-  { path: 'niveldetalle', component: NivelDetalleComponent,
+  {
+    path: 'niveldetalle',
+    component: NivelDetalleComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
+    data: { roles: ['Administracion'] },
   },
-
-  { path: 'niveldetallecurso', component: NivelDetalleCursoComponent ,
+  {
+    path: 'niveldetallecurso',
+    component: NivelDetalleCursoComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
+    data: { roles: ['Administracion'] },
   },
-
-  { path: 'nivel', component: NivelComponent,
+  {
+    path: 'nivel',
+    component: NivelComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
+    data: { roles: ['Administracion'] },
   },
   { path: 'luna', component: LunaComponent },
-  { path: 'periodo', component: PeriodoComponent,
-    canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
-  },
-  { path: 'agregar-noticia', component: AgregarNoticiaComponent ,
+  {
+    path: 'periodo',
+    component: PeriodoComponent,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion'] },
   },
-
-  { path: 'agregar-recurso', component: RecursoComponent ,
+  {
+    path: 'agregar-noticia',
+    component: AgregarNoticiaComponent,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion'] },
   },
-
-  { path: 'weka', component: WekaComponent ,
+  {
+    path: 'agregar-recurso',
+    component: RecursoComponent,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion'] },
   },
-  //docente
+  {
+    path: 'weka',
+    component: WekaComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion'] },
+  },
   {
     path: 'docentes',
     component: DocenteComponent,
     canActivate: [AuthGuard],
     data: { roles: ['Administracion'] },
   },
-
-  
-
-  { path: 'docentes/detalle', component: DocenteNivelDetalleCursoComponent,
+  {
+    path: 'docentes/detalle',
+    component: DocenteNivelDetalleCursoComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
-  }, 
-  { path: 'factura', component: FacturaComponent ,
-    canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  }, 
-
-    },
-
-
-  { path: 'predicciones', component: PrediccionComponent ,
-    canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  }, 
-
-    },
-
-
-    { path: 'perfil-estudiante', component: PerfilEstudianteComponent ,
-      canActivate: [AuthGuard],
-      data: { roles: ['Estudiante']  }, 
-      },
-
-      { path: 'crear-notificacion', component: CrearNotificacionComponent ,
-        canActivate: [AuthGuard],
-        data: { roles: ['Estudiante']  }, 
-        },
-  
-
-      
-  { path: 'calificaciones', component: CalificacionListComponent ,
-    canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
+    data: { roles: ['Administracion'] },
   },
-
-  { path: 'calificaciones/detail/:id', component: CalificacionDetailComponent ,
+  {
+    path: 'factura',
+    component: FacturaComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['Administracion']  },
+    data: { roles: ['Administracion'] },
+  },
+  {
+    path: 'predicciones',
+    component: PrediccionComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion'] },
+  },
+  {
+    path: 'perfil-estudiante',
+    component: PerfilEstudianteComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Estudiante'] },
+  },
+  {
+    path: 'crear-notificacion',
+    component: CrearNotificacionComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Estudiante'] },
+  },
+  {
+    path: 'calificaciones',
+    component: CalificacionListComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion'] },
+  },
+  {
+    path: 'calificaciones/detail/:id',
+    component: CalificacionDetailComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion'] },
   },
   {
     path: 'matricula',
@@ -348,53 +320,24 @@ const routes: Routes = [
     data: { roles: ['Administracion'] },
   },
 
+  { path: 'ventana-informacion-public', component:   VentanaInformacionPublicComponent },
 
-  
- 
-  
-  // Login route
+
+
+  {
+    path: 'materia-docente',
+    component: MaterialDocenteComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Docente'] },
+  },
+
+
+  { path: 'sedes', component: SedesComponent },
+  { path: 'consultar-precios', component: ConsultarPreciosComponent },
   { path: 'login', component: LoginComponent },
-
-
   { path: 'libros-api', component: LibrosApiComponent },
-
-
-
   { path: '**', redirectTo: '/venta-informacion' },
-
-
-
-
-  { path: 'juego', component: VentaInformacionComponent }, // Adjust as needed
-  { path: 'libros-api', component: VentaInformacionComponent }, // Adjust as needed
-  { path: 'victor', component: VentaInformacionComponent }, // Adjust as needed
-  { path: 'historia', component: VentaInformacionComponent },
-  { path: 'instalaciones', component: VentaInformacionComponent },
-  { path: 'docentes', component: VentaInformacionComponent },
-  { path: 'reglamento', component: VentaInformacionComponent },
-  { path: 'calendario', component: VentaInformacionComponent },
-  { path: 'libros', component: VentaInformacionComponent },
-  { path: 'videos', component: VentaInformacionComponent },
-  { path: 'documentos', component: VentaInformacionComponent },
-  { path: 'plataforma', component: VentaInformacionComponent },
-  { path: 'clases', component: VentaInformacionComponent },
-  { path: 'foros', component: VentaInformacionComponent },
-  { path: 'pruebas', component: VentaInformacionComponent },
-  { path: 'evaluaciones', component: VentaInformacionComponent },
-  { path: 'mision', component: VentaInformacionComponent },
-  { path: 'vision', component: VentaInformacionComponent },
-
-
-
-
 ];
-
-
-
-
-
-
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

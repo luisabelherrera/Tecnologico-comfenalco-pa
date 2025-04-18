@@ -70,30 +70,29 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/weka', icon: 'bar_chart', title: 'weka' },
   ];
   Menu = [
-    { path: '/agregar-noticia', icon: 'post_add', title: 'Agregar Noticia' },
-    { path: '/chat-gestion', icon: 'chat', title: 'Gestionar Chat' },
-    { path: '/header', icon: 'web', title: 'Personalizar Header' },
+    { path: '/agregar-noticia', icon: 'article', title: 'Publicar Noticia' },
+    { path: '/chat-gestion', icon: 'forum', title: 'Administrar Chat' },
+    { path: '/header', icon: 'palette', title: 'Configurar Encabezado' },
+    { path: '/preciosniveleducativo', icon: 'monetization_on', title: 'Tarifas Educativas' },
+    { path: '/informacion-educativa', icon: 'info', title: 'Información Educativa' },
   ];
   
   AdministrarUsuario = [
     { path: '/registro', icon: 'person_add', title: 'Registrar' },
   ];
   userLinks = [
-    { path: '/ventana2', icon: 'person', title: 'Mi Perfil' },
-    { path: '/curricularDocente', icon: 'school', title: 'Calificaciones' },
+    { path: '/ventana2', icon: 'account_circle', title: 'Mi Perfil' },
+    { path: '/curricularDocente', icon: 'grade', title: 'Calificaciones' },
     { path: '/horarioDocente', icon: 'schedule', title: 'Mi Horario' },
-    { path: '/asistencia', icon: 'fact_check', title: 'Control de Asistencia' },
-
-
-
-    
-    { path: '/docente-weka', icon: 'analytics', title: 'Rendimiento Estudiantil' },
+    { path: '/asistencia', icon: 'checklist', title: 'Control de Asistencia' },
+   
+    { path: '/docente-weka', icon: 'insights', title: 'Rendimiento Estudiantil' },
   ];
   Ventana3Links = [
     { path: '/perfil-estudiante', icon: 'account_circle', title: 'Mi Perfil' },
+    { path: '/EncuestaEstudiante', icon: 'edit_note', title: 'Encuesta Estudiantil' },
     { path: '/ventana3', icon: 'assessment', title: 'Mis Calificaciones' },
     { path: '/horarioEstudiante', icon: 'schedule', title: 'Mi Horario' },
-    { path: '/encuesta-estudiante', icon: 'edit_note', title: 'Encuesta Estudiantil' },
     { path: '/material-estudio', icon: 'import_contacts', title: 'Material de Estudio' },
   ];
 
@@ -195,9 +194,13 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.isButtonPressed) {
       this.previousTheme = { ...currentTheme };
       this.temaHeaderService.applyTheme({
-        ...currentTheme,
-        backgroundColor: '#3F51B5',
-        textColor: '#F5F5F5',
+        name: 'navidad',
+        backgroundColor: 'rgb(0, 0, 0)',
+        backgroundColorLeft: '#000000',
+
+        backgroundColorRight: '	#0000FF',
+        textColor: 'white',
+    
       });
     } else {
       this.temaHeaderService.applyTheme(this.previousTheme);

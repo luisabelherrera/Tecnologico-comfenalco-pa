@@ -89,6 +89,17 @@ import { WekaComponent } from './components/prediciones/weka/weka.component';
 import { StudentSelectionDialogComponent } from './components/prediciones/weka/dialogo/student-selection-dialog.component';
 import { DocenteAnalizaComponent } from './components/vista-docente/docente-analiza/docente-analiza.component';
 import { WekaEstudiantesComponent } from './components/vista-docente/docente-analiza/estudiante-weka/weka-estudiantes/weka-estudiantes.component';
+import { EncuestaEstudianteComponent } from './components/vista-estudiante/encuenta-estudiante/encuenta-estudiante.component';
+import { ConsultarPreciosComponent } from './components/ventanas-para-invitados/consultar-precios/consultar-precios/consultar-precios.component';
+import { PreciosNiveleducativoComponent } from './components/precios-niveleducativo/precios-niveleducativo.component';
+import { InformacionEducativaComponent } from './components/ventanas-para-invitados/ventana-informacion-educativa/ADMIN-informacion-educativa/informacion-educativa.component';
+import { VentanaInformacionPublicComponent } from './components/ventanas-para-invitados/ventanaInformacion-Public/ventana-informacion-public/ventana-informacion-public.component';
+import { SedesComponent } from './components/ventanas-para-invitados/sedes/sedes/sedes.component';
+import { MaterialDocenteComponent } from './components/vista-docente/docente-analiza/docente-crea-material/material-docente/material-docente.component';
+import { SharedModule } from './guards/shared.module';
+
+
+
 
 @NgModule({
   imports: [
@@ -120,9 +131,19 @@ import { WekaEstudiantesComponent } from './components/vista-docente/docente-ana
     MatCarouselModule,
     CommonModule,
     DragDropModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    HttpClientModule,
+    SharedModule,
   ],
   declarations: [
+    
+    MaterialDocenteComponent,
+    SedesComponent,
+    VentanaInformacionPublicComponent,
+    InformacionEducativaComponent,
+    PreciosNiveleducativoComponent,
+    ConsultarPreciosComponent,
+    EncuestaEstudianteComponent,
     WekaComponent,
     WekaEstudiantesComponent,
     DocenteAnalizaComponent,

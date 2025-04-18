@@ -124,7 +124,6 @@
       <button class="toggle-btn" [class.active]="showChart" (click)="toggleChartView()">Gráfico</button>
     </div>
 
-    <!-- Controles de filtro -->
     <div class="filter-section">
       <mat-form-field appearance="fill">
         <mat-label>Filtrar por Resultado</mat-label>
@@ -140,7 +139,7 @@
       </mat-form-field>
     </div>
 
-    <div *ngIf="!showChart" class="historial-container" [ngClass]="{'hidden': showChart}">
+    <div *ngIf="!showChart" class="historial-container">
       <div class="table-wrapper" *ngIf="paginatedHistorial.length > 0; else noHistorial">
         <table class="inscripcion-table">
           <thead>
@@ -196,17 +195,8 @@
       </ng-template>
     </div>
 
-    <div *ngIf="showChart" class="chart-container" [ngClass]="{'hidden': !showChart}">
-      <div class="bar-chart">
-        <div class="bar-item">
-          <div class="bar" [style.height.px]="getBarHeight(positiveCount)" style="background-color: #FF6384;"></div>
-          <span class="bar-label">tested_positive: {{ positiveCount }}</span>
-        </div>
-        <div class="bar-item">
-          <div class="bar" [style.height.px]="getBarHeight(negativeCount)" style="background-color: #36A2EB;"></div>
-          <span class="bar-label">tested_negative: {{ negativeCount }}</span>
-        </div>
-      </div>
+    <div *ngIf="showChart" class="chart-container">
+      <canvas #barChart></canvas>
     </div>
   </div>
 </div>

@@ -1,0 +1,199 @@
+<div class="page-container">
+  <!-- Header Animado -->
+  <header class="header">
+    <div class="header-container">
+      <a href="#" class="logo">
+        <img src="assets/iconos/eduportal.png" alt="EduPortal" />
+        <span>EduPortal</span>
+      </a>
+      <nav class="desktop-nav">
+        <ul class="nav-list">
+
+
+          <ul class="nav-list">
+            <li>
+              <a [routerLink]="'/inicio'" [class.active]="selectedSection === 'noticias'" (click)="smoothScrollToTop()">
+                Inicio
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="'/ventana-informacion-public'" (click)="smoothScrollToTop()">
+                Institución
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="'/sedes'" (click)="smoothScrollToTop()">
+                Instalaciones
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="'/consultar-precios'" (click)="smoothScrollToTop()">
+                Precios
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="'/victor'" (click)="smoothScrollToTop()">
+                Recursos
+              </a>
+            </li>
+          </ul>
+
+
+
+
+          <li class="auth-button">
+            <a (click)="irAOtraVentana()" class="btn-login">Iniciar Sesión</a>
+          </li>
+        </ul>
+      </nav>
+      <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" aria-label="Menu">
+        <i class="material-icons">{{ isMobileMenuOpen ? 'close' : 'menu' }}</i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" *ngIf="isMobileMenuOpen">
+    <div class="mobile-menu-header">
+      <a href="#" class="logo">
+        <span>EduPortal</span>
+      </a>
+    </div>
+    <nav>
+      <ul class="mobile-nav-list">
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#about">Nosotros</a></li>
+        <li><a href="#">Biblioteca</a></li>
+        <li><a href="consultar-precios" (click)="accion4()">Precios</a></li>
+        <li><a href="#">Recursos</a></li>
+        <li><a (click)="irAOtraVentana(); toggleMobileMenu()" class="btn-login">Iniciar Sesión</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      <section class="prices-section">
+        <h1 class="section-title">Ofertas Educativas <span class="emoji">🎓</span></h1>
+        <p class="subtitle">Descubre los mejores precios para tu educación</p>
+
+        <!-- List View -->
+        <div class="cards-container" *ngIf="!selectedPrecio" [@cardAnimation]>
+          <div *ngFor="let precio of precios" class="card">
+            <div class="card-image" *ngIf="precio.imagenPath && imageUrls[precio.id]">
+              <img [src]="imageUrls[precio.id]" alt="{{precio.concepto}}" />
+            </div>
+            <div class="card-content">
+              <h2>{{precio.nivel}} - {{precio.concepto}}</h2>
+              <p class="description">{{precio.descripcion || 'Sin descripción disponible'}}</p>
+              <div class="price-details">
+                <span class="price">${{precio.monto}}</span>
+                <span class="periodicity" *ngIf="precio.periodicidad">/{{precio.periodicidad}}</span>
+                <span class="discount" *ngIf="precio.descuento" [style.backgroundColor]="getDiscountColor(precio.descuento)">
+                  {{ getDiscountText(precio.descuento) }}
+                  <ng-container *ngIf="getDiscountText(precio.descuento)"> ({{precio.descuento}}% OFF)</ng-container>
+                </span>
+              </div>
+              <div class="dates" *ngIf="precio.fechaInicio || precio.fechaFin">
+                <p>Válido desde: {{precio.fechaInicio | date:'dd/MM/yyyy'}}</p>
+                <p>Hasta: {{precio.fechaFin | date:'dd/MM/yyyy'}}</p>
+              </div>
+              <button class="offer-button" (click)="exploreOffer(precio)">Explorar Oferta</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed View -->
+        <div class="detail-container" *ngIf="selectedPrecio" [@cardAnimation]>
+          <div class="detail-card">
+            <button class="back-button" (click)="backToList()">← Volver</button>
+            <div class="detail-content">
+              <!-- Image -->
+              <div class="detail-image" *ngIf="selectedPrecio.imagenPath && imageUrls[selectedPrecio.id]">
+                <img [src]="imageUrls[selectedPrecio.id]" alt="{{selectedPrecio.concepto}}" />
+              </div>
+              <!-- Content -->
+              <div class="detail-info">
+                <h2>{{selectedPrecio.nivel | uppercase}} - {{selectedPrecio.concepto | uppercase}}</h2>
+                <div class="price-details">
+                  <span class="price">${{selectedPrecio.monto | number:'1.0-0'}}/{{selectedPrecio.periodicidad}}</span>
+                  <span class="discount" *ngIf="selectedPrecio.descuento" [style.backgroundColor]="getDiscountColor(selectedPrecio.descuento)">
+                    {{ getDiscountText(selectedPrecio.descuento) }} ({{selectedPrecio.descuento}}% OFF)
+                  </span>
+                </div>
+                <div class="dates">
+                  <p><strong>Válido desde:</strong> {{selectedPrecio.fechaInicio | date:'dd/MM/yyyy'}}</p>
+                  <p><strong>Hasta:</strong> {{selectedPrecio.fechaFin | date:'dd/MM/yyyy'}}</p>
+                </div>
+                <div class="additional-info">
+                  <h3>Detalles de la Oferta</h3>
+                  <p class="section-label"><strong>Asignaturas Incluidas:</strong></p>
+                  <div class="subjects-list">
+                    <span class="subject">Matemática</span>
+                    <span class="subject">Inglés</span>
+                    <span class="subject">Innovación Tecnológica</span>
+                  </div>
+                  <h3>Métodos de Pago Aceptados</h3>
+                  <div class="payment-methods">
+                    <span class="payment-option">Nequi</span>
+                    <span class="payment-option">BBVA</span>
+                    <span class="payment-option">Daviplata</span>
+                    <span class="payment-option">Paypal</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <img src="assets/iconos/eduportal.png" alt="Logo Institucional" />
+          <h3>EduPortal</h3>
+          <p>¡Tu aventura escolar comienza aquí! 📚</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Explora</h4>
+            <ul>
+              <li><a href="#"><i class="material-icons">home</i> Inicio</a></li>
+              <li><a href="#about"><i class="material-icons">people</i> Nosotros</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Aventuras</h4>
+            <ul>
+              <li><a href="#"><i class="material-icons">local_library</i> Biblioteca</a></li>
+              <li><a href="#"><i class="material-icons">videogame_asset</i> Juegos</a></li>
+              <li><a href="#"><i class="material-icons">school</i> Recursos</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4>Contáctanos</h4>
+            <ul class="contact-info">
+              <li><i class="material-icons">location_on</i> Av. Escuela #123, Ciudad</li>
+              <li><i class="material-icons">phone</i> (123) 456-7890</li>
+              <li><i class="material-icons">email</i> info@hobocolegio.edu</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© {{ getCurrentYear() }} EduPortal. ¡Todos felices aprendiendo! 🌈</p>
+        <div class="social-links">
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>

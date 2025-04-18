@@ -1,0 +1,112 @@
+<div class="container">
+    <h2 class="title">Gestión de Precios Educativos</h2>
+  
+    <!-- Formulario -->
+    <div class="form-container">
+      <form [formGroup]="precioForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="nivel">Nivel Educativo</label>
+            <input id="nivel" type="text" formControlName="nivel" placeholder="Ej: Primaria">
+            <span class="error" *ngIf="precioForm.get('nivel')?.touched && precioForm.get('nivel')?.hasError('required')">
+              El nivel es requerido
+            </span>
+          </div>
+  
+          <div class="form-group">
+            <label for="concepto">Concepto</label>
+            <input id="concepto" type="text" formControlName="concepto" placeholder="Ej: Matrícula">
+            <span class="error" *ngIf="precioForm.get('concepto')?.touched && precioForm.get('concepto')?.hasError('required')">
+              El concepto es requerido
+            </span>
+          </div>
+  
+          <div class="form-group">
+            <label for="monto">Monto</label>
+            <input id="monto" type="number" formControlName="monto" placeholder="0.00">
+            <span class="error" *ngIf="precioForm.get('monto')?.touched && precioForm.get('monto')?.hasError('required')">
+              El monto es requerido
+            </span>
+            <span class="error" *ngIf="precioForm.get('monto')?.touched && precioForm.get('monto')?.hasError('min')">
+              El monto debe ser mayor o igual a 0
+            </span>
+          </div>
+  
+          <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <input id="descripcion" type="text" formControlName="descripcion" placeholder="Ej: Incluye materiales">
+          </div>
+  
+          <div class="form-group">
+            <label for="periodicidad">Periodicidad</label>
+            <select id="periodicidad" formControlName="periodicidad">
+              <option value="">Seleccione</option>
+              <option value="Mensual">Mensual</option>
+              <option value="Anual">Anual</option>
+              <option value="Única vez">Única vez</option>
+            </select>
+          </div>
+  
+          <div class="form-group">
+            <label for="fechaInicio">Fecha Inicio</label>
+            <input id="fechaInicio" type="date" formControlName="fechaInicio">
+          </div>
+  
+          <div class="form-group">
+            <label for="fechaFin">Fecha Fin</label>
+            <input id="fechaFin" type="date" formControlName="fechaFin">
+          </div>
+  
+          <div class="form-group">
+            <label for="descuento">Descuento (%)</label>
+            <input id="descuento" type="number" formControlName="descuento" placeholder="Ej: 10">
+          </div>
+  
+          <div class="form-group">
+            <label for="categoria">Categoría</label>
+            <input id="categoria" type="text" formControlName="categoria" placeholder="Ej: Cursos">
+          </div>
+  
+          <div class="form-group">
+            <label for="imagen">Imagen</label>
+            <input id="imagen" type="file" (change)="onFileSelected($event)" accept="image/*">
+          </div>
+        </div>
+  
+        <div class="button-group">
+          <button type="submit" [disabled]="precioForm.invalid">{{ isEditing ? 'Actualizar' : 'Crear' }}</button>
+          <button type="button" (click)="resetForm()" *ngIf="isEditing">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  
+    <!-- Announcement Cards -->
+    <div class="cards-container">
+      <div class="announcement-card" *ngFor="let precio of precios">
+        <div class="announcement-header">
+          <h3 class="announcement-title">{{ precio.nivel }} - {{ precio.concepto }}</h3>
+          <span class="announcement-label">¡Oferta Educativa!</span>
+        </div>
+        <div class="announcement-body">
+          <div class="announcement-image">
+            <img *ngIf="precio.imagenPath && imageUrls[precio.id!]" [src]="imageUrls[precio.id!]" alt="Imagen" class="card-image">
+          </div>
+          <div class="announcement-details">
+            <p class="price">{{ precio.monto | currency }} <span *ngIf="precio.periodicidad">/ {{ precio.periodicidad }}</span></p>
+            <p *ngIf="precio.descripcion" class="description">{{ precio.descripcion }}</p>
+            <p *ngIf="precio.descuento" class="discount">Descuento: {{ precio.descuento }}%</p>
+            <p *ngIf="precio.fechaInicio" class="validity">
+              Vigente: {{ precio.fechaInicio | date:'mediumDate' }} - {{ precio.fechaFin ? (precio.fechaFin | date:'mediumDate') : 'Indefinido' }}
+            </p>
+            <p *ngIf="precio.categoria" class="category">Categoría: {{ precio.categoria }}</p>
+          </div>
+        </div>
+        <div class="announcement-footer">
+          <div class="card-actions">
+            <button class="edit-btn" (click)="editPrecio(precio)">Editar</button>
+            <button class="delete-btn" (click)="deletePrecio(precio.id!)">Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

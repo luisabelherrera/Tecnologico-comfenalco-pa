@@ -1,0 +1,84 @@
+<div class="material-container">
+  <!-- Header -->
+  <div class="header">
+    <h2>Material para {{ data.estudiantePrediccion.estudiante.nombres }} {{ data.estudiantePrediccion.estudiante.apellidos }}</h2>
+    <button mat-icon-button (click)="closeDialog()" aria-label="Cerrar" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Mensaje si no hay curriculares -->
+  <div class="no-curriculares" *ngIf="!isLoadingCurriculares && curriculares.length === 0">
+    <p class="text-center text-danger">No se encontraron asignaturas asignadas al docente.</p>
+  </div>
+
+  <!-- Formulario -->
+  <form [formGroup]="materialForm" class="form" *ngIf="curriculares.length > 0">
+    <mat-form-field appearance="outline" class="curricular-field">
+      <mat-label>Asignatura</mat-label>
+      <mat-select formControlName="curricular" (selectionChange)="selectedCurricular = $event.value">
+        <mat-option *ngFor="let curricular of curriculares" [value]="curricular">
+          {{ curricular.descripcion }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="materialForm.get('curricular')?.touched && materialForm.get('curricular')?.hasError('required')">
+        Selecciona una asignatura
+      </mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="generateStudyMaterialSuggestions()" 
+            [disabled]="isLoadingSuggestions || !selectedCurricular" 
+            class="generate-button">
+      <mat-icon *ngIf="!isLoadingSuggestions">play_arrow</mat-icon>
+      <span>{{ isLoadingSuggestions ? 'Generando...' : 'Generar' }}</span>
+    </button>
+  </form>
+
+  <!-- Cargando -->
+  <div class="loading-container" *ngIf="isLoadingSuggestions">
+    <div class="loading">
+      <mat-spinner diameter="36"></mat-spinner>
+      <span>Generando material personalizado...</span>
+    </div>
+  </div>
+
+  <!-- Contenido generado -->
+  <div class="content" *ngIf="!isLoadingSuggestions && temas.length">
+    <!-- Temas -->
+    <div class="temas-nav">
+      <div *ngFor="let tema of temas" 
+           class="tema-item" 
+           [class.selected]="tema === temaSeleccionado" 
+           (click)="seleccionarTema(tema)">
+        <span class="tema-icon">{{ getIconForTema(tema.nombre) }}</span>
+        <span class="tema-title">{{ tema.nombre }}</span>
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content-area" #materialContent>
+      <div *ngIf="temaSeleccionado" [id]="temaSeleccionado.id" class="tema-content">
+        <h3>{{ temaSeleccionado.nombre }}</h3>
+
+        <!-- Videos -->
+        <div *ngIf="temaSeleccionado.nombre.toLowerCase().includes('videos') && temaSeleccionado.videos?.length" class="videos">
+          <div *ngFor="let video of temaSeleccionado.videos" class="video">
+            <iframe *ngIf="isValidVideoUrl(video)" [src]="getVideoEmbedUrl(video)" frameborder="0" allowfullscreen></iframe>
+            <p *ngIf="!isValidVideoUrl(video)" class="error">Video no disponible: {{ video }}</p>
+          </div>
+        </div>
+
+        <!-- Contenido textual -->
+        <div *ngIf="!temaSeleccionado.nombre.toLowerCase().includes('videos')" class="text-content">
+          {{ temaSeleccionado.contenido }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botones de acción -->
+  <div class="actions" *ngIf="temas.length">
+    <button mat-button color="warn" (click)="closeDialog()" class="cancel-button">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="enviarMaterial()" [disabled]="!materialForm.valid" class="send-button">Enviar</button>
+  </div>
+</div>

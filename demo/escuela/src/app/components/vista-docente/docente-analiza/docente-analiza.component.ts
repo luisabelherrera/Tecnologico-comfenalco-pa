@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
+import { Chart } from 'chart.js/auto';
 import { Estudiante } from 'src/app/models/entity/Estudiante.interface';
 import { Curricular } from 'src/app/models/entity/curricular.model';
 import { DocenteNivelDetalleCurso } from 'src/app/models/entity/docente-nivel-detalle-curso.model';
@@ -14,12 +15,15 @@ import { InscripcionService } from 'src/app/services/matricula/matricula.service
 import { DocentePerfilService } from 'src/app/services/Docente/Docente-perfil/docente-perfil.service';
 import { CalificacionService } from 'src/app/services/calificacion/calificacion.service';
 import { WekaEstudiantesComponent } from './estudiante-weka/weka-estudiantes/weka-estudiantes.component';
+import { EncuestaEstudianteService } from 'src/app/services/encuentasEstudiante/EncuestaEstudiante.service';
+import { MaterialDocenteComponent } from './docente-crea-material/material-docente/material-docente.component';
 
 interface EstudiantePrediccion {
   estudiante: Estudiante;
   prediccion?: string;
   confianza?: number;
   nota?: number;
+  showConfidence?: boolean;
 }
 
 interface DatosEstudiante {
@@ -33,19 +37,22 @@ interface DatosEstudiante {
   templateUrl: './docente-analiza.component.html',
   styleUrls: ['./docente-analiza.component.scss']
 })
-export class DocenteAnalizaComponent implements OnInit {
+export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit {
   docente?: UserDto;
   curriculares: Curricular[] = [];
   estudiantesPorCurricular: { [curricularId: number]: EstudiantePrediccion[] } = {};
   selectedCurricular: Curricular | null = null;
   studentForm: FormGroup;
   resultado: string = '';
-  displayedColumns: string[] = ['estudiante', 'documento', 'nota', 'prediccion', 'confianza'];
+  displayedColumns: string[] = ['estudiante', 'documento', 'nota', 'prediccion', 'confianza', 'accion'];
   dataSource = new MatTableDataSource<EstudiantePrediccion>([]);
   historialPredicciones: DatosEstudiante[] = [];
   showForm: boolean = false;
   showTable: boolean = true;
-
+  private gradeChart: Chart | undefined;
+  promedioNotas: number | null = null;
+  prediccionStats: { aprobados: number; reprobados: number; sinPredecir: number } = { aprobados: 0, reprobados: 0, sinPredecir: 0 };
+  student: EstudiantePrediccion;
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -55,7 +62,8 @@ export class DocenteAnalizaComponent implements OnInit {
     private docentePerfilService: DocentePerfilService,
     private docenteNivelDetalleCursoService: DocenteNivelDetalleCursoService,
     private inscripcionService: InscripcionService,
-    private calificacionService: CalificacionService
+    private calificacionService: CalificacionService,
+    private encuestaService: EncuestaEstudianteService
   ) {
     this.studentForm = this.fb.group({
       documento: ['', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]],
@@ -67,9 +75,9 @@ export class DocenteAnalizaComponent implements OnInit {
       participacionClases: ['', Validators.required],
       usoPlataformaVirtual: ['', Validators.required],
       antecedentesPerdida: ['', Validators.required],
-      apoyoFamiliar: ['', Validators.required],        // Nuevo
-      cargaAcademica: ['', [Validators.required, Validators.min(1), Validators.max(5)]], // Nuevo
-      problemasPersonales: ['', Validators.required]   // Nuevo
+      apoyoFamiliar: ['', Validators.required],
+      cargaAcademica: ['', [Validators.required, Validators.min(1), Validators.max(5)]],
+      problemasPersonales: ['', Validators.required]
     });
   }
 
@@ -78,10 +86,20 @@ export class DocenteAnalizaComponent implements OnInit {
     this.loadDocenteYDatos();
   }
 
+  ngAfterViewInit(): void {
+    if (this.selectedCurricular) {
+      this.updateGradeChart();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.gradeChart?.destroy();
+  }
+
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('accessToken');
     return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`
     });
   }
 
@@ -138,25 +156,40 @@ export class DocenteAnalizaComponent implements OnInit {
           const nivelDetalleId = curricular.docenteNivelDetalleCurso.nivelDetalleCurso?.nivelDetalle?.idNivelDetalle;
 
           const estudiantesInscritos = inscripciones
-            .filter(ins => ins.nivelDetalle?.idNivelDetalle === nivelDetalleId)
-            .map(ins => ins.estudiante);
+            .filter((ins) => ins.nivelDetalle?.idNivelDetalle === nivelDetalleId)
+            .map((ins) => ins.estudiante);
 
           this.calificacionService.getCalificacionesPorCurricular(curricular.idCurricular!).subscribe(
             (calificaciones) => {
-              this.estudiantesPorCurricular[curricular.idCurricular!] = estudiantesInscritos.map((est) => {
-                const prediccionGuardada = this.historialPredicciones.find(h => String(h.documento) === String(est.documentoIdentidad));
-                const calificacion = calificaciones.find(cal => cal.estudiante.idEstudiante === est.idEstudiante);
-                return {
-                  estudiante: est,
-                  prediccion: prediccionGuardada?.perderaAsignatura || undefined,
-                  confianza: prediccionGuardada ? parseFloat(prediccionGuardada.confianza.replace('%', '')) / 100 : undefined,
-                  nota: calificacion?.nota
-                };
-              });
+              Promise.all(
+                estudiantesInscritos.map(async (est) => {
+                  try {
+                    const encuesta = await this.encuestaService.getEncuestaByEstudianteId(est.idEstudiante).toPromise();
+                    est.encuesta = encuesta;
+                  } catch (error) {
+                    console.error('Error loading encuesta:', error);
+                  }
+                  return est;
+                })
+              ).then((estudiantesConEncuesta) => {
+                this.estudiantesPorCurricular[curricular.idCurricular!] = estudiantesConEncuesta.map((est) => {
+                  const prediccionGuardada = this.historialPredicciones.find(
+                    (h) => String(h.documento) === String(est.documentoIdentidad)
+                  );
+                  const calificacion = calificaciones.find((cal) => cal.estudiante.idEstudiante === est.idEstudiante);
+                  return {
+                    estudiante: est,
+                    prediccion: prediccionGuardada?.perderaAsignatura || undefined,
+                    confianza: prediccionGuardada ? parseFloat(prediccionGuardada.confianza.replace('%', '')) / 100 : undefined,
+                    nota: calificacion?.nota,
+                    showConfidence: false
+                  };
+                });
 
-              if (this.selectedCurricular && this.selectedCurricular.idCurricular === curricular.idCurricular) {
-                this.updateTableData();
-              }
+                if (this.selectedCurricular && this.selectedCurricular.idCurricular === curricular.idCurricular) {
+                  this.updateTableData();
+                }
+              });
             },
             (error) => {
               console.error('Error al cargar calificaciones:', error);
@@ -194,24 +227,30 @@ export class DocenteAnalizaComponent implements OnInit {
     this.updateTableData();
   }
 
-  toggleForm(): void {
+  toggleView(showForm: boolean): void {
     if (!this.selectedCurricular) {
       this.snackBar.open('Por favor, selecciona un curricular primero.', 'Cerrar', { duration: 5000 });
       return;
     }
-    this.showForm = !this.showForm;
+
+    this.showForm = showForm;
+    this.showTable = !showForm;
+
     if (!this.showForm) {
       this.studentForm.reset();
       this.resultado = '';
     }
+
+    if (this.showTable) {
+      setTimeout(() => this.updateGradeChart(), 0);
+    }
   }
 
   toggleTable(): void {
-    if (!this.selectedCurricular) {
-      this.snackBar.open('Por favor, selecciona un curricular primero.', 'Cerrar', { duration: 5000 });
-      return;
-    }
     this.showTable = !this.showTable;
+    if (this.showTable) {
+      setTimeout(() => this.updateGradeChart(), 0);
+    }
   }
 
   openStudentSelectionDialog(): void {
@@ -228,7 +267,7 @@ export class DocenteAnalizaComponent implements OnInit {
 
     const dialogRef = this.dialog.open(WekaEstudiantesComponent, {
       width: '600px',
-      data: { estudiantes: estudiantes.map(e => e.estudiante) }
+      data: { estudiantes: estudiantes.map((e) => e.estudiante) }
     });
 
     dialogRef.afterClosed().subscribe((result: Estudiante) => {
@@ -242,21 +281,21 @@ export class DocenteAnalizaComponent implements OnInit {
   populateForm(estudiante: Estudiante): void {
     const edad = this.calculateAge(estudiante.fechaNacimiento);
     const estudiantePred = this.estudiantesPorCurricular[this.selectedCurricular!.idCurricular!].find(
-      e => e.estudiante.documentoIdentidad === estudiante.documentoIdentidad
+      (e) => e.estudiante.documentoIdentidad === estudiante.documentoIdentidad
     );
     this.studentForm.patchValue({
       documento: estudiante.documentoIdentidad,
       edad: edad,
       genero: estudiante.sexo === 'M' ? 'Masculino' : estudiante.sexo === 'F' ? 'Femenino' : 'Otro',
       promedioParciales: estudiantePred?.nota !== undefined ? estudiantePred.nota : '',
-      horasEstudioSemanal: '', // No hay datos previos, dejar vacío
+      horasEstudioSemanal: '',
       asistencia: '',
       participacionClases: '',
       usoPlataformaVirtual: '',
       antecedentesPerdida: '',
-      apoyoFamiliar: '',
+      apoyoFamiliar: estudiante.encuesta?.apoyoFamiliar || '',
       cargaAcademica: '',
-      problemasPersonales: ''
+      problemasPersonales: estudiante.encuesta?.problemasPersonales || ''
     });
   }
 
@@ -276,7 +315,7 @@ export class DocenteAnalizaComponent implements OnInit {
     if (this.studentForm.valid && this.selectedCurricular) {
       const datos = this.studentForm.value;
       const estudiantePred = this.estudiantesPorCurricular[this.selectedCurricular.idCurricular!].find(
-        e => e.estudiante.documentoIdentidad === datos.documento
+        (e) => e.estudiante.documentoIdentidad === datos.documento
       );
       const headers = this.getHeaders();
 
@@ -285,46 +324,135 @@ export class DocenteAnalizaComponent implements OnInit {
         nota: estudiantePred?.nota !== undefined ? estudiantePred.nota : null
       };
 
-      this.http.post('http://localhost:9098/api/predecir', datosCompletos, { headers })
-        .subscribe({
-          next: (response: any) => {
-            this.resultado = `Resultado: ${response.prediccion} (Confianza: ${response.confianza})`;
-            if (estudiantePred) {
-              estudiantePred.prediccion = response.prediccion;
-              estudiantePred.confianza = parseFloat(response.confianza.replace('%', '')) / 100;
+      this.http.post('http://localhost:9098/api/predecir', datosCompletos, { headers }).subscribe({
+        next: (response: any) => {
+          this.resultado = `Resultado: ${response.prediccion} (Confianza: ${response.confianza})`;
+          if (estudiantePred) {
+            estudiantePred.prediccion = response.prediccion;
+            estudiantePred.confianza = parseFloat(response.confianza.replace('%', '')) / 100;
 
-              const existingPredictionIndex = this.historialPredicciones.findIndex(
-                h => String(h.documento) === String(datos.documento)
-              );
-              const prediccionData = {
-                documento: datos.documento,
-                perderaAsignatura: response.prediccion,
-                confianza: response.confianza
-              };
-              if (existingPredictionIndex !== -1) {
-                this.historialPredicciones[existingPredictionIndex] = prediccionData;
-              } else {
-                this.historialPredicciones.push(prediccionData);
-              }
-
-              this.updateTableData();
+            const existingPredictionIndex = this.historialPredicciones.findIndex(
+              (h) => String(h.documento) === String(datos.documento)
+            );
+            const prediccionData = {
+              documento: datos.documento,
+              perderaAsignatura: response.prediccion,
+              confianza: response.confianza
+            };
+            if (existingPredictionIndex !== -1) {
+              this.historialPredicciones[existingPredictionIndex] = prediccionData;
+            } else {
+              this.historialPredicciones.push(prediccionData);
             }
-          },
-          error: (err) => {
-            console.error('Error al predecir:', err);
-            this.resultado = `Error: ${err.status} - ${err.error?.error || 'Error desconocido'}`;
+
+            this.updateTableData();
           }
-        });
+        },
+        error: (err) => {
+          console.error('Error al predecir:', err);
+          this.resultado = `Error: ${err.status} - ${err.error?.error || 'Error desconocido'}`;
+        }
+      });
     } else {
       this.resultado = 'Formulario inválido o no se ha seleccionado un curricular.';
     }
   }
 
+  openMaterialPanel(student: EstudiantePrediccion): void {
+    const dialogRef = this.dialog.open(MaterialDocenteComponent, {
+      width: 'min(1300px, 100vw)', 
+      height: 'min(800px, 100vh)',
+      maxWidth: '100vw', 
+      maxHeight: '100vh',
+      data: { 
+        estudiantePrediccion: student,
+        curriculares: this.curriculares, // Pass filtered curriculares
+        curricularId: this.selectedCurricular?.idCurricular // Pass selected curricular ID
+      },
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result && result.material) {
+        this.snackBar.open(
+          `Material enviado a ${student.estudiante.nombres} ${student.estudiante.apellidos}`,
+          'Cerrar',
+          { duration: 3000 }
+        );
+        this.resultado = `Material enviado a ${student.estudiante.nombres} ${student.estudiante.apellidos}`;
+      }
+    });
+  }
   private updateTableData(): void {
     if (this.selectedCurricular && this.estudiantesPorCurricular[this.selectedCurricular.idCurricular!]) {
       this.dataSource.data = [...this.estudiantesPorCurricular[this.selectedCurricular.idCurricular!]];
+
+      const notas = this.dataSource.data.map((e) => e.nota).filter((n) => n !== undefined) as number[];
+      this.promedioNotas = notas.length > 0 ? notas.reduce((a, b) => a + b, 0) / notas.length : null;
+
+      this.prediccionStats = {
+        aprobados: this.dataSource.data.filter((e) => e.prediccion === 'tested_negative').length,
+        reprobados: this.dataSource.data.filter((e) => e.prediccion === 'tested_positive').length,
+        sinPredecir: this.dataSource.data.filter((e) => !e.prediccion).length
+      };
+
+      setTimeout(() => this.updateGradeChart(), 0);
     } else {
       this.dataSource.data = [];
+      this.promedioNotas = null;
+      this.prediccionStats = { aprobados: 0, reprobados: 0, sinPredecir: 0 };
+      setTimeout(() => this.updateGradeChart(), 0);
     }
+  }
+
+  private updateGradeChart(): void {
+    if (this.gradeChart) {
+      this.gradeChart.destroy();
+    }
+
+    const canvas = document.getElementById('gradeChart') as HTMLCanvasElement;
+    if (!canvas || this.dataSource.data.length === 0) return;
+
+    const labels = this.dataSource.data.map((e) => `${e.estudiante.nombres} ${e.estudiante.apellidos}`);
+    const notas = this.dataSource.data.map((e) => (e.nota !== undefined ? e.nota : 0));
+
+    this.gradeChart = new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Notas de Estudiantes',
+            data: notas,
+            backgroundColor: '#36A2EB',
+            borderColor: '#1E88E5',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 5,
+            title: { display: true, text: 'Nota' }
+          },
+          x: {
+            title: { display: true, text: 'Estudiantes' }
+          }
+        },
+        plugins: {
+          legend: { position: 'top' },
+          title: {
+            display: true,
+            text: `Distribución de Notas (Promedio: ${this.promedioNotas?.toFixed(2) || 'N/A'})`
+          }
+        }
+      }
+    });
+  }
+
+  toggleConfidence(element: EstudiantePrediccion): void {
+    element.showConfidence = !element.showConfidence;
   }
 }

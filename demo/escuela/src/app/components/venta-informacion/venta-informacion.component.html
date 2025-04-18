@@ -1,9 +1,3 @@
-
-
-
-
-
-
 <div class="page-container">
   <!-- Header Animado -->
   <header class="header">
@@ -14,11 +8,44 @@
       </a>
       <nav class="desktop-nav">
         <ul class="nav-list">
-          <li><a href="#" [class.active]="selectedSection === 'noticias'">Inicio</a></li>
-          <li><a href="#about" (click)="scrollToAbout()">Nosotros</a></li>
-          <li><a href="#" (click)="libro()">Biblioteca</a></li>
-          <li><a href="#" (click)="accion4()">Juegos</a></li>
-          <li><a href="#" (click)="victor()">Recursos</a></li>
+
+
+
+
+          <ul class="nav-list">
+            <li>
+              <a [routerLink]="'/inicio'" [class.active]="selectedSection === 'noticias'" (click)="smoothScrollToTop()">
+                Inicio
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="'/ventana-informacion-public'" (click)="smoothScrollToTop()">
+                Institución
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="'/sedes'" (click)="smoothScrollToTop()">
+                Instalaciones
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="'/consultar-precios'" (click)="smoothScrollToTop()">
+                Precios
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="'/victor'" (click)="smoothScrollToTop()">
+                Recursos
+              </a>
+            </li>
+          </ul>
+          
+          
+
+
+
+
+
           <li class="auth-button">
             <a (click)="irAOtraVentana()" class="btn-login">Iniciar Sesión</a>
           </li>
@@ -63,7 +90,7 @@
         <p>Tu aventura escolar comienza aquí</p>
         <div class="hero-buttons">
           <a href="#about" class="btn btn-primary" (click)="scrollToAbout()">¡Explora! <span class="emoji">🚀</span></a>
-          <a href="#news" class="btn btn-secondary">Noticias <span class="emoji">📰</span></a>
+          <a href="javascript:void(0)" class="btn btn-secondary" (click)="scrollToNews()">Noticias <span class="emoji">📰</span></a>
         </div>
       </div>
     </div>
@@ -174,16 +201,18 @@
   <footer class="footer">
     <div class="container">
       <div class="footer-content">
+        <!-- Logo y descripción -->
         <div class="footer-logo">
-          <img src="assets/iconos/eduportal.png" alt="Logo Institucional" />
-          <h3>EduPortal  </h3>
-          <p>¡Tu aventura escolar comienza aquí! 📚</p>
+          <img src="assets/iconos/eduportal.png" alt="Logo EduPortal" class="logo-img" />
+          <h3>EduPortal</h3>
+          <p>¡Explora, aprende y crece con nosotros! 🌟</p>
         </div>
+        <!-- Links -->
         <div class="footer-links">
           <div class="footer-column">
             <h4>Explora</h4>
             <ul>
-              <li><a href="#"><i class="material-icons">home</i> Inicio</a></li>
+              <li><a href="#" (click)="scrollToTop()"><i class="material-icons">home</i> Inicio</a></li>
               <li><a href="#about" (click)="scrollToAbout()"><i class="material-icons">people</i> Nosotros</a></li>
             </ul>
           </div>
@@ -200,40 +229,21 @@
             <ul class="contact-info">
               <li><i class="material-icons">location_on</i> Av. Escuela #123, Ciudad</li>
               <li><i class="material-icons">phone</i> (123) 456-7890</li>
-              <li><i class="material-icons">email</i> info@hobocolegio.edu</li>
+              <li><i class="material-icons">email</i> <a href="mailto:info@hobocolegio.edu">info@hobocolegio.edu</a></li>
             </ul>
           </div>
         </div>
       </div>
+      <!-- Bottom -->
       <div class="footer-bottom">
-        <p>© {{ getCurrentYear() }} EduPortal . ¡Todos felices aprendiendo! 🌈</p>
+        <p>© {{ getCurrentYear() }} EduPortal - Todos los derechos reservados 🌈</p>
         <div class="social-links">
-            <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
-            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#" aria-label="Facebook" class="social-icon"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" aria-label="Twitter" class="social-icon"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" aria-label="Instagram" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="YouTube" class="social-icon"><i class="fa-brands fa-youtube"></i></a>
         </div>
-        
       </div>
     </div>
   </footer>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

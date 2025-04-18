@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ChatHistoryService } from './chat-history.service';
-import { API_URL } from '../constants-ia/api.constants';
+import { API_URL } from '../constants-ia/constants-ia';
 
 @Injectable({
   providedIn: 'root',

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -20,8 +20,10 @@ interface FeatureCard {
   selector: 'app-venta-informacion',
   templateUrl: './venta-informacion.component.html',
   styleUrls: ['./venta-informacion.component.scss'],
+  
 })
-export class VentaInformacionComponent implements OnInit, OnDestroy {
+export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('news', { static: false }) newsSection!: ElementRef;
   @ViewChild('newsTrack') newsTrack!: ElementRef;
 
   private destroy$ = new Subject<void>();
@@ -68,6 +70,9 @@ export class VentaInformacionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initializeAuthState();
     this.cargarNoticias();
+  }
+
+  ngAfterViewInit(): void {
   }
 
   ngOnDestroy(): void {
@@ -168,7 +173,9 @@ export class VentaInformacionComponent implements OnInit, OnDestroy {
   handleImageError(event: Event): void {
     (event.target as HTMLImageElement).src = 'assets/img/cdc-GDokEYnOfnE-unsplash.jpg';
   }
-
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
   irAOtraVentana(): void {
     this.router.navigate(['/login']).then(() => this.smoothScrollToTop());
   }
@@ -205,6 +212,13 @@ export class VentaInformacionComponent implements OnInit, OnDestroy {
   scrollToAbout() {
     document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' });
   }
+
+  scrollToNews(): void {
+    if (this.newsSection) {
+      this.newsSection.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
   formatDate(date: string | Date): string {
     const dateObj = typeof date === 'string' ? new Date(date) : date;
     return dateObj.toLocaleDateString('es-ES', {
@@ -218,11 +232,23 @@ export class VentaInformacionComponent implements OnInit, OnDestroy {
     return new Date().getFullYear();
   }
 
-  accion4() { this.router.navigate(['/juego']); }
+  accion3(): void {
+    this.router.navigate(['/ventana-informacion-public']).then(() => this.smoothScrollToTop());
+  }
+  accion4(): void {
+    this.router.navigate(['/consultar-precios']).then(() => this.smoothScrollToTop());
+  }
+  
   libro() { this.router.navigate(['/libros-api']); }
   victor() { this.router.navigate(['/victor']); }
-  accion1() {}
+ 
+ 
+  accion1(): void {
+    this.router.navigate(['/sedes']).then(() => this.smoothScrollToTop());
+  }
+
+
   accion5() {}
   accion2() {}
-  accion3() {}
+
 }
