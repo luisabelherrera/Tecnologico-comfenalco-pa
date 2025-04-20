@@ -1,42 +1,114 @@
-<div class="institucion-container">
+<div class="page-container">
+    <!-- Header Animado -->
+    <header class="header">
+      <div class="header-container">
+        <a href="#" class="logo">
+          <img src="assets/iconos/eduportal.png" alt="EduPortal" />
+          <span>EduPortal</span>
+        </a>
+        <nav class="desktop-nav">
+          <ul class="nav-list">
+            <li>
+              <a [routerLink]="'/inicio'" [class.active]="selectedSection === 'noticias'" (click)="smoothScrollToTop()">
+                Inicio
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="'/ventana-informacion-public'" (click)="smoothScrollToTop()">
+                Institución
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="'/sedes'" [class.active]="selectedSection === 'sedes'" (click)="smoothScrollToTop()">
+                Instalaciones
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="'/consultar-precios'" (click)="smoothScrollToTop()">
+                Precios
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="'/victor'" (click)="smoothScrollToTop()">
+                Recursos
+              </a>
+            </li>
+            <li class="auth-button">
+              <a (click)="irAOtraVentana()" class="btn-login">Iniciar Sesión</a>
+            </li>
+          </ul>
+        </nav>
+        <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" aria-label="Menu">
+          <i class="material-icons">{{ isMobileMenuOpen ? 'close' : 'menu' }}</i>
+        </button>
+      </div>
+    </header>
+  
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" *ngIf="isMobileMenuOpen">
+      <div class="mobile-menu-header">
+        <a href="#" class="logo">
+          <span>EduPortal</span>
+        </a>
+        <button class="mobile-close-btn" (click)="toggleMobileMenu()" aria-label="Close Menu">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <nav>
+        <ul class="mobile-nav-list">
+          <li><a [routerLink]="'/inicio'" (click)="toggleMobileMenu(); smoothScrollToTop()">Inicio</a></li>
+          <li><a [routerLink]="'/ventana-informacion-public'" (click)="toggleMobileMenu(); smoothScrollToTop()">Institución</a></li>
+          <li><a [routerLink]="'/sedes'" (click)="toggleMobileMenu(); smoothScrollToTop()">Instalaciones</a></li>
+          <li><a [routerLink]="'/consultar-precios'" (click)="toggleMobileMenu(); smoothScrollToTop()">Precios</a></li>
+          <li><a [routerLink]="'/victor'" (click)="toggleMobileMenu(); smoothScrollToTop()">Recursos</a></li>
+          <li><a (click)="irAOtraVentana(); toggleMobileMenu()" class="btn-login">Iniciar Sesión</a></li>
+        </ul>
+      </nav>
+    </div>
+  
+ <!-- Institución Content -->
+ <div class="institucion-container">
     <h1>Institución Educativa El Hobo</h1>
     <p>
-        La Institución Educativa El Hobo, ubicada en la vereda El Hobo del municipio de El Carmen de Bolívar, 
-        ha experimentado mejoras significativas en sus instalaciones en los últimos años.
+      La Institución Educativa El Hobo, ubicada en la vereda El Hobo del municipio de El Carmen de Bolívar, 
+      ha experimentado mejoras significativas en sus instalaciones en los últimos años.
     </p>
 
     <h2>Mejoras en Infraestructura</h2>
     <p>
-        En 2019, se llevó a cabo una ampliación que incluyó nuevos bloques de aulas diseñados para optimizar 
-        la ventilación natural y el ingreso controlado de luz, adaptándose al clima cálido y húmedo de la región. 
-        Estas estructuras se elevaron sobre el suelo natural para permitir el paso de escorrentías y preservar 
-        la biodiversidad local.
+      En 2019, se llevó a cabo una ampliación que incluyó nuevos bloques de aulas diseñados para optimizar 
+      la ventilación natural y el ingreso controlado de luz, adaptándose al clima cálido y húmedo de la región. 
+      Estas estructuras se elevaron sobre el suelo natural para permitir el paso de escorrentías y preservar 
+      la biodiversidad local.
     </p>
     <p>
-        Más información en: 
-        <a href="https://www.archdaily.cl/cl/923759/escuela-rural-el-hobo-fp-arquitectura" target="_blank">
-            ArchDaily - Escuela Rural El Hobo
-        </a>
+      Más información en: 
+      <a href="https://www.archdaily.cl/cl/923759/escuela-rural-el-hobo-fp-arquitectura" target="_blank">
+        ArchDaily - Escuela Rural El Hobo
+      </a>
     </p>
 
     <h2>Compromiso con la Educación</h2>
     <p>
-        Además, la institución ha fortalecido su compromiso con la calidad educativa, implementando proyectos como 
-        la preparación de suelos para cultivos de caraota y frijol, y realizando rendiciones de cuentas anuales 
-        para mantener informada a la comunidad.
+      Además, la institución ha fortalecido su compromiso con la calidad educativa, implementando proyectos como 
+      la preparación de suelos para cultivos de caraota y frijol, y realizando rendiciones de cuentas anuales 
+      para mantener informada a la comunidad.
     </p>
     <p>
-        Más información en: 
-        <a href="https://www.ietaelhobo.com/" target="_blank">Sitio web oficial</a>
+      Más información en: 
+      <a href="https://www.ietaelhobo.com/" target="_blank">Sitio web oficial</a>
     </p>
 
     <h2>Video sobre las obras en la institución</h2>
     <p>
-        Puedes ver más sobre las obras realizadas en la siguiente presentación en video:
+      Puedes ver más sobre las obras realizadas en la siguiente presentación en video:
     </p>
     <p>
-        <a href="https://www.youtube.com/watch?v=gXmsPo_m11E" target="_blank">
-            Ver en YouTube
-        </a>
+      <a href="https://www.youtube.com/watch?v=gXmsPo_m11E" target="_blank">
+        Ver en YouTube
+      </a>
     </p>
-</div>
+  </div>
+  
+   
+  </div>

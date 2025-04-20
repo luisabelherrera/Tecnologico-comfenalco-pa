@@ -18,8 +18,8 @@ interface EstudiantePrediccion {
 
 interface DialogData {
   estudiantePrediccion: EstudiantePrediccion;
-  curriculares?: Curricular[]; // Filtered curriculares
-  curricularId?: number; // Optional pre-selected curricular
+  curriculares?: Curricular[];
+  curricularId?: number;
 }
 
 interface GenerateContentResponse {
@@ -54,13 +54,13 @@ interface Tema {
 export class MaterialDocenteComponent implements OnInit {
   materialForm: FormGroup;
   isLoadingSuggestions = false;
+  isLoadingReport = false;
   temas: Tema[] = [];
   temaSeleccionado: Tema | null = null;
   curriculares: Curricular[] = [];
   selectedCurricular: Curricular | null = null;
   isLoadingCurriculares = false;
 
-  // Fallback videos for Inglés Período 1
   private fallbackVideos: { [key: string]: { url: string; description: string }[] } = {
     'Inglés Período 1': [
       {
@@ -74,7 +74,7 @@ export class MaterialDocenteComponent implements OnInit {
     ],
   };
 
-  private apiKey = 'AIzaSyB9HNN9nYfHK07TlZiCjMG-qVXZ2u70Rxc'; // TODO: Mover a environment.ts
+  private apiKey = 'AIzaSyB9HNN9nYfHK07TlZiCjMG-qVXZ2u70Rxc';
 
   @ViewChild('materialContent') materialContent!: ElementRef;
 
@@ -104,10 +104,8 @@ export class MaterialDocenteComponent implements OnInit {
   loadCurriculares(): void {
     this.isLoadingCurriculares = true;
     if (this.data.curriculares && this.data.curriculares.length > 0) {
-      // Use curriculares passed from DocenteAnalizaComponent
       this.curriculares = this.data.curriculares;
       this.isLoadingCurriculares = false;
-      // Pre-select the curricular if curricularId is provided
       if (this.data.curricularId) {
         const preSelectedCurricular = this.curriculares.find(c => c.idCurricular === this.data.curricularId);
         if (preSelectedCurricular) {
@@ -116,7 +114,6 @@ export class MaterialDocenteComponent implements OnInit {
         }
       }
     } else {
-      // Handle case where no curriculares are passed
       this.isLoadingCurriculares = false;
       this.snackBar.open('No se encontraron asignaturas asignadas al docente.', 'Cerrar', { duration: 5000 });
       this.curriculares = [];
@@ -124,11 +121,10 @@ export class MaterialDocenteComponent implements OnInit {
   }
 
   loadCurricularById(id: number): void {
-    // Only fetch if curriculares weren't passed or the curricular isn't in the list
     if (!this.curriculares.some(c => c.idCurricular === id)) {
       this.curricularService.getCurricularById(id).subscribe({
         next: (curricular) => {
-          this.curriculares.push(curricular); // Add to list
+          this.curriculares.push(curricular);
           this.selectedCurricular = curricular;
           this.materialForm.patchValue({ curricular: curricular });
         },
@@ -166,23 +162,21 @@ Su calificación actual es de ${this.data.estudiantePrediccion.nota ?? 'no dispo
 
 Genera una lista de recursos personalizados para ayudarle a mejorar su rendimiento en la asignatura "${this.selectedCurricular.descripcion}":
 - Propón 3 ejercicios prácticos numerados relacionados con los temas de la asignatura "${this.selectedCurricular.descripcion}".
-  - Si la predicción indica bajo rendimiento o la confianza es menor a 70%, los ejercicios deben ser introductorios y guiados (por ejemplo, practicar el alfabeto o saludos para Inglés Período 1).
-  - Si la predicción indica buen rendimiento o la confianza es mayor o igual a 70%, los ejercicios pueden ser más desafiantes, fomentando el pensamiento crítico (por ejemplo, crear oraciones simples).
+  - Si la predicción indica bajo rendimiento o la confianza es menor a 70%, los ejercicios deben be introductorios y guiados.
+  - Si la predicción indica buen rendimiento o la confianza es mayor o igual a 70%, los ejercicios pueden ser más desafiantes.
 - Sugiere una lectura educativa relevante para la asignatura "${this.selectedCurricular.descripcion}", con una URL completa.
-  - Ajusta la complejidad de la lectura según la predicción y confianza: lecturas simples como cuentos infantiles para bajo rendimiento, y textos más avanzados para buen rendimiento.
-- Organiza el contenido en secciones con títulos claros, usando el formato "## Título de la sección" (por ejemplo: "## Conceptos básicos", "## Ejercicios recomendados", "## Lectura recomendada").
-- NO incluyas enlaces a videos de YouTube en esta respuesta, ya que los videos serán proporcionados by otra fuente.
+  - Ajusta la complejidad de la lectura según la predicción y confianza.
+- Organiza el contenido en secciones con títulos claros, usando el formato "## Título de la sección".
+- NO incluyas enlaces a videos de YouTube en esta respuesta.
 
 Usa un tono amigable y motivador, como si hablaras con un estudiante de secundaria. Sé claro, educativo y personaliza las recomendaciones según la predicción y confianza del estudiante.
 `;
 
-    // Step 1: Call Gemini API for text content (excluding videos)
     this.http.post(geminiUrl, { contents: [{ parts: [{ text: prompt }] }] }).subscribe({
       next: (response: any) => {
         let suggestions = response.candidates?.[0]?.content?.parts?.[0]?.text || 'No se pudieron generar sugerencias.';
         console.log('Material generado por Gemini:', suggestions);
 
-        // Step 2: Call YouTube Data v3 API for videos
         const youtubeUrl = `https://www.googleapis.com/youtube/v3/search`;
         const searchQuery =
           this.selectedCurricular.descripcion === 'Inglés Período 1'
@@ -212,7 +206,6 @@ Usa un tono amigable y motivador, como si hablaras con un estudiante de secundar
 
             console.log('Videos obtenidos de YouTube:', videos);
 
-            // Step 3: Combine Gemini content with YouTube videos
             let videoSection = `## Videos sugeridos\n`;
             if (videos.length >= 2) {
               videoSection += videos
@@ -220,7 +213,6 @@ Usa un tono amigable y motivador, como si hablaras con un estudiante de secundar
                 .map((video, index) => `${index + 1}. ${video.url} - ${video.description}`)
                 .join('\n');
             } else {
-              // Use fallback videos if YouTube API returns insufficient results
               const fallback = this.fallbackVideos[this.selectedCurricular?.descripcion || ''] || [];
               videoSection += fallback
                 .slice(0, 2)
@@ -229,7 +221,6 @@ Usa un tono amigable y motivador, como si hablaras con un estudiante de secundar
               console.log('Usando videos de respaldo:', fallback);
             }
 
-            // Append or replace video section in suggestions
             suggestions = suggestions.replace(/## Videos sugeridos\n([\s\S]*?)(##|$)/, '') + '\n' + videoSection;
             this.materialForm.patchValue({ material: suggestions });
             this.clasificarTemas(suggestions);
@@ -238,7 +229,6 @@ Usa un tono amigable y motivador, como si hablaras con un estudiante de secundar
           },
           error: (youtubeError) => {
             console.error('Error al buscar videos en YouTube:', youtubeError);
-            // Use fallback videos on YouTube API failure
             const fallback = this.fallbackVideos[this.selectedCurricular?.descripcion || ''] || [];
             const videoSection = `## Videos sugeridos\n${fallback
               .slice(0, 2)
@@ -254,7 +244,6 @@ Usa un tono amigable y motivador, como si hablaras con un estudiante de secundar
       },
       error: (geminiError) => {
         console.error('Error al generar sugerencias con Gemini:', geminiError);
-        // Full fallback if both APIs fail
         if (this.selectedCurricular?.descripcion === 'Inglés Período 1') {
           const fallbackMaterial = `
 ## Conceptos básicos
@@ -280,6 +269,77 @@ Usa un tono amigable y motivador, como si hablaras con un estudiante de secundar
         }
         this.isLoadingSuggestions = false;
         this.snackBar.open('Error al generar sugerencias.', 'Cerrar', { duration: 3000 });
+      },
+    });
+  }
+
+  generateEvaluativeReport(): void {
+    if (!this.selectedCurricular) {
+      this.snackBar.open('Selecciona una asignatura antes de generar el informe.', 'Cerrar', { duration: 3000 });
+      return;
+    }
+
+    this.isLoadingReport = true;
+
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${this.apiKey}`;
+
+    const prompt = `
+Eres un asistente académico experto en la generación de informes evaluativos para docentes en un colegio. Genera un informe evaluativo detallado en español para el estudiante ${
+      this.data.estudiantePrediccion.estudiante.nombres
+    } ${this.data.estudiantePrediccion.estudiante.apellidos}, que cursa la asignatura "${this.selectedCurricular.descripcion}" en el nivel "${
+      this.selectedCurricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.nivel.descripcionNivel ||
+      this.selectedCurricular.descripcion
+    }". El informe debe tener un mínimo de 7 páginas de contenido (aproximadamente 2500-3000 palabras en fuente Arial 12, espaciado sencillo, en papel A4) y estar estructurado en secciones claras con títulos en formato "## Título de la Sección".
+
+**Datos del estudiante:**
+- Predicción académica: "${this.data.estudiantePrediccion.prediccion || 'desconocida'}"
+- Confianza de la predicción: ${this.data.estudiantePrediccion.confianza ?? 'no disponible'}%
+- Calificación actual: ${this.data.estudiantePrediccion.nota ?? 'no disponible'} sobre 5
+
+**Requisitos del informe:**
+1. **Introducción (1 página)**: Presenta el propósito del informe, el contexto académico (asignatura, nivel), y un resumen del perfil del estudiante, incluyendo su nombre, predicción académica, confianza, y calificación actual. Usa un tono profesional pero accesible.
+2. **Perfil del Estudiante (1 página)**: Describe al estudiante (edad, género, nivel educativo, intereses si se infieren del contexto) y su situación académica actual en la asignatura. Menciona fortalezas y áreas de oportunidad basadas en la predicción y confianza.
+3. **Análisis de Desempeño (2 páginas)**: Evalúa el rendimiento del estudiante en la asignatura:
+   - Si la predicción indica bajo rendimiento o confianza < 70%, detalla dificultades específicas (ejemplo: problemas con vocabulario básico en Inglés Período 1).
+   - Si la predicción indica buen rendimiento o confianza ≥ 70%, destaca logros y áreas para desafíos avanzados (ejemplo: capacidad para formar oraciones complejas).
+   - Incluye ejemplos concretos relacionados con la asignatura y compara el desempeño con los objetivos del curso.
+4. **Desafíos Identificados (1 página)**: Identifica barreras específicas que afectan el rendimiento (ejemplo: falta de práctica, dificultades de comprensión, o factores externos como asistencia). Personaliza según la predicción y confianza.
+5. **Recomendaciones para la Mejora (2 páginas)**: Propón un plan detallado para mejorar el rendimiento:
+   - Incluye al menos 5 estrategias específicas (ejemplo: ejercicios guiados, lecturas complementarias, tutorías).
+   - Sugiere 3 recursos educativos (lecturas, sitios web, no videos) con URLs completas, ajustados al nivel de rendimiento.
+   - Propón un cronograma de actividades semanales para las próximas 4 semanas.
+   - Ajusta la complejidad según la predicción: estrategias introductorias para bajo rendimiento, avanzadas para buen rendimiento.
+6. **Conclusión (0.5-1 página)**: Resume los puntos clave, enfatiza la importancia de seguir las recomendaciones, y motiva al estudiante y docente a trabajar juntos para el éxito.
+7. **Anexos (opcional, 0.5 página)**: Incluye una lista de recursos adicionales o herramientas recomendadas (sin videos).
+
+**Instrucciones adicionales:**
+- Usa un tono profesional, motivador y claro, dirigido a docentes y padres, pero comprensible para un estudiante de secundaria.
+- Organiza el contenido con subtítulos claros (### Subsección) dentro de cada sección para mayor claridad.
+- Asegúrate de que el informe sea extenso (2500-3000 palabras) para cumplir con el requisito de 7 páginas.
+- NO incluyas enlaces a videos de YouTube, ya que se manejan por separado.
+- Personaliza el contenido según la predicción, confianza y calificación del estudiante, asegurando que las recomendaciones sean relevantes para la asignatura "${this.selectedCurricular.descripcion}".
+
+**Formato:**
+- Usa markdown para estructurar el informe.
+- Incluye un título principal con "# Informe Evaluativo" seguido del nombre del estudiante y la asignatura.
+- Numera las páginas en el texto (ejemplo: "Página 1 de 7") for reference.
+`;
+
+    this.http.post(geminiUrl, { contents: [{ parts: [{ text: prompt }] }] }).subscribe({
+      next: (response: any) => {
+        let report = response.candidates?.[0]?.content?.parts?.[0]?.text || 'No se pudo generar el informe.';
+        console.log('Informe generado por Gemini:', report);
+
+        this.materialForm.patchValue({ material: report });
+        this.clasificarTemas(report);
+        this.isLoadingReport = false;
+        this.snackBar.open('Informe evaluativo generado con éxito.', 'Cerrar', { duration: 3000 });
+      },
+      error: (error) => {
+        console.error('Error al generar el informe con Gemini:', error);
+        this.materialForm.patchValue({ material: 'Error al generar el informe. Intenta de nuevo.' });
+        this.isLoadingReport = false;
+        this.snackBar.open('Error al generar el informe.', 'Cerrar', { duration: 3000 });
       },
     });
   }
@@ -335,6 +395,25 @@ Usa un tono amigable y motivador, como si hablaras con un estudiante de secundar
     }
   }
 
+  exportMaterial(): void {
+    if (this.materialForm.valid) {
+      const material = this.materialForm.value.material;
+      const fileName = `Informe_${this.data.estudiantePrediccion.estudiante.nombres}_${this.selectedCurricular?.descripcion}.docx`;
+      const blob = new Blob([material], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      this.snackBar.open('Informe exportado con éxito.', 'Cerrar', { duration: 3000 });
+    } else {
+      this.snackBar.open('Por favor, genera un informe válido antes de exportar.', 'Cerrar', { duration: 3000 });
+    }
+  }
+
   closeDialog(): void {
     this.dialogRef.close();
   }
@@ -363,10 +442,11 @@ Usa un tono amigable y motivador, como si hablaras con un estudiante de secundar
 
   getIconForTema(nombre: string): string {
     const nombreLower = nombre.toLowerCase();
-    if (nombreLower.includes('conceptos') || nombreLower.includes('básicos')) return '📘';
-    if (nombreLower.includes('ejercicios')) return '✏️';
-    if (nombreLower.includes('videos')) return '🎥';
-    if (nombreLower.includes('lectura')) return '📖';
+    if (nombreLower.includes('introducción') || nombreLower.includes('perfil')) return '📄';
+    if (nombreLower.includes('análisis') || nombreLower.includes('desempeño')) return '📊';
+    if (nombreLower.includes('desafíos')) return '⚠️';
+    if (nombreLower.includes('recomendaciones') || nombreLower.includes('plan')) return '📋';
+    if (nombreLower.includes('conclusión') || nombreLower.includes('anexos')) return '✅';
     return '🌟';
   }
 }
