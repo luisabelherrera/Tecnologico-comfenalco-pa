@@ -20,7 +20,7 @@ interface FeatureCard {
   selector: 'app-venta-informacion',
   templateUrl: './venta-informacion.component.html',
   styleUrls: ['./venta-informacion.component.scss'],
-  
+
 })
 export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('news', { static: false }) newsSection!: ElementRef;
@@ -238,11 +238,11 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
   accion4(): void {
     this.router.navigate(['/consultar-precios']).then(() => this.smoothScrollToTop());
   }
-  
+
   libro() { this.router.navigate(['/libros-api']); }
-  victor() { this.router.navigate(['/victor']); }
- 
- 
+  victor() { this.router.navigate(['/live2']); }
+
+
   accion1(): void {
     this.router.navigate(['/sedes']).then(() => this.smoothScrollToTop());
   }

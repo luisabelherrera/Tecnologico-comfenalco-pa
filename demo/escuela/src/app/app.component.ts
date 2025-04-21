@@ -76,7 +76,7 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/preciosniveleducativo', icon: 'monetization_on', title: 'Tarifas Educativas' },
     { path: '/informacion-educativa', icon: 'info', title: 'Información Educativa' },
   ];
-  
+
   AdministrarUsuario = [
     { path: '/registro', icon: 'person_add', title: 'Registrar' },
   ];
@@ -85,7 +85,7 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/curricularDocente', icon: 'grade', title: 'Calificaciones' },
     { path: '/horarioDocente', icon: 'schedule', title: 'Mi Horario' },
     { path: '/asistencia', icon: 'checklist', title: 'Control de Asistencia' },
-   
+
     { path: '/docente-weka', icon: 'insights', title: 'Rendimiento Estudiantil' },
   ];
   Ventana3Links = [
@@ -93,7 +93,7 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/EncuestaEstudiante', icon: 'edit_note', title: 'Encuesta Estudiantil' },
     { path: '/ventana3', icon: 'assessment', title: 'Mis Calificaciones' },
     { path: '/horarioEstudiante', icon: 'schedule', title: 'Mi Horario' },
-    { path: '/material-estudio', icon: 'import_contacts', title: 'Material de Estudio' },
+    { path: '/material-estudio', icon: 'import_contacts', title: 'Aprende Estudiando' },
   ];
 
   notifications: string[] = [];
@@ -200,7 +200,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
         backgroundColorRight: '	#0000FF',
         textColor: 'white',
-    
+
       });
     } else {
       this.temaHeaderService.applyTheme(this.previousTheme);

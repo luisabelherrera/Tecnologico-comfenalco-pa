@@ -1,7 +1,8 @@
+
 <div class="material-container">
   <!-- Header -->
   <div class="header">
-    <h2>Material para {{ data.estudiantePrediccion.estudiante.nombres }} {{ data.estudiantePrediccion.estudiante.apellidos }}</h2>
+    <h2>Informe para {{ data.estudiantePrediccion.estudiante.nombres }} {{ data.estudiantePrediccion.estudiante.apellidos }}</h2>
     <button mat-icon-button (click)="closeDialog()" aria-label="Cerrar" class="close-button">
       <mat-icon>close</mat-icon>
     </button>
@@ -26,53 +27,61 @@
       </mat-error>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" (click)="generateStudyMaterialSuggestions()" 
-            [disabled]="isLoadingSuggestions || !selectedCurricular" 
-            class="generate-button">
-      <mat-icon *ngIf="!isLoadingSuggestions">play_arrow</mat-icon>
-      <span>{{ isLoadingSuggestions ? 'Generando...' : 'Generar' }}</span>
-    </button>
+    <div class="button-group">
+      <button mat-raised-button color="primary" (click)="generateEvaluativeReport()"
+              [disabled]="isLoadingReport || !selectedCurricular"
+              class="generate-button">
+        <mat-icon *ngIf="!isLoadingReport">assessment</mat-icon>
+        <span>{{ isLoadingReport ? 'Generando Informe...' : 'Generar Informe Evaluativo' }}</span>
+      </button>
+    </div>
+
+    <!-- Área editable para el informe -->
+    <mat-form-field appearance="outline" class="material-field" *ngIf="temas.length">
+      <mat-label>Informe Evaluativo (Editable)</mat-label>
+      <textarea matInput formControlName="material" rows="20" placeholder="Edita el informe generado aquí."></textarea>
+      <mat-error *ngIf="materialForm.get('material')?.touched && materialForm.get('material')?.hasError('required')">
+        El informe es requerido
+      </mat-error>
+    </mat-form-field>
   </form>
 
   <!-- Cargando -->
-  <div class="loading-container" *ngIf="isLoadingSuggestions">
+  <div class="loading-container" *ngIf="isLoadingReport">
     <div class="loading">
       <mat-spinner diameter="36"></mat-spinner>
-      <span>Generando material personalizado...</span>
+      <span>Generando informe evaluativo...</span>
     </div>
   </div>
 
-  <!-- Contenido generado -->
-  <div class="content" *ngIf="!isLoadingSuggestions && temas.length">
-    <!-- Temas -->
-    <div class="temas-nav">
-      <div *ngFor="let tema of temas" 
-           class="tema-item" 
-           [class.selected]="tema === temaSeleccionado" 
-           (click)="seleccionarTema(tema)">
-        <span class="tema-icon">{{ getIconForTema(tema.nombre) }}</span>
-        <span class="tema-title">{{ tema.nombre }}</span>
-      </div>
+  <!-- Vista previa del informe para impresión -->
+  <div class="report-preview" #reportContent *ngIf="!isLoadingReport && temas.length">
+    <!-- Portada APA -->
+    <div class="apa-cover-page">
+      <div class="running-head">Running head: INFORME EVALUATIVO</div>
+      <h1>Informe Evaluativo</h1>
+      <h2>{{ data.estudiantePrediccion.estudiante.nombres }} {{ data.estudiantePrediccion.estudiante.apellidos }}</h2>
+      <h3>{{ selectedCurricular?.descripcion }}</h3>
+      <p>Institución Educativa [Nombre]</p>
+      <p>Fecha: {{ today | date:'longDate' }}</p>
     </div>
 
-    <!-- Contenido principal -->
-    <div class="content-area" #materialContent>
-      <div *ngIf="temaSeleccionado" [id]="temaSeleccionado.id" class="tema-content">
-        <h3>{{ temaSeleccionado.nombre }}</h3>
+    <!-- Contenido del informe -->
+    <div class="report-content" *ngFor="let tema of temas; let i = index">
+      <div class="page-break"></div>
+      <div class="running-head">INFORME EVALUATIVO</div>
+      <div class="page-number">Página {{ i + 1 }} de {{ temas.length }}</div>
+      <h2>{{ tema.nombre }}</h2>
+      <div [innerHTML]="tema.contenido | safeHtml"></div>
+    </div>
 
-        <!-- Videos -->
-        <div *ngIf="temaSeleccionado.nombre.toLowerCase().includes('videos') && temaSeleccionado.videos?.length" class="videos">
-          <div *ngFor="let video of temaSeleccionado.videos" class="video">
-            <iframe *ngIf="isValidVideoUrl(video)" [src]="getVideoEmbedUrl(video)" frameborder="0" allowfullscreen></iframe>
-            <p *ngIf="!isValidVideoUrl(video)" class="error">Video no disponible: {{ video }}</p>
-          </div>
-        </div>
-
-        <!-- Contenido textual -->
-        <div *ngIf="!temaSeleccionado.nombre.toLowerCase().includes('videos')" class="text-content">
-          {{ temaSeleccionado.contenido }}
-        </div>
-      </div>
+    <!-- Página de referencias -->
+    <div class="references-page">
+      <div class="page-break"></div>
+      <div class="running-head">INFORME EVALUATIVO</div>
+      <div class="page-number">Página {{ temas.length + 1 }} de {{ temas.length + 1 }}</div>
+      <h2>Referencias</h2>
+      <div [innerHTML]="references | safeHtml"></div>
     </div>
   </div>
 
@@ -80,5 +89,7 @@
   <div class="actions" *ngIf="temas.length">
     <button mat-button color="warn" (click)="closeDialog()" class="cancel-button">Cancelar</button>
     <button mat-raised-button color="primary" (click)="enviarMaterial()" [disabled]="!materialForm.valid" class="send-button">Enviar</button>
+    <button mat-raised-button color="accent" (click)="exportAsPDF()" [disabled]="!materialForm.valid" class="export-button">Exportar PDF</button>
+    <button mat-raised-button color="accent" (click)="exportAsWord()" [disabled]="!materialForm.valid" class="export-button">Exportar Word</button>
   </div>
 </div>

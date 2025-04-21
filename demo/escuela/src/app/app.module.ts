@@ -97,12 +97,20 @@ import { VentanaInformacionPublicComponent } from './components/ventanas-para-in
 import { SedesComponent } from './components/ventanas-para-invitados/sedes/sedes/sedes.component';
 import { MaterialDocenteComponent } from './components/vista-docente/docente-analiza/docente-crea-material/material-docente/material-docente.component';
 import { SharedModule } from './guards/shared.module';
+import { Live2dComponent } from './components/ventanas-para-invitados/live2d/live2d.component';
+import { MaterialStudioComponent } from './components/vista-estudiante/material-studio/material-studio.component';
 
-
-
-
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
 @NgModule({
   imports: [
+
+    MatExpansionModule, // For mat-accordion, mat-expansion-panel, etc.
+
+    MatCardModule, // For mat-card
+
+
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -134,9 +142,11 @@ import { SharedModule } from './guards/shared.module';
     NoopAnimationsModule,
     HttpClientModule,
     SharedModule,
+    MatRadioModule,
   ],
   declarations: [
-    
+    MaterialStudioComponent,
+    Live2dComponent,
     MaterialDocenteComponent,
     SedesComponent,
     VentanaInformacionPublicComponent,
@@ -196,7 +206,7 @@ import { SharedModule } from './guards/shared.module';
     AsistenciaComponent,
     HistorialAsistenciaComponent,
     PreguntasJuegosComponent,
-  
+
     AgregarNoticiaComponent,
     ImagenDialogComponent,
     RecursoComponent,

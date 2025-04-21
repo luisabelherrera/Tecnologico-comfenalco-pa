@@ -1,3 +1,4 @@
+import { DesempenoEstudiante } from "./desempeno-estudiante.model";
 import { EncuestaEstudiante } from "./EncuestaEstudiante.interface";
 
 export interface Estudiante {
@@ -12,5 +13,6 @@ export interface Estudiante {
   ciudad?: string;
   direccion?: string;
   activo?: boolean;
-  encuesta?: EncuestaEstudiante; 
+  encuesta?: EncuestaEstudiante;
+  desempeno?: DesempenoEstudiante;
 }

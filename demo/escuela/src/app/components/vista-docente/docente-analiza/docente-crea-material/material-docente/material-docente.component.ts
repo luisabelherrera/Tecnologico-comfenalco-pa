@@ -1,3 +1,4 @@
+
 import { Component, OnInit, Inject, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -6,7 +7,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Curricular } from 'src/app/models/entity/curricular.model';
 import { CurricularService } from 'src/app/services/curricular/curricular.service';
 import { Estudiante } from 'src/app/models/entity/Estudiante.interface';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DesempenoEstudiante } from 'src/app/models/entity/desempeno-estudiante.model';
+import { EncuestaEstudiante } from 'src/app/models/entity/EncuestaEstudiante.interface';
+import { DomSanitizer } from '@angular/platform-browser';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { saveAs } from 'file-saver';
+import { environment } from 'src/environments/environment';
 
 interface EstudiantePrediccion {
   estudiante: Estudiante;
@@ -22,61 +29,33 @@ interface DialogData {
   curricularId?: number;
 }
 
-interface GenerateContentResponse {
-  candidates: Array<{
-    content: {
-      parts: Array<{
-        text: string;
-      }>;
-    };
-  }>;
-}
-
-interface YouTubeSearchResponse {
-  items: Array<{
-    id: { videoId: string };
-    snippet: { title: string; description: string };
-  }>;
-}
-
 interface Tema {
   nombre: string;
   contenido: string;
   id: string;
-  videos?: string[];
 }
 
 @Component({
   selector: 'app-material-docente',
   templateUrl: './material-docente.component.html',
-  styleUrls: ['./material-docente.component.scss'],
+  styleUrls: ['./material-docente.component.scss', './material-docente-print.scss'],
 })
 export class MaterialDocenteComponent implements OnInit {
   materialForm: FormGroup;
-  isLoadingSuggestions = false;
   isLoadingReport = false;
   temas: Tema[] = [];
   temaSeleccionado: Tema | null = null;
   curriculares: Curricular[] = [];
   selectedCurricular: Curricular | null = null;
   isLoadingCurriculares = false;
+  today: Date = new Date();
+  references: string = `
+        <p>Hall, M., Frank, E., Holmes, G., Pfahringer, B., Reutemann, P., & Witten, I. H. (2009). The WEKA data mining software: An update. <i>SIGKDD Explorations Newsletter, 11</i>(1), 10–18. https://doi.org/10.1145/1656274.1656278</p>
+        <p>Oxford University Press. (n.d.). Oxford Learner's Dictionaries. Retrieved from https://www.oxfordlearnersdictionaries.com</p>
+        <p>Cambridge University Press. (n.d.). English Language Teaching. Retrieved from https://www.cambridge.org/elt</p>
+      `;
 
-  private fallbackVideos: { [key: string]: { url: string; description: string }[] } = {
-    'Inglés Período 1': [
-      {
-        url: 'https://www.youtube.com/watch?v=36IBDpTRVNE',
-        description: 'Phonics Song for Children | Alphabet Song | Letter Sounds | Patty Shukla - Enseña el alfabeto inglés con sonidos de letras.',
-      },
-      {
-        url: 'https://www.youtube.com/watch?v=0N0jODwY9fk',
-        description: 'Learn English for Kids – Hello, Goodbye, Please, Thank You - Cubre saludos básicos y presentaciones.',
-      },
-    ],
-  };
-
-  private apiKey = 'AIzaSyB9HNN9nYfHK07TlZiCjMG-qVXZ2u70Rxc';
-
-  @ViewChild('materialContent') materialContent!: ElementRef;
+  @ViewChild('reportContent') reportContent!: ElementRef;
 
   constructor(
     private fb: FormBuilder,
@@ -94,10 +73,17 @@ export class MaterialDocenteComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('Estudiante seleccionado:', this.data.estudiantePrediccion.estudiante);
     this.loadCurriculares();
     if (this.data.curricularId) {
       this.loadCurricularById(this.data.curricularId);
+    }
+    this.validateStudentAge();
+  }
+
+  validateStudentAge(): void {
+    const age = this.calculateAge(this.data.estudiantePrediccion.estudiante.fechaNacimiento);
+    if (age < 10 || age > 20) {
+      this.snackBar.open(`Advertencia: La edad del estudiante (${age} años) parece inusual para Bachillerato. Verifica la fecha de nacimiento.`, 'Cerrar', { duration: 5000 });
     }
   }
 
@@ -116,7 +102,6 @@ export class MaterialDocenteComponent implements OnInit {
     } else {
       this.isLoadingCurriculares = false;
       this.snackBar.open('No se encontraron asignaturas asignadas al docente.', 'Cerrar', { duration: 5000 });
-      this.curriculares = [];
     }
   }
 
@@ -129,148 +114,10 @@ export class MaterialDocenteComponent implements OnInit {
           this.materialForm.patchValue({ curricular: curricular });
         },
         error: (error) => {
-          console.error('Error al cargar curricular:', error);
           this.snackBar.open('Error al cargar la asignatura seleccionada.', 'Cerrar', { duration: 3000 });
         },
       });
     }
-  }
-
-  generateStudyMaterialSuggestions(): void {
-    if (!this.selectedCurricular) {
-      this.snackBar.open('Selecciona una asignatura antes de generar material.', 'Cerrar', { duration: 3000 });
-      return;
-    }
-
-    this.isLoadingSuggestions = true;
-
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${this.apiKey}`;
-
-    const prompt = `
-Eres un asistente académico para docentes en un colegio. Genera material de estudio en español para el estudiante ${
-      this.data.estudiantePrediccion.estudiante.nombres
-    } ${this.data.estudiantePrediccion.estudiante.apellidos}, 
-que está cursando la asignatura "${this.selectedCurricular.descripcion}" correspondiente al nivel "${
-      this.selectedCurricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.nivel.descripcionNivel ||
-      this.selectedCurricular.descripcion
-    }".
-
-Este estudiante tiene una predicción académica de "${this.data.estudiantePrediccion.prediccion || 'desconocida'}", con una confianza de ${
-      this.data.estudiantePrediccion.confianza ?? 'no disponible'
-    }%. 
-Su calificación actual es de ${this.data.estudiantePrediccion.nota ?? 'no disponible'} sobre 5.
-
-Genera una lista de recursos personalizados para ayudarle a mejorar su rendimiento en la asignatura "${this.selectedCurricular.descripcion}":
-- Propón 3 ejercicios prácticos numerados relacionados con los temas de la asignatura "${this.selectedCurricular.descripcion}".
-  - Si la predicción indica bajo rendimiento o la confianza es menor a 70%, los ejercicios deben be introductorios y guiados.
-  - Si la predicción indica buen rendimiento o la confianza es mayor o igual a 70%, los ejercicios pueden ser más desafiantes.
-- Sugiere una lectura educativa relevante para la asignatura "${this.selectedCurricular.descripcion}", con una URL completa.
-  - Ajusta la complejidad de la lectura según la predicción y confianza.
-- Organiza el contenido en secciones con títulos claros, usando el formato "## Título de la sección".
-- NO incluyas enlaces a videos de YouTube en esta respuesta.
-
-Usa un tono amigable y motivador, como si hablaras con un estudiante de secundaria. Sé claro, educativo y personaliza las recomendaciones según la predicción y confianza del estudiante.
-`;
-
-    this.http.post(geminiUrl, { contents: [{ parts: [{ text: prompt }] }] }).subscribe({
-      next: (response: any) => {
-        let suggestions = response.candidates?.[0]?.content?.parts?.[0]?.text || 'No se pudieron generar sugerencias.';
-        console.log('Material generado por Gemini:', suggestions);
-
-        const youtubeUrl = `https://www.googleapis.com/youtube/v3/search`;
-        const searchQuery =
-          this.selectedCurricular.descripcion === 'Inglés Período 1'
-            ? this.data.estudiantePrediccion.confianza && this.data.estudiantePrediccion.confianza >= 70
-              ? 'english for kids vocabulary grammar'
-              : 'english for kids alphabet greetings'
-            : `${this.selectedCurricular.descripcion} educativo`;
-
-        const youtubeParams = {
-          key: this.apiKey,
-          part: 'snippet',
-          q: searchQuery,
-          type: 'video',
-          maxResults: '2',
-          videoEmbeddable: 'true',
-          safeSearch: 'strict',
-        };
-
-        this.http.get<YouTubeSearchResponse>(youtubeUrl, { params: youtubeParams }).subscribe({
-          next: (youtubeResponse) => {
-            const videos = youtubeResponse.items
-              .map((item) => ({
-                url: `https://www.youtube.com/watch?v=${item.id.videoId}`,
-                description: `${item.snippet.title} - ${item.snippet.description.slice(0, 100)}...`,
-              }))
-              .filter((video) => this.isValidVideoUrl(video.url));
-
-            console.log('Videos obtenidos de YouTube:', videos);
-
-            let videoSection = `## Videos sugeridos\n`;
-            if (videos.length >= 2) {
-              videoSection += videos
-                .slice(0, 2)
-                .map((video, index) => `${index + 1}. ${video.url} - ${video.description}`)
-                .join('\n');
-            } else {
-              const fallback = this.fallbackVideos[this.selectedCurricular?.descripcion || ''] || [];
-              videoSection += fallback
-                .slice(0, 2)
-                .map((video, index) => `${index + 1}. ${video.url} - ${video.description}`)
-                .join('\n');
-              console.log('Usando videos de respaldo:', fallback);
-            }
-
-            suggestions = suggestions.replace(/## Videos sugeridos\n([\s\S]*?)(##|$)/, '') + '\n' + videoSection;
-            this.materialForm.patchValue({ material: suggestions });
-            this.clasificarTemas(suggestions);
-            this.isLoadingSuggestions = false;
-            this.snackBar.open('Sugerencias y videos generados con éxito.', 'Cerrar', { duration: 3000 });
-          },
-          error: (youtubeError) => {
-            console.error('Error al buscar videos en YouTube:', youtubeError);
-            const fallback = this.fallbackVideos[this.selectedCurricular?.descripcion || ''] || [];
-            const videoSection = `## Videos sugeridos\n${fallback
-              .slice(0, 2)
-              .map((video, index) => `${index + 1}. ${video.url} - ${video.description}`)
-              .join('\n')}`;
-            suggestions = suggestions.replace(/## Videos sugeridos\n([\s\S]*?)(##|$)/, '') + '\n' + videoSection;
-            this.materialForm.patchValue({ material: suggestions });
-            this.clasificarTemas(suggestions);
-            this.isLoadingSuggestions = false;
-            this.snackBar.open('Error al buscar videos, se usaron videos de respaldo.', 'Cerrar', { duration: 3000 });
-          },
-        });
-      },
-      error: (geminiError) => {
-        console.error('Error al generar sugerencias con Gemini:', geminiError);
-        if (this.selectedCurricular?.descripcion === 'Inglés Período 1') {
-          const fallbackMaterial = `
-## Conceptos básicos
-¡Hola ${this.data.estudiantePrediccion.estudiante.nombres} ${this.data.estudiantePrediccion.estudiante.apellidos}! Vamos a trabajar juntos para mejorar en Inglés Período 1. Con práctica, ¡verás grandes resultados!
-
-## Videos sugeridos
-1. https://www.youtube.com/watch?v=36IBDpTRVNE - Phonics Song for Children | Alphabet Song | Letter Sounds | Patty Shukla - Enseña el alfabeto inglés con sonidos de letras.
-2. https://www.youtube.com/watch?v=0N0jODwY9fk - Learn English for Kids – Hello, Goodbye, Please, Thank You - Cubre saludos básicos y presentaciones.
-
-## Ejercicios recomendados
-1. Escribe el alfabeto inglés (A-Z) en mayúsculas y minúsculas. Luego, elige 5 letras y escribe una palabra en inglés para cada una (ejemplo: A - Apple).
-2. Practica diciendo en voz alta: "Hello", "Good morning", "Goodbye", "My name is ${this.data.estudiantePrediccion.estudiante.nombres}". Grábate y escucha tu pronunciación.
-3. Escribe 3 oraciones sobre ti en inglés, como: "My name is ${this.data.estudiantePrediccion.estudiante.nombres}.", "I am a student.", "I like soccer."
-
-## Lectura recomendada
-- https://www.oxfordowl.co.uk/for-home/find-a-book/library-page/ - Regístrate gratis y elige un cuento sencillo como "The Magic Paintbrush" para practicar lectura en inglés.
-            `;
-          this.materialForm.patchValue({ material: fallbackMaterial });
-          this.clasificarTemas(fallbackMaterial);
-          console.log('Usando material de respaldo completo');
-        } else {
-          this.materialForm.patchValue({ material: 'Error al generar sugerencias. Intenta de nuevo.' });
-        }
-        this.isLoadingSuggestions = false;
-        this.snackBar.open('Error al generar sugerencias.', 'Cerrar', { duration: 3000 });
-      },
-    });
   }
 
   generateEvaluativeReport(): void {
@@ -280,63 +127,96 @@ Usa un tono amigable y motivador, como si hablaras con un estudiante de secundar
     }
 
     this.isLoadingReport = true;
-
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${this.apiKey}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${environment.geminiApiKey}`;
+    const estudiante = this.data.estudiantePrediccion.estudiante;
+    const desempeno: DesempenoEstudiante | undefined = estudiante.desempeno;
+    const encuesta: EncuestaEstudiante | undefined = estudiante.encuesta;
 
     const prompt = `
-Eres un asistente académico experto en la generación de informes evaluativos para docentes en un colegio. Genera un informe evaluativo detallado en español para el estudiante ${
-      this.data.estudiantePrediccion.estudiante.nombres
-    } ${this.data.estudiantePrediccion.estudiante.apellidos}, que cursa la asignatura "${this.selectedCurricular.descripcion}" en el nivel "${
+Eres un asistente académico experto en generar informes evaluativos para docentes en un colegio, siguiendo las normas APA 7. Genera un informe evaluativo detallado en español para el estudiante ${
+      estudiante.nombres || 'Nombre no disponible'
+    } ${estudiante.apellidos || ''}, que cursa la asignatura "${this.selectedCurricular.descripcion}" en el nivel "${
       this.selectedCurricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.nivel.descripcionNivel ||
       this.selectedCurricular.descripcion
-    }". El informe debe tener un mínimo de 7 páginas de contenido (aproximadamente 2500-3000 palabras en fuente Arial 12, espaciado sencillo, en papel A4) y estar estructurado en secciones claras con títulos en formato "## Título de la Sección".
+    }". El informe debe tener exactamente 3 páginas de contenido (750-1000 palabras, Arial 12, doble espacio, márgenes de 1 pulgada, en papel A4), excluyendo portada y referencias, y estar estructurado en secciones claras con títulos en formato "## Título de la Sección". Usa markdown limpio y consistente, evitando énfasis innecesario (e.g., **texto** sin motivo), numeración manual (e.g., "4.2"), o saltos de página dentro del contenido. Coloca "Página X de 3" al final de cada página, sin repetir "INFORME EVALUATIVO" o números adicionales.
 
-**Datos del estudiante:**
-- Predicción académica: "${this.data.estudiantePrediccion.prediccion || 'desconocida'}"
-- Confianza de la predicción: ${this.data.estudiantePrediccion.confianza ?? 'no disponible'}%
+**Datos académicos del estudiante:**
+- Predicción académica (Weka): "${this.data.estudiantePrediccion.prediccion || 'desconocida'}" (tested_positive indica riesgo de reprobar, tested_negative indica probabilidad de aprobar)
+- Confianza de la predicción: ${(this.data.estudiantePrediccion.confianza !== undefined ? this.data.estudiantePrediccion.confianza * 100 : 'no disponible')}%
 - Calificación actual: ${this.data.estudiantePrediccion.nota ?? 'no disponible'} sobre 5
+- Horas de estudio semanal: ${desempeno?.horasEstudioSemanal ?? 'no disponible'} horas
+- Asistencia: ${desempeno?.asistencia ?? 'no disponible'}%
+- Promedio de parciales: ${desempeno?.promedioParciales ?? 'no disponible'} sobre 5
+- Participación en clases: ${desempeno?.participacionClases ?? 'no disponible'}
+- Uso de plataforma virtual: ${desempeno?.usoPlataformaVirtual ?? 'no disponible'}
+- Antecedentes de pérdida de asignatura: ${desempeno?.antecedentesPerdida ?? 'no disponible'}
+- Predicción de pérdida de asignatura: ${desempeno?.perderaAsignatura ?? 'no disponible'}
+
+**Datos personales y socioeconómicos:**
+- Documento: ${estudiante.documentoIdentidad ?? 'no disponible'}
+- Edad: ${this.calculateAge(estudiante.fechaNacimiento) || 'no disponible'} años
+- Género: ${estudiante.sexo === 'M' ? 'Masculino' : estudiante.sexo === 'F' ? 'Femenino' : 'No especificado'}
+- Problemas personales: ${encuesta?.problemasPersonales ?? 'no disponible'}
+- Apoyo familiar: ${encuesta?.apoyoFamiliar ?? 'no disponible'}
+- Nivel de estrés: ${encuesta?.nivelEstres ?? 'no disponible'}
+- Estrato socioeconómico: ${encuesta?.estrato ?? 'no disponible'}
+- Acceso a internet: ${encuesta?.tieneAccesoInternet ? 'Sí' : 'No'}
+- Posee computador: ${encuesta?.tieneComputador ? 'Sí' : 'No'}
+- Vive con padres: ${encuesta?.viveConPadres ? 'Sí' : 'No'}
+- Tiene trabajo: ${encuesta?.tieneTrabajo ? 'Sí' : 'No'}
+
+**Análisis Weka:**
+- **Metodología**: La predicción se realizó con un clasificador Weka (J48 decision tree, según Hall et al., 2009), entrenado con un conjunto de datos que incluye 13 atributos: documento, ID estudiante, edad, género, horas de estudio semanal, asistencia, promedio de parciales, participación en clases, uso de plataforma virtual, antecedentes de pérdida, apoyo familiar, carga académica, y problemas personales. La clase objetivo es "perderaAsignatura" (tested_positive o tested_negative).
+- **Atributos utilizados**: ${[
+    `Edad: ${this.calculateAge(estudiante.fechaNacimiento) || 'no disponible'} años`,
+    `Género: ${estudiante.sexo === 'M' ? 'Masculino' : estudiante.sexo === 'F' ? 'Femenino' : 'No especificado'}`,
+    `Horas de estudio: ${desempeno?.horasEstudioSemanal ?? 'no disponible'} horas`,
+    `Asistencia: ${desempeno?.asistencia ?? 'no disponible'}%`,
+    `Promedio de parciales: ${desempeno?.promedioParciales ?? 'no disponible'}/5`,
+    `Participación: ${desempeno?.participacionClases ?? 'no disponible'}`,
+    `Plataforma virtual: ${desempeno?.usoPlataformaVirtual ?? 'no disponible'}`,
+    `Antecedentes: ${desempeno?.antecedentesPerdida ?? 'no disponible'}`,
+    `Apoyo familiar: ${encuesta?.apoyoFamiliar ?? 'no disponible'}`,
+    `Problemas personales: ${encuesta?.problemasPersonales ?? 'no disponible'}`,
+  ].join('; ')}
+- **Confianza**: La probabilidad de la predicción (${this.data.estudiantePrediccion.confianza !== undefined ? this.data.estudiantePrediccion.confianza * 100 : 'no disponible'}%) refleja la certeza del modelo basada en la distribución de probabilidades para la clase predicha.
 
 **Requisitos del informe:**
-1. **Introducción (1 página)**: Presenta el propósito del informe, el contexto académico (asignatura, nivel), y un resumen del perfil del estudiante, incluyendo su nombre, predicción académica, confianza, y calificación actual. Usa un tono profesional pero accesible.
-2. **Perfil del Estudiante (1 página)**: Describe al estudiante (edad, género, nivel educativo, intereses si se infieren del contexto) y su situación académica actual en la asignatura. Menciona fortalezas y áreas de oportunidad basadas en la predicción y confianza.
-3. **Análisis de Desempeño (2 páginas)**: Evalúa el rendimiento del estudiante en la asignatura:
-   - Si la predicción indica bajo rendimiento o confianza < 70%, detalla dificultades específicas (ejemplo: problemas con vocabulario básico en Inglés Período 1).
-   - Si la predicción indica buen rendimiento o confianza ≥ 70%, destaca logros y áreas para desafíos avanzados (ejemplo: capacidad para formar oraciones complejas).
-   - Incluye ejemplos concretos relacionados con la asignatura y compara el desempeño con los objetivos del curso.
-4. **Desafíos Identificados (1 página)**: Identifica barreras específicas que afectan el rendimiento (ejemplo: falta de práctica, dificultades de comprensión, o factores externos como asistencia). Personaliza según la predicción y confianza.
-5. **Recomendaciones para la Mejora (2 páginas)**: Propón un plan detallado para mejorar el rendimiento:
-   - Incluye al menos 5 estrategias específicas (ejemplo: ejercicios guiados, lecturas complementarias, tutorías).
-   - Sugiere 3 recursos educativos (lecturas, sitios web, no videos) con URLs completas, ajustados al nivel de rendimiento.
-   - Propón un cronograma de actividades semanales para las próximas 4 semanas.
-   - Ajusta la complejidad según la predicción: estrategias introductorias para bajo rendimiento, avanzadas para buen rendimiento.
-6. **Conclusión (0.5-1 página)**: Resume los puntos clave, enfatiza la importancia de seguir las recomendaciones, y motiva al estudiante y docente a trabajar juntos para el éxito.
-7. **Anexos (opcional, 0.5 página)**: Incluye una lista de recursos adicionales o herramientas recomendadas (sin videos).
+1. **Introducción (0.5 página)**: Explica el propósito del informe, el contexto académico (asignatura, nivel), y un resumen del perfil del estudiante (nombre, predicción Weka, calificación, situación personal). Cita el análisis Weka (Hall et al., 2009). Termina con "Página 1 de 3".
+2. **Perfil del Estudiante (0.5 página)**: Describe edad, género, nivel educativo, fortalezas (e.g., alta participación), y áreas de oportunidad (e.g., baja asistencia, problemas personales). Termina with "Página 1 de 3".
+3. **Análisis de Desempeño (1 página)**: Evalúa el rendimiento en la asignatura:
+   - Para 'tested_positive', asistencia < 60%, o promedio < 3.0, detalla dificultades específicas (e.g., fundamentos de programación en Informática).
+   - Para 'tested_negative' o participación 'Alta', destaca logros y desafíos avanzados.
+   - Integra factores Weka (e.g., horas de estudio, apoyo familiar) y ejemplos específicos.
+   - Termina with "Página 2 de 3".
+4. **Recomendaciones para la Mejora (0.75 página)**:
+   - Propón exactamente 3 estrategias específicas (e.g., tutorías, ejercicios, manejo del estrés, evitando énfasis innecesario como "**estrés**").
+   - Sugiere exactamente 2 recursos educativos (lecturas, sitios web, no videos) with citas APA (e.g., Oxford University Press, n.d.).
+   - Incluye un cronograma de 2 semanas with 4 actividades (2 por semana), ajustado al tiempo disponible.
+   - Adapta estrategias según Weka ('tested_positive' requiere apoyo básico, 'tested_negative' desafíos avanzados).
+   - Considera limitaciones personales (e.g., sin internet, usar materiales impresos).
+   - Usa subtítulo "### Recursos Educativos" para los recursos and "### Cronograma" for the schedule.
+   - Termina with "Página 3 de 3".
+5. **Conclusión (0.25 página)**: Resume puntos clave, enfatiza las recomendaciones, and motiva la colaboración entre estudiante, docente, y familia. Termina with "Página 3 de 3".
 
 **Instrucciones adicionales:**
-- Usa un tono profesional, motivador y claro, dirigido a docentes y padres, pero comprensible para un estudiante de secundaria.
-- Organiza el contenido con subtítulos claros (### Subsección) dentro de cada sección para mayor claridad.
-- Asegúrate de que el informe sea extenso (2500-3000 palabras) para cumplir con el requisito de 7 páginas.
-- NO incluyas enlaces a videos de YouTube, ya que se manejan por separado.
-- Personaliza el contenido según la predicción, confianza y calificación del estudiante, asegurando que las recomendaciones sean relevantes para la asignatura "${this.selectedCurricular.descripcion}".
-
-**Formato:**
-- Usa markdown para estructurar el informe.
-- Incluye un título principal con "# Informe Evaluativo" seguido del nombre del estudiante y la asignatura.
-- Numera las páginas en el texto (ejemplo: "Página 1 de 7") for reference.
+- Usa un tono profesional, motivador, y claro, dirigido a docentes y padres, comprensible para estudiantes de secundaria.
+- Estructura with subtítulos "##" y "###" sin numeración manual (e.g., no "4.2"). Evita bold innecesario.
+- Genera 750-1000 palabras, excluyendo portada y referencias.
+- NO incluyas enlaces a YouTube or duplicar referencias.
+- Usa markdown with título "# Informe Evaluativo" followed by sections and "Página X de 3" at the end of each page.
+- Ensure all sections are complete, with no truncation.
 `;
 
     this.http.post(geminiUrl, { contents: [{ parts: [{ text: prompt }] }] }).subscribe({
       next: (response: any) => {
         let report = response.candidates?.[0]?.content?.parts?.[0]?.text || 'No se pudo generar el informe.';
-        console.log('Informe generado por Gemini:', report);
-
         this.materialForm.patchValue({ material: report });
         this.clasificarTemas(report);
         this.isLoadingReport = false;
         this.snackBar.open('Informe evaluativo generado con éxito.', 'Cerrar', { duration: 3000 });
       },
       error: (error) => {
-        console.error('Error al generar el informe con Gemini:', error);
         this.materialForm.patchValue({ material: 'Error al generar el informe. Intenta de nuevo.' });
         this.isLoadingReport = false;
         this.snackBar.open('Error al generar el informe.', 'Cerrar', { duration: 3000 });
@@ -344,109 +224,200 @@ Eres un asistente académico experto en la generación de informes evaluativos p
     });
   }
 
+  parseMarkdown(content: string): string {
+    let html = content
+      // Headers
+      .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      // Unordered lists
+      .replace(/^\* (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.+<\/li>\n?)+/g, '<ul>$&</ul>')
+      // Paragraphs and line breaks
+      .replace(/\n\n(.+?)(?=\n\n|$)/g, '<p>$1</p>')
+      .replace(/\n/g, '<br>')
+      // Remove extra breaks after lists
+      .replace(/<\/ul>\s*<br>/g, '</ul>');
+    return html;
+  }
+
   clasificarTemas(material: string): void {
     this.temas = [];
     const secciones = material.split('## ').filter((seccion) => seccion.trim());
-
+    let pageCount = 0;
     secciones.forEach((seccion, index) => {
       const lineas = seccion.split('\n');
       const nombre = lineas[0].trim();
-      const contenido = seccion;
-      const videos = Array.from(
-        new Set(
-          (seccion.match(/https:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)[^\s&)]+/g) || []).filter((url) =>
-            this.isValidVideoUrl(url)
-          )
-        )
-      ).slice(0, 2);
-      console.log(`Videos extraídos para ${nombre}:`, videos);
-
-      this.temas.push({
-        nombre,
-        contenido,
-        id: `tema-${index}`,
-        videos,
+      let contenido = lineas.slice(1).join('\n').trim();
+      // Remove "Página X de 3" from content and track page
+      contenido = contenido.replace(/Página \d de \d/, () => {
+        pageCount++;
+        return '';
       });
+      contenido = this.parseMarkdown(contenido);
+      this.temas.push({ nombre, contenido, id: `tema-${index}` });
     });
-
-    this.temaSeleccionado = this.temas.length > 0
-      ? this.temas.find((t) => t.nombre.toLowerCase().includes('videos')) || this.temas[0]
-      : null;
-  }
-
-  seleccionarTema(tema: Tema): void {
-    this.temaSeleccionado = tema;
-    console.log('Tema seleccionado:', tema.nombre, 'Videos:', tema.videos);
-    const elemento = document.getElementById(tema.id);
-    if (elemento && this.materialContent) {
-      this.materialContent.nativeElement.scrollTo({
-        top: elemento.offsetTop,
-        behavior: 'smooth',
-      });
+    this.temaSeleccionado = this.temas.length > 0 ? this.temas[0] : null;
+    // Validate expected sections
+    const expectedSections = ['Introducción', 'Perfil del Estudiante', 'Análisis de Desempeño', 'Recomendaciones para la Mejora', 'Conclusión'];
+    const missingSections = expectedSections.filter(section => !this.temas.some(tema => tema.nombre === section));
+    if (missingSections.length > 0) {
+      this.snackBar.open(`Advertencia: Faltan secciones: ${missingSections.join(', ')}. Revisa el informe generado.`, 'Cerrar', { duration: 5000 });
     }
   }
 
   enviarMaterial(): void {
     if (this.materialForm.valid) {
-      console.log('Enviando material:', this.materialForm.value.material, 'a', this.data.estudiantePrediccion.estudiante);
       this.dialogRef.close({ material: this.materialForm.value.material, curricular: this.selectedCurricular });
     } else {
       this.snackBar.open('Por favor, completa el formulario correctamente.', 'Cerrar', { duration: 3000 });
     }
   }
 
-  exportMaterial(): void {
-    if (this.materialForm.valid) {
-      const material = this.materialForm.value.material;
-      const fileName = `Informe_${this.data.estudiantePrediccion.estudiante.nombres}_${this.selectedCurricular?.descripcion}.docx`;
-      const blob = new Blob([material], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-      this.snackBar.open('Informe exportado con éxito.', 'Cerrar', { duration: 3000 });
-    } else {
+  exportAsPDF(): void {
+    if (!this.materialForm.valid || !this.reportContent) {
       this.snackBar.open('Por favor, genera un informe válido antes de exportar.', 'Cerrar', { duration: 3000 });
+      return;
     }
+
+    const reportElement = this.reportContent.nativeElement;
+    const fileName = `Informe_${this.data.estudiantePrediccion.estudiante.nombres || 'Estudiante'}_${this.selectedCurricular?.descripcion}.pdf`;
+
+    reportElement.classList.add('print-mode');
+
+    html2canvas(reportElement, { scale: 2 }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      const imgWidth = 190; // 210mm - 2 * 10mm margins
+      const pageHeight = 297;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      pdf.save(fileName);
+      this.snackBar.open('Informe exportado como PDF con éxito.', 'Cerrar', { duration: 3000 });
+      reportElement.classList.remove('print-mode');
+    }).catch((error) => {
+      this.snackBar.open('Error al exportar el informe como PDF.', 'Cerrar', { duration: 3000 });
+    });
+  }
+
+  exportAsWord(): void {
+    if (!this.materialForm.valid) {
+      this.snackBar.open('Por favor, genera un informe válido antes de exportar.', 'Cerrar', { duration: 3000 });
+      return;
+    }
+
+    const content = this.materialForm.value.material;
+    const htmlContent = this.parseMarkdown(content);
+    const referencesHtml = this.references;
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            font-size: 12pt;
+            line-height: 2;
+            margin: 25.4mm;
+          }
+          h1, h2, h3 {
+            font-weight: bold;
+          }
+          h1 { font-size: 16pt; text-align: center; }
+          h2 { font-size: 14pt; }
+          h3 { font-size: 12pt; }
+          .running-head {
+            font-size: 10pt;
+            text-transform: uppercase;
+            position: absolute;
+            top: 12.7mm;
+            left: 25.4mm;
+          }
+          .page-number {
+            font-size: 10pt;
+            position: absolute;
+            top: 12.7mm;
+            right: 25.4mm;
+          }
+          .references p {
+            text-indent: -36pt;
+            margin-left: 36pt;
+          }
+          .cover-page {
+            text-align: center;
+            page-break-after: always;
+          }
+          .page-break { page-break-before: always; }
+          ul { margin-left: 36pt; }
+        </style>
+      </head>
+      <body>
+        <!-- Cover Page -->
+        <div class="cover-page">
+          <div class="running-head">Running head: INFORME EVALUATIVO</div>
+          <h1>Informe Evaluativo</h1>
+          <h2>${this.data.estudiantePrediccion.estudiante.nombres || 'Estudiante'} ${this.data.estudiantePrediccion.estudiante.apellidos || ''}</h2>
+          <h3>${this.selectedCurricular?.descripcion || ''}</h3>
+          <p>Institución Educativa [Nombre]</p>
+          <p>Fecha: ${this.today.toLocaleDateString('es-ES', { dateStyle: 'long' })}</p>
+        </div>
+        <!-- Report Content -->
+        ${this.temas.map((tema, index) => `
+          <div class="page-break"></div>
+          <div class="running-head">INFORME EVALUATIVO</div>
+          <div class="page-number">Página ${index + 1} de ${this.temas.length}</div>
+          <h2>${tema.nombre}</h2>
+          ${tema.contenido}
+        `).join('')}
+        <!-- References Page -->
+        <div class="page-break"></div>
+        <div class="running-head">INFORME EVALUATIVO</div>
+        <div class="page-number">Página ${this.temas.length + 1} de ${this.temas.length + 1}</div>
+        <h2>Referencias</h2>
+        <div class="references">${referencesHtml}</div>
+      </body>
+      </html>
+    `;
+
+    const blob = new Blob([html], { type: 'application/msword' });
+    const fileName = `Informe_${this.data.estudiantePrediccion.estudiante.nombres || 'Estudiante'}_${this.selectedCurricular?.descripcion}.doc`;
+    saveAs(blob, fileName);
+    this.snackBar.open('Informe exportado como Word con éxito.', 'Cerrar', { duration: 3000 });
   }
 
   closeDialog(): void {
     this.dialogRef.close();
   }
 
-  getVideoEmbedUrl(url: string): SafeResourceUrl {
-    let videoId = '';
-    const watchMatch = url.match(/v=([^&]+)/);
-    const shortMatch = url.match(/youtu\.be\/([^?]+)/);
-    const embedMatch = url.match(/embed\/([^?]+)/);
-    const shortsMatch = url.match(/shorts\/([^?]+)/);
-
-    if (watchMatch) videoId = watchMatch[1];
-    else if (shortMatch) videoId = shortMatch[1];
-    else if (embedMatch) videoId = embedMatch[1];
-    else if (shortsMatch) videoId = shortsMatch[1];
-
-    const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0&modestbranding=1` : '';
-    console.log(`URL original: ${url}, Embed URL: ${embedUrl}`);
-    return this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
-  }
-
-  isValidVideoUrl(url: string): boolean {
-    const videoId = url.match(/v=([^&]+)/)?.[1] || url.match(/youtu\.be\/([^?]+)/)?.[1] || url.match(/embed\/([^?]+)/)?.[1] || url.match(/shorts\/([^?]+)/)?.[1];
-    return !!videoId && videoId.length === 11;
-  }
-
-  getIconForTema(nombre: string): string {
-    const nombreLower = nombre.toLowerCase();
-    if (nombreLower.includes('introducción') || nombreLower.includes('perfil')) return '📄';
-    if (nombreLower.includes('análisis') || nombreLower.includes('desempeño')) return '📊';
-    if (nombreLower.includes('desafíos')) return '⚠️';
-    if (nombreLower.includes('recomendaciones') || nombreLower.includes('plan')) return '📋';
-    if (nombreLower.includes('conclusión') || nombreLower.includes('anexos')) return '✅';
-    return '🌟';
+  calculateAge(fechaNacimiento?: Date): number {
+    if (!fechaNacimiento) return 0;
+    const today = new Date();
+    const birthDate = new Date(fechaNacimiento);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
   }
 }

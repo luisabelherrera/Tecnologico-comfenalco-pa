@@ -54,6 +54,8 @@ import { InformacionEducativaComponent } from './components/ventanas-para-invita
 import { VentanaInformacionPublicComponent } from './components/ventanas-para-invitados/ventanaInformacion-Public/ventana-informacion-public/ventana-informacion-public.component';
 import { SedesComponent } from './components/ventanas-para-invitados/sedes/sedes/sedes.component';
 import { MaterialDocenteComponent } from './components/vista-docente/docente-analiza/docente-crea-material/material-docente/material-docente.component';
+import { Live2dComponent } from './components/ventanas-para-invitados/live2d/live2d.component';
+import { MaterialStudioComponent } from './components/vista-estudiante/material-studio/material-studio.component';
 
 const routes: Routes = [
   {
@@ -126,6 +128,15 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Estudiante'] },
   },
+
+  {
+    path: 'material-estudio',
+    component:   MaterialStudioComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Estudiante'] },
+  },
+
+
   { path: 'eventos', component: QuizComponent },
   { path: 'home', component: HomeComponent },
   {
@@ -154,7 +165,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Administracion'] },
   },
- 
+
 
   {
     path: 'informacion-educativa',
@@ -321,7 +332,7 @@ const routes: Routes = [
   },
 
   { path: 'ventana-informacion-public', component:   VentanaInformacionPublicComponent },
-
+  { path: 'live2', component:   Live2dComponent },
 
 
   {

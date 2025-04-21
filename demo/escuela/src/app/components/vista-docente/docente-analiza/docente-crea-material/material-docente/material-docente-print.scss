@@ -1,0 +1,63 @@
+
+@media print {
+  .material-container {
+    display: none;
+  }
+
+  .report-preview {
+    display: block !important;
+    font-family: Arial, sans-serif;
+    font-size: 12pt;
+    line-height: 2;
+    margin: 25.4mm;
+    width: 160mm;
+    color: black;
+  }
+
+  .apa-cover-page {
+    text-align: center;
+    page-break-after: always;
+  }
+
+  .running-head {
+    position: fixed;
+    top: 12.7mm;
+    left: 25.4mm;
+    font-size: 10pt;
+    text-transform: uppercase;
+  }
+
+  .page-number {
+    position: fixed;
+    top: 12.7mm;
+    right: 25.4mm;
+    font-size: 10pt;
+  }
+
+  .report-content h2 {
+    font-size: 14pt;
+    margin-top: 20pt;
+  }
+
+  .report-content h3 {
+    font-size: 12pt;
+    margin-top: 15pt;
+  }
+
+  .report-content ul {
+    margin-left: 36pt;
+  }
+
+  .references-page p {
+    text-indent: -36pt;
+    margin-left: 36pt;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  button, .actions, .loading-container, .form, .header, .no-curriculares {
+    display: none !important;
+  }
+}
