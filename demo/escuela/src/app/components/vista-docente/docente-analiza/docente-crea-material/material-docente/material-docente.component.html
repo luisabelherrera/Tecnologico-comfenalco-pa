@@ -69,7 +69,7 @@
     <!-- Contenido del informe -->
     <div class="report-content" *ngFor="let tema of temas; let i = index">
       <div class="page-break"></div>
-      <div class="running-head">INFORME EVALUATIVO</div>
+      <div class="running-head"></div>
       <div class="page-number">Página {{ i + 1 }} de {{ temas.length }}</div>
       <h2>{{ tema.nombre }}</h2>
       <div [innerHTML]="tema.contenido | safeHtml"></div>
@@ -78,7 +78,7 @@
     <!-- Página de referencias -->
     <div class="references-page">
       <div class="page-break"></div>
-      <div class="running-head">INFORME EVALUATIVO</div>
+      <div class="running-head"></div>
       <div class="page-number">Página {{ temas.length + 1 }} de {{ temas.length + 1 }}</div>
       <h2>Referencias</h2>
       <div [innerHTML]="references | safeHtml"></div>
@@ -88,7 +88,6 @@
   <!-- Botones de acción -->
   <div class="actions" *ngIf="temas.length">
     <button mat-button color="warn" (click)="closeDialog()" class="cancel-button">Cancelar</button>
-    <button mat-raised-button color="primary" (click)="enviarMaterial()" [disabled]="!materialForm.valid" class="send-button">Enviar</button>
     <button mat-raised-button color="accent" (click)="exportAsPDF()" [disabled]="!materialForm.valid" class="export-button">Exportar PDF</button>
     <button mat-raised-button color="accent" (click)="exportAsWord()" [disabled]="!materialForm.valid" class="export-button">Exportar Word</button>
   </div>

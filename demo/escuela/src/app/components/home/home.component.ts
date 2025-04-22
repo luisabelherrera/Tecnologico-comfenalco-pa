@@ -11,6 +11,7 @@ import { Mensaje } from './models/mensaje';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { TemaHeaderService } from 'src/app/services/tema-header/tema-header.service';
+import { InformacionInstitucionalService, InformacionInstitucional } from 'src/app/services/servicios-escolares/InformacionInsittucional/informacion-institucional.service';
 
 @Component({
   selector: 'app-home',
@@ -32,13 +33,14 @@ export class HomeComponent implements OnInit {
   chatVisible: boolean = false;
   currentYear: number = new Date().getFullYear();
   isAuthenticated: boolean = false;
-  isAdmin: boolean = false; // Added for admin check
-  isBlocked: boolean = false; // Added for blocked status
-  errorMessage: string = ''; // Added for error feedback
+  isAdmin: boolean = false;
+  isBlocked: boolean = false;
+  errorMessage: string = '';
   showComments: { [key: string]: boolean } = {};
   comentarioTexto: { [key: string]: string } = {};
   headerBackground: string | SafeStyle = '#ffffff';
   emojis: string[] = ['😊', '🏫', '📚', '✏️', '🎓', '✨', '❤️', '👍'];
+  institutionName: string = 'EduPortal'; // Property to hold institution name
   recursosEducativos: Array<any> = [
     {
       titulo: 'Curso de Matemáticas',
@@ -61,7 +63,8 @@ export class HomeComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private dialog: MatDialog,
     private authService: AuthService,
-    private temaHeaderService: TemaHeaderService
+    private temaHeaderService: TemaHeaderService,
+    private informacionService: InformacionInstitucionalService // Inject the service
   ) {
     this.currentTheme$ = this.temaHeaderService.currentTheme$;
     this.currentTheme$.subscribe(theme => {
@@ -72,11 +75,13 @@ export class HomeComponent implements OnInit {
         this.headerBackground = theme.backgroundColor || '#ffffff';
       }
     });
+    this.client = new Client(); // Initialize client to avoid undefined errors
   }
 
   ngOnInit() {
     this.cargarNoticias();
     this.iniciarConexiónWebSocket();
+    this.loadInstitutionName(); // Load the institution name
 
     this.authService.isAuthenticated$.subscribe((authenticated) => {
       this.isAuthenticated = authenticated;
@@ -92,17 +97,31 @@ export class HomeComponent implements OnInit {
       this.isAdmin = isAdmin;
     });
   }
-  
+
+  // Method to load the institution name
+  loadInstitutionName() {
+    this.informacionService.getPublic().subscribe({
+      next: (data: InformacionInstitucional) => {
+        this.institutionName = data.nombreInstitucion || 'EduPortal'; // Update with institution name
+        console.log('Nombre de la institución cargado:', this.institutionName);
+      },
+      error: (err) => {
+        console.error('Error al cargar el nombre de la institución:', err);
+        this.institutionName = 'EduPortal'; // Fallback in case of error
+      }
+    });
+  }
+
   darLike(noticia: Noticia): void {
     if (!this.isAuthenticated || !noticia.id || !this.mensaje.username) return;
-  
+
     if (!noticia.likedBy) {
       noticia.likedBy = [];
     }
-  
+
     const userIndex = noticia.likedBy.indexOf(this.mensaje.username);
     let optimisticLikesCount = noticia.likesCount || 0;
-  
+
     if (userIndex === -1) {
       noticia.likedBy.push(this.mensaje.username);
       noticia.likesCount = optimisticLikesCount + 1;
@@ -110,11 +129,9 @@ export class HomeComponent implements OnInit {
       noticia.likedBy.splice(userIndex, 1);
       noticia.likesCount = optimisticLikesCount - 1;
     }
-  
-    // Forzar actualización de la UI
+
     this.noticias = [...this.noticias];
-  
-    // Enviar al backend
+
     this.noticiaService.actualizarLikes(noticia.id, noticia.likedBy).subscribe({
       next: (updatedNoticia) => {
         noticia.likesCount = updatedNoticia.likesCount;
@@ -122,7 +139,6 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al actualizar likes', error);
-        // Revertir el cambio local si falla
         if (userIndex === -1) {
           noticia.likedBy.splice(noticia.likedBy.indexOf(this.mensaje.username), 1);
           noticia.likesCount = optimisticLikesCount;
@@ -130,10 +146,11 @@ export class HomeComponent implements OnInit {
           noticia.likedBy.push(this.mensaje.username);
           noticia.likesCount = optimisticLikesCount;
         }
-        this.noticias = [...this.noticias]; // Forzar actualización de la UI
+        this.noticias = [...this.noticias];
       }
     });
   }
+
   hasLiked(noticia: Noticia): boolean {
     return this.isAuthenticated && noticia.likedBy?.includes(this.mensaje.username) || false;
   }
@@ -149,28 +166,23 @@ export class HomeComponent implements OnInit {
         contenido: this.comentarioTexto[noticia.id],
         fechaCreacion: new Date()
       };
-  
-      // Agregar comentario localmente para una respuesta inmediata
+
       if (!noticia.comentarios) {
         noticia.comentarios = [];
       }
       noticia.comentarios.push(comentario);
-  
-      // Limpiar el input inmediatamente
+
       const comentarioTextoTemp = this.comentarioTexto[noticia.id];
       this.comentarioTexto[noticia.id] = '';
-  
-      // Enviar al backend
+
       this.noticiaService.agregarComentario(noticia.id, comentario).subscribe({
         next: (updatedNoticia) => {
-          // Actualizar el objeto local con la respuesta del servidor
           noticia.comentarios = updatedNoticia.comentarios;
         },
         error: (error) => {
           console.error('Error al guardar comentario', error);
-          // Revertir el cambio local si falla
           noticia.comentarios = noticia.comentarios.filter(c => c !== comentario);
-          this.comentarioTexto[noticia.id] = comentarioTextoTemp; // Restaurar el texto si falla
+          this.comentarioTexto[noticia.id] = comentarioTextoTemp;
         }
       });
     }
@@ -256,6 +268,11 @@ export class HomeComponent implements OnInit {
       this.mensajes = [];
       this.isAuthenticated = false;
     };
+
+    // Activate WebSocket connection if authenticated
+    if (this.isAuthenticated && this.mensaje.username) {
+      this.client.activate();
+    }
   }
 
   conectar(): void {
@@ -294,7 +311,7 @@ export class HomeComponent implements OnInit {
       this.noticias.forEach(noticia => {
         noticia.fechaCreacion = new Date(noticia.fechaCreacion);
         this.cargarImagen(noticia);
-        this.cargarVideo(noticia); // Load video
+        this.cargarVideo(noticia);
       });
     } else {
       this.noticiaService.obtenerNoticias().subscribe({
@@ -304,7 +321,7 @@ export class HomeComponent implements OnInit {
           );
           this.noticias.forEach(noticia => {
             this.cargarImagen(noticia);
-            this.cargarVideo(noticia); // Load video
+            this.cargarVideo(noticia);
           });
         },
         error: (error) => {
@@ -325,7 +342,7 @@ export class HomeComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error al cargar la imagen de la noticia', error);
-          noticia.imagen = null; // Fallback
+          noticia.imagen = null;
         }
       });
     }
@@ -343,11 +360,12 @@ export class HomeComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error al cargar el video de la noticia', error);
-          noticia.video = null; // Fallback
+          noticia.video = null;
         }
       });
     }
   }
+
   verNoticia(noticia: Noticia): void {
     this.dialog.open(ImagenDialogComponent, {
       data: {
@@ -357,18 +375,18 @@ export class HomeComponent implements OnInit {
         video: noticia.video,
         fechaCreacion: noticia.fechaCreacion
       },
-      width: '600px',  
-      maxHeight: '90vh' // Evita que el modal sea demasiado alto en pantallas grandes
+      width: '600px',
+      maxHeight: '90vh'
     });
   }
-  
+
   mostrarImagen(noticia: Noticia): void {
     this.dialog.open(ImagenDialogComponent, {
       data: {
         titulo: noticia.titulo,
         contenido: noticia.contenido,
         imagen: noticia.imagen,
-        video: noticia.video, // Pass video to dialog
+        video: noticia.video,
         fechaCreacion: noticia.fechaCreacion
       }
     });

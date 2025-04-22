@@ -99,7 +99,7 @@ import { MaterialDocenteComponent } from './components/vista-docente/docente-ana
 import { SharedModule } from './guards/shared.module';
 import { Live2dComponent } from './components/ventanas-para-invitados/live2d/live2d.component';
 import { MaterialStudioComponent } from './components/vista-estudiante/material-studio/material-studio.component';
-
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -109,7 +109,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatExpansionModule, // For mat-accordion, mat-expansion-panel, etc.
 
     MatCardModule, // For mat-card
-
+    MatTabsModule,
 
     BrowserModule,
     AppRoutingModule,

@@ -3,13 +3,11 @@
   <header class="header">
     <div class="header-container">
       <a href="#" class="logo">
-        <img src="assets/iconos/eduportal.png" alt="EduPortal" />
-        <span>EduPortal</span>
+        <img src="assets/iconos/eduportal.png" alt="{{ institutionName }}" />
+        <span>{{ institutionName }}</span>
       </a>
       <nav class="desktop-nav">
         <ul class="nav-list">
-
-
           <ul class="nav-list">
             <li>
               <a [routerLink]="'/inicio'" [class.active]="selectedSection === 'noticias'" (click)="smoothScrollToTop()">
@@ -37,10 +35,6 @@
               </a>
             </li>
           </ul>
-
-
-
-
           <li class="auth-button">
             <a (click)="irAOtraVentana()" class="btn-login">Iniciar Sesión</a>
           </li>
@@ -56,16 +50,16 @@
   <div class="mobile-menu" *ngIf="isMobileMenuOpen">
     <div class="mobile-menu-header">
       <a href="#" class="logo">
-        <span>EduPortal</span>
+        <span>{{ institutionName }}</span>
       </a>
     </div>
     <nav>
       <ul class="mobile-nav-list">
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#about">Nosotros</a></li>
-        <li><a href="#">Biblioteca</a></li>
-        <li><a href="consultar-precios" (click)="accion4()">Precios</a></li>
-        <li><a href="#">Recursos</a></li>
+        <li><a href="#" (click)="toggleMobileMenu()">Inicio</a></li>
+        <li><a href="#about" (click)="toggleMobileMenu()">Nosotros</a></li>
+        <li><a href="#" (click)="libro(); toggleMobileMenu()">Biblioteca</a></li>
+        <li><a href="#" (click)="accion4(); toggleMobileMenu()">Precios</a></li>
+        <li><a href="#" (click)="victor(); toggleMobileMenu()">Recursos</a></li>
         <li><a (click)="irAOtraVentana(); toggleMobileMenu()" class="btn-login">Iniciar Sesión</a></li>
       </ul>
     </nav>
@@ -149,51 +143,4 @@
       </section>
     </div>
   </main>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-logo">
-          <img src="assets/iconos/eduportal.png" alt="Logo Institucional" />
-          <h3>EduPortal</h3>
-          <p>¡Tu aventura escolar comienza aquí! 📚</p>
-        </div>
-        <div class="footer-links">
-          <div class="footer-column">
-            <h4>Explora</h4>
-            <ul>
-              <li><a href="#"><i class="material-icons">home</i> Inicio</a></li>
-              <li><a href="#about"><i class="material-icons">people</i> Nosotros</a></li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h4>Aventuras</h4>
-            <ul>
-              <li><a href="#"><i class="material-icons">local_library</i> Biblioteca</a></li>
-              <li><a href="#"><i class="material-icons">videogame_asset</i> Juegos</a></li>
-              <li><a href="#"><i class="material-icons">school</i> Recursos</a></li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h4>Contáctanos</h4>
-            <ul class="contact-info">
-              <li><i class="material-icons">location_on</i> Av. Escuela #123, Ciudad</li>
-              <li><i class="material-icons">phone</i> (123) 456-7890</li>
-              <li><i class="material-icons">email</i> info@hobocolegio.edu</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>© {{ getCurrentYear() }} EduPortal. ¡Todos felices aprendiendo! 🌈</p>
-        <div class="social-links">
-          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
-          <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-        </div>
-      </div>
-    </div>
-  </footer>
 </div>

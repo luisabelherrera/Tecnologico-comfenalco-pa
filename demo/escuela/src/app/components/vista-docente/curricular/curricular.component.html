@@ -1,75 +1,74 @@
 <div class="container">
   <div class="header">
     <h2>Calificaciones</h2>
-
-
-  </div>
-
-  <div class="form-container" *ngIf="showForm">
-    <form [formGroup]="curricularForm" (ngSubmit)="onSubmitCurricular()">
-      <mat-form-field>
-        <mat-label>Descripción</mat-label>
-        <input matInput formControlName="descripcion" required />
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Asignación Docente</mat-label>
-        <mat-select formControlName="docenteNivelDetalleCurso" required>
-          <mat-option *ngFor="let dndc of docentesNivelDetalleCurso" [value]="dndc">
-            {{ dndc.nivelDetalleCurso.curso.descripcion }} - {{ dndc.nivelDetalleCurso.nivelDetalle.nivel.descripcionNivel }}
-             - {{ dndc.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionGrado}}
-            - {{ dndc.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionSeccion }}    
-        
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-checkbox formControlName="activo">Activo</mat-checkbox>
-      <div class="form-actions">
-        <button type="submit" mat-raised-button color="primary" [disabled]="!curricularForm.valid">Guardar</button>
-        <button type="button" mat-raised-button color="warn" (click)="toggleForm(false)">Cancelar</button>
-      </div>
-    </form>
+    <div class="header-actions">
+      <button class="btn-print" (click)="printReporte()">
+        <mat-icon>print</mat-icon>
+        Imprimir Reporte
+      </button>
+    </div>
   </div>
 
   <div class="curricular-list">
     <mat-list>
       <mat-list-item *ngFor="let curricular of curriculares" (click)="selectCurricular(curricular)">
-        <span matListItemTitle>{{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.curso.descripcion }} 
-          - {{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionGrado}}
-          - {{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionSeccion }} - </span>
-        <span matListItemLine>  {{ curricular.descripcion }}</span>
+        <span matListItemTitle>
+          {{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.curso.descripcion }} -
+          {{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionGrado }} -
+          {{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionSeccion }}
+        </span>
+        <span matListItemLine>{{ curricular.descripcion }}</span>
       </mat-list-item>
     </mat-list>
   </div>
 
   <div class="students-table" *ngIf="selectedCurricular">
-    <h3>Estudiantes en {{ selectedCurricular.docenteNivelDetalleCurso?.nivelDetalleCurso.curso.descripcion }} 
-      - {{ selectedCurricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionGrado}}
-      - {{ selectedCurricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionSeccion }}</h3>
+    <h3>
+      Estudiantes en {{ selectedCurricular.docenteNivelDetalleCurso?.nivelDetalleCurso.curso.descripcion }} -
+      {{ selectedCurricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionGrado }} -
+      {{ selectedCurricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionSeccion }}
+    </h3>
+
     <table mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="estudiante">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Estudiante</th>
         <td mat-cell *matCellDef="let element">{{ element.estudiante.nombres }} {{ element.estudiante.apellidos }}</td>
       </ng-container>
+
       <ng-container matColumnDef="documento">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Documento</th>
         <td mat-cell *matCellDef="let element">{{ element.estudiante.documentoIdentidad }}</td>
       </ng-container>
+
       <ng-container matColumnDef="nota">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Nota</th>
         <td mat-cell *matCellDef="let element">
-          <input type="number" [(ngModel)]="element.nuevaNota" min="0" max="5" step="0.1" placeholder="0-5" />
+          <input
+            type="number"
+            [(ngModel)]="element.nuevaNota"
+            min="0"
+            max="5"
+            step="0.1"
+            placeholder="0-5"
+          />
         </td>
       </ng-container>
+
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef>Acciones</th>
         <td mat-cell *matCellDef="let element">
-          <button mat-raised-button color="primary" (click)="guardarCalificacion(element)">Guardar</button>
+          <button mat-raised-button (click)="guardarCalificacion(element)">
+            Guardar
+          </button>
         </td>
       </ng-container>
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
     <div class="no-students" *ngIf="dataSource.data.length === 0">
       <p>No hay estudiantes registrados en este curricular.</p>
     </div>
@@ -81,6 +80,7 @@
       <p><strong>Docente:</strong> {{ docente?.docente?.nombres }} {{ docente?.docente?.apellidos }}</p>
       <p><strong>Fecha de Emisión:</strong> {{ today | date: 'dd/MM/yyyy' }}</p>
     </div>
+
     <div *ngFor="let curricular of curriculares">
       <h2>{{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.curso.descripcion }} - {{ curricular.docenteNivelDetalleCurso?.nivelDetalleCurso.nivelDetalle.gradoSeccion.descripcionSeccion }}</h2>
       <table class="reporte-table">
@@ -100,6 +100,7 @@
         </tbody>
       </table>
     </div>
+
     <div class="reporte-footer">
       <p>Generado por el Sistema de Gestión Académica</p>
     </div>

@@ -1,210 +1,270 @@
-// Contenedor principal (visible en pantalla y PDF)
+// Variables
+$font-serif: "Times New Roman", Times, serif;
+$font-sans: Arial, Helvetica, sans-serif;
+$color-text: #000000;
+$color-light-bg: #ffffff;
+$color-border: #cccccc;
+$spacing-base: 1rem;
+
+// Base styles (visible in browser only)
 .container {
-  max-width: 900px;
+  max-width: 8.5in;
   margin: 2rem auto;
   padding: 2rem;
-  background: linear-gradient(135deg, #ffffff, #f9fafb);
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-// Encabezado para el PDF
-.print-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid #e5e7eb; // Línea más fina para un diseño limpio
-
-  .logo {
-    max-width: 80px; // Tamaño del logo en pantalla
-    height: auto;
-  }
-}
-
-// Contenido en grid para el PDF
-.content-grid {
-  margin-top: 1rem;
-}
-
-section {
-  background-color: #f9fafb; // Fondo más claro para las secciones
-  padding: 1rem;
+  background-color: $color-light-bg;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); // Sombra más sutil
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: $font-sans;
+}
 
-  h4 {
-    font-size: 1.125rem; // Tamaño de fuente más pequeño para ahorrar espacio
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 0.75rem;
+// Loading spinner
+.flex.flex-col.items-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem 0;
+
+  .spinner-border {
+    width: 2rem;
+    height: 2rem;
+    border: 0.25rem solid #3b82f6;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
   }
 
   p {
-    font-size: 0.875rem; // Fuente más pequeña para compactar
-    color: #4b5563;
-    margin-bottom: 0.5rem;
-
-    strong {
-      color: #1f2937;
-      font-weight: 600;
-    }
-
-    .text-green-500 {
-      color: #10b981; // Verde para "Sí"
-      font-weight: 500;
-    }
-
-    .text-red-500 {
-      color: #dc2626; // Rojo para "No"
-      font-weight: 500;
-    }
+    margin-top: 0.5rem;
+    color: #6b7280;
   }
 }
 
-// Títulos principales
-h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1f2937;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-// Botones (visible en pantalla, oculto en PDF)
-.btn {
-  display: inline-block;
-  padding: 0.75rem 2rem;
-  margin: 0.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  &.btn-print {
-    background-color: #10b981;
-    color: #ffffff;
-
-    &:hover {
-      background-color: #059669;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-  }
-
-  &.btn-back {
-    background-color: #3b82f6;
-    color: #ffffff;
-
-    &:hover {
-      background-color: #2563eb;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-  }
-}
-
-// Spinner de carga
-.spinner-border {
-  border: 4px solid #3b82f6;
-  border-top-color: transparent;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-// Alerta de error
+// Error alert
 .alert-danger {
+  padding: 1rem;
+  margin-bottom: 1rem;
   background-color: #fee2e2;
-  border-left: 4px solid #dc2626;
-  color: #991b1b;
-  font-weight: 500;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #b91c1c;
+  border-radius: 4px;
 }
 
-// Estilos específicos para impresión (PDF)
-@media print {
-  .print-content {
-    background: #ffffff !important; // Fondo blanco para el PDF
-    box-shadow: none !important; // Eliminar sombras en impresión
-    padding: 0 !important; // Eliminar padding adicionales
-    margin: 0 !important; // Eliminar márgenes
-    width: 100% !important; // Usar todo el ancho de la página
-    height: auto !important; // Altura automática para ajustarse al contenido
-    border-radius: 0 !important; // Eliminar bordes redondeados
+// Action buttons
+.text-center.my-4 {
+  margin: 1.5rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 
-    h1, h4, p, strong {
-      color: #000000 !important; // Texto negro para mejor legibilidad
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &.btn-print {
+      background-color: #2563eb;
+      color: white;
+
+      &:hover {
+        background-color: #1d4ed8;
+      }
     }
 
-    hr {
-      border-top: 1px solid #e5e7eb !important; // Línea más simple para impresión
-    }
+    &.btn-back {
+      background-color: #6b7280;
+      color: white;
 
-    .btn {
-      display: none !important; // Ocultar botones en el PDF
+      &:hover {
+        background-color: #4b5563;
+      }
     }
+  }
+}
 
-    .print-header {
-      .logo {
-        max-width: 50px !important; // Reducir tamaño del logo en el PDF
+// APA Style Report (for both screen and print)
+#print-content {
+  font-family: $font-serif;
+  line-height: 2;
+  color: $color-text;
+
+  // Header
+  .header {
+    text-align: center;
+    margin-bottom: 2rem;
+    border-bottom: none;
+
+    h1 {
+      font-size: 16pt;
+      font-weight: bold;
+      text-transform: none;
+      letter-spacing: normal;
+      margin: 0;
+    }
+  }
+
+  // Main content
+  .content-grid {
+    display: block;
+
+    section {
+      margin-bottom: 1.5rem;
+      background-color: transparent;
+      padding: 0;
+      box-shadow: none;
+      border-radius: 0;
+
+      h4 {
+        font-size: 14pt;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        text-align: left;
+        border-bottom: 1px solid $color-border;
+        padding-bottom: 0.25rem;
       }
 
-      border-bottom: 1px solid #e5e7eb !important; // Mantener la línea en el PDF
+      p {
+        margin: 0.5rem 0;
+        font-size: 12pt;
+
+        strong {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+// Print styles
+@media print {
+  @page {
+    size: letter;
+    margin: 1in;
+  }
+
+  body {
+    background-color: white;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    background-color: white;
+  }
+
+  #print-content {
+    font-family: $font-serif !important;
+    font-size: 12pt;
+    line-height: 2;
+
+    .header {
+      position: relative;
+
+      &::after {
+        content: "Running head: BOLETÍN DE CALIFICACIÓN";
+        position: absolute;
+        top: -0.5in;
+        left: 0;
+        font-size: 10pt;
+      }
+
+      h1 {
+        margin-top: 1in;
+        text-align: center;
+      }
     }
 
     .content-grid {
-      grid-template-columns: 1fr 1fr !important; // Mantener las columnas en PDF
-      gap: 0.5rem !important; // Reducir el espacio entre secciones
-    }
+      section {
+        page-break-inside: avoid;
 
-    section {
-      background-color: #ffffff !important; // Fondo blanco en PDF
-      padding: 0.75rem !important; // Reducir padding para ahorrar espacio
-      box-shadow: none !important; // Eliminar sombras en PDF
+        h4 {
+          font-weight: bold;
+          font-size: 12pt;
+        }
+
+        p {
+          text-indent: 0.5in;
+        }
+      }
     }
   }
 
-  // Ocultar elementos que no deben aparecer en el PDF
-  .container {
-    padding: 0 !important;
-    background: none !important;
+  // Hide non-printable elements
+  .flex.flex-col.items-center,
+  .alert-danger,
+  .text-center.my-4,
+  .logo {
+    display: none !important;
   }
 }
 
-// Responsive
-@media (max-width: 768px) {
-  .container {
-    padding: 1.5rem;
-    margin: 1rem;
+// APA-specific styles for the report
+.apa-report {
+  // Student information block
+  .student-info {
+    margin: 1rem 0 2rem;
+    text-align: center;
+
+    p {
+      margin: 0;
+      line-height: 1.5;
+    }
   }
 
-  .btn {
-    width: 100%;
-    margin: 0.5rem 0;
-  }
+  // Abstract-like summary
+  .summary {
+    margin-bottom: 2rem;
 
-  h1 {
-    font-size: 1.75rem;
-  }
-
-  .card-body {
     h4 {
-      font-size: 1.125rem;
+      text-align: center;
+      font-weight: bold;
     }
 
     p {
-      font-size: 0.875rem;
+      text-indent: 0.5in;
     }
+  }
+
+  // Main content sections
+  .section {
+    margin-bottom: 1.5rem;
+
+    h4 {
+      font-weight: bold;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+
+      th, td {
+        padding: 0.5rem;
+        text-align: left;
+        border-bottom: 1px solid $color-border;
+      }
+
+      th {
+        font-weight: bold;
+      }
+    }
+  }
+
+  // Page number
+  .page-number {
+    position: fixed;
+    top: 0.5in;
+    right: 1in;
+    font-size: 12pt;
   }
 }

@@ -1,17 +1,13 @@
 <div class="page-container">
-    <!-- Header Animado -->
+  <!-- Header Animado -->
   <header class="header">
     <div class="header-container">
       <a href="#" class="logo">
-        <img src="assets/iconos/eduportal.png" alt="EduPortal" />
-        <span>EduPortal</span>
+        <img src="assets/iconos/eduportal.png" alt="{{ institutionName }}" />
+        <span>{{ institutionName }}</span>
       </a>
       <nav class="desktop-nav">
         <ul class="nav-list">
-
-
-
-
           <ul class="nav-list">
             <li>
               <a [routerLink]="'/inicio'" [class.active]="selectedSection === 'noticias'" (click)="smoothScrollToTop()">
@@ -39,13 +35,6 @@
               </a>
             </li>
           </ul>
-          
-          
-
-
-
-
-
           <li class="auth-button">
             <a (click)="irAOtraVentana()" class="btn-login">Iniciar Sesión</a>
           </li>
@@ -56,28 +45,27 @@
       </button>
     </div>
   </header>
-    
-  
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" *ngIf="isMobileMenuOpen">
-      <div class="mobile-menu-header">
-        <a href="#" class="logo">
-          <span>EduPortal</span>
-        </a>
-      </div>
-      <nav>
-        <ul class="mobile-nav-list">
-          <li><a href="#" (click)="toggleMobileMenu()">Inicio</a></li>
-          <li><a href="#about" (click)="scrollToAbout(); toggleMobileMenu()">Nosotros</a></li>
-          <li><a href="#" (click)="libro(); toggleMobileMenu()">Biblioteca</a></li>
-          <li><a href="#" (click)="accion4(); toggleMobileMenu()">Juegos</a></li>
-          <li><a href="#" (click)="victor(); toggleMobileMenu()">Recursos</a></li>
-          <li><a (click)="irAOtraVentana(); toggleMobileMenu()" class="btn-login">Iniciar Sesión</a></li>
-        </ul>
-      </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" *ngIf="isMobileMenuOpen">
+    <div class="mobile-menu-header">
+      <a href="#" class="logo">
+        <span>{{ institutionName }}</span>
+      </a>
     </div>
-  
-   <!-- Contenido principal -->
+    <nav>
+      <ul class="mobile-nav-list">
+        <li><a [routerLink]="'/inicio'" (click)="toggleMobileMenu()">Inicio</a></li>
+        <li><a [routerLink]="'/ventana-informacion-public'" (click)="toggleMobileMenu()">Institución</a></li>
+        <li><a [routerLink]="'/sedes'" (click)="toggleMobileMenu()">Instalaciones</a></li>
+        <li><a [routerLink]="'/consultar-precios'" (click)="toggleMobileMenu()">Precios</a></li>
+        <li><a [routerLink]="'/victor'" (click)="toggleMobileMenu()">Recursos</a></li>
+        <li><a (click)="irAOtraVentana(); toggleMobileMenu()" class="btn-login">Iniciar Sesión</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Contenido principal -->
   <div class="public-container">
     <h1 class="title">Información Institucional <span class="emoji">✨</span></h1>
 

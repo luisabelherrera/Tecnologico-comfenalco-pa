@@ -8,6 +8,7 @@ import { Noticia } from 'src/app/models/entity/Noticia.interface';
 import { AuthService } from 'src/app/services/auth/AuthService.service';
 import { NoticiaService } from 'src/app/services/Menu/Menu.service';
 import { ImagenDialogComponent } from '../home/dialogo/ImagenDialog.component';
+import { InformacionInstitucionalService, InformacionInstitucional } from 'src/app/services/servicios-escolares/InformacionInsittucional/informacion-institucional.service';
 
 interface FeatureCard {
   icon: string;
@@ -20,7 +21,6 @@ interface FeatureCard {
   selector: 'app-venta-informacion',
   templateUrl: './venta-informacion.component.html',
   styleUrls: ['./venta-informacion.component.scss'],
-
 })
 export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('news', { static: false }) newsSection!: ElementRef;
@@ -37,10 +37,10 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
   isAuthenticated: boolean = false;
   currentUserId: string | null = null;
   menuOpen = false;
+  institutionName: string = 'EduPortal'; // Property to hold institution name
 
-  // Propiedades para controlar los menús
-  isNavHidden = false; // Estado inicial: menú visible en escritorio
-  isMobileNavHidden = false; // Estado inicial: contenido del menú móvil visible
+  isNavHidden = false;
+  isMobileNavHidden = false;
 
   featureCards: FeatureCard[] = [
     { icon: 'menu_book', emoji: '📚', title: 'Educación Integral', description: 'Programas adaptados al mundo actual.' },
@@ -59,7 +59,8 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
     private sanitizer: DomSanitizer,
     private dialog: MatDialog,
     private authService: AuthService,
-    public router: Router
+    public router: Router,
+    private informacionService: InformacionInstitucionalService // Inject the service
   ) {}
 
   @HostListener('window:scroll', [])
@@ -70,17 +71,30 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
   ngOnInit(): void {
     this.initializeAuthState();
     this.cargarNoticias();
+    this.loadInstitutionName(); // Load the institution name
   }
 
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  // Métodos para controlar los menús
+  // Method to load the institution name
+  loadInstitutionName() {
+    this.informacionService.getPublic().pipe(takeUntil(this.destroy$)).subscribe({
+      next: (data: InformacionInstitucional) => {
+        this.institutionName = data.nombreInstitucion || 'EduPortal'; // Update with institution name
+        console.log('Nombre de la institución cargado:', this.institutionName);
+      },
+      error: (err) => {
+        console.error('Error al cargar el nombre de la institución:', err);
+        this.institutionName = 'EduPortal'; // Fallback in case of error
+      }
+    });
+  }
+
   toggleDesktopNav() {
     this.isNavHidden = !this.isNavHidden;
   }
@@ -93,6 +107,7 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
       document.body.classList.remove('mobile-menu-open');
     }
   }
+
   toggleMobileNav() {
     this.isMobileNavHidden = !this.isMobileNavHidden;
   }
@@ -173,9 +188,11 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
   handleImageError(event: Event): void {
     (event.target as HTMLImageElement).src = 'assets/img/cdc-GDokEYnOfnE-unsplash.jpg';
   }
+
   scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
   irAOtraVentana(): void {
     this.router.navigate(['/login']).then(() => this.smoothScrollToTop());
   }
@@ -235,20 +252,23 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
   accion3(): void {
     this.router.navigate(['/ventana-informacion-public']).then(() => this.smoothScrollToTop());
   }
+
   accion4(): void {
     this.router.navigate(['/consultar-precios']).then(() => this.smoothScrollToTop());
   }
 
-  libro() { this.router.navigate(['/libros-api']); }
-  victor() { this.router.navigate(['/live2']); }
+  libro() {
+    this.router.navigate(['/libros-api']);
+  }
 
+  victor() {
+    this.router.navigate(['/live2']);
+  }
 
   accion1(): void {
     this.router.navigate(['/sedes']).then(() => this.smoothScrollToTop());
   }
 
-
   accion5() {}
   accion2() {}
-
 }

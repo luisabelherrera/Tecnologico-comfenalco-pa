@@ -1,138 +1,218 @@
 .material-container {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 
   h2 {
     margin: 0;
+    font-size: 1.5rem;
+    color: #333;
   }
 }
 
 .no-curriculares {
+  padding: 24px;
   text-align: center;
-  margin: 20px 0;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  margin: 16px 0;
 }
 
 .form {
   display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.subject-selection {
+  display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 16px;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
 
   .curricular-field {
     flex: 1;
+    min-width: 250px;
   }
 
   .generate-button {
+    height: 56px;
     display: flex;
     align-items: center;
     gap: 8px;
   }
 }
 
+.preview-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.material-field {
+  width: 100%;
+}
+
 .loading-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 20px;
+  padding: 32px 0;
 
   .loading {
     display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-}
-
-.content {
-  display: flex;
-  gap: 20px;
-
-  .temas-nav {
-    width: 250px;
-    flex-shrink: 0;
-
-    .tema-item {
-      padding: 12px;
-      cursor: pointer;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: background-color 0.2s;
-
-      &.selected,
-      &:hover {
-        background-color: #f5f5f5;
-      }
-
-      .tema-icon {
-        font-size: 20px;
-      }
-
-      .tema-title {
-        flex: 1;
-      }
-    }
-  }
-
-  .content-area {
-    flex: 1;
-    max-height: 500px;
-    overflow-y: auto;
-    padding: 16px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-
-  .tema-content {
-    h3 {
-      margin-top: 0;
-    }
-  }
-
-  .videos {
-    display: flex;
     flex-direction: column;
-    gap: 20px;
-  }
-
-  .video-wrapper {
-    position: relative;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio (9/16 = 0.5625) */
-    height: 0;
-    overflow: hidden;
-
-    iframe.youtube-video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-  }
-
-  .error {
-    color: red;
-    font-style: italic;
-  }
-
-  .text-content {
-    white-space: pre-wrap;
-    line-height: 1.6;
+    align-items: center;
+    gap: 16px;
   }
 }
 
 .actions {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: 20px;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+/* Report Preview Styles */
+.report-preview {
+  background-color: white;
+  padding: 24px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-family: Arial, sans-serif;
+
+  .apa-cover-page {
+    text-align: center;
+    margin-bottom: 48px;
+
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 120px;
+      margin-bottom: 24px;
+    }
+
+    h2 {
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      font-size: 16px;
+      margin-bottom: 24px;
+    }
+  }
+
+  .running-head {
+    font-size: 10pt;
+    text-transform: uppercase;
+    position: absolute;
+    top: 12.7mm;
+    left: 25.4mm;
+  }
+
+  .page-number {
+    font-size: 10pt;
+    position: absolute;
+    top: 12.7mm;
+    right: 25.4mm;
+  }
+
+  .report-content {
+    margin-bottom: 48px;
+
+    h2 {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+  }
+
+  .references-page {
+    h2 {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+
+    p {
+      text-indent: -36pt;
+      margin-left: 36pt;
+    }
+  }
+}
+
+/* Print Styles */
+@media print {
+  .material-container {
+    display: none;
+  }
+
+  .report-preview {
+    display: block !important;
+    font-family: Arial, sans-serif;
+    font-size: 12pt;
+    line-height: 2;
+    margin: 25.4mm;
+    width: 160mm;
+    color: black;
+  }
+
+  .apa-cover-page {
+    text-align: center;
+    page-break-after: always;
+  }
+
+  .running-head {
+    position: fixed;
+    top: 12.7mm;
+    left: 25.4mm;
+    font-size: 10pt;
+    text-transform: uppercase;
+  }
+
+  .page-number {
+    position: fixed;
+    top: 12.7mm;
+    right: 25.4mm;
+    font-size: 10pt;
+  }
+
+  .report-content h2 {
+    font-size: 14pt;
+    margin-top: 20pt;
+  }
+
+  .report-content h3 {
+    font-size: 12pt;
+    margin-top: 15pt;
+  }
+
+  .report-content ul {
+    margin-left: 36pt;
+  }
+
+  .references-page p {
+    text-indent: -36pt;
+    margin-left: 36pt;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  button, .actions, .loading-container, .form, .header, .no-curriculares, .preview-actions, mat-tab-group {
+    display: none !important;
+  }
 }

@@ -227,7 +227,7 @@ export class CalificacionListComponent implements OnInit, AfterViewInit {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(16);
       doc.setTextColor(0, 51, 102);
-      doc.text('INSTITUCION EDUCATIVA EL HOBO', doc.internal.pageSize.width / 2, marginY + 20, { align: 'center' });
+      doc.text('INSTITUCION EDUCATIVA EL EDUPORTAL', doc.internal.pageSize.width / 2, marginY + 20, { align: 'center' });
       doc.setFontSize(12);
       doc.text('NIT: 123456789', doc.internal.pageSize.width / 2, marginY + 40, { align: 'center' });
       doc.text('CARMEN DE BOLIVAR', doc.internal.pageSize.width / 2, marginY + 60, { align: 'center' });

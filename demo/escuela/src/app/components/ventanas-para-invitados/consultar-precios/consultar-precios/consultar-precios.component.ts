@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/AuthService.service';
 import { PrecioNivelEducativo, PreciosEducativosService } from 'src/app/services/servicios-escolares/PrecioNivelEducativo/precios-educativos.service';
 import { trigger, transition, style, animate, stagger, query } from '@angular/animations';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { InformacionInstitucionalService, InformacionInstitucional } from 'src/app/services/servicios-escolares/InformacionInsittucional/informacion-institucional.service';
 
 @Component({
   selector: 'app-consultar-precios',
@@ -23,12 +26,15 @@ import { trigger, transition, style, animate, stagger, query } from '@angular/an
     ])
   ]
 })
-export class ConsultarPreciosComponent implements OnInit {
+export class ConsultarPreciosComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+
   selectedSection = 'noticias';
   isMobileMenuOpen = false;
   isScrolled = false;
   isMobileNavHidden = false;
   selectedPrecio: PrecioNivelEducativo | null = null;
+  institutionName: string = 'EduPortal'; // Property to hold institution name
 
   precios: PrecioNivelEducativo[] = [];
   imageUrls: { [key: string]: SafeUrl } = {};
@@ -38,15 +44,36 @@ export class ConsultarPreciosComponent implements OnInit {
     private dialog: MatDialog,
     private authService: AuthService,
     public router: Router,
-    private preciosService: PreciosEducativosService
+    private preciosService: PreciosEducativosService,
+    private informacionService: InformacionInstitucionalService // Inject the service
   ) { }
 
   ngOnInit(): void {
     this.loadPrecios();
+    this.loadInstitutionName(); // Load the institution name
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  // Method to load the institution name
+  loadInstitutionName() {
+    this.informacionService.getPublic().pipe(takeUntil(this.destroy$)).subscribe({
+      next: (data: InformacionInstitucional) => {
+        this.institutionName = data.nombreInstitucion || 'EduPortal'; // Update with institution name
+        console.log('Nombre de la institución cargado:', this.institutionName);
+      },
+      error: (err) => {
+        console.error('Error al cargar el nombre de la institución:', err);
+        this.institutionName = 'EduPortal'; // Fallback in case of error
+      }
+    });
   }
 
   loadPrecios(): void {
-    this.preciosService.getAllPublic().subscribe({
+    this.preciosService.getAllPublic().pipe(takeUntil(this.destroy$)).subscribe({
       next: (precios) => {
         this.precios = precios;
         this.loadImages();
@@ -64,7 +91,7 @@ export class ConsultarPreciosComponent implements OnInit {
   }
 
   fetchImage(id: string): void {
-    this.preciosService.getImagePublic(id).subscribe({
+    this.preciosService.getImagePublic(id).pipe(takeUntil(this.destroy$)).subscribe({
       next: (blob) => {
         const objectUrl = URL.createObjectURL(blob);
         this.imageUrls[id] = this.sanitizer.bypassSecurityTrustUrl(objectUrl);
@@ -99,8 +126,14 @@ export class ConsultarPreciosComponent implements OnInit {
     this.router.navigate(['/consultar-precios']).then(() => this.smoothScrollToTop());
   }
 
-  libro(): void { this.router.navigate(['/libros-api']); }
-  victor(): void { this.router.navigate(['/victor']); }
+  libro(): void {
+    this.router.navigate(['/libros-api']).then(() => this.smoothScrollToTop());
+  }
+
+  victor(): void {
+    this.router.navigate(['/victor']).then(() => this.smoothScrollToTop());
+  }
+
   accion1(): void {}
   accion5(): void {}
   accion2(): void {}
@@ -116,7 +149,7 @@ export class ConsultarPreciosComponent implements OnInit {
   getDiscountText(descuento: number | null): string {
     if (descuento === null) return '';
     else if (descuento >= 50) return '¡SÚPER OFERTA!';
-    else if (descuento >= 25) return '¡GRAN DESCUENTO!'; // Matches the screenshot
+    else if (descuento >= 25) return '¡GRAN DESCUENTO!';
     else if (descuento > 0) return 'Oferta Especial';
     else return '';
   }
@@ -124,7 +157,7 @@ export class ConsultarPreciosComponent implements OnInit {
   getDiscountColor(descuento: number | null): string {
     if (descuento === null) return 'transparent';
     else if (descuento >= 50) return '#ff4081'; // Pink
-    else if (descuento >= 25) return '#00bcd4'; // Cyan, matches the screenshot
+    else if (descuento >= 25) return '#00bcd4'; // Cyan
     else if (descuento > 0) return '#ffca28'; // Yellow
     else return 'transparent';
   }

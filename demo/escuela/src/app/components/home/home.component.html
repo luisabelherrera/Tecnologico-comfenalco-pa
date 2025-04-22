@@ -1,7 +1,7 @@
 <header class="header" [style.background]="headerBackground" [style.color]="(currentTheme$ | async)?.textColor">
   <nav class="navbar">
     <div class="logo">
-      <h1 class="logo-text" [ngStyle]="{'color': (currentTheme$ | async)?.textColor}">EduPortal </h1>
+      <h1 class="logo-text" [ngStyle]="{'color': (currentTheme$ | async)?.textColor}">{{ institutionName }}</h1>
       <div class="user-info">
         <span *ngIf="userName$ | async as userName; else loading" [ngStyle]="{'color': (currentTheme$ | async)?.textColor}">
           <i class="fas fa-user-circle"></i> Bienvenido, {{ userName }}. Aquí podrás encontrar las noticias y eventos de la institución.
@@ -22,15 +22,15 @@
 
 <div class="chat-container" [ngStyle]="{
   'display': chatVisible && isAuthenticated ? 'block' : 'none',
-  'background': (currentTheme$ | async)?.backgroundColorLeft && (currentTheme$ | async)?.backgroundColorRight 
-    ? 'linear-gradient(to right, ' + (currentTheme$ | async)?.backgroundColorLeft + ', ' + (currentTheme$ | async)?.backgroundColorRight + ')' 
+  'background': (currentTheme$ | async)?.backgroundColorLeft && (currentTheme$ | async)?.backgroundColorRight
+    ? 'linear-gradient(to right, ' + (currentTheme$ | async)?.backgroundColorLeft + ', ' + (currentTheme$ | async)?.backgroundColorRight + ')'
     : (currentTheme$ | async)?.backgroundColor,
   'color': (currentTheme$ | async)?.textColor
 }" style="position: fixed; bottom: 70px; right: 20px; width: 300px; z-index: 1000;">
   <div class="card chat-card" style="width: 100%; max-height: 400px; overflow: hidden;">
     <div [ngStyle]="{
-      'background': (currentTheme$ | async)?.backgroundColorLeft && (currentTheme$ | async)?.backgroundColorRight 
-        ? 'linear-gradient(to right, ' + (currentTheme$ | async)?.backgroundColorLeft + ', ' + (currentTheme$ | async)?.backgroundColorRight + ')' 
+      'background': (currentTheme$ | async)?.backgroundColorLeft && (currentTheme$ | async)?.backgroundColorRight
+        ? 'linear-gradient(to right, ' + (currentTheme$ | async)?.backgroundColorLeft + ', ' + (currentTheme$ | async)?.backgroundColorRight + ')'
         : (currentTheme$ | async)?.backgroundColor,
       'color': (currentTheme$ | async)?.textColor
     }">
@@ -62,8 +62,8 @@
     </div>
 
     <div class="card-footer" *ngIf="conectado" [ngStyle]="{
-      'background': (currentTheme$ | async)?.backgroundColorLeft && (currentTheme$ | async)?.backgroundColorRight 
-        ? 'linear-gradient(to right, ' + (currentTheme$ | async)?.backgroundColorLeft + ', ' + (currentTheme$ | async)?.backgroundColorRight + ')' 
+      'background': (currentTheme$ | async)?.backgroundColorLeft && (currentTheme$ | async)?.backgroundColorRight
+        ? 'linear-gradient(to right, ' + (currentTheme$ | async)?.backgroundColorLeft + ', ' + (currentTheme$ | async)?.backgroundColorRight + ')'
         : (currentTheme$ | async)?.backgroundColor,
       'color': (currentTheme$ | async)?.textColor
     }">
@@ -129,24 +129,24 @@
       </div>
       <div class="noticia-contenido">
         <p class="noticia-texto">{{ noticia.contenido | slice: 0:100 }}...</p>
-        <img *ngIf="noticia.imagen" 
-             [src]="noticia.imagen" 
-             alt="Imagen de noticia" 
+        <img *ngIf="noticia.imagen"
+             [src]="noticia.imagen"
+             alt="Imagen de noticia"
              class="noticia-imagen" />
-        <video *ngIf="noticia.video" 
-               [src]="noticia.video" 
-               controls 
+        <video *ngIf="noticia.video"
+               [src]="noticia.video"
+               controls
                class="noticia-video">
           Tu navegador no soporta el elemento de video.
         </video>
-        <button *ngIf="!noticia.imagen && !noticia.video" 
-                (click)="cargarImagen(noticia); cargarVideo(noticia)" 
+        <button *ngIf="!noticia.imagen && !noticia.video"
+                (click)="cargarImagen(noticia); cargarVideo(noticia)"
                 class="btn-cargar-imagen">
           <i class="fas fa-upload"></i> Cargar Media
         </button>
-        <button class="btn-ver-mas" 
-                (click)="verNoticia(noticia)" 
-                [attr.aria-label]="'Ver más sobre ' + noticia.titulo" 
+        <button class="btn-ver-mas"
+                (click)="verNoticia(noticia)"
+                [attr.aria-label]="'Ver más sobre ' + noticia.titulo"
                 matTooltip="Ver más">
           <i class="fas fa-eye"></i>
         </button>
@@ -163,7 +163,7 @@
               stroke="currentColor"
               stroke-width="2"
               viewBox="0 0 24 24"
-              height="24" 
+              height="24"
               width="24"
               xmlns="http://www.w3.org/2000/svg"
               class="w-6 hover:scale-125 duration-200 hover:stroke-blue-500"
@@ -180,10 +180,10 @@
         </div>
       </div>
       <div class="comentario-input-container" *ngIf="isAuthenticated">
-        <input type="text" 
-               class="comentario-input" 
-               [(ngModel)]="comentarioTexto[noticia.id]" 
-               placeholder="Escribe un comentario..." 
+        <input type="text"
+               class="comentario-input"
+               [(ngModel)]="comentarioTexto[noticia.id]"
+               placeholder="Escribe un comentario..."
                (keyup.enter)="noticia.id && comentarioTexto[noticia.id] ? agregarComentario(noticia) : null" />
       </div>
       <div class="comentarios-lista" [ngStyle]="{'display': showComments[noticia.id] ? 'block' : 'none'}"

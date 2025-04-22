@@ -9,6 +9,7 @@ import { NavigationStart, Router } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 import { TemaHeaderService, Theme } from './services/tema-header/tema-header.service';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import { InformacionInstitucionalService, InformacionInstitucional } from './services/servicios-escolares/InformacionInsittucional/informacion-institucional.service';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,7 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy {
-  title = ' EduPortal ';
+  title: string = 'EduPortal'; // Initialize with default, will be updated
 
   @ViewChild('sidenav') sidenav!: MatSidenav;
   toolbarColor: string | SafeStyle = 'rgb(0, 0, 0)';
@@ -50,7 +51,6 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/docentes', icon: 'person', title: 'Docentes' },
     { path: '/curriculares', icon: 'assignment', title: 'Curriculares' },
     { path: '/calificaciones', icon: 'grade', title: 'Calificaciones' },
-
   ];
   Curso = [
     { path: '/cursos', icon: 'school', title: 'Cursos' },
@@ -60,7 +60,6 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/matricula', icon: 'assignment_ind', title: 'Matrícula' },
   ];
   configuraciones = [
-
     { path: '/periodo', icon: 'calendar_today', title: 'Crear Periodo' },
     { path: '/nivel', icon: 'school', title: 'Nivel Académico' },
     { path: '/grado-seccion', icon: 'groups', title: 'Grado y Sección' },
@@ -76,7 +75,6 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/preciosniveleducativo', icon: 'monetization_on', title: 'Tarifas Educativas' },
     { path: '/informacion-educativa', icon: 'info', title: 'Información Educativa' },
   ];
-
   AdministrarUsuario = [
     { path: '/registro', icon: 'person_add', title: 'Registrar' },
   ];
@@ -85,7 +83,6 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/curricularDocente', icon: 'grade', title: 'Calificaciones' },
     { path: '/horarioDocente', icon: 'schedule', title: 'Mi Horario' },
     { path: '/asistencia', icon: 'checklist', title: 'Control de Asistencia' },
-
     { path: '/docente-weka', icon: 'insights', title: 'Rendimiento Estudiantil' },
   ];
   Ventana3Links = [
@@ -110,9 +107,11 @@ export class AppComponent implements OnInit, OnDestroy {
     private notificacionService: NotificacionService,
     private router: Router,
     private temaHeaderService: TemaHeaderService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private informacionService: InformacionInstitucionalService // Inject the service
   ) {
     this.currentTheme$ = this.temaHeaderService.currentTheme$;
+    this.previousTheme = this.temaHeaderService.getCurrentTheme();
     this.temaHeaderService.currentTheme$.pipe(takeUntil(this.unsubscribe$)).subscribe(theme => {
       console.log('Tema recibido en AppComponent:', theme);
 
@@ -142,6 +141,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.cargarNotificaciones();
+    this.loadInstitutionName(); // Call the method to load the institution name
     this.authService.userName$.pipe(takeUntil(this.unsubscribe$)).subscribe(name => {
       this.username = name;
     });
@@ -163,6 +163,20 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     });
     document.documentElement.style.setProperty('--theme-background-color', typeof this.toolbarColor === 'string' ? this.toolbarColor : 'rgb(0, 0, 0)');
+  }
+
+  // Method to load the institution name
+  loadInstitutionName() {
+    this.informacionService.getPublic().pipe(takeUntil(this.unsubscribe$)).subscribe({
+      next: (data: InformacionInstitucional) => {
+        this.title = data.nombreInstitucion || 'EduPortal'; // Update title with institution name
+        console.log('Nombre de la institución cargado:', this.title);
+      },
+      error: (err) => {
+        console.error('Error al cargar el nombre de la institución:', err);
+        this.title = 'EduPortal'; // Fallback in case of error
+      }
+    });
   }
 
   cargarNotificaciones() {
@@ -197,10 +211,8 @@ export class AppComponent implements OnInit, OnDestroy {
         name: 'navidad',
         backgroundColor: 'rgb(0, 0, 0)',
         backgroundColorLeft: '#000000',
-
-        backgroundColorRight: '	#0000FF',
+        backgroundColorRight: '#0000FF',
         textColor: 'white',
-
       });
     } else {
       this.temaHeaderService.applyTheme(this.previousTheme);
@@ -223,11 +235,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
+
   onSidenavToggle(opened: boolean) {
-    // Forzar recalculo del layout
     setTimeout(() => {
       window.dispatchEvent(new Event('resize'));
-    }, 300); // Coincide con la duración de la transición
+    }, 300);
   }
-
 }

@@ -1,27 +1,385 @@
+// Variables - Refined color palette
+$primary: #4d7cfe;
+$primary-light: #6b8eff;
+$primary-dark: #3a6ae8;
+$secondary: #6c757d;
+$accent: #20c997;
+$warning: #fcc419;
+$danger: #fa5252;
+$light: #f8f9fa;
+$dark: #343a40;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #868e96;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+
+$border-radius: 8px;
+$border-radius-sm: 6px;
+$box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+$transition: all 0.25s ease;
+
+// Imports
+// @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+// Base styles
+body {
+  background-color: #f8f9fa;
+  font-family: 'Inter', sans-serif;
+  color: $gray-800;
+}
+
 .container {
-    padding: 20px;
+  padding: 1.5rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+}
+
+// Header
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid $gray-200;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $gray-800;
+    margin: 0;
+    position: relative;
+    padding-left: 1rem;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 24px;
+      background: $accent;
+      border-radius: 2px;
+    }
   }
-  
-  .header {
+}
+
+// Course list - ENHANCED STYLING
+.curso-list {
+  margin-bottom: 1.5rem;
+
+  mat-list {
+    background: white;
+    border-radius: $border-radius;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    border: 1px solid $gray-200;
+    padding: 0.5rem;
+
+    mat-list-item {
+      position: relative;
+      transition: $transition;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      border-radius: $border-radius-sm;
+      overflow: hidden;
+      background: $gray-100;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &:hover {
+        background: rgba($accent, 0.1);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+
+        &::before {
+          opacity: 1;
+          height: 100%;
+        }
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 4px;
+        height: 0;
+        background: $accent;
+        opacity: 0;
+        transition: all 0.3s ease;
+      }
+
+      ::ng-deep {
+        .mat-list-item-content {
+          padding: 1rem 1.25rem;
+        }
+
+        span[matListItemTitle] {
+          font-weight: 600;
+          color: $gray-800;
+          margin-bottom: 0.25rem;
+          font-size: 1rem;
+          display: flex;
+          align-items: center;
+
+          &::before {
+            content: '📋';
+            margin-right: 0.75rem;
+            font-size: 1.125rem;
+          }
+        }
+
+        span[matListItemLine] {
+          color: $accent;
+          font-size: 0.875rem;
+          font-weight: 500;
+          padding-left: 2rem;
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+// Students table
+.students-table {
+  background: white;
+  border-radius: $border-radius;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  padding: 1.25rem;
+  animation: fadeIn 0.3s ease;
+  border: 1px solid $gray-200;
+  margin-top: 1.5rem;
+
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: $gray-800;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid $gray-200;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+
+    &::before {
+      content: '👥';
+      margin-right: 0.75rem;
+      font-size: 1.25rem;
+    }
   }
-  
-  .curso-list {
-    margin-top: 20px;
-  }
-  
-  .students-table {
-    margin-top: 20px;
-  }
-  
+
   table {
     width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+
+    th {
+      background: $gray-100;
+      color: $gray-700;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid $gray-200;
+
+      &:first-child {
+        border-top-left-radius: $border-radius-sm;
+      }
+
+      &:last-child {
+        border-top-right-radius: $border-radius-sm;
+        text-align: center;
+      }
+    }
+
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid $gray-200;
+      font-size: 0.875rem;
+      color: $gray-800;
+      vertical-align: middle;
+
+      &:nth-child(3), &:nth-child(4), &:nth-child(5) {
+        text-align: center;
+      }
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+
+      &:first-child {
+        border-bottom-left-radius: $border-radius-sm;
+      }
+
+      &:last-child {
+        border-bottom-right-radius: $border-radius-sm;
+      }
+    }
+
+    tr:hover td {
+      background: rgba($gray-200, 0.5);
+    }
+
+    mat-checkbox {
+      ::ng-deep {
+        .mat-checkbox-frame {
+          border-color: $gray-400;
+          border-radius: 4px;
+        }
+
+        .mat-checkbox-background {
+          background-color: $accent;
+        }
+      }
+    }
+
+    button[mat-icon-button] {
+      width: 36px;
+      height: 36px;
+      line-height: 36px;
+
+      &[color="primary"] {
+        color: $primary;
+      }
+
+      &[color="accent"] {
+        color: $accent;
+      }
+
+      &:hover {
+        background: rgba($gray-200, 0.8);
+      }
+
+      mat-icon {
+        font-size: 1.25rem;
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+    }
   }
-  
+
+  mat-paginator {
+    margin-top: 0.75rem;
+    background: transparent;
+
+    ::ng-deep {
+      .mat-paginator-container {
+        min-height: 48px;
+        padding: 0 0.5rem;
+      }
+
+      .mat-paginator-range-label,
+      .mat-paginator-page-size-label {
+        font-size: 0.75rem;
+        color: $gray-600;
+      }
+
+      .mat-icon-button {
+        color: $gray-700;
+      }
+    }
+  }
+
   .no-students {
+    padding: 2rem 1rem;
     text-align: center;
-    padding: 20px;
-    color: #666;
+    color: $gray-500;
+    font-style: italic;
+    background: $gray-100;
+    border-radius: $border-radius-sm;
+    margin-top: 1rem;
+
+    p {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &::before {
+        content: '🔍';
+        margin-right: 0.5rem;
+        font-size: 1.5rem;
+      }
+    }
   }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .students-table {
+    padding: 1rem;
+
+    table {
+      display: block;
+      overflow-x: auto;
+
+      th, td {
+        padding: 0.5rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0.75rem;
+  }
+
+  .header h2 {
+    font-size: 1.25rem;
+  }
+}
+
+// Custom scrollbar
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: $gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $gray-300;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $gray-400;
+}
+
