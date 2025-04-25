@@ -15,8 +15,8 @@ import { InscripcionService } from 'src/app/services/matricula/matricula.service
 import { DocentePerfilService } from 'src/app/services/Docente/Docente-perfil/docente-perfil.service';
 import { CalificacionService } from 'src/app/services/calificacion/calificacion.service';
 import { WekaEstudiantesComponent } from './estudiante-weka/weka-estudiantes/weka-estudiantes.component';
-import { EncuestaEstudianteService } from 'src/app/services/encuentasEstudiante/EncuestaEstudiante.service';
 import { MaterialDocenteComponent } from './docente-crea-material/material-docente/material-docente.component';
+import { EncuestaEstudianteService } from 'src/app/services/encuentasEstudiante/EncuestaEstudiante.service';
 
 interface EstudiantePrediccion {
   estudiante: Estudiante;
@@ -24,10 +24,35 @@ interface EstudiantePrediccion {
   confianza?: number;
   nota?: number;
   showConfidence?: boolean;
+  inputData?: {
+    documento: string;
+    edad: number | string;
+    genero: string;
+    promedioParciales: number | string;
+    horasEstudioSemanal: string;
+    asistencia: string;
+    participacionClases: string;
+    usoPlataformaVirtual: string;
+    antecedentesPerdida: string;
+    apoyoFamiliar: string;
+    cargaAcademica: string;
+    problemasPersonales: string;
+  };
 }
 
 interface DatosEstudiante {
   documento: string;
+  edad?: number | string;
+  genero?: string;
+  promedioParciales?: number | string;
+  horasEstudioSemanal?: string;
+  asistencia?: string;
+  participacionClases?: string;
+  usoPlataformaVirtual?: string;
+  antecedentesPerdida?: string;
+  apoyoFamiliar?: string;
+  cargaAcademica?: string;
+  problemasPersonales?: string;
   perderaAsignatura: string;
   confianza: string;
 }
@@ -52,7 +77,8 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
   private gradeChart: Chart | undefined;
   promedioNotas: number | null = null;
   prediccionStats: { aprobados: number; reprobados: number; sinPredecir: number } = { aprobados: 0, reprobados: 0, sinPredecir: 0 };
-  student: EstudiantePrediccion;
+  selectedPrediction: EstudiantePrediccion | null = null;
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -182,7 +208,23 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
                     prediccion: prediccionGuardada?.perderaAsignatura || undefined,
                     confianza: prediccionGuardada ? parseFloat(prediccionGuardada.confianza.replace('%', '')) / 100 : undefined,
                     nota: calificacion?.nota,
-                    showConfidence: false
+                    showConfidence: false,
+                    inputData: prediccionGuardada
+                      ? {
+                          documento: prediccionGuardada.documento,
+                          edad: prediccionGuardada.edad || this.calculateAge(est.fechaNacimiento),
+                          genero: prediccionGuardada.genero || (est.sexo === 'M' ? 'Masculino' : est.sexo === 'F' ? 'Femenino' : 'Otro'),
+                          promedioParciales: prediccionGuardada.promedioParciales || (calificacion?.nota !== undefined ? calificacion.nota : ''),
+                          horasEstudioSemanal: prediccionGuardada.horasEstudioSemanal || '',
+                          asistencia: prediccionGuardada.asistencia || '',
+                          participacionClases: prediccionGuardada.participacionClases || '',
+                          usoPlataformaVirtual: prediccionGuardada.usoPlataformaVirtual || '',
+                          antecedentesPerdida: prediccionGuardada.antecedentesPerdida || '',
+                          apoyoFamiliar: prediccionGuardada.apoyoFamiliar || est.encuesta?.apoyoFamiliar || '',
+                          cargaAcademica: prediccionGuardada.cargaAcademica || '',
+                          problemasPersonales: prediccionGuardada.problemasPersonales || est.encuesta?.problemasPersonales || ''
+                        }
+                      : undefined
                   };
                 });
 
@@ -224,6 +266,7 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
     this.resultado = '';
     this.showForm = false;
     this.showTable = true;
+    this.selectedPrediction = null;
     this.updateTableData();
   }
 
@@ -239,6 +282,7 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
     if (!this.showForm) {
       this.studentForm.reset();
       this.resultado = '';
+      this.selectedPrediction = null;
     }
 
     if (this.showTable) {
@@ -283,7 +327,7 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
     const estudiantePred = this.estudiantesPorCurricular[this.selectedCurricular!.idCurricular!].find(
       (e) => e.estudiante.documentoIdentidad === estudiante.documentoIdentidad
     );
-    this.studentForm.patchValue({
+    const formData = {
       documento: estudiante.documentoIdentidad,
       edad: edad,
       genero: estudiante.sexo === 'M' ? 'Masculino' : estudiante.sexo === 'F' ? 'Femenino' : 'Otro',
@@ -296,7 +340,12 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
       apoyoFamiliar: estudiante.encuesta?.apoyoFamiliar || '',
       cargaAcademica: '',
       problemasPersonales: estudiante.encuesta?.problemasPersonales || ''
-    });
+    };
+    this.studentForm.patchValue(formData);
+    if (estudiantePred) {
+      estudiantePred.inputData = { ...formData };
+      console.log('InputData set in populateForm:', estudiantePred.inputData); // Debug
+    }
   }
 
   calculateAge(fechaNacimiento?: Date): number {
@@ -330,12 +379,31 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
           if (estudiantePred) {
             estudiantePred.prediccion = response.prediccion;
             estudiantePred.confianza = parseFloat(response.confianza.replace('%', '')) / 100;
+            // Preserve inputData from populateForm, update with non-empty form values
+            estudiantePred.inputData = estudiantePred.inputData || { ...datos };
+            Object.keys(datos).forEach((key) => {
+              if (datos[key] !== '' && datos[key] !== null && datos[key] !== undefined) {
+                estudiantePred.inputData![key] = datos[key];
+              }
+            });
+            console.log('InputData after prediction:', estudiantePred.inputData); // Debug
 
             const existingPredictionIndex = this.historialPredicciones.findIndex(
               (h) => String(h.documento) === String(datos.documento)
             );
-            const prediccionData = {
+            const prediccionData: DatosEstudiante = {
               documento: datos.documento,
+              edad: estudiantePred.inputData.edad,
+              genero: estudiantePred.inputData.genero,
+              promedioParciales: estudiantePred.inputData.promedioParciales,
+              horasEstudioSemanal: estudiantePred.inputData.horasEstudioSemanal,
+              asistencia: estudiantePred.inputData.asistencia,
+              participacionClases: estudiantePred.inputData.participacionClases,
+              usoPlataformaVirtual: estudiantePred.inputData.usoPlataformaVirtual,
+              antecedentesPerdida: estudiantePred.inputData.antecedentesPerdida,
+              apoyoFamiliar: estudiantePred.inputData.apoyoFamiliar,
+              cargaAcademica: estudiantePred.inputData.cargaAcademica,
+              problemasPersonales: estudiantePred.inputData.problemasPersonales,
               perderaAsignatura: response.prediccion,
               confianza: response.confianza
             };
@@ -360,17 +428,17 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
 
   openMaterialPanel(student: EstudiantePrediccion): void {
     const dialogRef = this.dialog.open(MaterialDocenteComponent, {
-      width: 'min(1300px, 100vw)', 
+      width: 'min(1300px, 100vw)',
       height: 'min(800px, 100vh)',
-      maxWidth: '100vw', 
+      maxWidth: '100vw',
       maxHeight: '100vh',
-      data: { 
+      data: {
         estudiantePrediccion: student,
-        curriculares: this.curriculares, // Pass filtered curriculares
-        curricularId: this.selectedCurricular?.idCurricular // Pass selected curricular ID
-      },
+        curriculares: this.curriculares,
+        curricularId: this.selectedCurricular?.idCurricular
+      }
     });
-  
+
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result.material) {
         this.snackBar.open(
@@ -382,6 +450,19 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
       }
     });
   }
+
+  showPredictionDetails(element: EstudiantePrediccion): void {
+    this.selectedPrediction = element;
+  }
+
+  closePredictionDetails(): void {
+    this.selectedPrediction = null;
+  }
+
+  toggleConfidence(element: EstudiantePrediccion): void {
+    element.showConfidence = !element.showConfidence;
+  }
+
   private updateTableData(): void {
     if (this.selectedCurricular && this.estudiantesPorCurricular[this.selectedCurricular.idCurricular!]) {
       this.dataSource.data = [...this.estudiantesPorCurricular[this.selectedCurricular.idCurricular!]];
@@ -450,9 +531,5 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
         }
       }
     });
-  }
-
-  toggleConfidence(element: EstudiantePrediccion): void {
-    element.showConfidence = !element.showConfidence;
   }
 }
