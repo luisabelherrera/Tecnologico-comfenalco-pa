@@ -20,22 +20,26 @@
   <i class="fas fa-comments fa-2x" [ngStyle]="{'color': (currentTheme$ | async)?.textColor}" style="cursor: pointer;"></i>
 </div>
 
+<!-- Este es un ejemplo de cómo aplicar los nuevos estilos a tu plantilla Angular -->
 <div class="chat-container" [ngStyle]="{
   'display': chatVisible && isAuthenticated ? 'block' : 'none',
   'background': (currentTheme$ | async)?.backgroundColorLeft && (currentTheme$ | async)?.backgroundColorRight
     ? 'linear-gradient(to right, ' + (currentTheme$ | async)?.backgroundColorLeft + ', ' + (currentTheme$ | async)?.backgroundColorRight + ')'
     : (currentTheme$ | async)?.backgroundColor,
   'color': (currentTheme$ | async)?.textColor
-}" style="position: fixed; bottom: 70px; right: 20px; width: 300px; z-index: 1000;">
-  <div class="card chat-card" style="width: 100%; max-height: 400px; overflow: hidden;">
-    <div [ngStyle]="{
+}">
+  <div class="card chat-card">
+    <div class="card-header" [ngStyle]="{
       'background': (currentTheme$ | async)?.backgroundColorLeft && (currentTheme$ | async)?.backgroundColorRight
         ? 'linear-gradient(to right, ' + (currentTheme$ | async)?.backgroundColorLeft + ', ' + (currentTheme$ | async)?.backgroundColorRight + ')'
         : (currentTheme$ | async)?.backgroundColor,
       'color': (currentTheme$ | async)?.textColor
     }">
       <ul class="nav nav-pills card-header-pills">
-        <li class="nav-item mr-2">
+        <li class="nav-item">
+          <h5 style="margin: 0;">Chat en vivo</h5>
+        </li>
+        <li class="nav-item">
           <button class="btn btn-success" type="button" (click)="conectar()" *ngIf="!conectado" [ngStyle]="{
             'background-color': (currentTheme$ | async)?.backgroundColorLeft || (currentTheme$ | async)?.backgroundColor,
             'color': (currentTheme$ | async)?.textColor
@@ -46,19 +50,23 @@
       </ul>
     </div>
 
-    <div #scrollChat [scrollTop]="scrollChat.scrollHeight" class="card-body chat-body" *ngIf="conectado" style="overflow-y: auto; max-height: 300px;">
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item list-group-item-light" *ngFor="let mensaje of mensajes">
+    <div #scrollChat [scrollTop]="scrollChat.scrollHeight" class="card-body chat-body" *ngIf="conectado">
+      <div class="mensajes-container">
+        <div *ngFor="let mensaje of mensajes" 
+             [ngClass]="{'mensaje-usuario': mensaje.username === (userName$ | async), 'mensaje-sistema': mensaje.username !== (userName$ | async)}">
           <span *ngIf="mensaje.tipo=='NUEVO_USUARIO'">
-            <i class="fas fa-user-plus"></i> {{mensaje.fecha | date:'shortTime'}} @ {{mensaje.texto}}
-            <span [ngStyle]="{'color': mensaje.color}">{{mensaje.username}}</span>
+            <i class="fas fa-user-plus"></i> 
+            <span class="nombre-usuario" [ngStyle]="{'color': mensaje.color}">{{mensaje.username}}</span> 
+            se ha unido al chat
+            <span class="tiempo-mensaje">{{mensaje.fecha | date:'shortTime'}}</span>
           </span>
           <span *ngIf="mensaje.tipo=='MENSAJE'">
-            <i class="fas fa-comment-dots"></i> {{mensaje.fecha | date:'shortTime'}}
-            <span [ngStyle]="{'color': mensaje.color}">{{mensaje.username}}</span> dice:<br> {{mensaje.texto}}
+            <span class="nombre-usuario" [ngStyle]="{'color': mensaje.color}">{{mensaje.username}}</span>
+            {{mensaje.texto}}
+            <span class="tiempo-mensaje">{{mensaje.fecha | date:'shortTime'}}</span>
           </span>
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
 
     <div class="card-footer" *ngIf="conectado" [ngStyle]="{
@@ -68,7 +76,7 @@
       'color': (currentTheme$ | async)?.textColor
     }">
       <form class="form-inline" (ngSubmit)="enviarMensaje()">
-        <div class="form-group mx-3">
+        <div class="form-group">
           <input
             type="text"
             [(ngModel)]="mensaje.texto"
@@ -83,7 +91,15 @@
           </button>
         </div>
       </form>
-      <div>{{escribiendo}}</div>
+      
+      <div class="escribiendo" *ngIf="escribiendo">
+        {{escribiendo}}
+        <span class="typing-indicator">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </div>
 
       <div *ngIf="emojisVisible" class="emoji-picker">
         <span (click)="agregarEmoji('😊')">😊</span>
@@ -118,6 +134,8 @@
       <p>Por favor, inicia sesión para acceder al chat.</p>
     </div>
   </div>
+
+
 </div>
 <div class="noticias-container mx-4 my-4">
   <h2 class="noticias-titulo"><i class="fas fa-newspaper"></i> Las noticias del día</h2>

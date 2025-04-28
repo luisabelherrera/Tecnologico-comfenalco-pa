@@ -3,35 +3,55 @@
   <header class="header">
     <div class="header-container">
       <a href="#" class="logo">
-        <img src="assets/iconos/eduportal.png" alt="{{ institutionName }}" />
+        <div class="earth-container">
+          <div class="earth">
+            <div class="earth-loader"> 
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+                <path
+                  transform="translate(100 100)"
+                  d="M29.4,-17.4C33.1,1.8,27.6,16.1,11.5,31.6C-4.7,47,-31.5,63.6,-43,56C-54.5,48.4,-50.7,16.6,-41,-10.9C-31.3,-38.4,-15.6,-61.5,-1.4,-61C12.8,-60.5,25.7,-36.5,29.4,-17.4Z"
+                  fill="#7CC133"
+                ></path>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+                <path
+                  transform="translate(100 100)"
+                  d="M31.7,-55.8C40.3,-50,45.9,-39.9,49.7,-29.8C53.5,-19.8,55.5,-9.9,53.1,-1.4C50.6,7.1,43.6,14.1,41.8,27.6C40.1,41.1,43.4,61.1,37.3,67C31.2,72.9,15.6,64.8,1.5,62.2C-12.5,59.5,-25,62.3,-31.8,56.7C-38.5,51.1,-39.4,37.2,-49.3,26.3C-59.1,15.5,-78,7.7,-77.6,0.2C-77.2,-7.2,-57.4,-14.5,-49.3,-28.4C-41.2,-42.4,-44.7,-63,-38.5,-70.1C-32.2,-77.2,-16.1,-70.8,-2.3,-66.9C11.6,-63,23.1,-61.5,31.7,-55.8Z"
+                  fill="#7CC133"
+                ></path>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+                <path
+                  transform="translate(100 100)"
+                  d="M30.6,-49.2C42.5,-46.1,57.1,-43.7,67.6,-35.7C78.1,-27.6,84.6,-13.8,80.3,-2.4C76.1,8.9,61.2,17.8,52.5,29.1C43.8,40.3,41.4,53.9,33.7,64C26,74.1,13,80.6,2.2,76.9C-8.6,73.1,-17.3,59,-30.6,52.1C-43.9,45.3,-61.9,45.7,-74.1,38.2C-86.4,30.7,-92.9,15.4,-88.6,2.5C-84.4,-10.5,-69.4,-20.9,-60.7,-34.6C-52.1,-48.3,-49.8,-65.3,-40.7,-70C-31.6,-74.8,-15.8,-67.4,-3.2,-61.8C9.3,-56.1,18.6,-52.3,30.6,-49.2Z"
+                  fill="#7CC133"
+                ></path>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+                <path
+                  transform="translate(100 100)"
+                  d="M39.4,-66C48.6,-62.9,51.9,-47.4,52.9,-34.3C53.8,-21.3,52.4,-10.6,54.4,1.1C56.3,12.9,61.7,25.8,57.5,33.2C53.2,40.5,39.3,42.3,28.2,46C17,49.6,8.5,55.1,1.3,52.8C-5.9,50.5,-11.7,40.5,-23.6,37.2C-35.4,34,-53.3,37.5,-62,32.4C-70.7,27.4,-70.4,13.7,-72.4,-1.1C-74.3,-15.9,-78.6,-31.9,-73.3,-43C-68.1,-54.2,-53.3,-60.5,-39.5,-60.9C-25.7,-61.4,-12.9,-56,1.1,-58C15.1,-59.9,30.2,-69.2,39.4,-66Z"
+                  fill="#7CC133"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </div>
         <span>{{ institutionName }}</span>
       </a>
       <nav class="desktop-nav">
         <ul class="nav-list">
           <li>
-            <a [routerLink]="'/inicio'" [class.active]="selectedSection === 'noticias'" (click)="smoothScrollToTop()">
-              Inicio
-            </a>
+            <a [routerLink]="'/inicio'" (click)="smoothScrollToTop()">Inicio</a>
           </li>
           <li>
-            <a [routerLink]="'/ventana-informacion-public'" (click)="smoothScrollToTop()">
-              Institución
-            </a>
+            <a [routerLink]="'/ventana-informacion-public'" (click)="smoothScrollToTop()">Institución</a>
           </li>
           <li>
-            <a [routerLink]="'/sedes'" [class.active]="selectedSection === 'sedes'" (click)="smoothScrollToTop()">
-              Instalaciones
-            </a>
+            <a [routerLink]="'/sedes'" [class.active]="true" (click)="smoothScrollToTop()">Instalaciones</a>
           </li>
           <li>
-            <a [routerLink]="'/consultar-precios'" (click)="smoothScrollToTop()">
-              Precios
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="'/victor'" (click)="smoothScrollToTop()">
-              Recursos
-            </a>
+            <a [routerLink]="'/consultar-precios'" (click)="smoothScrollToTop()">Precios</a>
           </li>
           <li class="auth-button">
             <a (click)="irAOtraVentana()" class="btn-login">Iniciar Sesión</a>
@@ -66,47 +86,327 @@
     </nav>
   </div>
 
-  <!-- Institución Content -->
-  <div class="institucion-container">
-    <h1>{{ institutionName }}</h1>
-    <p>
-      La {{ institutionName }}, ubicada en la vereda El Hobo del municipio de El Carmen de Bolívar,
-      ha experimentado mejoras significativas en sus instalaciones en los últimos años.
-    </p>
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="hero-section">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1>Nuestras Instalaciones</h1>
+        <p>Conoce los espacios donde formamos el futuro</p>
+      </div>
+    </div>
 
-    <h2>Mejoras en Infraestructura</h2>
-    <p>
-      En 2019, se llevó a cabo una ampliación que incluyó nuevos bloques de aulas diseñados para optimizar
-      la ventilación natural y el ingreso controlado de luz, adaptándose al clima cálido y húmedo de la región.
-      Estas estructuras se elevaron sobre el suelo natural para permitir el paso de escorrentías y preservar
-      la biodiversidad local.
-    </p>
-    <p>
-      Más información en:
-      <a href="https://www.archdaily.cl/cl/923759/escuela-rural-el-hobo-fp-arquitectura" target="_blank">
-        ArchDaily - Escuela Rural El Hobo
-      </a>
-    </p>
+    <div class="container">
+      <!-- Introducción -->
+      <section class="intro-section">
+        <div class="section-header">
+          <h2>{{ institutionName }}</h2>
+          <div class="section-divider">
+            <span></span>
+            <i class="material-icons">school</i>
+            <span></span>
+          </div>
+        </div>
+        <p class="intro-text">
+          <strong>{{ institutionName }}</strong> es una institución educativa de excelencia ubicada en Cartagena. Nuestras modernas instalaciones están diseñadas para crear un ambiente óptimo de aprendizaje, donde cada espacio ha sido pensado para inspirar la creatividad, fomentar la colaboración y potenciar el conocimiento de nuestros estudiantes.
+        </p>
+      </section>
 
-    <h2>Compromiso con la Educación</h2>
-    <p>
-      Además, la institución ha fortalecido su compromiso con la calidad educativa, implementando proyectos como
-      la preparación de suelos para cultivos de caraota y frijol, y realizando rendiciones de cuentas anuales
-      para mantener informada a la comunidad.
-    </p>
-    <p>
-      Más información en:
-      <a href="https://www.ietaelhobo.com/" target="_blank">Sitio web oficial</a>
-    </p>
+      <!-- Galería de Instalaciones -->
+      <section class="facilities-section">
+        <div class="section-header">
+          <h2>Galería de Instalaciones</h2>
+          <div class="section-divider">
+            <span></span>
+            <i class="material-icons">photo_library</i>
+            <span></span>
+          </div>
+        </div>
 
-    <h2>Video sobre las obras en la institución</h2>
-    <p>
-      Puedes ver más sobre las obras realizadas en la siguiente presentación en video:
-    </p>
-    <p>
-      <a href="https://www.youtube.com/watch?v=gXmsPo_m11E" target="_blank">
-        Ver en YouTube
-      </a>
-    </p>
+        <div class="facilities-grid">
+          <div class="facility-card" (click)="openGallery('aulas')">
+            <div class="facility-image">
+              <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Aulas modernas" />
+              <div class="facility-overlay">
+                <i class="material-icons">zoom_in</i>
+              </div>
+            </div>
+            <div class="facility-content">
+              <h3>Aulas Modernas</h3>
+              <p>Espacios diseñados para optimizar la ventilación natural y el ingreso controlado de luz.</p>
+            </div>
+          </div>
+
+          <div class="facility-card" (click)="openGallery('biblioteca')">
+            <div class="facility-image">
+              <img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Biblioteca" />
+              <div class="facility-overlay">
+                <i class="material-icons">zoom_in</i>
+              </div>
+            </div>
+            <div class="facility-content">
+              <h3>Biblioteca</h3>
+              <p>Centro de recursos educativos con amplia colección de libros y espacios de estudio.</p>
+            </div>
+          </div>
+
+          <div class="facility-card" (click)="openGallery('laboratorio')">
+            <div class="facility-image">
+              <img src="https://images.unsplash.com/photo-1581093588401-fbb62a02f120?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Laboratorio" />
+              <div class="facility-overlay">
+                <i class="material-icons">zoom_in</i>
+              </div>
+            </div>
+            <div class="facility-content">
+              <h3>Laboratorio</h3>
+              <p>Equipado con tecnología moderna para experimentos y prácticas científicas.</p>
+            </div>
+          </div>
+
+          <div class="facility-card" (click)="openGallery('deportes')">
+            <div class="facility-image">
+              <img src="https://images.unsplash.com/photo-1577741314755-048d8525d31e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Áreas deportivas" />
+              <div class="facility-overlay">
+                <i class="material-icons">zoom_in</i>
+              </div>
+            </div>
+            <div class="facility-content">
+              <h3>Áreas Deportivas</h3>
+              <p>Espacios para actividades físicas y deportivas que promueven el desarrollo integral.</p>
+            </div>
+          </div>
+
+          <div class="facility-card" (click)="openGallery('comedor')">
+            <div class="facility-image">
+              <img src="https://images.unsplash.com/photo-1544427920-c49ccfb85579?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Comedor escolar" />
+              <div class="facility-overlay">
+                <i class="material-icons">zoom_in</i>
+              </div>
+            </div>
+            <div class="facility-content">
+              <h3>Comedor Escolar</h3>
+              <p>Ambiente acogedor donde los estudiantes disfrutan de alimentación balanceada.</p>
+            </div>
+          </div>
+
+          <div class="facility-card" (click)="openGallery('tecnologia')">
+            <div class="facility-image">
+              <img src="https://images.unsplash.com/photo-1593642532973-d31b97d0e6b1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Aula de tecnología" />
+              <div class="facility-overlay">
+                <i class="material-icons">zoom_in</i>
+              </div>
+            </div>
+            <div class="facility-content">
+              <h3>Aula de Tecnología</h3>
+              <p>Espacio equipado con computadoras y herramientas digitales para el aprendizaje tecnológico.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mejoras en Infraestructura -->
+      <section class="improvements-section">
+        <div class="section-header">
+          <h2>Mejoras en Infraestructura</h2>
+          <div class="section-divider">
+            <span></span>
+            <i class="material-icons">construction</i>
+            <span></span>
+          </div>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">2019</div>
+            <div class="timeline-content">
+              <h3>Ampliación de Instalaciones</h3>
+              <p>
+                Inauguramos nuevos bloques de aulas diseñados para optimizar la ventilación natural y el ingreso controlado de luz, adaptándose perfectamente al clima de nuestra región.
+              </p>
+              <div class="timeline-image">
+                <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Ampliación 2019" />
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">2020</div>
+            <div class="timeline-content">
+              <h3>Renovación de Espacios Comunes</h3>
+              <p>
+                Modernizamos las áreas comunes y zonas de recreación para mejorar la experiencia educativa de los estudiantes y promover la interacción social.
+              </p>
+              <div class="timeline-image">
+                <img src="https://images.unsplash.com/photo-1517164850305-99a3e65bb47e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Espacios comunes" />
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">2021</div>
+            <div class="timeline-content">
+              <h3>Implementación de Tecnología</h3>
+              <p>
+                Equipamos las aulas con recursos tecnológicos para facilitar el aprendizaje digital y preparar a los estudiantes para los retos del futuro.
+              </p>
+              <div class="timeline-image">
+                <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Tecnología educativa" />
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">2022</div>
+            <div class="timeline-content">
+              <h3>Proyecto de Sostenibilidad</h3>
+              <p>
+                Implementamos sistemas de recolección de agua lluvia y paneles solares para reducir el impacto ambiental y enseñar a los estudiantes sobre sostenibilidad.
+              </p>
+              <div class="timeline-image">
+                <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Proyecto sostenible" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Video y Recursos -->
+      <section class="resources-section">
+        <div class="section-header">
+          <h2>Video y Recursos</h2>
+          <div class="section-divider">
+            <span></span>
+            <i class="material-icons">play_circle</i>
+            <span></span>
+          </div>
+        </div>
+
+        <div class="resources-container">
+          <div class="video-container">
+            <div class="video-wrapper">
+              <iframe
+                width="560"
+                height="315"
+                src="https://www.youtube.com/embed/gXmsPo_m11E"
+                title="Video sobre nuestras instalaciones"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            </div>
+            <h3>Video sobre nuestras instalaciones</h3>
+          </div>
+
+          <div class="resources-links">
+            <h3>Enlaces de Interés</h3>
+            <ul>
+              <li>
+                <a href="#" target="_blank">
+                  <i class="material-icons">article</i>
+                  <span>Noticias sobre nuestras instalaciones</span>
+                </a>
+              </li>
+              <li>
+                <a href="#" target="_blank">
+                  <i class="material-icons">language</i>
+                  <span>Sitio web oficial</span>
+                </a>
+              </li>
+              <li>
+                <a href="#" (click)="downloadBrochure($event)">
+                  <i class="material-icons">download</i>
+                  <span>Descargar folleto informativo</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contacto -->
+      <section class="contact-section">
+        <div class="section-header">
+          <h2>¿Quieres conocer nuestras instalaciones?</h2>
+          <div class="section-divider">
+            <span></span>
+            <i class="material-icons">contact_support</i>
+            <span></span>
+          </div>
+        </div>
+
+        <div class="contact-container">
+          <div class="contact-info">
+            <div class="contact-item">
+              <i class="material-icons">location_on</i>
+              <div>
+                <h3>Dirección</h3>
+                <p>Cartagena, Barrio España, Cra 44 #30A - 91</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <i class="material-icons">phone</i>
+              <div>
+                <h3>Teléfono</h3>
+                <p>(+57) 605-672-7200</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <i class="material-icons">email</i>
+              <div>
+                <h3>Correo Electrónico</h3>
+                <p>info@eduportal.edu.co</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <i class="material-icons">schedule</i>
+              <div>
+                <h3>Horario de Visitas</h3>
+                <p>Lunes a Viernes: 9:00 AM - 3:00 PM</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="map-container">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3924.4254976897347!2d-75.5047903!3d10.4022542!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8ef625e7ae9d1571%3A0x7ff53f9ae3942d96!2sFundaci%C3%B3n%20Universitaria%20Tecnol%C3%B3gico%20Comfenalco!5e0!3m2!1ses!2sco!4v1619712345678!5m2!1ses!2sco"
+              width="100%"
+              height="300"
+              style="border:0;"
+              allowfullscreen=""
+              loading="lazy"
+            ></iframe>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Gallery Modal -->
+  <div class="gallery-modal" *ngIf="showGallery">
+    <div class="gallery-overlay" (click)="closeGallery()"></div>
+    <div class="gallery-content">
+      <button class="gallery-close" (click)="closeGallery()">
+        <i class="material-icons">close</i>
+      </button>
+      <div class="gallery-navigation">
+        <button class="gallery-nav-btn prev" (click)="prevImage()">
+          <i class="material-icons">chevron_left</i>
+        </button>
+        <div class="gallery-image-container">
+          <img [src]="currentGalleryImage" alt="Imagen de galería" />
+        </div>
+        <button class="gallery-nav-btn next" (click)="nextImage()">
+          <i class="material-icons">chevron_right</i>
+        </button>
+      </div>
+      <div class="gallery-caption">
+        <p>{{ currentGalleryCaption }}</p>
+        <span class="gallery-counter">{{ currentImageIndex + 1 }} / {{ galleryImages.length }}</span>
+      </div>
+    </div>
   </div>
 </div>

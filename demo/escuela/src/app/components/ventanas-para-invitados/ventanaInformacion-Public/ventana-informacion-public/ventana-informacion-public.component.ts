@@ -26,7 +26,7 @@ export class VentanaInformacionPublicComponent implements OnInit, OnDestroy {
   errorMessage: string | null = null;
   isLoading: boolean = false;
   isMobileMenuOpen: boolean = false;
-  selectedSection: string = 'institucion';
+  selectedSection = 'noticias';
   activeSection: string = 'mision'; // Sección activa por defecto
 
   constructor(

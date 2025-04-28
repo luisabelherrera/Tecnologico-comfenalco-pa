@@ -35,7 +35,6 @@ $transition: all 0.3s ease;
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
   }
-
   @else {
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
@@ -54,6 +53,7 @@ $transition: all 0.3s ease;
   box-shadow: $shadow;
   overflow: hidden;
   transition: $transition;
+  position: relative;
 
   &:hover {
     transform: translateY(-6px);
@@ -95,7 +95,7 @@ body {
   flex-direction: column;
 }
 
-// Header Animado
+// Header
 .header {
   width: 100%;
   position: fixed;
@@ -104,84 +104,67 @@ body {
   z-index: 1000;
   background-color: #ffffff;
   padding: 1rem 0;
-  box-shadow: $shadow;
-  border-bottom: 1px solid $border-color;
-
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid #e5e7eb;
+  
   .header-container {
     @include flex(row, space-between, center);
     max-width: 1240px;
     margin: 0 auto;
     padding: 0 1.5rem;
   }
-
+  
   .logo {
     @include flex(row, flex-start, center);
     text-decoration: none;
-
-    img {
-      height: 40px;
-      transition: transform 0.3s ease;
-      animation: bounceLogo 2s infinite ease-in-out;
-
-      &:hover {
-        transform: rotate(15deg);
-      }
-    }
-
+    
     span {
       font-size: 1.5rem;
       font-weight: 600;
       color: $primary-color;
       margin-left: 0.75rem;
       position: relative;
-      animation: waveText 1.5s infinite ease-in-out;
     }
   }
-
+  
   .desktop-nav {
     @include flex(row, flex-end, center);
-
-    @media (max-width: 992px) {
-      display: none;
-    }
-
+    
+    @media (max-width: 992px) { display: none; }
+    
     .nav-list {
       @include flex(row, center, center);
       list-style: none;
       gap: 1.75rem;
-
-      li {
-        a {
-          color: $dark-text;
-          text-decoration: none;
-          font-weight: 500;
-          font-size: 1rem;
-          transition: $transition;
-          position: relative;
-
-          &:hover,
-          &.active {
-            color: $primary-color;
-            transform: scale(1.1);
-
-            &:after {
-              width: 100%;
-            }
-          }
-
+      
+      a {
+        color: $dark-text;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 1rem;
+        transition: $transition;
+        position: relative;
+        
+        &:hover, &.active {
+          color: $primary-color;
+          transform: scale(1.1);
           &:after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: $accent-color;
-            transition: width 0.3s ease;
+            width: 100%;
           }
         }
+        
+        &:after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background-color: $accent-color;
+          transition: width 0.3s ease;
+        }
       }
-
+      
       .auth-button a.btn-login {
         @include button($primary-color, $light-text, darken($primary-color, 10%), 'small');
         border: 1px solid $primary-color;
@@ -189,7 +172,7 @@ body {
         position: relative;
         overflow: hidden;
         margin-right: 1rem;
-
+        
         &:before {
           content: '✨';
           position: absolute;
@@ -197,7 +180,7 @@ body {
           opacity: 0;
           transition: all 0.3s ease;
         }
-
+        
         &:hover {
           &:before {
             left: 5px;
@@ -207,7 +190,7 @@ body {
       }
     }
   }
-
+  
   .mobile-menu-toggle {
     display: none;
     background: none;
@@ -217,11 +200,9 @@ body {
     cursor: pointer;
     padding: 0.5rem;
     transition: transform 0.3s ease;
-
-    @media (max-width: 992px) {
-      display: block;
-    }
-
+    
+    @media (max-width: 992px) { display: block; }
+    
     &:hover {
       color: $primary-color;
       transform: rotate(90deg);
@@ -241,33 +222,19 @@ body {
   padding: 4rem 1.5rem 2rem;
   animation: slideIn 0.3s ease-out;
   overflow-y: auto;
-
+  
   .mobile-menu-header {
     @include flex(row, space-between, center);
     margin-bottom: 2rem;
   }
-
-  .mobile-close-btn {
-    background: none;
-    border: none;
-    color: $dark-text;
-    font-size: 1.75rem;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-
-    &:hover {
-      color: $primary-color;
-      transform: rotate(90deg);
-    }
-  }
-
+  
   nav {
     .mobile-nav-list {
       list-style: none;
-
+      
       li {
         margin-bottom: 1.5rem;
-
+        
         a {
           color: $dark-text;
           text-decoration: none;
@@ -276,12 +243,12 @@ body {
           transition: $transition;
           display: block;
           padding: 0.5rem 0;
-
+          
           &:hover {
             color: $primary-color;
             transform: translateX(10px) scale(1.05);
           }
-
+          
           &.btn-login {
             @include button($primary-color, $light-text, darken($primary-color, 10%), 'small');
             width: auto;
@@ -290,7 +257,7 @@ body {
             margin-right: 1rem;
             position: relative;
             overflow: hidden;
-
+            
             &:before {
               content: '✨';
               position: absolute;
@@ -298,10 +265,9 @@ body {
               opacity: 0;
               transition: all 0.3s ease;
             }
-
+            
             &:hover {
               transform: translateY(-2px);
-
               &:before {
                 left: 5px;
                 opacity: 1;
@@ -314,421 +280,776 @@ body {
   }
 }
 
-// Main Content
-.main-content {
-    flex: 1;
-    padding: 6rem 0 4rem;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    .prices-section {
-      text-align: center;
-      .section-title {
-        font-size: 3rem;
-        font-weight: 700;
-        color: $primary-color;
-        margin-bottom: 1rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        .emoji {
-          font-size: 2rem;
-          animation: bounceLogo 2s infinite ease-in-out;
-        }
-      }
-      .subtitle {
-        font-size: 1.3rem;
-        color: lighten($text-color, 20%);
-        margin-bottom: 3rem;
-      }
-    }
-    .cards-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 2.5rem;
-      padding: 2rem 0;
-    }
-    .card {
-      @include card;
-      border-top: 6px solid $primary-color;
-      .card-image {
-        width: 100%;
-        height: 220px;
-        overflow: hidden;
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.5s ease;
-        }
-        &:hover img {
-          transform: scale(1.1);
-        }
-      }
-      .card-content {
-        padding: 1.5rem;
-        h2 {
-          font-size: 1.6rem;
-          font-weight: 600;
-          color: $dark-text;
-          margin-bottom: 0.75rem;
-        }
-        .description {
-          font-size: 1rem;
-          color: lighten($text-color, 20%);
-          margin-bottom: 1.2rem;
-        }
-        .price-details {
-          @include flex(row, flex-start, center);
-          gap: 0.75rem;
-          margin-bottom: 1.2rem;
-          flex-wrap: wrap;
-          .price {
-            font-size: 2rem;
-            font-weight: 700;
-            color: $secondary-color;
-            background: rgba($secondary-color, 0.1);
-            padding: 0.3rem 0.8rem;
-            border-radius: 8px;
-          }
-          .periodicity {
-            font-size: 1.1rem;
-            color: lighten($text-color, 30%);
-          }
-          .discount {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: $light-text;
-            animation: pulse 2s infinite ease-in-out;
-          }
-        }
-        .dates {
-          font-size: 0.9rem;
-          color: lighten($text-color, 40%);
-          margin-bottom: 1.5rem;
-          p {
-            margin: 0.3rem 0;
-          }
-        }
-        .offer-button {
-          @include button($primary-color, $light-text);
-          width: 100%;
-          font-size: 1rem;
-          text-transform: uppercase;
-          &:hover {
-            background: $accent-color;
-          }
-        }
-      }
-    }
-  }
-  
-
-
-
-// Variables
-$primary-color: #3f51b5;
-$secondary-color: #ff4081;
-$accent-color: #00bcd4;
-$text-color: #2d2d2d;
-$light-text: #fff;
-$dark-text: #1a1a1a;
-$light-bg: #f8fafc;
-$dark-bg: #1f2a30;
-$border-color: #e5e7eb;
-$shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
-$transition: all 0.3s ease;
-
-// Detail Container
-.detail-container {
-  background-color: $light-bg; // Fondo claro
-  border-radius: 12px; // Bordes redondeados
-  box-shadow: $shadow; // Sombra suave
-  padding: 2rem; // Relleno en todos los lados
-  margin: 2rem 0; // Margen superior e inferior
-  display: flex;
-  flex-direction: column;
-  animation: fadeIn 0.5s ease; // Animación de entrada
-  
-  .back-button {
-    @include button($primary-color, $light-text, darken($primary-color, 10%), 'small'); 
-    margin-bottom: 1.5rem; // Espacio inferior
-  }
-
-  .detail-content {
-    display: flex;
-    flex-direction: column; // Coloca elementos verticalmente
-    margin-top: 1rem; // Espacio superior
-    text-align: left;
-
-    .detail-image {
-      border-radius: 12px; // Bordes redondeados para imagen
-      overflow: hidden; // Prevenir el desbordamiento
-
-      img {
-        width: 100%; // Imagen responsiva
-        transition: transform $transition; // Transición suave al pasar el ratón
-
-        &:hover {
-          transform: scale(1.05); // Zoom al pasar ratón
-        }
-      }
-    }
-
-    h2 {
-      font-size: 2rem; // Fuente grande para el título
-      color: $dark-text; // Color oscuro para contraste
-      margin: 1rem 0; // Márgenes alrededor del título
-      font-weight: bold; // Texto en negrita
-      text-transform: uppercase; // Texto en mayúsculas
-    }
-
-    .price-details {
-      display: flex;
-      align-items: center; // Alinea elementos verticalmente
-      margin-bottom: 1rem; // Espacio inferior
-
-      .price {
-        font-size: 2rem; // Tamaño grande para el precio
-        color: $secondary-color; // Color del precio
-        padding: 0.5rem; // Relleno
-        background: rgba($secondary-color, 0.1); // Fondo suave
-        border-radius: 8px; // Bordes redondeados
-        margin-right: 1rem; // Espacio a la derecha
-      }
-
-      .discount {
-        background-color: $accent-color; // Color de fondo del descuento
-        color: $light-text; // Color del texto del descuento
-        padding: 0.4rem 1rem; // Relleno
-        border-radius: 20px; // Bordes redondeados
-        font-weight: bold; // Peso en negrita
-      }
-    }
-
-    .dates {
-      font-size: 0.9rem; // Tamaño para las fechas
-      color: lighten($text-color, 40%); // Texto más claro
-      margin: 1rem 0; // Márgenes verticales
-    }
-
-    .additional-info {
-      margin-top: 2rem; // Margen superior
-
-      h3 {
-        font-size: 1.5rem; // Tamaño del subtítulo
-        color: $dark-text; // Color del título
-        margin-bottom: 1rem; // Margen inferior
-      }
-
-      .section-label {
-        font-weight: bold; // Resaltar el texto
-        margin-bottom: 0.3rem; // Espacio debajo
-      }
-
-      .payment-methods {
-        display: flex; // Usar flex para alineación suave
-        margin-top: 1rem; // Margen superior
-        
-        .icon {
-          margin-right: 1rem; // Espacio entre iconos
-          width: 40px; // Ancho de los iconos
-          height: 40px; // Alto de los iconos
-
-          img {
-            width: 100%; // Ajusta la imagen al contenedor
-            height: auto; // Mantiene proporción
-            transition: transform $transition; // Transición suave
-
-            &:hover {
-              transform: scale(1.1); // Efecto de hover
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-// Animaciones
-@keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-
-
-  
-// Footer
-.footer {
-  background-color: $dark-bg;
-  color: $light-text;
-  padding: 5rem 0 2.5rem;
-
-  .footer-content {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 4rem;
-    margin-bottom: 3.5rem;
-
-    @media (max-width: 992px) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .footer-logo {
-    img {
-      height: 65px;
-      margin-bottom: 1.25rem;
-      transition: transform 0.3s ease;
-
-      &:hover {
-        transform: scale(1.1);
-      }
-    }
-
-    h3 {
-      font-size: 1.75rem;
-    }
-
-    p {
-      font-size: 1.1rem;
-    }
-  }
-
-  .footer-links {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2.5rem;
-
-    @media (max-width: 768px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media (max-width: 576px) {
-      grid-template-columns: 1fr;
-    }
-
-    .footer-column {
-      h4 {
-        font-size: 1.35rem;
-        margin-bottom: 1.75rem;
-        position: relative;
-
-        &:after {
-          content: '';
-          position: absolute;
-          bottom: -0.5rem;
-          left: 0;
-          width: 40px;
-          height: 3px;
-          background-color: $secondary-color;
-        }
-      }
-
-      ul {
-        list-style: none;
-
-        li {
-          margin-bottom: 0.75rem;
-
-          a {
-            color: rgba($light-text, 0.8);
-            text-decoration: none;
-            font-size: 1.05rem;
-            transition: $transition;
-
-            &:hover {
-              color: $light-text;
-              padding-left: 8px;
-            }
-          }
-        }
-      }
-
-      .contact-info {
-        li {
-          @include flex(row, flex-start, center);
-          gap: 0.75rem;
-
-          i {
-            font-size: 1.5rem;
-            color: $accent-color;
-          }
-        }
-      }
-    }
-  }
-
-  .footer-bottom {
-    border-top: 1px solid rgba($light-text, 0.1);
-    padding-top: 2.5rem;
-    @include flex(row, space-between, center);
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-      gap: 1.5rem;
-      text-align: center;
-    }
-
-    p {
-      opacity: 0.8;
-    }
-
-    .social-links {
-      @include flex(row, center, center);
-      gap: 1.25rem;
-
-      a {
-        width: 45px;
-        height: 45px;
-        background-color: rgba($light-text, 0.15);
-        border-radius: 50%;
-        @include flex(row, center, center);
-        transition: $transition;
-
-        i {
-          font-size: 1.5rem;
-        }
-
-        &:hover {
-          background-color: $accent-color;
-          transform: scale(1.1);
-        }
-      }
-    }
-  }
-}
-
 // Animaciones
 @keyframes bounceLogo {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-5px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }
 
 @keyframes waveText {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-2px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
 }
 
 @keyframes slideIn {
-  from {
-    transform: translateY(-100%);
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+// Main Content
+.main-content {
+  flex: 1;
+  padding: 6rem 0 4rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  
+  .prices-section {
+    text-align: center;
+    
+    .section-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: $primary-color;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      
+      .emoji {
+        font-size: 2.5rem;
+        display: inline-block;
+        animation: bounce 2s infinite ease-in-out;
+        margin-left: 0.5rem;
+      }
+    }
+    
+    .subtitle {
+      font-size: 1.3rem;
+      color: lighten($text-color, 20%);
+      margin-bottom: 2rem;
+    }
+  }
+  
+  // Filtros
+  .filter-controls {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem;
+    background-color: white;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: $shadow;
+    flex-wrap: wrap;
+    
+    .search-input, .filter-select {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      border: 1px solid $border-color;
+      font-size: 1rem;
+      flex: 1;
+      min-width: 200px;
+      transition: $transition;
+      
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+        box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+      }
+    }
+    
+    .reset-button {
+      @include button($accent-color, $light-text, darken($accent-color, 10%), 'small');
+      white-space: nowrap;
+    }
+  }
+  
+  // Cards Container
+  .cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2.5rem;
+    padding: 1rem 0;
+  }
+  
+  // Empty State
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: $shadow;
+    
+    i {
+      font-size: 4rem;
+      color: lighten($text-color, 50%);
+      margin-bottom: 1rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      color: $text-color;
+      margin-bottom: 0.5rem;
+    }
+    
+    p {
+      color: lighten($text-color, 30%);
+      margin-bottom: 1.5rem;
+    }
+    
+    .reset-button {
+      @include button($primary-color, $light-text);
+      display: inline-block;
+    }
+  }
+  
+  // Card
+  .card {
+    @include card;
+    background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+    border-bottom: 4px solid $primary-color;
+    
+    // Ribbon
+    .ribbon {
+      position: absolute;
+      top: 20px;
+      right: -5px;
+      z-index: 1;
+      overflow: hidden;
+      width: 150px;
+      height: 150px;
+      text-align: right;
+      
+      span {
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: $light-text;
+        text-transform: uppercase;
+        text-align: center;
+        line-height: 30px;
+        transform: rotate(45deg);
+        width: 170px;
+        display: block;
+        background: $secondary-color;
+        box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+        position: absolute;
+        top: 30px;
+        right: -35px;
+        
+        &::before {
+          content: "";
+          position: absolute;
+          left: 0px;
+          top: 100%;
+          z-index: -1;
+          border-left: 3px solid darken($secondary-color, 20%);
+          border-right: 3px solid transparent;
+          border-bottom: 3px solid transparent;
+          border-top: 3px solid darken($secondary-color, 20%);
+        }
+        
+        &::after {
+          content: "";
+          position: absolute;
+          right: 0px;
+          top: 100%;
+          z-index: -1;
+          border-left: 3px solid transparent;
+          border-right: 3px solid darken($secondary-color, 20%);
+          border-bottom: 3px solid transparent;
+          border-top: 3px solid darken($secondary-color, 20%);
+        }
+      }
+    }
+    
+    .card-image {
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+      
+      &:hover img {
+        transform: scale(1.1);
+      }
+    }
+    
+    .card-content {
+      padding: 1.5rem;
+      
+      .card-badge {
+        display: inline-block;
+        background-color: rgba($primary-color, 0.1);
+        color: $primary-color;
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      h2 {
+        font-size: 1.6rem;
+        font-weight: 600;
+        color: $dark-text;
+        margin-bottom: 0.75rem;
+        line-height: 1.3;
+      }
+      
+      .description {
+        font-size: 1rem;
+        color: lighten($text-color, 20%);
+        margin-bottom: 1.2rem;
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      
+      .price-details {
+        @include flex(row, space-between, center);
+        margin-bottom: 1.2rem;
+        flex-wrap: wrap;
+        
+        .price-container {
+          display: flex;
+          align-items: baseline;
+          
+          .price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: $secondary-color;
+          }
+          
+          .periodicity {
+            font-size: 1rem;
+            color: lighten($text-color, 30%);
+            margin-left: 0.3rem;
+          }
+        }
+        
+        .discount {
+          padding: 0.4rem 0.8rem;
+          border-radius: 20px;
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: $light-text;
+          animation: pulse 2s infinite ease-in-out;
+        }
+      }
+      
+      .dates {
+        font-size: 0.9rem;
+        color: lighten($text-color, 40%);
+        margin-bottom: 1.5rem;
+        
+        .date-item {
+          display: flex;
+          align-items: center;
+          margin-bottom: 0.5rem;
+          
+          i {
+            margin-right: 0.5rem;
+            color: $accent-color;
+            font-size: 1.1rem;
+          }
+        }
+      }
+      
+      .offer-button {
+        @include button($primary-color, $light-text);
+        width: 100%;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        
+        &:hover {
+          background: $accent-color;
+        }
+      }
+    }
+  }
+  
+  // Detail Container
+  .detail-container {
+    margin: 2rem 0;
+    
+    .detail-card {
+      @include card;
+      background-color: white;
+      padding: 0;
+      overflow: hidden;
+      
+      .back-button {
+        @include button($primary-color, $light-text, darken($primary-color, 10%), 'small');
+        margin: 1.5rem;
+        align-self: flex-start;
+      }
+      
+      .detail-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        
+        @media (max-width: 992px) {
+          grid-template-columns: 1fr;
+        }
+        
+        .detail-image {
+          position: relative;
+          height: 100%;
+          min-height: 300px;
+          
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+          
+          .detail-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background-color: rgba($primary-color, 0.9);
+            color: $light-text;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+        }
+        
+        .detail-info {
+          padding: 2rem;
+          
+          h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: $dark-text;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+          }
+          
+          .price-details {
+            @include flex(row, flex-start, center);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            
+            .price-container {
+              display: flex;
+              align-items: baseline;
+              
+              .price {
+                font-size: 2.5rem;
+                font-weight: 700;
+                color: $secondary-color;
+              }
+              
+              .periodicity {
+                font-size: 1.2rem;
+                color: lighten($text-color, 30%);
+                margin-left: 0.5rem;
+              }
+            }
+            
+            .discount {
+              padding: 0.5rem 1rem;
+              border-radius: 20px;
+              font-size: 1rem;
+              font-weight: 600;
+              color: $light-text;
+              animation: pulse 2s infinite ease-in-out;
+            }
+          }
+          
+          .dates {
+            margin-bottom: 2rem;
+            
+            .date-item {
+              display: flex;
+              align-items: center;
+              margin-bottom: 0.75rem;
+              font-size: 1rem;
+              
+              i {
+                margin-right: 0.75rem;
+                color: $accent-color;
+                font-size: 1.2rem;
+              }
+            }
+          }
+          
+          .additional-info {
+            h3 {
+              font-size: 1.8rem;
+              font-weight: 600;
+              color: $dark-text;
+              margin-bottom: 1rem;
+              padding-bottom: 0.5rem;
+              border-bottom: 2px solid $border-color;
+            }
+            
+            .description {
+              font-size: 1.1rem;
+              line-height: 1.6;
+              color: lighten($text-color, 15%);
+              margin-bottom: 2rem;
+            }
+            
+            .info-section {
+              margin-bottom: 2rem;
+              
+              h4 {
+                font-size: 1.3rem;
+                font-weight: 600;
+                color: $dark-text;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                
+                i {
+                  margin-right: 0.75rem;
+                  color: $primary-color;
+                }
+              }
+            }
+            
+            .subjects-list {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 0.75rem;
+              margin-bottom: 1.5rem;
+              
+              .subject {
+                background-color: rgba($accent-color, 0.1);
+                color: $accent-color;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.9rem;
+                font-weight: 500;
+                transition: $transition;
+                
+                &:hover {
+                  background-color: $accent-color;
+                  color: $light-text;
+                  transform: translateY(-2px);
+                }
+              }
+            }
+            
+            .payment-methods {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 1rem;
+              margin-bottom: 2rem;
+              
+              .payment-option {
+                background-color: rgba($primary-color, 0.05);
+                padding: 1rem;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                flex: 1;
+                min-width: 200px;
+                transition: $transition;
+                
+                i {
+                  font-size: 1.5rem;
+                  color: $primary-color;
+                  margin-right: 0.75rem;
+                }
+                
+                span {
+                  font-weight: 500;
+                  color: $dark-text;
+                }
+                
+                &:hover {
+                  background-color: rgba($primary-color, 0.1);
+                  transform: translateY(-2px);
+                }
+              }
+            }
+            
+            .cta-container {
+              display: flex;
+              gap: 1rem;
+              margin-top: 2rem;
+              flex-wrap: wrap;
+              
+              .enroll-button {
+                @include button($secondary-color, $light-text);
+                flex: 1;
+                min-width: 200px;
+              }
+              
+              .contact-button {
+                @include button(transparent, $primary-color);
+                flex: 1;
+                min-width: 200px;
+                border: 2px solid $primary-color;
+                
+                &:hover {
+                  background-color: rgba($primary-color, 0.1);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
-  to {
-    transform: translateY(0);
+  // Añadir estos estilos para el formulario
+  .info-form-container {
+    margin-top: 2rem;
+    background-color: rgba($primary-color, 0.03);
+    border-radius: 12px;
+    padding: 1.5rem;
+    
+    h4 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: $dark-text;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      
+      i {
+        margin-right: 0.75rem;
+        color: $primary-color;
+      }
+    }
+    
+    .info-request-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        
+        label {
+          font-weight: 500;
+          color: $dark-text;
+          font-size: 0.95rem;
+        }
+        
+        .form-control {
+          padding: 0.75rem;
+          border-radius: 8px;
+          border: 1px solid $border-color;
+          font-size: 1rem;
+          transition: $transition;
+          
+          &:focus {
+            outline: none;
+            border-color: $primary-color;
+            box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+          }
+          
+          &::placeholder {
+            color: lighten($text-color, 40%);
+          }
+        }
+        
+        textarea.form-control {
+          resize: vertical;
+          min-height: 100px;
+        }
+      }
+      
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 0.5rem;
+        
+        .submit-button {
+          @include button($secondary-color, $light-text);
+          
+          &:disabled {
+            background-color: lighten($secondary-color, 20%);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+          }
+        }
+      }
+    }
+    
+    .form-success {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+      
+      i {
+        font-size: 3rem;
+        color: #4CAF50;
+        margin-bottom: 1rem;
+      }
+      
+      p {
+        font-size: 1.1rem;
+        color: $dark-text;
+        font-weight: 500;
+      }
+    }
   }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  // Ajustes responsive para el formulario
+  @media (max-width: 768px) {
+    .info-form-container {
+      padding: 1rem;
+      
+      .info-request-form {
+        .form-group {
+          .form-control {
+            padding: 0.6rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Logo and Earth Loader
+.earth-container {
+  margin-right: 0.5rem;
+}
+
+.earth {
+  --watercolor: #3344c1;
+  --landcolor: #7cc133;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  filter: brightness(1);
+  object-fit: cover;
+}
+
+.earth-loader {
+  width: 100%;
+  height: 100%;
+  background-color: var(--watercolor);
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 2px rgba(255, 255, 255, 0.25),
+    inset 0 -2px rgba(0, 0, 0, 0.25);
+  border: solid 1px rgb(0, 0, 0);
+  animation: startround 0.3s ease-in-out;
+  animation-iteration-count: 1;
+}
+
+.earth-loader:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, #7cc133 30%, #3344c1 70%);
+  border-radius: 50%;
+  opacity: 0.5;
+  animation: fadeOut 0.5s ease-in-out forwards;
+}
+
+.earth-loader svg {
+  width: 36px;
+  height: auto;
+}
+
+.earth-loader svg:nth-child(1) {
+  position: absolute;
+  bottom: -8px;
+  animation: round1 3s infinite linear 0.5s;
+}
+
+.earth-loader svg:nth-child(2) {
+  position: absolute;
+  top: -12px;
+  animation: round1 3s infinite linear;
+}
+
+.earth-loader svg:nth-child(3) {
+  position: absolute;
+  top: -10px;
+  animation: round2 3s infinite linear;
+}
+
+.earth-loader svg:nth-child(4) {
+  position: absolute;
+  bottom: -9px;
+  animation: round2 3s infinite linear 0.5s;
+}
+
+@keyframes startround {
+  0% { filter: brightness(150%); box-shadow: none; }
+  100% {
+    filter: brightness(100%);
+    box-shadow:
+      inset 0 2px rgba(255, 255, 255, 0.25),
+      inset 0 -2px rgba(0, 0, 0, 0.25);
+  }
+}
+
+@keyframes round1 {
+  0% { transform: translateX(-8px) skewX(0deg) rotate(0deg); opacity: 1; }
+  30% { transform: translateX(-24px) skewX(-25deg) rotate(25deg); opacity: 1; }
+  31% { transform: translateX(-24px) skewX(-25deg) rotate(25deg); opacity: 0; }
+  35% { transform: translateX(28px) skewX(25deg) rotate(-25deg); opacity: 0; }
+  45% { transform: translateX(28px) skewX(25deg) rotate(-25deg); opacity: 1; }
+  100% { transform: translateX(-8px) skewX(0deg) rotate(0deg); opacity: 1; }
+}
+
+@keyframes round2 {
+  0% { transform: translateX(20px) skewX(0deg) rotate(0deg); opacity: 1; }
+  75% { transform: translateX(-28px) skewX(-25deg) rotate(25deg); opacity: 1; }
+  76% { transform: translateX(-28px) skewX(-25deg) rotate(25deg); opacity: 0; }
+  77% { transform: translateX(32px) skewX(25deg) rotate(-25deg); opacity: 0; }
+  80% { transform: translateX(32px) skewX(25deg) rotate(-25deg); opacity: 1; }
+  100% { transform: translateX(20px) skewX(0deg) rotate(0deg); opacity: 1; }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 0.5; }
+  100% { opacity: 0; }
 }
 
 // Responsive Adjustments
@@ -742,9 +1063,13 @@ $transition: all 0.3s ease;
   .container {
     max-width: 768px;
   }
-
+  
   .cards-container {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  
+  .detail-container .detail-card .detail-content {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -752,9 +1077,22 @@ $transition: all 0.3s ease;
   .container {
     max-width: 576px;
   }
-
+  
   .main-content {
-    padding: 4rem 0;
+    padding: 5rem 0 3rem;
+  }
+  
+  .prices-section .section-title {
+    font-size: 2.2rem;
+  }
+  
+  .filter-controls {
+    flex-direction: column;
+    align-items: stretch;
+    
+    .search-input, .filter-select, .reset-button {
+      width: 100%;
+    }
   }
 }
 
@@ -762,186 +1100,25 @@ $transition: all 0.3s ease;
   .container {
     padding: 0 1rem;
   }
-
+  
   .cards-container {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
-}
-
-// Cards Container y Card
-.cards-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
-  padding: 2rem 0;
-}
-
-.card {
-  @include card;
-  position: relative;
-  border-top: 6px solid $primary-color;
-  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
-  padding-bottom: 1rem;
-  transition: transform 0.3s ease,
-    box-shadow 0.3s ease;
-
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+  
+  .card .card-content h2 {
+    font-size: 1.4rem;
   }
-
-  .card-image {
-    width: 100%;
-    height: 200px; // Máxima altura adaptable
-    overflow: hidden;
-    border-bottom: 1px solid $border-color;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover; // Ajusta la imagen sin distorsionarla
-      transition: transform 0.4s ease;
-
-      &:hover {
-        transform: scale(1.1); // Zoom suave al pasar el ratón
-      }
-    }
-  }
-
-  .card-content {
+  
+  .detail-container .detail-card .detail-info {
     padding: 1.5rem;
-
+    
     h2 {
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: $dark-text;
-      margin-bottom: 0.5rem;
-      line-height: 1.3;
+      font-size: 1.8rem;
     }
-
-    .description {
-      font-size: 0.95rem;
-      color: lighten($text-color, 25%);
-      margin-bottom: 1rem;
-      line-height: 1.5;
-    }
-
-    .price-details {
-      @include flex(row, flex-start, center);
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap; // Para que se ajuste en pantallas pequeñas
-
-      .price {
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: $secondary-color;
-        background: rgba($secondary-color, 0.1);
-        padding: 0.3rem 0.8rem;
-        border-radius: 8px;
-      }
-
-      .periodicity {
-        font-size: 1rem;
-        color: lighten($text-color, 30%);
-        font-style: italic;
-      }
-
-      .discount {
-        background: $accent-color;
-        color: $light-text;
-        padding: 0.4rem 1rem;
-        border-radius: 20px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        text-transform: uppercase;
-      }
-    }
-
-    .dates {
-      font-size: 0.85rem;
-      color: lighten($text-color, 40%);
-      margin-bottom: 1.5rem;
-
-      p {
-        margin: 0.2rem 0;
-      }
-    }
-
-    .offer-button {
-      @include button($primary-color, $light-text, darken($primary-color, 10%), 'small');
-      width: 100%;
-      margin-top: 0.5rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-
-      &:hover {
-        background: $accent-color;
-        transform: translateY(-2px);
-      }
-    }
-  }
-}
-.filter-controls {
-    display: flex;
-    gap: 1rem;
-    padding: 1rem;
-    background-color: #f0f0f0;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    align-items: center;
-    justify-content: flex-start; /* Align items to the start */
-    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
-  
-    input[type="text"],
-    select {
-      padding: 0.5rem;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-      flex: 1 1 auto; /* Grow and shrink as needed */
-      max-width: 200px; /* Limit the maximum width */
-    }
-  
-    select {
-      cursor: pointer;
-    }
-  
-    button {
-      @include button($primary-color, $light-text, darken($primary-color, 10%), 'small');
-      border: none;
-      cursor: pointer;
-      flex: 0 0 auto; /* Don't grow, don't shrink, base size is the content size */
-    }
-  }
-// Ajustes Responsive
-@media (max-width: 992px) {
-  .cards-container {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  }
-}
-
-@media (max-width: 576px) {
-  .cards-container {
-    grid-template-columns: 1fr;
-  }
-
-  .card {
-    .card-image {
-      max-height: 160px; // Reduce la altura en móviles
-    }
-
-    .card-content {
-      padding: 1rem;
-
-      h2 {
-        font-size: 1.25rem;
-      }
-
-      .price-details .price {
-        font-size: 1.5rem;
-      }
+    
+    .price-details .price-container .price {
+      font-size: 2rem;
     }
   }
 }

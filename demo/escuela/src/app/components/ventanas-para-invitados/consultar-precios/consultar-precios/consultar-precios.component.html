@@ -3,38 +3,64 @@
   <header class="header">
     <div class="header-container">
       <a href="#" class="logo">
-        <img src="assets/iconos/eduportal.png" alt="{{ institutionName }}" />
+        <div class="earth-container">
+          <div class="earth">
+            <div class="earth-loader"> 
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+                <path
+                  transform="translate(100 100)"
+                  d="M29.4,-17.4C33.1,1.8,27.6,16.1,11.5,31.6C-4.7,47,-31.5,63.6,-43,56C-54.5,48.4,-50.7,16.6,-41,-10.9C-31.3,-38.4,-15.6,-61.5,-1.4,-61C12.8,-60.5,25.7,-36.5,29.4,-17.4Z"
+                  fill="#7CC133"
+                ></path>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+                <path
+                  transform="translate(100 100)"
+                  d="M31.7,-55.8C40.3,-50,45.9,-39.9,49.7,-29.8C53.5,-19.8,55.5,-9.9,53.1,-1.4C50.6,7.1,43.6,14.1,41.8,27.6C40.1,41.1,43.4,61.1,37.3,67C31.2,72.9,15.6,64.8,1.5,62.2C-12.5,59.5,-25,62.3,-31.8,56.7C-38.5,51.1,-39.4,37.2,-49.3,26.3C-59.1,15.5,-78,7.7,-77.6,0.2C-77.2,-7.2,-57.4,-14.5,-49.3,-28.4C-41.2,-42.4,-44.7,-63,-38.5,-70.1C-32.2,-77.2,-16.1,-70.8,-2.3,-66.9C11.6,-63,23.1,-61.5,31.7,-55.8Z"
+                  fill="#7CC133"
+                ></path>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+                <path
+                  transform="translate(100 100)"
+                  d="M30.6,-49.2C42.5,-46.1,57.1,-43.7,67.6,-35.7C78.1,-27.6,84.6,-13.8,80.3,-2.4C76.1,8.9,61.2,17.8,52.5,29.1C43.8,40.3,41.4,53.9,33.7,64C26,74.1,13,80.6,2.2,76.9C-8.6,73.1,-17.3,59,-30.6,52.1C-43.9,45.3,-61.9,45.7,-74.1,38.2C-86.4,30.7,-92.9,15.4,-88.6,2.5C-84.4,-10.5,-69.4,-20.9,-60.7,-34.6C-52.1,-48.3,-49.8,-65.3,-40.7,-70C-31.6,-74.8,-15.8,-67.4,-3.2,-61.8C9.3,-56.1,18.6,-52.3,30.6,-49.2Z"
+                  fill="#7CC133"
+                ></path>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+                <path
+                  transform="translate(100 100)"
+                  d="M39.4,-66C48.6,-62.9,51.9,-47.4,52.9,-34.3C53.8,-21.3,52.4,-10.6,54.4,1.1C56.3,12.9,61.7,25.8,57.5,33.2C53.2,40.5,39.3,42.3,28.2,46C17,49.6,8.5,55.1,1.3,52.8C-5.9,50.5,-11.7,40.5,-23.6,37.2C-35.4,34,-53.3,37.5,-62,32.4C-70.7,27.4,-70.4,13.7,-72.4,-1.1C-74.3,-15.9,-78.6,-31.9,-73.3,-43C-68.1,-54.2,-53.3,-60.5,-39.5,-60.9C-25.7,-61.4,-12.9,-56,1.1,-58C15.1,-59.9,30.2,-69.2,39.4,-66Z"
+                  fill="#7CC133"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </div>
         <span>{{ institutionName }}</span>
       </a>
       <nav class="desktop-nav">
         <ul class="nav-list">
-          <ul class="nav-list">
-            <li>
-              <a [routerLink]="'/inicio'" [class.active]="selectedSection === 'noticias'" (click)="smoothScrollToTop()">
-                Inicio
-              </a>
-            </li>
-            <li>
-              <a [routerLink]="'/ventana-informacion-public'" (click)="smoothScrollToTop()">
-                Institución
-              </a>
-            </li>
-            <li>
-              <a [routerLink]="'/sedes'" (click)="smoothScrollToTop()">
-                Instalaciones
-              </a>
-            </li>
-            <li>
-              <a [routerLink]="'/consultar-precios'" (click)="smoothScrollToTop()">
-                Precios
-              </a>
-            </li>
-            <li>
-              <a [routerLink]="'/victor'" (click)="smoothScrollToTop()">
-                Recursos
-              </a>
-            </li>
-          </ul>
+          <li>
+            <a [routerLink]="'/inicio'" (click)="smoothScrollToTop()">
+              Inicio
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="'/ventana-informacion-public'" (click)="smoothScrollToTop()">
+              Institución
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="'/sedes'" (click)="smoothScrollToTop()">
+              Instalaciones
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="'/consultar-precios'" [class.active]="selectedSection === 'noticias'" (click)="smoothScrollToTop()">
+              Precios
+            </a>
+          </li>
           <li class="auth-button">
             <a (click)="irAOtraVentana()" class="btn-login">Iniciar Sesión</a>
           </li>
@@ -55,11 +81,10 @@
     </div>
     <nav>
       <ul class="mobile-nav-list">
-        <li><a href="#" (click)="toggleMobileMenu()">Inicio</a></li>
-        <li><a href="#about" (click)="toggleMobileMenu()">Nosotros</a></li>
-        <li><a href="#" (click)="libro(); toggleMobileMenu()">Biblioteca</a></li>
-        <li><a href="#" (click)="accion4(); toggleMobileMenu()">Precios</a></li>
-        <li><a href="#" (click)="victor(); toggleMobileMenu()">Recursos</a></li>
+        <li><a [routerLink]="'/inicio'" (click)="toggleMobileMenu()">Inicio</a></li>
+        <li><a [routerLink]="'/ventana-informacion-public'" (click)="toggleMobileMenu()">Institución</a></li>
+        <li><a [routerLink]="'/sedes'" (click)="toggleMobileMenu()">Instalaciones</a></li>
+        <li><a [routerLink]="'/consultar-precios'" (click)="toggleMobileMenu()">Precios</a></li>
         <li><a (click)="irAOtraVentana(); toggleMobileMenu()" class="btn-login">Iniciar Sesión</a></li>
       </ul>
     </nav>
@@ -72,68 +97,205 @@
         <h1 class="section-title">Ofertas Educativas <span class="emoji">🎓</span></h1>
         <p class="subtitle">Descubre los mejores precios para tu educación</p>
 
+        <!-- Filtros -->
+        <div class="filter-controls">
+          <input 
+            type="text" 
+            placeholder="Buscar por nombre..." 
+            [(ngModel)]="searchTerm" 
+            (keyup)="applyFilters()"
+            class="search-input"
+          >
+          <select [(ngModel)]="selectedNivel" (change)="applyFilters()" class="filter-select">
+            <option value="">Todos los niveles</option>
+            <option *ngFor="let nivel of niveles" [value]="nivel">{{ nivel }}</option>
+          </select>
+          <button (click)="resetFilters()" class="reset-button">
+            <i class="material-icons">refresh</i> Reiniciar
+          </button>
+        </div>
+
         <!-- List View -->
         <div class="cards-container" *ngIf="!selectedPrecio" [@cardAnimation]>
-          <div *ngFor="let precio of precios" class="card">
+          <div *ngFor="let precio of filteredPrecios" class="card">
+            <div class="ribbon" *ngIf="precio.descuento && precio.descuento >= 25">
+              <span>{{ getDiscountText(precio.descuento) }}</span>
+            </div>
             <div class="card-image" *ngIf="precio.imagenPath && imageUrls[precio.id]">
               <img [src]="imageUrls[precio.id]" alt="{{precio.concepto}}" />
             </div>
             <div class="card-content">
-              <h2>{{precio.nivel}} - {{precio.concepto}}</h2>
-              <p class="description">{{precio.descripcion || 'Sin descripción disponible'}}</p>
+              <div class="card-badge">{{ precio.nivel }}</div>
+              <h2>{{ precio.concepto }}</h2>
+              <p class="description">{{ precio.descripcion || 'Sin descripción disponible' }}</p>
               <div class="price-details">
-                <span class="price">${{precio.monto}}</span>
-                <span class="periodicity" *ngIf="precio.periodicidad">/{{precio.periodicidad}}</span>
+                <div class="price-container">
+                  <span class="price">{{ formatPrice(precio.monto) }}</span>
+                  <span class="periodicity" *ngIf="precio.periodicidad">/ {{ precio.periodicidad }}</span>
+                </div>
                 <span class="discount" *ngIf="precio.descuento" [style.backgroundColor]="getDiscountColor(precio.descuento)">
-                  {{ getDiscountText(precio.descuento) }}
-                  <ng-container *ngIf="getDiscountText(precio.descuento)"> ({{precio.descuento}}% OFF)</ng-container>
+                  {{ precio.descuento }}% OFF
                 </span>
               </div>
               <div class="dates" *ngIf="precio.fechaInicio || precio.fechaFin">
-                <p>Válido desde: {{precio.fechaInicio | date:'dd/MM/yyyy'}}</p>
-                <p>Hasta: {{precio.fechaFin | date:'dd/MM/yyyy'}}</p>
+                <div class="date-item">
+                  <i class="material-icons">event</i>
+                  <span>Desde: {{ precio.fechaInicio | date:'dd/MM/yyyy' }}</span>
+                </div>
+                <div class="date-item">
+                  <i class="material-icons">event_busy</i>
+                  <span>Hasta: {{ precio.fechaFin | date:'dd/MM/yyyy' }}</span>
+                </div>
               </div>
-              <button class="offer-button" (click)="exploreOffer(precio)">Explorar Oferta</button>
+              <button class="offer-button" (click)="exploreOffer(precio)">
+                <span>Explorar Oferta</span>
+                <i class="material-icons">arrow_forward</i>
+              </button>
             </div>
+          </div>
+
+          <!-- Empty state -->
+          <div *ngIf="filteredPrecios.length === 0" class="empty-state">
+            <i class="material-icons">search_off</i>
+            <h3>No se encontraron resultados</h3>
+            <p>Intenta con otros criterios de búsqueda</p>
+            <button (click)="resetFilters()" class="reset-button">Reiniciar filtros</button>
           </div>
         </div>
 
         <!-- Detailed View -->
         <div class="detail-container" *ngIf="selectedPrecio" [@cardAnimation]>
           <div class="detail-card">
-            <button class="back-button" (click)="backToList()">← Volver</button>
+            <button class="back-button" (click)="backToList()">
+              <i class="material-icons">arrow_back</i>
+              <span>Volver a la lista</span>
+            </button>
+            
             <div class="detail-content">
               <!-- Image -->
               <div class="detail-image" *ngIf="selectedPrecio.imagenPath && imageUrls[selectedPrecio.id]">
                 <img [src]="imageUrls[selectedPrecio.id]" alt="{{selectedPrecio.concepto}}" />
+                <div class="detail-badge">{{ selectedPrecio.nivel }}</div>
               </div>
+              
               <!-- Content -->
               <div class="detail-info">
-                <h2>{{selectedPrecio.nivel | uppercase}} - {{selectedPrecio.concepto | uppercase}}</h2>
+                <h2>{{ selectedPrecio.concepto }}</h2>
+                
                 <div class="price-details">
-                  <span class="price">${{selectedPrecio.monto | number:'1.0-0'}}/{{selectedPrecio.periodicidad}}</span>
+                  <div class="price-container">
+                    <span class="price">{{ formatPrice(selectedPrecio.monto) }}</span>
+                    <span class="periodicity" *ngIf="selectedPrecio.periodicidad">/ {{ selectedPrecio.periodicidad }}</span>
+                  </div>
                   <span class="discount" *ngIf="selectedPrecio.descuento" [style.backgroundColor]="getDiscountColor(selectedPrecio.descuento)">
-                    {{ getDiscountText(selectedPrecio.descuento) }} ({{selectedPrecio.descuento}}% OFF)
+                    {{ selectedPrecio.descuento }}% OFF
                   </span>
                 </div>
+                
                 <div class="dates">
-                  <p><strong>Válido desde:</strong> {{selectedPrecio.fechaInicio | date:'dd/MM/yyyy'}}</p>
-                  <p><strong>Hasta:</strong> {{selectedPrecio.fechaFin | date:'dd/MM/yyyy'}}</p>
+                  <div class="date-item">
+                    <i class="material-icons">event</i>
+                    <span><strong>Válido desde:</strong> {{ selectedPrecio.fechaInicio | date:'dd/MM/yyyy' }}</span>
+                  </div>
+                  <div class="date-item">
+                    <i class="material-icons">event_busy</i>
+                    <span><strong>Hasta:</strong> {{ selectedPrecio.fechaFin | date:'dd/MM/yyyy' }}</span>
+                  </div>
                 </div>
+                
                 <div class="additional-info">
                   <h3>Detalles de la Oferta</h3>
-                  <p class="section-label"><strong>Asignaturas Incluidas:</strong></p>
-                  <div class="subjects-list">
-                    <span class="subject">Matemática</span>
-                    <span class="subject">Inglés</span>
-                    <span class="subject">Innovación Tecnológica</span>
+                  <p class="description">{{ selectedPrecio.descripcion || 'Sin descripción disponible' }}</p>
+                  
+                  <div class="info-section">
+                    <h4><i class="material-icons">school</i> Asignaturas Incluidas</h4>
+                    <div class="subjects-list">
+                      <span class="subject">Matemática</span>
+                      <span class="subject">Inglés</span>
+                      <span class="subject">Innovación Tecnológica</span>
+                      <span class="subject">Ciencias Naturales</span>
+                      <span class="subject">Historia</span>
+                    </div>
                   </div>
-                  <h3>Métodos de Pago Aceptados</h3>
-                  <div class="payment-methods">
-                    <span class="payment-option">Nequi</span>
-                    <span class="payment-option">BBVA</span>
-                    <span class="payment-option">Daviplata</span>
-                    <span class="payment-option">Paypal</span>
+                  
+                  <div class="info-section">
+                    <h4><i class="material-icons">payments</i> Métodos de Pago Aceptados</h4>
+                    <div class="payment-methods">
+                      <div class="payment-option">
+                        <i class="material-icons">account_balance</i>
+                        <span>Transferencia Bancaria</span>
+                      </div>
+                      <div class="payment-option">
+                        <i class="material-icons">credit_card</i>
+                        <span>Tarjeta de Crédito/Débito</span>
+                      </div>
+                      <div class="payment-option">
+                        <i class="material-icons">smartphone</i>
+                        <span>Pagos Móviles</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="info-form-container">
+                    <h4><i class="material-icons">mail_outline</i> Solicitar Información</h4>
+                    <form class="info-request-form" (ngSubmit)="enviarSolicitud()" #infoForm="ngForm">
+                      <div class="form-group">
+                        <label for="nombre">Nombre completo</label>
+                        <input 
+                          type="text" 
+                          id="nombre" 
+                          name="nombre" 
+                          [(ngModel)]="formData.nombre" 
+                          required 
+                          placeholder="Ingrese su nombre completo"
+                          class="form-control"
+                        >
+                      </div>
+                      <div class="form-group">
+                        <label for="email">Correo electrónico</label>
+                        <input 
+                          type="email" 
+                          id="email" 
+                          name="email" 
+                          [(ngModel)]="formData.email" 
+                          required 
+                          placeholder="luisabel_26@hotmail.com"
+                          class="form-control"
+                        >
+                      </div>
+                      <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input 
+                          type="tel" 
+                          id="telefono" 
+                          name="telefono" 
+                          [(ngModel)]="formData.telefono" 
+                          placeholder="Número de contacto"
+                          class="form-control"
+                        >
+                      </div>
+                      <div class="form-group">
+                        <label for="mensaje">Mensaje</label>
+                        <textarea 
+                          id="mensaje" 
+                          name="mensaje" 
+                          [(ngModel)]="formData.mensaje" 
+                          rows="3" 
+                          placeholder="¿Qué información necesitas sobre esta oferta?"
+                          class="form-control"
+                        ></textarea>
+                      </div>
+                      <div class="form-actions">
+                        <button type="submit" class="submit-button" [disabled]="!infoForm.form.valid">
+                          <i class="material-icons">send</i>
+                          <span>Enviar Solicitud</span>
+                        </button>
+                      </div>
+                    </form>
+                    <div *ngIf="formEnviado" class="form-success">
+                      <i class="material-icons">check_circle</i>
+                      <p>¡Solicitud enviada! Te contactaremos pronto.</p>
+                    </div>
                   </div>
                 </div>
               </div>

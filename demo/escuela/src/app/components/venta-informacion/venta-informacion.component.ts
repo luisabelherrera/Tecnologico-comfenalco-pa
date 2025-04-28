@@ -23,7 +23,6 @@ interface FeatureCard {
   styleUrls: ['./venta-informacion.component.scss'],
 })
 export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('news', { static: false }) newsSection!: ElementRef;
   @ViewChild('newsTrack') newsTrack!: ElementRef;
 
   private destroy$ = new Subject<void>();
@@ -37,10 +36,18 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
   isAuthenticated: boolean = false;
   currentUserId: string | null = null;
   menuOpen = false;
-  institutionName: string = 'EduPortal'; // Property to hold institution name
-
+  institutionName: string = 'EduPortal';
   isNavHidden = false;
   isMobileNavHidden = false;
+
+  // Formulario
+  contactData = {
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  };
+  formEnviado = false;
 
   featureCards: FeatureCard[] = [
     { icon: 'menu_book', emoji: '📚', title: 'Educación Integral', description: 'Programas adaptados al mundo actual.' },
@@ -60,7 +67,7 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
     private dialog: MatDialog,
     private authService: AuthService,
     public router: Router,
-    private informacionService: InformacionInstitucionalService // Inject the service
+    private informacionService: InformacionInstitucionalService
   ) {}
 
   @HostListener('window:scroll', [])
@@ -71,26 +78,29 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
   ngOnInit(): void {
     this.initializeAuthState();
     this.cargarNoticias();
-    this.loadInstitutionName(); // Load the institution name
+    this.loadInstitutionName();
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    console.log('AfterViewInit: Checking if sections are present');
+    console.log('Features section:', document.querySelector('#features'));
+    console.log('News section:', document.querySelector('#news'));
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  // Method to load the institution name
   loadInstitutionName() {
     this.informacionService.getPublic().pipe(takeUntil(this.destroy$)).subscribe({
       next: (data: InformacionInstitucional) => {
-        this.institutionName = data.nombreInstitucion || 'EduPortal'; // Update with institution name
+        this.institutionName = data.nombreInstitucion || 'EduPortal';
         console.log('Nombre de la institución cargado:', this.institutionName);
       },
       error: (err) => {
         console.error('Error al cargar el nombre de la institución:', err);
-        this.institutionName = 'EduPortal'; // Fallback in case of error
+        this.institutionName = 'EduPortal';
       }
     });
   }
@@ -189,6 +199,37 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
     (event.target as HTMLImageElement).src = 'assets/img/cdc-GDokEYnOfnE-unsplash.jpg';
   }
 
+  submitContactForm(): void {
+    if (this.contactData.name && this.contactData.email && this.contactData.message) {
+      const asunto = this.contactData.subject || 'Consulta desde el formulario de contacto';
+      const cuerpo = `
+Nombre: ${this.contactData.name}
+Email: ${this.contactData.email}
+Asunto: ${this.contactData.subject || 'No especificado'}
+
+Mensaje: ${this.contactData.message}
+      `;
+
+      const mailtoLink = `mailto:info@hobocolegio.edu?subject=${encodeURIComponent(
+        asunto
+      )}&body=${encodeURIComponent(cuerpo)}`;
+
+      window.location.href = mailtoLink;
+
+      this.formEnviado = true;
+
+      setTimeout(() => {
+        this.contactData = {
+          name: '',
+          email: '',
+          subject: '',
+          message: '',
+        };
+        this.formEnviado = false;
+      }, 3000);
+    }
+  }
+
   scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -226,13 +267,35 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
     });
   }
 
-  scrollToAbout() {
-    document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' });
+  scrollToFeatures(): void {
+    console.log('scrollToFeatures called');
+    const featuresSection = document.querySelector('#features');
+    if (featuresSection) {
+      console.log('Features section found:', featuresSection);
+      const headerHeight = document.querySelector('.header')?.getBoundingClientRect().height || 80;
+      const offsetTop = featuresSection.getBoundingClientRect().top + window.scrollY - headerHeight;
+      window.scrollTo({
+        top: offsetTop,
+        behavior: 'smooth'
+      });
+    } else {
+      console.error('Features section not found. Check if #features exists in the DOM.');
+    }
   }
 
   scrollToNews(): void {
-    if (this.newsSection) {
-      this.newsSection.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    console.log('scrollToNews called');
+    const newsSection = document.querySelector('#news');
+    if (newsSection) {
+      console.log('News section found:', newsSection);
+      const headerHeight = document.querySelector('.header')?.getBoundingClientRect().height || 80;
+      const offsetTop = newsSection.getBoundingClientRect().top + window.scrollY - headerHeight;
+      window.scrollTo({
+        top: offsetTop,
+        behavior: 'smooth'
+      });
+    } else {
+      console.error('News section not found. Check if #news exists in the DOM.');
     }
   }
 

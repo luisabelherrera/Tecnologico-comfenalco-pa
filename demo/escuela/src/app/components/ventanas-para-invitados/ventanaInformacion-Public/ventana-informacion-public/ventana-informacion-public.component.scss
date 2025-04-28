@@ -75,30 +75,27 @@ body {
   z-index: 1000;
   background-color: #ffffff;
   padding: 1rem 0;
-  box-shadow: $shadow;
-  border-bottom: 1px solid $border-color;
-
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid #e5e7eb;
+  
   .header-container {
     @include flex(row, space-between, center);
     max-width: 1240px;
     margin: 0 auto;
     padding: 0 1.5rem;
   }
-
+  
   .logo {
     @include flex(row, flex-start, center);
     text-decoration: none;
-
+    
     img {
       height: 40px;
       transition: transform 0.3s ease;
       animation: bounceLogo 2s infinite ease-in-out;
-
-      &:hover {
-        transform: rotate(15deg);
-      }
+      &:hover { transform: rotate(15deg); }
     }
-
+    
     span {
       font-size: 1.5rem;
       font-weight: 600;
@@ -108,51 +105,45 @@ body {
       animation: waveText 1.5s infinite ease-in-out;
     }
   }
-
+  
   .desktop-nav {
     @include flex(row, flex-end, center);
-
-    @media (max-width: 992px) {
-      display: none;
-    }
-
+    
+    @media (max-width: 992px) { display: none; }
+    
     .nav-list {
       @include flex(row, center, center);
       list-style: none;
       gap: 1.75rem;
-
-      li {
-        a {
-          color: $dark-text;
-          text-decoration: none;
-          font-weight: 500;
-          font-size: 1rem;
-          transition: $transition;
-          position: relative;
-
-          &:hover,
-          &.active {
-            color: $primary-color;
-            transform: scale(1.1);
-
-            &:after {
-              width: 100%;
-            }
-          }
-
+      
+      a {
+        color: $dark-text;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 1rem;
+        transition: $transition;
+        position: relative;
+        
+        &:hover, &.active {
+          color: $primary-color;
+          transform: scale(1.1);
           &:after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: $accent-color;
-            transition: width 0.3s ease;
+            width: 100%;
           }
         }
+        
+        &:after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background-color: $accent-color;
+          transition: width 0.3s ease;
+        }
       }
-
+      
       .auth-button a.btn-login {
         @include button($primary-color, $light-text, darken($primary-color, 10%), 'small');
         border: 1px solid $primary-color;
@@ -160,7 +151,7 @@ body {
         position: relative;
         overflow: hidden;
         margin-right: 1rem;
-
+        
         &:before {
           content: '✨';
           position: absolute;
@@ -168,7 +159,7 @@ body {
           opacity: 0;
           transition: all 0.3s ease;
         }
-
+        
         &:hover {
           &:before {
             left: 5px;
@@ -178,7 +169,7 @@ body {
       }
     }
   }
-
+  
   .mobile-menu-toggle {
     display: none;
     background: none;
@@ -188,11 +179,9 @@ body {
     cursor: pointer;
     padding: 0.5rem;
     transition: transform 0.3s ease;
-
-    @media (max-width: 992px) {
-      display: block;
-    }
-
+    
+    @media (max-width: 992px) { display: block; }
+    
     &:hover {
       color: $primary-color;
       transform: rotate(90deg);
@@ -200,7 +189,6 @@ body {
   }
 }
 
-// Mobile Menu (from the first code)
 .mobile-menu {
   position: fixed;
   top: 0;
@@ -212,12 +200,12 @@ body {
   padding: 4rem 1.5rem 2rem;
   animation: slideIn 0.3s ease-out;
   overflow-y: auto;
-
+  
   .mobile-menu-header {
     @include flex(row, space-between, center);
     margin-bottom: 2rem;
   }
-
+  
   .mobile-close-btn {
     background: none;
     border: none;
@@ -225,20 +213,20 @@ body {
     font-size: 1.75rem;
     cursor: pointer;
     transition: transform 0.3s ease;
-
+    
     &:hover {
       color: $primary-color;
       transform: rotate(90deg);
     }
   }
-
+  
   nav {
     .mobile-nav-list {
       list-style: none;
-
+      
       li {
         margin-bottom: 1.5rem;
-
+        
         a {
           color: $dark-text;
           text-decoration: none;
@@ -247,12 +235,12 @@ body {
           transition: $transition;
           display: block;
           padding: 0.5rem 0;
-
+          
           &:hover {
             color: $primary-color;
             transform: translateX(10px) scale(1.05);
           }
-
+          
           &.btn-login {
             @include button($primary-color, $light-text, darken($primary-color, 10%), 'small');
             width: auto;
@@ -261,7 +249,7 @@ body {
             margin-right: 1rem;
             position: relative;
             overflow: hidden;
-
+            
             &:before {
               content: '✨';
               position: absolute;
@@ -269,10 +257,9 @@ body {
               opacity: 0;
               transition: all 0.3s ease;
             }
-
+            
             &:hover {
               transform: translateY(-2px);
-
               &:before {
                 left: 5px;
                 opacity: 1;
@@ -285,54 +272,39 @@ body {
   }
 }
 
-// Animaciones
 @keyframes bounceLogo {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }
 
 @keyframes waveText {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-2px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
 }
 
 @keyframes slideIn {
-  from {
-    transform: translateY(-100%);
-  }
-  to {
-    transform: translateY(0);
-  }
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  100% { transform: rotate(360deg); }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 // Contenido principal
@@ -359,6 +331,135 @@ body {
   }
 }
 
+
+// Logo and Earth Loader
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.earth {
+  --watercolor: #3344c1;
+  --landcolor: #7cc133;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  filter: brightness(1);
+  object-fit: cover;
+}
+
+.earth-loader {
+  width: 100%;
+  height: 100%;
+  background-color: var(--watercolor);
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 2px rgba(255, 255, 255, 0.25),
+    inset 0 -2px rgba(0, 0, 0, 0.25);
+  border: solid 1px rgb(0, 0, 0);
+  animation: startround 0.3s ease-in-out;
+  animation-iteration-count: 1;
+}
+
+.earth-loader:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, #7cc133 30%, #3344c1 70%);
+  border-radius: 50%;
+  opacity: 0.5;
+  animation: fadeOut 0.5s ease-in-out forwards;
+}
+
+.earth-loader svg {
+  width: 36px;
+  height: auto;
+}
+
+.earth-loader svg:nth-child(1) {
+  position: absolute;
+  bottom: -8px;
+  animation: round1 3s infinite linear 0.5s;
+}
+
+.earth-loader svg:nth-child(2) {
+  position: absolute;
+  top: -12px;
+  animation: round1 3s infinite linear;
+}
+
+.earth-loader svg:nth-child(3) {
+  position: absolute;
+  top: -10px;
+  animation: round2 3s infinite linear;
+}
+
+.earth-loader svg:nth-child(4) {
+  position: absolute;
+  bottom: -9px;
+  animation: round2 3s infinite linear 0.5s;
+}
+
+@keyframes startround {
+  0% { filter: brightness(150%); box-shadow: none; }
+  100% {
+    filter: brightness(100%);
+    box-shadow:
+      inset 0 2px rgba(255, 255, 255, 0.25),
+      inset 0 -2px rgba(0, 0, 0, 0.25);
+  }
+}
+
+@keyframes round1 {
+  0% { transform: translateX(-8px) skewX(0deg) rotate(0deg); opacity: 1; }
+  30% { transform: translateX(-24px) skewX(-25deg) rotate(25deg); opacity: 1; }
+  31% { transform: translateX(-24px) skewX(-25deg) rotate(25deg); opacity: 0; }
+  35% { transform: translateX(28px) skewX(25deg) rotate(-25deg); opacity: 0; }
+  45% { transform: translateX(28px) skewX(25deg) rotate(-25deg); opacity: 1; }
+  100% { transform: translateX(-8px) skewX(0deg) rotate(0deg); opacity: 1; }
+}
+
+@keyframes round2 {
+  0% { transform: translateX(20px) skewX(0deg) rotate(0deg); opacity: 1; }
+  75% { transform: translateX(-28px) skewX(-25deg) rotate(25deg); opacity: 1; }
+  76% { transform: translateX(-28px) skewX(-25deg) rotate(25deg); opacity: 0; }
+  77% { transform: translateX(32px) skewX(25deg) rotate(-25deg); opacity: 0; }
+  80% { transform: translateX(32px) skewX(25deg) rotate(-25deg); opacity: 1; }
+  100% { transform: translateX(20px) skewX(0deg) rotate(0deg); opacity: 1; }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 0.5; }
+  100% { opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  .earth {
+    width: 30px;
+    height: 30px;
+  }
+
+  .earth-loader svg {
+    width: 27px;
+  }
+}
+
+@media (max-width: 480px) {
+  .earth {
+    width: 25px;
+    height: 25px;
+  }
+
+  .earth-loader svg {
+    width: 22px;
+  }
+}
 .loading {
   @include flex(column, center, center);
   padding: 40px;

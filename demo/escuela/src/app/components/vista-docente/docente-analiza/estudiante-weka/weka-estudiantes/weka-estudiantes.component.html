@@ -1,15 +1,75 @@
-<h2 mat-dialog-title>Seleccionar Estudiante</h2>
-    <mat-dialog-content>
-      <mat-list>
-        <mat-list-item *ngFor="let estudiante of data.estudiantes" (click)="selectStudent(estudiante)">
-          <span matListItemTitle>{{ estudiante.nombres }} {{ estudiante.apellidos }}</span>
-          <span matListItemLine>Documento: {{ estudiante.documentoIdentidad }}</span>
-        </mat-list-item>
-        <mat-list-item *ngIf="data.estudiantes.length === 0">
-          <span matListItemTitle>No hay estudiantes inscritos en este curso.</span>
+<div class="dialog-container">
+  <h2 mat-dialog-title class="dialog-title">Seleccionar Estudiante</h2>
+  
+  <div class="search-container">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar estudiante</mat-label>
+      <input matInput placeholder="Nombre o documento" #searchInput (keyup)="applyFilter(searchInput.value)">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+  
+  <mat-dialog-content class="dialog-content">
+    <div *ngIf="data.estudiantes.length > 0; else noStudents">
+      <mat-list class="student-list">
+        <mat-list-item 
+          *ngFor="let estudiante of paginatedEstudiantes" 
+          (click)="selectStudent(estudiante)"
+          class="student-item"
+        >
+          <div class="student-avatar">
+            <div class="avatar-circle">
+              {{ getInitials(estudiante.nombres, estudiante.apellidos) }}
+            </div>
+          </div>
+          <div class="student-info">
+            <span class="student-name">
+              {{ estudiante.nombres }} {{ estudiante.apellidos }}
+            </span>
+            <span class="student-id">
+              <mat-icon class="id-icon">badge</mat-icon> {{ estudiante.documentoIdentidad }}
+            </span>
+          </div>
+          <mat-icon class="select-icon">chevron_right</mat-icon>
         </mat-list-item>
       </mat-list>
-    </mat-dialog-content>
-    <mat-dialog-actions>
-      <button mat-button (click)="dialogRef.close()">Cancelar</button>
+    </div>
+    
+    <ng-template #noStudents>
+      <div class="empty-state">
+        <mat-icon class="empty-icon">school</mat-icon>
+        <p class="empty-text">No hay estudiantes inscritos en este curso</p>
+      </div>
+    </ng-template>
+  </mat-dialog-content>
+  
+  <div class="dialog-footer">
+    <mat-paginator
+      *ngIf="data.estudiantes.length > 0"
+      [length]="data.estudiantes.length"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 20]"
+      (page)="onPageChange($event)"
+      class="custom-paginator"
+    ></mat-paginator>
+    
+    <mat-dialog-actions class="dialog-actions">
+      <button 
+        mat-button 
+        (click)="dialogRef.close()" 
+        class="cancel-button"
+      >
+        Cancelar
+      </button>
+      <button 
+        mat-flat-button 
+        color="primary" 
+        [disabled]="!selectedStudent"
+        (click)="confirmSelection()"
+        class="confirm-button"
+      >
+        Seleccionar
+      </button>
     </mat-dialog-actions>
+  </div>
+</div>
