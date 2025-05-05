@@ -1,4 +1,3 @@
-
 <div class="material-container">
   <!-- Header -->
   <div class="header">
@@ -58,7 +57,7 @@
   <div class="report-preview" #reportContent *ngIf="!isLoadingReport && temas.length">
     <!-- Portada APA -->
     <div class="apa-cover-page">
-      <div class="running-head">Running head: INFORME EVALUATIVO</div>
+      <div class="running-head"></div>
       <h1>Informe Evaluativo</h1>
       <h2>{{ data.estudiantePrediccion.estudiante.nombres }} {{ data.estudiantePrediccion.estudiante.apellidos }}</h2>
       <h3>{{ selectedCurricular?.descripcion }}</h3>
@@ -70,9 +69,28 @@
     <div class="report-content" *ngFor="let tema of temas; let i = index">
       <div class="page-break"></div>
       <div class="running-head"></div>
-      <div class="page-number">Página {{ i + 1 }} de {{ temas.length }}</div>
+      <div class="page-number"></div>
       <h2>{{ tema.nombre }}</h2>
       <div [innerHTML]="tema.contenido | safeHtml"></div>
+      
+      <!-- Añadir gráficos después del análisis de desempeño -->
+      <div *ngIf="tema.nombre === 'Análisis de Desempeño'" class="charts-section">
+        <h3>Análisis Gráfico del Desempeño</h3>
+        <div class="charts-grid">
+          <div class="chart-item">
+            <canvas id="performanceChart" width="400" height="300"></canvas>
+          </div>
+          <div class="chart-item">
+            <canvas id="attendanceChart" width="400" height="300"></canvas>
+          </div>
+          <div class="chart-item">
+            <canvas id="participationChart" width="400" height="300"></canvas>
+          </div>
+          <div class="chart-item">
+            <canvas id="predictionChart" width="400" height="300"></canvas>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Página de referencias -->

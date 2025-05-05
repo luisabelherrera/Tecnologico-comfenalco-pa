@@ -137,6 +137,56 @@
       font-weight: bold;
       margin-bottom: 16px;
     }
+    
+    /* Estilos para la sección de gráficos */
+    .charts-section {
+      margin-top: 30px;
+      margin-bottom: 30px;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+      
+      h3 {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 10px;
+        text-align: center;
+        font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+      }
+      
+      .charts-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        
+        @media (max-width: 768px) {
+          grid-template-columns: 1fr;
+        }
+        
+        .chart-item {
+          background-color: white;
+          border-radius: 8px;
+          padding: 16px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          
+          &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+          }
+          
+          canvas {
+            width: 100% !important;
+            height: auto !important;
+            max-height: 300px;
+          }
+        }
+      }
+    }
   }
 
   .references-page {
@@ -201,6 +251,29 @@
 
   .report-content ul {
     margin-left: 36pt;
+  }
+  
+  .charts-section {
+    page-break-inside: avoid;
+    background-color: #f9f9f9 !important;
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    page-break-inside: avoid;
+  }
+  
+  .chart-item {
+    page-break-inside: avoid;
+    background-color: white !important;
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .references-page p {
