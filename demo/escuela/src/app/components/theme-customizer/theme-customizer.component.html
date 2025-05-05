@@ -58,6 +58,23 @@
       />
     </div>
 
+    <!-- Theme Preview -->
+    <div class="theme-preview">
+      <h4>Vista Previa</h4>
+      <div 
+        class="preview-container" 
+        [ngClass]="{'split': useSplitColors, 'solid': !useSplitColors}"
+        [style.--left-color]="selectedTheme.backgroundColorLeft"
+        [style.--right-color]="selectedTheme.backgroundColorRight"
+        [style.--bg-color]="selectedTheme.backgroundColor"
+        [style.--text-color]="selectedTheme.textColor">
+        <div class="preview-text">
+          {{ selectedTheme.name || 'Vista Previa del Tema' }}
+        </div>
+      </div>
+      <p class="preview-info">Esta es una vista previa de cómo se verá tu tema</p>
+    </div>
+
     <button class="btn btn-save" (click)="saveTheme()">Guardar Tema</button>
   </section>
 
@@ -78,7 +95,7 @@
 
   <section class="saved-themes">
     <h4>Temas Guardados</h4>
-    <div class="theme-list">
+    <div class="theme-list" *ngIf="themes.length > 0; else noThemes">
       <div *ngFor="let theme of themes" class="theme-item">
         <button
           (click)="applyTheme(theme)"
@@ -93,9 +110,19 @@
           class="btn btn-delete"
           *ngIf="theme.id"
         >
-          Eliminar
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
         </button>
       </div>
     </div>
+    <ng-template #noThemes>
+      <div class="empty-state">
+        No hay temas guardados. Crea un tema personalizado o selecciona uno predefinido.
+      </div>
+    </ng-template>
   </section>
 </div>

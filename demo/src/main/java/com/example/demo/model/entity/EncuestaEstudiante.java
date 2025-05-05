@@ -44,4 +44,14 @@ public class EncuestaEstudiante implements Serializable {
     private Boolean poseeReciboGas;
     private Boolean tieneSisben;
     private Boolean tieneSeguroMedico;
+
+
+
+    // Nuevos campos agregados
+    private String horasEstudioSemanal;
+    private String asistencia;
+    private String participacionClases;
+    private String usoPlataformaVirtual;
+    private String antecedentesPerdida;
+    private String cargaAcademica;
 }

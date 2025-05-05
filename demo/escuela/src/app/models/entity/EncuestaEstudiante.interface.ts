@@ -21,4 +21,10 @@ export interface EncuestaEstudiante {
   poseeReciboGas?: boolean;
   tieneSisben?: boolean;
   tieneSeguroMedico?: boolean;
+  horasEstudioSemanal?: string;
+  asistencia?: string;
+  participacionClases?: string;
+  usoPlataformaVirtual?: string;
+  antecedentesPerdida?: string;
+  cargaAcademica?: string;
 }

@@ -1,136 +1,350 @@
-.theme-customizer {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 2rem auto;
+// Variables
+$primary-color: #6200ee;
+$primary-light: #e4d7f9;
+$primary-dark: #3700b3;
+$secondary-color: #03dac6;
+$error-color: #b00020;
+$background-color: #f8f9fa;
+$surface-color: #ffffff;
+$text-primary: #333333;
+$text-secondary: #757575;
+$border-color: #e0e0e0;
+$shadow-color: rgba(0, 0, 0, 0.1);
+$transition: all 0.3s ease;
+
+// Mixins
+@mixin card {
+  background-color: $surface-color;
   border-radius: 12px;
-  background: linear-gradient(145deg, #ffffff, #f0f0f0);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px $shadow-color;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
 
-  section {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease;
-
-    &:hover {
-      transform: translateY(-2px);
-    }
+@mixin button {
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: $transition;
+  border: none;
+  outline: none;
+  font-size: 0.9rem;
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
+}
 
+// Main Container
+.theme-customizer {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  color: $text-primary;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  h3, h4 {
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+    color: $primary-dark;
+    font-weight: 500;
+  }
+  
   h3 {
-    font-size: 1.8rem;
-    color: #2c3e50;
-    margin-bottom: 1.5rem;
-    border-bottom: 2px solid #3498db;
-    padding-bottom: 0.5rem;
+    font-size: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid $primary-light;
   }
-
+  
   h4 {
-    font-size: 1.4rem;
-    color: #34495e;
-    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid $primary-light;
   }
+}
 
+// Theme Creator Section
+.theme-creator {
+  @include card;
+  grid-column: 1 / -1;
+  
+  @media (min-width: 768px) {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+  
   .form-group {
-    margin-bottom: 1.2rem;
-
+    margin-bottom: 1.25rem;
+    
     label {
-      font-weight: 500;
-      color: #4a5568;
-      margin-bottom: 0.5rem;
       display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: $text-secondary;
+      font-size: 0.9rem;
+      
+      input[type="checkbox"] {
+        margin-right: 0.5rem;
+        transform: scale(1.2);
+        cursor: pointer;
+      }
     }
-
+    
     .form-control {
-      padding: 0.8rem;
-      border: 2px solid #e2e8f0;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid $border-color;
       border-radius: 6px;
       font-size: 1rem;
-      transition: all 0.3s ease;
-
+      transition: $transition;
+      
       &:focus {
-        border-color: #3498db;
-        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
         outline: none;
+        border-color: $primary-color;
+        box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+      }
+      
+      &::placeholder {
+        color: lighten($text-secondary, 20%);
       }
     }
-
+    
     .color-picker {
-      width: 120px;
-      height: 45px;
+      width: 100%;
+      height: 40px;
+      padding: 0;
+      border: 1px solid $border-color;
       border-radius: 6px;
-      border: 2px solid #e2e8f0;
       cursor: pointer;
-      transition: transform 0.2s ease;
-
-      &:hover {
-        transform: scale(1.05);
+      
+      &::-webkit-color-swatch-wrapper {
+        padding: 0;
+      }
+      
+      &::-webkit-color-swatch {
+        border: none;
+        border-radius: 5px;
+      }
+      
+      &::-moz-color-swatch {
+        border: none;
+        border-radius: 5px;
       }
     }
   }
-
-  .btn {
-    padding: 0.8rem 1.5rem;
-    border-radius: 6px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border: none;
-
-    &-save {
-      background: linear-gradient(145deg, #2ecc71, #27ae60);
-      color: white;
-      
-      &:hover {
-        background: linear-gradient(145deg, #27ae60, #219a52);
-        transform: translateY(-2px);
-      }
+  
+  .btn-save {
+    @include button;
+    background-color: $primary-color;
+    color: white;
+    width: 100%;
+    margin-top: 1rem;
+    
+    &:hover:not(:disabled) {
+      background-color: $primary-dark;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba($primary-dark, 0.3);
     }
-
-    &-theme {
-      background: linear-gradient(145deg, #3498db, #2980b9);
-      color: white;
-      padding: 0.6rem 1.2rem;
-      
-      &:hover:not(:disabled) {
-        background: linear-gradient(145deg, #2980b9, #2472a4);
-        transform: translateY(-1px);
-      }
-
-      &.active {
-        background: #95a5a6;
-      }
-
-      &:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-      }
-    }
-
-    &-delete {
-      background: linear-gradient(145deg, #e74c3c, #c0392b);
-      color: white;
-      padding: 0.6rem 1rem;
-      margin-left: 0.5rem;
-
-      &:hover {
-        background: linear-gradient(145deg, #c0392b, #a93226);
-        transform: translateY(-1px);
-      }
+    
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba($primary-dark, 0.3);
     }
   }
+}
 
+// Theme Preview
+.theme-preview {
+  @include card;
+  margin-top: 1.25rem;
+  
+  .preview-container {
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &.split {
+      background: linear-gradient(to right, var(--left-color, #f0f0f0), var(--right-color, #ffffff));
+    }
+    
+    &.solid {
+      background-color: var(--bg-color, #ffffff);
+    }
+    
+    .preview-text {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--text-color, #333333);
+      text-align: center;
+      padding: 1rem;
+    }
+  }
+  
+  .preview-info {
+    font-size: 0.9rem;
+    color: $text-secondary;
+    text-align: center;
+  }
+}
+
+// Predefined Themes Section
+.predefined-themes {
+  @include card;
+  
   .theme-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-
-    .theme-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    
+    @media (min-width: 576px) {
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     }
+  }
+  
+  .btn-theme {
+    @include button;
+    background-color: $primary-light;
+    color: $primary-dark;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background-color: $primary-color;
+      opacity: 0;
+      transition: $transition;
+    }
+    
+    &:hover:not(:disabled)::before {
+      opacity: 1;
+    }
+    
+    &.active {
+      background-color: rgba($primary-color, 0.15);
+      font-weight: 600;
+      
+      &::before {
+        opacity: 1;
+      }
+    }
+    
+    span {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-left: 0.5rem;
+    }
+  }
+}
+
+// Saved Themes Section
+.saved-themes {
+  @include card;
+  
+  .theme-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .theme-item {
+    display: flex;
+    gap: 0.5rem;
+    
+    .btn-theme {
+      @include button;
+      background-color: $primary-light;
+      color: $primary-dark;
+      flex: 1;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background-color: $primary-color;
+        opacity: 0;
+        transition: $transition;
+      }
+      
+      &:hover:not(:disabled)::before {
+        opacity: 1;
+      }
+      
+      &.active {
+        background-color: rgba($primary-color, 0.15);
+        font-weight: 600;
+        
+        &::before {
+          opacity: 1;
+        }
+      }
+      
+      span {
+        font-size: 0.8rem;
+        opacity: 0.7;
+        margin-left: 0.5rem;
+      }
+    }
+    
+    .btn-delete {
+      @include button;
+      background-color: rgba($error-color, 0.1);
+      color: $error-color;
+      padding: 0.75rem;
+      
+      &:hover {
+        background-color: rgba($error-color, 0.2);
+      }
+    }
+  }
+}
+
+// Empty State
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: $text-secondary;
+  font-style: italic;
+}
+
+// Responsive Adjustments
+@media (max-width: 576px) {
+  .theme-customizer {
+    margin: 1rem auto;
+  }
+  
+  .theme-creator, .predefined-themes, .saved-themes {
+    padding: 1.25rem;
+  }
+  
+  .btn-theme, .btn-delete {
+    padding: 0.6rem 1rem;
   }
 }
