@@ -13,7 +13,7 @@ import { Calificacion } from 'src/app/models/entity/Calificacion.interface';
   providedIn: 'root'
 })
 export class EstudiantePerfilService {
-  private apiUrl = `${environment.apiUrl}estudiantee`; // URL del backend
+  private apiUrl = `${environment.apiUrl}api/estudiantee`; // URL del backend
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 

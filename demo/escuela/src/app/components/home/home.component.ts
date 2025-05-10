@@ -104,7 +104,7 @@ export class HomeComponent implements OnInit {
       next: (data: InformacionInstitucional) => {
         this.institutionName = data.nombreInstitucion || 'EduPortal'; // Update with institution name
         console.log('Nombre de la institución cargado:', this.institutionName);
-      },
+      }, 
       error: (err) => {
         console.error('Error al cargar el nombre de la institución:', err);
         this.institutionName = 'EduPortal'; // Fallback in case of error
