@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class DocentePerfilService {
-  private apiUrl = `${environment.apiUrl}docentee`; // Adjust based on backend endpoint
+  private apiUrl = `${environment.apiUrl}api/docentee`; // Adjust based on backend endpoint
 
   constructor(private http: HttpClient) {}
 
