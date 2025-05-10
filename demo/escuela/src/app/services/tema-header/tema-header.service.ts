@@ -17,7 +17,7 @@ export interface Theme {
   providedIn: 'root'
 })
 export class TemaHeaderService {
-  private apiUrl = 'http://localhost:9098/api/themes';
+  private apiUrl = 'https://just-tenderness-production.up.railway.app/api/themes';
   private currentThemeSubject: BehaviorSubject<Theme>;
   public currentTheme$: Observable<Theme>;
 
