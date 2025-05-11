@@ -36,12 +36,13 @@
           <button class="toggle-btn" [class.active]="!showForm" (click)="toggleView(false)">
             <i class="fas fa-list"></i>Lista de Estudiantes
           </button>
+                <button class="btn btn-outline-success btn-custom" (click)="exportToExcel()">
+          <i class="fas fa-file-excel me-2"></i>Exportar a Excel
+        </button>
         </div>
+        
         <button class="btn btn-outline-primary btn-custom" (click)="openStudentSelectionDialog()">
           <i class="fas fa-user-plus me-2"></i>Seleccionar Estudiante
-        </button>
-        <button class="btn btn-outline-success btn-custom" (click)="exportToExcel()">
-          <i class="fas fa-file-excel me-2"></i>Exportar a Excel
         </button>
       </div>
     </div>
