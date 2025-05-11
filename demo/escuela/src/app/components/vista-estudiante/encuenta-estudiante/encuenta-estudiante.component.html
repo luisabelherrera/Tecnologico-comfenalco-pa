@@ -159,12 +159,13 @@
       <div class="row">
         <div class="col-md-6">
           <label>Horas de Estudio Semanal</label>
-          <select [(ngModel)]="encuesta.horasEstudioSemanal" class="form-control">
-            <option value="Menos de 10">Menos de 10</option>
-            <option value="10-20">10-20</option>
-            <option value="Más de 20">Más de 20</option>
-          </select>
-          <span class="completed-badge" *ngIf="encuesta.horasEstudioSemanal">1</span>
+     <label>Horas de Estudio Semanal</label>
+<select [(ngModel)]="encuesta.horasEstudioSemanal" name="horasEstudioSemanal" class="form-control" required>
+  <option value="5">Menos de 10 horas</option>
+  <option value="15">10 a 20 horas</option>
+  <option value="25">Más de 20 horas</option>
+</select>
+<span class="completed-badge" *ngIf="encuesta.horasEstudioSemanal">1</span>
 
           <label class="mt-2">Asistencia</label>
           <select [(ngModel)]="encuesta.asistencia" class="form-control">
