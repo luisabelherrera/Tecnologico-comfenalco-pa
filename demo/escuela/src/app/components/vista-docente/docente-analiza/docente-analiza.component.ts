@@ -16,6 +16,8 @@ import { DocentePerfilService } from 'src/app/services/Docente/Docente-perfil/do
 import { CalificacionService } from 'src/app/services/calificacion/calificacion.service';
 import { WekaEstudiantesComponent } from './estudiante-weka/weka-estudiantes/weka-estudiantes.component';
 import { MaterialDocenteComponent } from './docente-crea-material/material-docente/material-docente.component';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import { EncuestaEstudianteService } from 'src/app/services/encuentasEstudiante/EncuestaEstudiante.service';
 
 interface EstudiantePrediccion {
@@ -57,6 +59,11 @@ interface DatosEstudiante {
   confianza: string;
 }
 
+interface PredictionResponse {
+  prediccion: string;
+  confianza: string;
+}
+
 @Component({
   selector: 'app-docente-analiza',
   templateUrl: './docente-analiza.component.html',
@@ -93,9 +100,9 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
   ) {
     this.studentForm = this.fb.group({
       documento: ['', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]],
-      edad: ['', [Validators.required, Validators.min(5)]],
+      edad: ['', [Validators.required, Validators.min(5), Validators.max(100)]],
       genero: ['', Validators.required],
-      horasEstudioSemanal: ['', [Validators.required, Validators.min(0)]],
+      horasEstudioSemanal: ['', [Validators.required, Validators.min(0), Validators.max(168)]],
       asistencia: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
       promedioParciales: ['', [Validators.required, Validators.min(0), Validators.max(5)]],
       participacionClases: ['', Validators.required],
@@ -154,6 +161,7 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
       },
       (error) => {
         console.error('Error al obtener asignaciones:', error);
+        this.snackBar.open('Error al cargar asignaciones', 'Cerrar', { duration: 5000 });
       }
     );
   }
@@ -166,6 +174,7 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
       },
       (error) => {
         console.error('Error al obtener curriculares:', error);
+        this.snackBar.open('Error al cargar curriculares', 'Cerrar', { duration: 5000 });
       }
     );
   }
@@ -250,7 +259,7 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
   async loadHistorialPredicciones(): Promise<void> {
     const headers = this.getHeaders();
     try {
-      const historial = await this.http.get<DatosEstudiante[]>('http://localhost:9098/api/historial', { headers }).toPromise();
+      const historial = await this.http.get<DatosEstudiante[]>('https://just-tenderness-production.up.railway.app/api/historial', { headers }).toPromise();
       console.log('Historial recibido del backend:', historial);
       this.historialPredicciones = historial || [];
     } catch (error) {
@@ -344,7 +353,7 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
     this.studentForm.patchValue(formData);
     if (estudiantePred) {
       estudiantePred.inputData = { ...formData };
-      console.log('InputData set in populateForm:', estudiantePred.inputData); // Debug
+      console.log('InputData set in populateForm:', estudiantePred.inputData);
     }
   }
 
@@ -373,20 +382,19 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
         nota: estudiantePred?.nota !== undefined ? estudiantePred.nota : null
       };
 
-      this.http.post('http://localhost:9098/api/predecir', datosCompletos, { headers }).subscribe({
-        next: (response: any) => {
+      this.http.post<PredictionResponse>('https://just-tenderness-production.up.railway.app/api/predecir', datosCompletos, { headers }).subscribe({
+        next: (response) => {
           this.resultado = `Resultado: ${response.prediccion} (Confianza: ${response.confianza})`;
           if (estudiantePred) {
             estudiantePred.prediccion = response.prediccion;
             estudiantePred.confianza = parseFloat(response.confianza.replace('%', '')) / 100;
-            // Preserve inputData from populateForm, update with non-empty form values
             estudiantePred.inputData = estudiantePred.inputData || { ...datos };
             Object.keys(datos).forEach((key) => {
               if (datos[key] !== '' && datos[key] !== null && datos[key] !== undefined) {
                 estudiantePred.inputData![key] = datos[key];
               }
             });
-            console.log('InputData after prediction:', estudiantePred.inputData); // Debug
+            console.log('InputData after prediction:', estudiantePred.inputData);
 
             const existingPredictionIndex = this.historialPredicciones.findIndex(
               (h) => String(h.documento) === String(datos.documento)
@@ -418,11 +426,21 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
         },
         error: (err) => {
           console.error('Error al predecir:', err);
-          this.resultado = `Error: ${err.status} - ${err.error?.error || 'Error desconocido'}`;
+          let errorMessage = 'Error desconocido';
+          if (err.status === 401) {
+            errorMessage = 'Sesión expirada. Por favor, inicia sesión nuevamente.';
+          } else if (err.status === 400) {
+            errorMessage = 'Datos inválidos enviados al servidor.';
+          } else if (err.status === 500) {
+            errorMessage = 'Error en el servidor. Intenta de nuevo más tarde.';
+          }
+          this.resultado = `Error: ${err.status} - ${errorMessage}`;
+          this.snackBar.open(errorMessage, 'Cerrar', { duration: 5000 });
         }
       });
     } else {
       this.resultado = 'Formulario inválido o no se ha seleccionado un curricular.';
+      this.snackBar.open(this.resultado, 'Cerrar', { duration: 5000 });
     }
   }
 
@@ -463,6 +481,65 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
     element.showConfidence = !element.showConfidence;
   }
 
+  exportToExcel(): void {
+    if (!this.selectedCurricular || !this.dataSource.data.length) {
+      this.snackBar.open('No hay datos para exportar.', 'Cerrar', { duration: 5000 });
+      return;
+    }
+
+    // Prepare data for export
+    const data = this.dataSource.data.map((item) => ({
+      Estudiante: `${item.estudiante.nombres} ${item.estudiante.apellidos}`,
+      Documento: item.estudiante.documentoIdentidad,
+      Nota: item.nota !== undefined ? item.nota.toFixed(2) : 'N/A',
+      Predicción: item.prediccion === 'tested_positive' ? 'Necesita Ayuda' : item.prediccion === 'tested_negative' ? 'Tiene Posibilidades de Ganar' : 'Sin predecir',
+      Confianza: item.confianza ? `${(item.confianza * 100).toFixed(1)}%` : '-',
+      Edad: item.inputData?.edad || 'N/A',
+      Género: item.inputData?.genero || 'N/A',
+      'Promedio Parciales': item.inputData?.promedioParciales || 'N/A',
+      'Horas de Estudio': item.inputData?.horasEstudioSemanal || 'N/A',
+      Asistencia: item.inputData?.asistencia || 'N/A',
+      'Participación en Clases': item.inputData?.participacionClases || 'N/A',
+      'Uso de Plataforma Virtual': item.inputData?.usoPlataformaVirtual || 'N/A',
+      'Antecedentes de Pérdida': item.inputData?.antecedentesPerdida || 'N/A',
+      'Apoyo Familiar': item.inputData?.apoyoFamiliar || 'N/A',
+      'Carga Académica': item.inputData?.cargaAcademica || 'N/A',
+      'Problemas Personales': item.inputData?.problemasPersonales || 'N/A'
+    }));
+
+    // Create worksheet and workbook
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Estudiantes');
+
+    // Customize column widths
+    ws['!cols'] = [
+      { wch: 30 }, // Estudiante
+      { wch: 15 }, // Documento
+      { wch: 10 }, // Nota
+      { wch: 20 }, // Predicción
+      { wch: 10 }, // Confianza
+      { wch: 10 }, // Edad
+      { wch: 10 }, // Género
+      { wch: 15 }, // Promedio Parciales
+      { wch: 15 }, // Horas de Estudio
+      { wch: 10 }, // Asistencia
+      { wch: 20 }, // Participación en Clases
+      { wch: 20 }, // Uso de Plataforma Virtual
+      { wch: 20 }, // Antecedentes de Pérdida
+      { wch: 15 }, // Apoyo Familiar
+      { wch: 15 }, // Carga Académica
+      { wch: 20 }  // Problemas Personales
+    ];
+
+    // Generate Excel file and trigger download
+    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const dataBlob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(dataBlob, `Estudiantes_${this.selectedCurricular?.descripcion || 'Curricular'}.xlsx`);
+
+    this.snackBar.open('Datos exportados a Excel exitosamente.', 'Cerrar', { duration: 3000 });
+  }
+
   private updateTableData(): void {
     if (this.selectedCurricular && this.estudiantesPorCurricular[this.selectedCurricular.idCurricular!]) {
       this.dataSource.data = [...this.estudiantesPorCurricular[this.selectedCurricular.idCurricular!]];
@@ -491,7 +568,10 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     const canvas = document.getElementById('gradeChart') as HTMLCanvasElement;
-    if (!canvas || this.dataSource.data.length === 0) return;
+    if (!canvas || this.dataSource.data.length === 0) {
+      console.warn('Canvas no encontrado o no hay datos para el gráfico.');
+      return;
+    }
 
     const labels = this.dataSource.data.map((e) => `${e.estudiante.nombres} ${e.estudiante.apellidos}`);
     const notas = this.dataSource.data.map((e) => (e.nota !== undefined ? e.nota : 0));
