@@ -21,6 +21,8 @@ export interface EncuestaEstudiante {
   poseeReciboGas?: boolean;
   tieneSisben?: boolean;
   tieneSeguroMedico?: boolean;
+
+  // Nuevos campos agregados
   horasEstudioSemanal?: string;
   asistencia?: string;
   participacionClases?: string;
