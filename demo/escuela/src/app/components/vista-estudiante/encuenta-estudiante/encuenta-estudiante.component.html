@@ -167,13 +167,17 @@
 </select>
 <span class="completed-badge" *ngIf="encuesta.horasEstudioSemanal">1</span>
 
-          <label class="mt-2">Asistencia</label>
-          <select [(ngModel)]="encuesta.asistencia" class="form-control">
-            <option value="Alta">Alta</option>
-            <option value="Media">Media</option>
-            <option value="Baja">Baja</option>
-          </select>
-          <span class="completed-badge" *ngIf="encuesta.asistencia">1</span>
+       <label class="mt-2">Asistencia (%)</label>
+<input 
+  type="number" 
+  [(ngModel)]="encuesta.asistencia" 
+  class="form-control" 
+  min="0" 
+  max="100" 
+  placeholder="Ej: 85"
+  required
+>
+<span class="completed-badge" *ngIf="encuesta.asistencia !== null && encuesta.asistencia !== undefined">✓</span>
 
           <label class="mt-2">Participación en Clases</label>
           <select [(ngModel)]="encuesta.participacionClases" class="form-control">
