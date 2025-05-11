@@ -250,7 +250,7 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
   async loadHistorialPredicciones(): Promise<void> {
     const headers = this.getHeaders();
     try {
-      const historial = await this.http.get<DatosEstudiante[]>('http://localhost:9098/api/historial', { headers }).toPromise();
+      const historial = await this.http.get<DatosEstudiante[]>('https://just-tenderness-production.up.railway.app/api/historial', { headers }).toPromise();
       console.log('Historial recibido del backend:', historial);
       this.historialPredicciones = historial || [];
     } catch (error) {
@@ -373,7 +373,7 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
         nota: estudiantePred?.nota !== undefined ? estudiantePred.nota : null
       };
 
-      this.http.post('http://localhost:9098/api/predecir', datosCompletos, { headers }).subscribe({
+      this.http.post('https://just-tenderness-production.up.railway.app/api/predecir', datosCompletos, { headers }).subscribe({
         next: (response: any) => {
           this.resultado = `Resultado: ${response.prediccion} (Confianza: ${response.confianza})`;
           if (estudiantePred) {
