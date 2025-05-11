@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class DesempenoEstudianteService {
-private apiUrl = `${environment.apiUrl}api`; // URL dinámica desde environment
+  private apiUrl = `${environment.apiUrl}api/prediccion`; // URL dinámica desde environment
 
   constructor(private http: HttpClient) {}
 
@@ -23,9 +23,7 @@ private apiUrl = `${environment.apiUrl}api`; // URL dinámica desde environment
   getAll(): Observable<DesempenoEstudiante[]> {
     return this.http.get<DesempenoEstudiante[]>(this.apiUrl, { headers: this.getHeaders() });
   }
-predecir(datos: DesempenoEstudiante): Observable<any> {
-  return this.http.post<any>(`${this.apiUrl}/predecir`, datos, { headers: this.getHeaders() });
-}
+
   getById(id: number): Observable<DesempenoEstudiante> {
     return this.http.get<DesempenoEstudiante>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
   }
@@ -42,7 +40,7 @@ predecir(datos: DesempenoEstudiante): Observable<any> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
   }
 
-getPredicciones(): Observable<any> {
-  return this.http.get<any>(`${this.apiUrl}/historial`, { headers: this.getHeaders() });
-}
+  getPredicciones(): Observable<any> { // Ajusta el tipo según lo que devuelva tu backend
+    return this.http.get<any>(`${this.apiUrl}/predicciones`, { headers: this.getHeaders() });
+  }
 }
