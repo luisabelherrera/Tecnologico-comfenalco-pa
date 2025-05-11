@@ -198,7 +198,9 @@
         </div>
         <div class="col-md-6">
    <label>Antecedentes de Pérdida</label>
-<select [(ngModel)]="encuesta.antecedentesPerdida" class="form-control">
+<!-- Ejemplo para Antecedentes de Pérdida -->
+<select [(ngModel)]="encuesta.antecedentesPerdida" class="form-control" required>
+  <option value="" disabled selected>Seleccione...</option>
   <option value="Sí">Sí</option>
   <option value="No">No</option>
 </select>

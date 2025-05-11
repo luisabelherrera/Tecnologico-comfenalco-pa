@@ -17,7 +17,7 @@ import { CalificacionService } from 'src/app/services/calificacion/calificacion.
 import { WekaEstudiantesComponent } from './estudiante-weka/weka-estudiantes/weka-estudiantes.component';
 import { MaterialDocenteComponent } from './docente-crea-material/material-docente/material-docente.component';
 import { EncuestaEstudianteService } from 'src/app/services/encuentasEstudiante/EncuestaEstudiante.service';
-
+import * as XLSX from 'xlsx';
 interface EstudiantePrediccion {
   estudiante: Estudiante;
   prediccion?: string;
@@ -124,9 +124,8 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('accessToken');
-     return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
     });
   }
 
@@ -485,7 +484,25 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
       setTimeout(() => this.updateGradeChart(), 0);
     }
   }
+exportToExcel(): void {
+  if (!this.selectedCurricular || !this.dataSource.data.length) {
+    this.snackBar.open('No hay datos para exportar.', 'Cerrar', { duration: 5000 });
+    return;
+  }
 
+  const data = this.dataSource.data.map((item) => ({
+    Estudiante: `${item.estudiante.nombres} ${item.estudiante.apellidos}`,
+    Documento: item.estudiante.documentoIdentidad,
+    Nota: item.nota !== undefined ? item.nota.toFixed(2) : 'N/A',
+    Predicción: item.prediccion === 'tested_positive' ? 'Necesita Ayuda' : item.prediccion === 'tested_negative' ? 'Tiene Posibilidades de Ganar' : 'Sin predecir',
+    Confianza: item.confianza ? `${(item.confianza * 100).toFixed(1)}%` : '-'
+  }));
+
+  const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+  const wb: XLSX.WorkBook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Estudiantes');
+  XLSX.writeFile(wb, `Estudiantes_${this.selectedCurricular?.descripcion || 'Curricular'}.xlsx`);
+}
   private updateGradeChart(): void {
     if (this.gradeChart) {
       this.gradeChart.destroy();
