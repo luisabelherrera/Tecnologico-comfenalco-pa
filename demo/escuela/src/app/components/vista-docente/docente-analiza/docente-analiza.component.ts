@@ -127,7 +127,7 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('accessToken');
     return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`
     });
   }
 
