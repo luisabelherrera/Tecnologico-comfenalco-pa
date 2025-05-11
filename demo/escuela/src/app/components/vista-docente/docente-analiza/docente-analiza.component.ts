@@ -410,70 +410,102 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   enviarDatos(): void {
-    if (this.studentForm.valid && this.selectedCurricular) {
-      const datos = this.studentForm.value;
-      const estudiantePred = this.estudiantesPorCurricular[this.selectedCurricular.idCurricular!].find(
-        (e) => e.estudiante.documentoIdentidad === datos.documento
-      );
-      const headers = this.getHeaders();
+  if (this.studentForm.valid && this.selectedCurricular) {
+    const datos = this.studentForm.value;
+    const estudiantePred = this.estudiantesPorCurricular[this.selectedCurricular.idCurricular!].find(
+      (e) => e.estudiante.documentoIdentidad === datos.documento
+    );
+    const headers = this.getHeaders();
 
-      const datosCompletos = {
-        ...datos,
-        nota: estudiantePred?.nota !== undefined ? estudiantePred.nota : null
-      };
+    // Ensure all required fields are included and properly formatted
+    const datosCompletos = {
+      documento: datos.documento,
+      edad: Number(datos.edad),
+      genero: datos.genero,
+      horas_estudio_semanal: datos.horasEstudioSemanal,
+      asistencia: Number(datos.asistencia),
+      promedio_parciales: Number(datos.promedioParciales),
+      participacion_clases: datos.participacionClases,
+      uso_plataforma_virtual: datos.usoPlataformaVirtual,
+      antecedentes_perdida: datos.antecedentesPerdida,
+      apoyo_familiar: datos.apoyoFamiliar,
+      carga_academica: Number(datos.cargaAcademica),
+      problemas_personales: datos.problemasPersonales,
+      nota: estudiantePred?.nota !== undefined ? estudiantePred.nota : null
+    };
 
-      this.http.post('https://just-tenderness-production.up.railway.app/api/predecir', datosCompletos, { headers }).subscribe({
-        next: (response: any) => {
-          this.resultado = `Resultado: ${response.prediccion} (Confianza: ${response.confianza})`;
-          if (estudiantePred) {
-            estudiantePred.prediccion = response.prediccion;
-            estudiantePred.confianza = parseFloat(response.confianza.replace('%', '')) / 100;
-            estudiantePred.inputData = estudiantePred.inputData || { ...datos };
-            Object.keys(datos).forEach((key) => {
-              if (datos[key] !== '' && datos[key] !== null && datos[key] !== undefined) {
-                estudiantePred.inputData![key] = datos[key];
-              }
-            });
-            console.log('InputData after prediction:', estudiantePred.inputData);
-
-            const existingPredictionIndex = this.historialPredicciones.findIndex(
-              (h) => String(h.documento) === String(datos.documento)
-            );
-            const prediccionData: DatosEstudiante = {
-              documento: datos.documento,
-              edad: estudiantePred.inputData.edad,
-              genero: estudiantePred.inputData.genero,
-              promedioParciales: estudiantePred.inputData.promedioParciales,
-              horasEstudioSemanal: estudiantePred.inputData.horasEstudioSemanal,
-              asistencia: estudiantePred.inputData.asistencia,
-              participacionClases: estudiantePred.inputData.participacionClases,
-              usoPlataformaVirtual: estudiantePred.inputData.usoPlataformaVirtual,
-              antecedentesPerdida: estudiantePred.inputData.antecedentesPerdida,
-              apoyoFamiliar: estudiantePred.inputData.apoyoFamiliar,
-              cargaAcademica: estudiantePred.inputData.cargaAcademica,
-              problemasPersonales: estudiantePred.inputData.problemasPersonales,
-              perderaAsignatura: response.prediccion,
-              confianza: response.confianza
-            };
-            if (existingPredictionIndex !== -1) {
-              this.historialPredicciones[existingPredictionIndex] = prediccionData;
-            } else {
-              this.historialPredicciones.push(prediccionData);
-            }
-
-            this.updateTableData();
-          }
-        },
-        error: (err) => {
-          console.error('Error al predecir:', err);
-          this.resultado = `Error: ${err.status} - ${err.error?.error || 'Error desconocido'}`;
-        }
-      });
-    } else {
-      this.resultado = 'Formulario inválido o no se ha seleccionado un curricular.';
+    // Add validation for required fields
+    const requiredFields = ['documento', 'edad', 'genero', 'horas_estudio_semanal', 'asistencia', 
+                          'promedio_parciales', 'participacion_clases', 'uso_plataforma_virtual',
+                          'antecedentes_perdida', 'apoyo_familiar', 'carga_academica', 'problemas_personales'];
+    
+    const missingFields = requiredFields.filter(field => !datosCompletos[field as keyof typeof datosCompletos]);
+    
+    if (missingFields.length > 0) {
+      this.snackBar.open(`Faltan campos requeridos: ${missingFields.join(', ')}`, 'Cerrar', { duration: 5000 });
+      return;
     }
-  }
 
+    this.http.post('https://just-tenderness-production.up.railway.app/api/predecir', datosCompletos, { headers }).subscribe({
+      next: (response: any) => {
+        if (response.error) {
+          this.snackBar.open(`Error en la predicción: ${response.error}`, 'Cerrar', { duration: 5000 });
+          return;
+        }
+        
+        this.resultado = `Resultado: ${response.prediccion} (Confianza: ${response.confianza})`;
+        
+        if (estudiantePred) {
+          estudiantePred.prediccion = response.prediccion;
+          estudiantePred.confianza = parseFloat(response.confianza.replace('%', '')) / 100;
+          estudiantePred.inputData = estudiantePred.inputData || { ...datos };
+          
+          // Update the table and chart
+          this.updateTableData();
+          
+          // Save to historial
+          this.savePredictionToHistorial(datosCompletos, response);
+        }
+      },
+      error: (err) => {
+        console.error('Error al predecir:', err);
+        let errorMessage = err.error?.message || err.message || 'Error desconocido';
+        this.snackBar.open(`Error: ${errorMessage}`, 'Cerrar', { duration: 5000 });
+      }
+    });
+  } else {
+    this.snackBar.open('Formulario inválido o no se ha seleccionado un curricular.', 'Cerrar', { duration: 5000 });
+  }
+}
+
+private savePredictionToHistorial(datos: any, response: any): void {
+  const prediccionData: DatosEstudiante = {
+    documento: datos.documento,
+    edad: datos.edad,
+    genero: datos.genero,
+    promedioParciales: datos.promedio_parciales,
+    horasEstudioSemanal: datos.horas_estudio_semanal,
+    asistencia: datos.asistencia.toString(),
+    participacionClases: datos.participacion_clases,
+    usoPlataformaVirtual: datos.uso_plataforma_virtual,
+    antecedentesPerdida: datos.antecedentes_perdida,
+    apoyoFamiliar: datos.apoyo_familiar,
+    cargaAcademica: datos.carga_academica.toString(),
+    problemasPersonales: datos.problemas_personales,
+    perderaAsignatura: response.prediccion,
+    confianza: response.confianza
+  };
+
+  const existingIndex = this.historialPredicciones.findIndex(
+    h => String(h.documento) === String(datos.documento)
+  );
+
+  if (existingIndex !== -1) {
+    this.historialPredicciones[existingIndex] = prediccionData;
+  } else {
+    this.historialPredicciones.push(prediccionData);
+  }
+}
   openMaterialPanel(student: EstudiantePrediccion): void {
     const dialogRef = this.dialog.open(MaterialDocenteComponent, {
       width: 'min(1300px, 100vw)',
