@@ -1,18 +1,66 @@
 <div class="encuesta-container" *ngIf="estudiante?.estudiante">
   <!-- Estilos inline (mover a .scss en producción) -->
   <style>
-    .encuesta-container { max-width: 900px; margin: 0 auto; padding: 20px; background: #f9f9f9; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    .encuesta-header { text-align: center; margin-bottom: 20px; }
-    .encuesta-header h2 { color: #2c3e50; font-weight: bold; }
-    .encuesta-body h3 { color: #2980b9; border-bottom: 2px solid #3498db; padding-bottom: 5px; margin-bottom: 15px; }
-    .info { background: white; padding: 20px; border-radius: 8px; }
-    .edit-mode { border: 1px solid #ddd; padding: 20px; background: #fff; }
-    .form-control { border-radius: 5px; }
-    .btn-dark, .btn-success, .btn-danger, .btn-primary { border-radius: 5px; transition: all 0.3s; }
-    .btn-dark:hover { background: #34495e; }
-    .btn-success:hover { background: #27ae60; }
-    .btn-danger:hover { background: #c0392b; }
-    .completed-badge { display: inline-block; margin-left: 5px; font-size: 12px; padding: 2px 6px; background: #27ae60; color: white; border-radius: 10px; }
+    .encuesta-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .encuesta-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .encuesta-header h2 {
+      color: #2c3e50;
+      font-weight: bold;
+    }
+    .encuesta-body h3 {
+      color: #2980b9;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 5px;
+      margin-bottom: 15px;
+    }
+    .info {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    .edit-mode {
+      border: 1px solid #ddd;
+      padding: 20px;
+      background: #fff;
+    }
+    .form-control {
+      border-radius: 5px;
+    }
+    .btn-dark,
+    .btn-success,
+    .btn-danger,
+    .btn-primary {
+      border-radius: 5px;
+      transition: all 0.3s;
+    }
+    .btn-dark:hover {
+      background: #34495e;
+    }
+    .btn-success:hover {
+      background: #27ae60;
+    }
+    .btn-danger:hover {
+      background: #c0392b;
+    }
+    .completed-badge {
+      display: inline-block;
+      margin-left: 5px;
+      font-size: 12px;
+      padding: 2px 6px;
+      background: #27ae60;
+      color: white;
+      border-radius: 10px;
+    }
   </style>
 
   <!-- Notification Area -->
@@ -53,13 +101,15 @@
       <div class="row">
         <div class="col-md-6">
           <p><strong>Horas de Estudio Semanal:</strong> {{ encuesta.horasEstudioSemanal || 'No especificado' }}</p>
-          <p><strong>Asistencia:</strong> {{ encuesta.asistencia || 'No especificado' }}</p>
+          <p><strong>Asistencia:</strong> {{ encuesta.asistencia || 'No especificado' }}%</p>
+          <p><strong>Promedio Parciales:</strong> {{ encuesta.promedioParciales || 'No especificado' }}</p>
           <p><strong>Participación en Clases:</strong> {{ encuesta.participacionClases || 'No especificado' }}</p>
-          <p><strong>Uso de Plataforma Virtual:</strong> {{ encuesta.usoPlataformaVirtual || 'No especificado' }}</p>
         </div>
         <div class="col-md-6">
+          <p><strong>Uso de Plataforma Virtual:</strong> {{ encuesta.usoPlataformaVirtual || 'No especificado' }}</p>
           <p><strong>Antecedentes de Pérdida:</strong> {{ encuesta.antecedentesPerdida || 'No especificado' }}</p>
           <p><strong>Carga Académica:</strong> {{ encuesta.cargaAcademica || 'No especificado' }}</p>
+          <p><strong>Perderá Asignatura:</strong> {{ encuesta.perderaAsignatura || 'No especificado' }}</p>
         </div>
       </div>
 
@@ -105,7 +155,8 @@
       <div class="row">
         <div class="col-md-6">
           <label>Problemas Personales</label>
-          <select [(ngModel)]="encuesta.problemasPersonales" class="form-control">
+          <select [(ngModel)]="encuesta.problemasPersonales" class="form-control" required>
+            <option value="">Seleccione</option>
             <option value="Ninguno">Ninguno</option>
             <option value="Leves">Leves</option>
             <option value="Graves">Graves</option>
@@ -113,7 +164,8 @@
           <span class="completed-badge" *ngIf="encuesta.problemasPersonales">1</span>
 
           <label class="mt-2">Confianza</label>
-          <select [(ngModel)]="encuesta.confianza" class="form-control">
+          <select [(ngModel)]="encuesta.confianza" class="form-control" required>
+            <option value="">Seleccione</option>
             <option value="Alta">Alta</option>
             <option value="Media">Media</option>
             <option value="Baja">Baja</option>
@@ -121,7 +173,8 @@
           <span class="completed-badge" *ngIf="encuesta.confianza">1</span>
 
           <label class="mt-2">Estado Emocional</label>
-          <select [(ngModel)]="encuesta.estadoEmocional" class="form-control">
+          <select [(ngModel)]="encuesta.estadoEmocional" class="form-control" required>
+            <option value="">Seleccione</option>
             <option value="Bueno">Bueno</option>
             <option value="Regular">Regular</option>
             <option value="Malo">Malo</option>
@@ -130,7 +183,8 @@
         </div>
         <div class="col-md-6">
           <label>Apoyo Familiar</label>
-          <select [(ngModel)]="encuesta.apoyoFamiliar" class="form-control">
+          <select [(ngModel)]="encuesta.apoyoFamiliar" class="form-control" required>
+            <option value="">Seleccione</option>
             <option value="Bajo">Bajo</option>
             <option value="Medio">Medio</option>
             <option value="Alto">Alto</option>
@@ -138,7 +192,8 @@
           <span class="completed-badge" *ngIf="encuesta.apoyoFamiliar">1</span>
 
           <label class="mt-2">Nivel de Estrés</label>
-          <select [(ngModel)]="encuesta.nivelEstres" class="form-control">
+          <select [(ngModel)]="encuesta.nivelEstres" class="form-control" required>
+            <option value="">Seleccione</option>
             <option value="Alto">Alto</option>
             <option value="Medio">Medio</option>
             <option value="Bajo">Bajo</option>
@@ -146,7 +201,8 @@
           <span class="completed-badge" *ngIf="encuesta.nivelEstres">1</span>
 
           <label class="mt-2">Recibe Ayuda Psicológica</label>
-          <select [(ngModel)]="encuesta.recibeAyudaPsicologica" class="form-control">
+          <select [(ngModel)]="encuesta.recibeAyudaPsicologica" class="form-control" required>
+            <option value="">Seleccione</option>
             <option [ngValue]="true">Sí</option>
             <option [ngValue]="false">No</option>
           </select>
@@ -159,53 +215,55 @@
       <div class="row">
         <div class="col-md-6">
           <label>Horas de Estudio Semanal</label>
-          <select [(ngModel)]="encuesta.horasEstudioSemanal" class="form-control">
-            <option value="Menos de 10">Menos de 10</option>
-            <option value="10-20">10-20</option>
-            <option value="Más de 20">Más de 20</option>
-          </select>
-          <span class="completed-badge" *ngIf="encuesta.horasEstudioSemanal">1</span>
+          <input type="number" [(ngModel)]="encuesta.horasEstudioSemanal" class="form-control" placeholder="Horas" required>
+          <span class="completed-badge" *ngIf="encuesta.horasEstudioSemanal !== null">1</span>
 
           <label class="mt-2">Asistencia</label>
-          <select [(ngModel)]="encuesta.asistencia" class="form-control">
-            <option value="Alta">Alta</option>
-            <option value="Media">Media</option>
-            <option value="Baja">Baja</option>
-          </select>
-          <span class="completed-badge" *ngIf="encuesta.asistencia">1</span>
+          <input type="number" step="0.01" [(ngModel)]="encuesta.asistencia" class="form-control" placeholder="Porcentaje" required>
+          <span class="completed-badge" *ngIf="encuesta.asistencia !== null">1</span>
+
+          <label class="mt-2">Promedio Parciales</label>
+          <input type="number" step="0.01" [(ngModel)]="encuesta.promedioParciales" class="form-control" placeholder="Promedio" required>
+          <span class="completed-badge" *ngIf="encuesta.promedioParciales !== null">1</span>
 
           <label class="mt-2">Participación en Clases</label>
-          <select [(ngModel)]="encuesta.participacionClases" class="form-control">
-            <option value="Alta">Alta</option>
-            <option value="Media">Media</option>
+          <select [(ngModel)]="encuesta.participacionClases" class="form-control" required>
+            <option value="">Seleccione</option>
             <option value="Baja">Baja</option>
+            <option value="Media">Media</option>
+            <option value="Alta">Alta</option>
           </select>
           <span class="completed-badge" *ngIf="encuesta.participacionClases">1</span>
-
-          <label class="mt-2">Uso de Plataforma Virtual</label>
-          <select [(ngModel)]="encuesta.usoPlataformaVirtual" class="form-control">
-            <option value="Frecuente">Frecuente</option>
-            <option value="Ocasional">Ocasional</option>
-            <option value="Nunca">Nunca</option>
-          </select>
-          <span class="completed-badge" *ngIf="encuesta.usoPlataformaVirtual">1</span>
         </div>
         <div class="col-md-6">
-          <label>Antecedentes de Pérdida</label>
-          <select [(ngModel)]="encuesta.antecedentesPerdida" class="form-control">
-            <option value="Ninguno">Ninguno</option>
-            <option value="Una asignatura">Una asignatura</option>
-            <option value="Varias asignaturas">Varias asignaturas</option>
+          <label>Uso de Plataforma Virtual</label>
+          <select [(ngModel)]="encuesta.usoPlataformaVirtual" class="form-control" required>
+            <option value="">Seleccione</option>
+            <option value="Bajo">Bajo</option>
+            <option value="Medio">Medio</option>
+            <option value="Alto">Alto</option>
+          </select>
+          <span class="completed-badge" *ngIf="encuesta.usoPlataformaVirtual">1</span>
+
+          <label class="mt-2">Antecedentes de Pérdida</label>
+          <select [(ngModel)]="encuesta.antecedentesPerdida" class="form-control" required>
+            <option value="">Seleccione</option>
+            <option value="Sí">Sí</option>
+            <option value="No">No</option>
           </select>
           <span class="completed-badge" *ngIf="encuesta.antecedentesPerdida">1</span>
 
           <label class="mt-2">Carga Académica</label>
-          <select [(ngModel)]="encuesta.cargaAcademica" class="form-control">
-            <option value="Alta">Alta</option>
-            <option value="Media">Media</option>
-            <option value="Baja">Baja</option>
+          <input type="number" [(ngModel)]="encuesta.cargaAcademica" class="form-control" placeholder="Materias" required>
+          <span class="completed-badge" *ngIf="encuesta.cargaAcademica !== null">1</span>
+
+          <label class="mt-2">Perderá Asignatura</label>
+          <select [(ngModel)]="encuesta.perderaAsignatura" class="form-control" required>
+            <option value="">Seleccione</option>
+            <option value="tested_positive">Sí</option>
+            <option value="tested_negative">No</option>
           </select>
-          <span class="completed-badge" *ngIf="encuesta.cargaAcademica">1</span>
+          <span class="completed-badge" *ngIf="encuesta.perderaAsignatura">1</span>
         </div>
       </div>
 

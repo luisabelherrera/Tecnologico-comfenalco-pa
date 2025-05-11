@@ -115,11 +115,10 @@
     </div>
     <nav>
       <ul class="mobile-nav-list">
-        <li><a href="#" (click)="toggleMobileMenu()">Inicio</a></li>
-        <li><a href="#features" (click)="scrollToFeatures(); toggleMobileMenu()">Nosotros</a></li>
-        <li><a href="#" (click)="libro(); toggleMobileMenu()">Biblioteca</a></li>
-        <li><a href="#" (click)="accion4(); toggleMobileMenu()">Juegos</a></li>
-        <li><a href="#" (click)="victor(); toggleMobileMenu()">Recursos</a></li>
+        <li><a [routerLink]="'/inicio'" (click)="toggleMobileMenu()">Inicio</a></li>
+        <li><a [routerLink]="'/ventana-informacion-public'" (click)="scrollToFeatures(); toggleMobileMenu()">Institución</a></li>
+        <li><a [routerLink]="'/sedes'"  (click)="libro(); toggleMobileMenu()">Instalaciones</a></li>
+        <li><a [routerLink]="'/consultar-precios'" (click)="accion4(); toggleMobileMenu()">Precios</a></li>
         <li><a (click)="irAOtraVentana(); toggleMobileMenu()" class="btn-login">Iniciar Sesión</a></li>
       </ul>
     </nav>
