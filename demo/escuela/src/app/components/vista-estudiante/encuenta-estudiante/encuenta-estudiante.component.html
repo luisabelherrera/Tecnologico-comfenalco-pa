@@ -99,7 +99,15 @@
               <label for="problemasPersonales" class="form-label text-muted small mb-1">Problemas Personales</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-exclamation-circle"></i></span>
-                <select id="problemasPersonales" class="form-select" formControlName="problemasPersonales" required>
+                <select
+                  id="problemasPersonales"
+                  class="form-select"
+                  formControlName="problemasPersonales"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('problemasPersonales')?.invalid && surveyForm.get('problemasPersonales')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option value="Ninguno">Ninguno</option>
                   <option value="Leves">Leves</option>
@@ -112,7 +120,15 @@
               <label for="confianza" class="form-label text-muted small mb-1">Confianza</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-smile"></i></span>
-                <select id="confianza" class="form-select" formControlName="confianza" required>
+                <select
+                  id="confianza"
+                  class="form-select"
+                  formControlName="confianza"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('confianza')?.invalid && surveyForm.get('confianza')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option value="Alta">Alta</option>
                   <option value="Media">Media</option>
@@ -125,7 +141,15 @@
               <label for="estadoEmocional" class="form-label text-muted small mb-1">Estado Emocional</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-heart"></i></span>
-                <select id="estadoEmocional" class="form-select" formControlName="estadoEmocional" required>
+                <select
+                  id="estadoEmocional"
+                  class="form-select"
+                  formControlName="estadoEmocional"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('estadoEmocional')?.invalid && surveyForm.get('estadoEmocional')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option value="Bueno">Bueno</option>
                   <option value="Regular">Regular</option>
@@ -138,7 +162,15 @@
               <label for="apoyoFamiliar" class="form-label text-muted small mb-1">Apoyo Familiar</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-home"></i></span>
-                <select id="apoyoFamiliar" class="form-select" formControlName="apoyoFamiliar" required>
+                <select
+                  id="apoyoFamiliar"
+                  class="form-select"
+                  formControlName="apoyoFamiliar"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('apoyoFamiliar')?.invalid && surveyForm.get('apoyoFamiliar')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option value="Alto">Alto</option>
                   <option value="Medio">Medio</option>
@@ -151,7 +183,15 @@
               <label for="nivelEstres" class="form-label text-muted small mb-1">Nivel de Estrés</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-burn"></i></span>
-                <select id="nivelEstres" class="form-select" formControlName="nivelEstres" required>
+                <select
+                  id="nivelEstres"
+                  class="form-select"
+                  formControlName="nivelEstres"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('nivelEstres')?.invalid && surveyForm.get('nivelEstres')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option value="Alto">Alto</option>
                   <option value="Medio">Medio</option>
@@ -164,7 +204,15 @@
               <label for="recibeAyudaPsicologica" class="form-label text-muted small mb-1">Recibe Ayuda Psicológica</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-hand-holding-heart"></i></span>
-                <select id="recibeAyudaPsicologica" class="form-select" formControlName="recibeAyudaPsicologica" required>
+                <select
+                  id="recibeAyudaPsicologica"
+                  class="form-select"
+                  formControlName="recibeAyudaPsicologica"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('recibeAyudaPsicologica')?.invalid && surveyForm.get('recibeAyudaPsicologica')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option [ngValue]="true">Sí</option>
                   <option [ngValue]="false">No</option>
@@ -181,7 +229,15 @@
               <label for="horasEstudioSemanal" class="form-label text-muted small mb-1">Horas de Estudio Semanal</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-clock"></i></span>
-                <select id="horasEstudioSemanal" class="form-select" formControlName="horasEstudioSemanal" required>
+                <select
+                  id="horasEstudioSemanal"
+                  class="form-select"
+                  formControlName="horasEstudioSemanal"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('horasEstudioSemanal')?.invalid && surveyForm.get('horasEstudioSemanal')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option value="Menos de 10 horas">Menos de 10 horas</option>
                   <option value="10 a 20 horas">10 a 20 horas</option>
@@ -201,6 +257,9 @@
                   placeholder="Ej: 85"
                   formControlName="asistencia"
                   required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('asistencia')?.invalid && surveyForm.get('asistencia')?.touched
+                  }"
                 />
               </div>
               <div class="invalid-feedback">Asistencia debe estar entre 0 y 100</div>
@@ -209,7 +268,15 @@
               <label for="participacionClases" class="form-label text-muted small mb-1">Participación en Clases</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-comments"></i></span>
-                <select id="participacionClases" class="form-select" formControlName="participacionClases" required>
+                <select
+                  id="participacionClases"
+                  class="form-select"
+                  formControlName="participacionClases"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('participacionClases')?.invalid && surveyForm.get('participacionClases')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option value="Alta">Alta</option>
                   <option value="Media">Media</option>
@@ -222,7 +289,15 @@
               <label for="usoPlataformaVirtual" class="form-label text-muted small mb-1">Uso de Plataforma Virtual</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-laptop"></i></span>
-                <select id="usoPlataformaVirtual" class="form-select" formControlName="usoPlataformaVirtual" required>
+                <select
+                  id="usoPlataformaVirtual"
+                  class="form-select"
+                  formControlName="usoPlataformaVirtual"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('usoPlataformaVirtual')?.invalid && surveyForm.get('usoPlataformaVirtual')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option value="Alto">Alto</option>
                   <option value="Medio">Medio</option>
@@ -235,7 +310,15 @@
               <label for="antecedentesPerdida" class="form-label text-muted small mb-1">Antecedentes de Pérdida</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-history"></i></span>
-                <select id="antecedentesPerdida" class="form-select" formControlName="antecedentesPerdida" required>
+                <select
+                  id="antecedentesPerdida"
+                  class="form-select"
+                  formControlName="antecedentesPerdida"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('antecedentesPerdida')?.invalid && surveyForm.get('antecedentesPerdida')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option value="Sí">Sí</option>
                   <option value="No">No</option>
@@ -247,7 +330,15 @@
               <label for="cargaAcademica" class="form-label text-muted small mb-1">Carga Académica</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-book"></i></span>
-                <select id="cargaAcademica" class="form-select" formControlName="cargaAcademica" required>
+                <select
+                  id="cargaAcademica"
+                  class="form-select"
+                  formControlName="cargaAcademica"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('cargaAcademica')?.invalid && surveyForm.get('cargaAcademica')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option value="Alta">Alta</option>
                   <option value="Media">Media</option>
@@ -272,6 +363,9 @@
                   placeholder="Estrato socioeconómico"
                   formControlName="estrato"
                   required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('estrato')?.invalid && surveyForm.get('estrato')?.touched
+                  }"
                 />
               </div>
               <div class="invalid-feedback">Estrato es requerido</div>
@@ -280,7 +374,15 @@
               <label for="recibeSubsidio" class="form-label text-muted small mb-1">Recibe Subsidio</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-hand-holding-usd"></i></span>
-                <select id="recibeSubsidio" class="form-select" formControlName="recibeSubsidio" required>
+                <select
+                  id="recibeSubsidio"
+                  class="form-select"
+                  formControlName="recibeSubsidio"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('recibeSubsidio')?.invalid && surveyForm.get('recibeSubsidio')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option [ngValue]="true">Sí</option>
                   <option [ngValue]="false">No</option>
@@ -292,7 +394,15 @@
               <label for="tieneAccesoInternet" class="form-label text-muted small mb-1">Tiene Acceso a Internet</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-wifi"></i></span>
-                <select id="tieneAccesoInternet" class="form-select" formControlName="tieneAccesoInternet" required>
+                <select
+                  id="tieneAccesoInternet"
+                  class="form-select"
+                  formControlName="tieneAccesoInternet"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('tieneAccesoInternet')?.invalid && surveyForm.get('tieneAccesoInternet')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option [ngValue]="true">Sí</option>
                   <option [ngValue]="false">No</option>
@@ -304,7 +414,15 @@
               <label for="tieneComputador" class="form-label text-muted small mb-1">Tiene Computador</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-laptop"></i></span>
-                <select id="tieneComputador" class="form-select" formControlName="tieneComputador" required>
+                <select
+                  id="tieneComputador"
+                  class="form-select"
+                  formControlName="tieneComputador"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('tieneComputador')?.invalid && surveyForm.get('tieneComputador')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option [ngValue]="true">Sí</option>
                   <option [ngValue]="false">No</option>
@@ -316,7 +434,15 @@
               <label for="viveConPadres" class="form-label text-muted small mb-1">Vive con Padres</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-home"></i></span>
-                <select id="viveConPadres" class="form-select" formControlName="viveConPadres" required>
+                <select
+                  id="viveConPadres"
+                  class="form-select"
+                  formControlName="viveConPadres"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('viveConPadres')?.invalid && surveyForm.get('viveConPadres')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option [ngValue]="true">Sí</option>
                   <option [ngValue]="false">No</option>
@@ -328,7 +454,15 @@
               <label for="tieneTrabajo" class="form-label text-muted small mb-1">Tiene Trabajo</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
-                <select id="tieneTrabajo" class="form-select" formControlName="tieneTrabajo" required>
+                <select
+                  id="tieneTrabajo"
+                  class="form-select"
+                  formControlName="tieneTrabajo"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('tieneTrabajo')?.invalid && surveyForm.get('tieneTrabajo')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option [ngValue]="true">Sí</option>
                   <option [ngValue]="false">No</option>
@@ -347,6 +481,9 @@
                   class="form-control"
                   placeholder="Ingresos mensuales"
                   formControlName="ingresosFamiliares"
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('ingresosFamiliares')?.invalid && surveyForm.get('ingresosFamiliares')?.touched
+                  }"
                 />
               </div>
               <div class="invalid-feedback">Ingresos deben ser un número positivo</div>
@@ -360,7 +497,15 @@
               <label for="poseeReciboLuz" class="form-label text-muted small mb-1">Posee Recibo de Luz</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-lightbulb"></i></span>
-                <select id="poseeReciboLuz" class="form-select" formControlName="poseeReciboLuz" required>
+                <select
+                  id="poseeReciboLuz"
+                  class="form-select"
+                  formControlName="poseeReciboLuz"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('poseeReciboLuz')?.invalid && surveyForm.get('poseeReciboLuz')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option [ngValue]="true">Sí</option>
                   <option [ngValue]="false">No</option>
@@ -372,7 +517,15 @@
               <label for="poseeReciboAgua" class="form-label text-muted small mb-1">Posee Recibo de Agua</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-tint"></i></span>
-                <select id="poseeReciboAgua" class="form-select" formControlName="poseeReciboAgua" required>
+                <select
+                  id="poseeReciboAgua"
+                  class="form-select"
+                  formControlName="poseeReciboAgua"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('poseeReciboAgua')?.invalid && surveyForm.get('poseeReciboAgua')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option [ngValue]="true">Sí</option>
                   <option [ngValue]="false">No</option>
@@ -384,7 +537,15 @@
               <label for="poseeReciboGas" class="form-label text-muted small mb-1">Posee Recibo de Gas</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-fire"></i></span>
-                <select id="poseeReciboGas" class="form-select" formControlName="poseeReciboGas" required>
+                <select
+                  id="poseeReciboGas"
+                  class="form-select"
+                  formControlName="poseeReciboGas"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('poseeReciboGas')?.invalid && surveyForm.get('poseeReciboGas')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option [ngValue]="true">Sí</option>
                   <option [ngValue]="false">No</option>
@@ -396,7 +557,15 @@
               <label for="tieneSisben" class="form-label text-muted small mb-1">Tiene Sisben</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-file-medical"></i></span>
-                <select id="tieneSisben" class="form-select" formControlName="tieneSisben" required>
+                <select
+                  id="tieneSisben"
+                  class="form-select"
+                  formControlName="tieneSisben"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('tieneSisben')?.invalid && surveyForm.get('tieneSisben')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option [ngValue]="true">Sí</option>
                   <option [ngValue]="false">No</option>
@@ -408,7 +577,15 @@
               <label for="tieneSeguroMedico" class="form-label text-muted small mb-1">Tiene Seguro Médico</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-shield-alt"></i></span>
-                <select id="tieneSeguroMedico" class="form-select" formControlName="tieneSeguroMedico" required>
+                <select
+                  id="tieneSeguroMedico"
+                  class="form-select"
+                  formControlName="tieneSeguroMedico"
+                  required
+                  [ngClass]="{
+                    'is-invalid': surveyForm.get('tieneSeguroMedico')?.invalid && surveyForm.get('tieneSeguroMedico')?.touched
+                  }"
+                >
                   <option value="" disabled>Seleccione...</option>
                   <option [ngValue]="true">Sí</option>
                   <option [ngValue]="false">No</option>
@@ -420,7 +597,7 @@
 
           <!-- Botones -->
           <div class="text-center mt-4">
-            <button type="submit" class="btn btn-success btn-custom btn-lg" [disabled]="!surveyForm.valid">
+            <button type="submit" class="btn btn-success btn-custom btn-lg" [disabled]="surveyForm.invalid">
               <i class="fas fa-save me-2"></i> Guardar
             </button>
             <button type="button" class="btn btn-danger btn-custom btn-lg ms-2" (click)="editando = false">
