@@ -204,14 +204,14 @@
 </select>
 <span class="completed-badge" *ngIf="encuesta.antecedentesPerdida">1</span>
 
+<label class="mt-2">Carga Académica</label>
+<select [(ngModel)]="encuesta.cargaAcademica" class="form-control">
+  <option [value]="9">Alta</option>
+  <option [value]="6">Media</option>
+  <option [value]="3">Baja</option>
+</select>
+<span class="completed-badge" *ngIf="encuesta.cargaAcademica">1</span>
 
-          <label class="mt-2">Carga Académica</label>
-          <select [(ngModel)]="encuesta.cargaAcademica" class="form-control">
-            <option value="Alta">Alta</option>
-            <option value="Media">Media</option>
-            <option value="Baja">Baja</option>
-          </select>
-          <span class="completed-badge" *ngIf="encuesta.cargaAcademica">1</span>
         </div>
       </div>
 
