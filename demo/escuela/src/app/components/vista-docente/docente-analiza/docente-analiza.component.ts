@@ -17,7 +17,7 @@ import { CalificacionService } from 'src/app/services/calificacion/calificacion.
 import { WekaEstudiantesComponent } from './estudiante-weka/weka-estudiantes/weka-estudiantes.component';
 import { MaterialDocenteComponent } from './docente-crea-material/material-docente/material-docente.component';
 import { EncuestaEstudianteService } from 'src/app/services/encuentasEstudiante/EncuestaEstudiante.service';
-import * as XLSX from 'xlsx';
+
 interface EstudiantePrediccion {
   estudiante: Estudiante;
   prediccion?: string;
@@ -250,7 +250,7 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
   async loadHistorialPredicciones(): Promise<void> {
     const headers = this.getHeaders();
     try {
-      const historial = await this.http.get<DatosEstudiante[]>('https://just-tenderness-production.up.railway.app/api/historial', { headers }).toPromise();
+      const historial = await this.http.get<DatosEstudiante[]>('http://localhost:9098/api/historial', { headers }).toPromise();
       console.log('Historial recibido del backend:', historial);
       this.historialPredicciones = historial || [];
     } catch (error) {
@@ -359,25 +359,7 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
     }
     return age;
   }
-exportToExcel(): void {
-  if (!this.selectedCurricular || !this.dataSource.data.length) {
-    this.snackBar.open('No hay datos para exportar.', 'Cerrar', { duration: 5000 });
-    return;
-  }
 
-  const data = this.dataSource.data.map((item) => ({
-    Estudiante: `${item.estudiante.nombres} ${item.estudiante.apellidos}`,
-    Documento: item.estudiante.documentoIdentidad,
-    Nota: item.nota !== undefined ? item.nota.toFixed(2) : 'N/A',
-    Predicción: item.prediccion === 'tested_positive' ? 'Necesita Ayuda' : item.prediccion === 'tested_negative' ? 'Tiene Posibilidades de Ganar' : 'Sin predecir',
-    Confianza: item.confianza ? `${(item.confianza * 100).toFixed(1)}%` : '-'
-  }));
-
-  const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
-  const wb: XLSX.WorkBook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Estudiantes');
-  XLSX.writeFile(wb, `Estudiantes_${this.selectedCurricular?.descripcion || 'Curricular'}.xlsx`);
-}
   enviarDatos(): void {
     if (this.studentForm.valid && this.selectedCurricular) {
       const datos = this.studentForm.value;
@@ -391,7 +373,7 @@ exportToExcel(): void {
         nota: estudiantePred?.nota !== undefined ? estudiantePred.nota : null
       };
 
-      this.http.post('https://just-tenderness-production.up.railway.app/api/predecir', datosCompletos, { headers }).subscribe({
+      this.http.post('http://localhost:9098/api/predecir', datosCompletos, { headers }).subscribe({
         next: (response: any) => {
           this.resultado = `Resultado: ${response.prediccion} (Confianza: ${response.confianza})`;
           if (estudiantePred) {
