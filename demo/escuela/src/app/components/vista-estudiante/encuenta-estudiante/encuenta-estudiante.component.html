@@ -183,22 +183,23 @@
           </select>
           <span class="completed-badge" *ngIf="encuesta.participacionClases">1</span>
 
-          <label class="mt-2">Uso de Plataforma Virtual</label>
-          <select [(ngModel)]="encuesta.usoPlataformaVirtual" class="form-control">
-            <option value="Frecuente">Frecuente</option>
-            <option value="Ocasional">Ocasional</option>
-            <option value="Nunca">Nunca</option>
-          </select>
-          <span class="completed-badge" *ngIf="encuesta.usoPlataformaVirtual">1</span>
+  <label class="mt-2">Uso de Plataforma Virtual</label>
+<select [(ngModel)]="encuesta.usoPlataformaVirtual" class="form-control">
+  <option value="Bajo">Bajo</option>
+  <option value="Medio">Medio</option>
+  <option value="Alto">Alto</option>
+</select>
+<span class="completed-badge" *ngIf="encuesta.usoPlataformaVirtual">1</span>
+
         </div>
         <div class="col-md-6">
-          <label>Antecedentes de Pérdida</label>
-          <select [(ngModel)]="encuesta.antecedentesPerdida" class="form-control">
-            <option value="Ninguno">Ninguno</option>
-            <option value="Una asignatura">Una asignatura</option>
-            <option value="Varias asignaturas">Varias asignaturas</option>
-          </select>
-          <span class="completed-badge" *ngIf="encuesta.antecedentesPerdida">1</span>
+   <label>Antecedentes de Pérdida</label>
+<select [(ngModel)]="encuesta.antecedentesPerdida" class="form-control">
+  <option value="Sí">Sí</option>
+  <option value="No">No</option>
+</select>
+<span class="completed-badge" *ngIf="encuesta.antecedentesPerdida">1</span>
+
 
           <label class="mt-2">Carga Académica</label>
           <select [(ngModel)]="encuesta.cargaAcademica" class="form-control">
