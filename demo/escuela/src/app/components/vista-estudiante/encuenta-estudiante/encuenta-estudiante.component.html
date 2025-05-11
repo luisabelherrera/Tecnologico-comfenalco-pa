@@ -1,23 +1,38 @@
 <div class="encuesta-container" *ngIf="estudiante?.estudiante">
-  <!-- Notification Area -->
-  <div class="alert alert-success" *ngIf="mensajeExito" role="alert">
-    {{ mensajeExito }}
-    <button type="button" class="btn-close float-end" (click)="cerrarMensajes()"></button>
-  </div>
-  <div class="alert alert-danger" *ngIf="mensajeError" role="alert">
-    {{ mensajeError }}
-    <button type="button" class="btn-close float-end" (click)="cerrarMensajes()"></button>
-  </div>
-
-  <div class="encuesta-header">
-    <h2><i class="fas fa-poll"></i> Encuesta del Estudiante</h2>
-    <p>Estudiante: {{ estudiante.estudiante.nombres }} {{ estudiante.estudiante.apellidos }}</p>
-  </div>
-
-  <div class="encuesta-body">
-    <!-- Vista de solo lectura -->
-    <div class="info card shadow-sm" *ngIf="!editando && encuesta">
-      <div class="card-body">
+    <!-- Estilos inline (mover a .scss en producción) -->
+    <style>
+      .encuesta-container { max-width: 900px; margin: 0 auto; padding: 20px; background: #f9f9f9; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+      .encuesta-header { text-align: center; margin-bottom: 20px; }
+      .encuesta-header h2 { color: #2c3e50; font-weight: bold; }
+      .encuesta-body h3 { color: #2980b9; border-bottom: 2px solid #3498db; padding-bottom: 5px; margin-bottom: 15px; }
+      .info { background: white; padding: 20px; border-radius: 8px; }
+      .edit-mode { border: 1px solid #ddd; padding: 20px; background: #fff; }
+      .form-control { border-radius: 5px; }
+      .btn-dark, .btn-success, .btn-danger, .btn-primary { border-radius: 5px; transition: all 0.3s; }
+      .btn-dark:hover { background: #34495e; }
+      .btn-success:hover { background: #27ae60; }
+      .btn-danger:hover { background: #c0392b; }
+      .completed-badge { display: inline-block; margin-left: 5px; font-size: 12px; padding: 2px 6px; background: #27ae60; color: white; border-radius: 10px; }
+    </style>
+  
+    <!-- Notification Area -->
+    <div class="alert alert-success" *ngIf="mensajeExito" role="alert">
+      {{ mensajeExito }}
+      <button type="button" class="btn-close float-end" (click)="cerrarMensajes()"></button>
+    </div>
+    <div class="alert alert-danger" *ngIf="mensajeError" role="alert">
+      {{ mensajeError }}
+      <button type="button" class="btn-close float-end" (click)="cerrarMensajes()"></button>
+    </div>
+  
+    <div class="encuesta-header">
+      <h2><i class="fas fa-poll"></i> Encuesta del Estudiante</h2>
+      <p>Estudiante: {{ estudiante.estudiante.nombres }} {{ estudiante.estudiante.apellidos }}</p>
+    </div>
+  
+    <div class="encuesta-body">
+      <!-- Vista de solo lectura -->
+      <div class="info" *ngIf="!editando && encuesta">
         <!-- Información emocional/personal -->
         <h3>Información Emocional/Personal</h3>
         <div class="row">
@@ -32,22 +47,7 @@
             <p><strong>Recibe Ayuda Psicológica:</strong> {{ encuesta.recibeAyudaPsicologica ? 'Sí' : 'No' }}</p>
           </div>
         </div>
-
-        <!-- Información académica -->
-        <h3 class="mt-4">Información Académica</h3>
-        <div class="row">
-          <div class="col-md-6">
-            <p><strong>Horas de Estudio Semanal:</strong> {{ encuesta.horasEstudioSemanal || 'No especificado' }}</p>
-            <p><strong>Asistencia:</strong> {{ encuesta.asistencia || 'No especificado' }}%</p>
-            <p><strong>Participación en Clases:</strong> {{ encuesta.participacionClases || 'No especificado' }}</p>
-          </div>
-          <div class="col-md-6">
-            <p><strong>Uso de Plataforma Virtual:</strong> {{ encuesta.usoPlataformaVirtual || 'No especificado' }}</p>
-            <p><strong>Antecedentes de Pérdida:</strong> {{ encuesta.antecedentesPerdida || 'No especificado' }}</p>
-            <p><strong>Carga Académica:</strong> {{ encuesta.cargaAcademica || 'No especificado' }}</p>
-          </div>
-        </div>
-
+  
         <!-- Información socioeconómica -->
         <h3 class="mt-4">Información Socioeconómica</h3>
         <div class="row">
@@ -63,7 +63,7 @@
             <p><strong>Ingresos Familiares:</strong> {{ encuesta.ingresosFamiliares || 'No especificado' }}</p>
           </div>
         </div>
-
+  
         <!-- Comprobantes y documentación -->
         <h3 class="mt-4">Comprobantes y Documentación</h3>
         <div class="row">
@@ -77,541 +77,175 @@
             <p><strong>Tiene Seguro Médico:</strong> {{ encuesta.tieneSeguroMedico ? 'Sí' : 'No' }}</p>
           </div>
         </div>
-      </div>
-      <div class="card-footer text-center">
-        <button class="btn btn-dark btn-custom" (click)="habilitarEdicion()">
+  
+        <button class="btn btn-dark mt-3" (click)="habilitarEdicion()">
           <i class="fas fa-edit"></i> {{ encuesta.id ? 'Actualizar Encuesta' : 'Completar Encuesta' }}
         </button>
       </div>
-    </div>
-
-    <!-- Modo edición -->
-    <div class="info card shadow-sm edit-mode" *ngIf="editando">
-      <div class="card-header bg-gradient-info text-white text-center">
-        <h3 class="h5 mb-0">Editar Encuesta</h3>
+  
+      <!-- Modo edición -->
+      <div class="info edit-mode" *ngIf="editando">
+        <!-- Información emocional/personal -->
+        <h3>Información Emocional/Personal</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <label>Problemas Personales</label>
+                <select [(ngModel)]="encuesta.problemasPersonales" class="form-control">
+                    <option value="Ninguno">Ninguno</option>
+                    <option value="Leves">Leves</option>
+                    <option value="Graves">Graves</option>
+                </select>
+                <span class="completed-badge" *ngIf="encuesta.problemasPersonales">1</span>
+            
+                <!-- Resto del código sigue igual -->
+                <label class="mt-2">Confianza</label>
+                <select [(ngModel)]="encuesta.confianza" class="form-control">
+                    <option value="Alta">Alta</option>
+                    <option value="Media">Media</option>
+                    <option value="Baja">Baja</option>
+                </select>
+                <span class="completed-badge" *ngIf="encuesta.confianza">1</span>
+            
+                <label class="mt-2">Estado Emocional</label>
+                <select [(ngModel)]="encuesta.estadoEmocional" class="form-control">
+                    <option value="Bueno">Bueno</option>
+                    <option value="Regular">Regular</option>
+                    <option value="Malo">Malo</option>
+                </select>
+                <span class="completed-badge" *ngIf="encuesta.estadoEmocional">1</span>
+            </div>
+          <div class="col-md-6">
+            <label>Apoyo Familiar</label>
+    <select [(ngModel)]="encuesta.apoyoFamiliar" class="form-control">
+        <option value="Bajo">Bajo</option>
+        <option value="Medio">Medio</option>
+        <option value="Alto">Alto</option>
+    </select>
+    <span class="completed-badge" *ngIf="encuesta.apoyoFamiliar">1</span>
+  
+            <label class="mt-2">Nivel de Estrés</label>
+            <select [(ngModel)]="encuesta.nivelEstres" class="form-control">
+              <option value="Alto">Alto</option>
+              <option value="Medio">Medio</option>
+              <option value="Bajo">Bajo</option>
+            </select>
+            <span class="completed-badge" *ngIf="encuesta.nivelEstres">1</span>
+  
+            <label class="mt-2">Recibe Ayuda Psicológica</label>
+            <select [(ngModel)]="encuesta.recibeAyudaPsicologica" class="form-control">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+            <span class="completed-badge" *ngIf="encuesta.recibeAyudaPsicologica !== null">1</span>
+          </div>
+        </div>
+  
+        <!-- Información socioeconómica -->
+        <h3 class="mt-4">Información Socioeconómica</h3>
+        <div class="row">
+          <div class="col-md-6">
+            <label>Estrato</label>
+            <input type="text" [(ngModel)]="encuesta.estrato" class="form-control" placeholder="Estrato socioeconómico">
+            <span class="completed-badge" *ngIf="encuesta.estrato">1</span>
+  
+            <label class="mt-2">Recibe Subsidio</label>
+            <select [(ngModel)]="encuesta.recibeSubsidio" class="form-control">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+            <span class="completed-badge" *ngIf="encuesta.recibeSubsidio !== null">1</span>
+  
+            <label class="mt-2">Tiene Acceso a Internet</label>
+            <select [(ngModel)]="encuesta.tieneAccesoInternet" class="form-control">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+            <span class="completed-badge" *ngIf="encuesta.tieneAccesoInternet !== null">1</span>
+  
+            <label class="mt-2">Tiene Computador</label>
+            <select [(ngModel)]="encuesta.tieneComputador" class="form-control">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+            <span class="completed-badge" *ngIf="encuesta.tieneComputador !== null">1</span>
+          </div>
+          <div class="col-md-6">
+            <label>Vive con Padres</label>
+            <select [(ngModel)]="encuesta.viveConPadres" class="form-control">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+            <span class="completed-badge" *ngIf="encuesta.viveConPadres !== null">1</span>
+  
+            <label class="mt-2">Tiene Trabajo</label>
+            <select [(ngModel)]="encuesta.tieneTrabajo" class="form-control">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+            <span class="completed-badge" *ngIf="encuesta.tieneTrabajo !== null">1</span>
+  
+            <label class="mt-2">Ingresos Familiares</label>
+            <input type="number" [(ngModel)]="encuesta.ingresosFamiliares" class="form-control" placeholder="Ingresos mensuales">
+            <span class="completed-badge" *ngIf="encuesta.ingresosFamiliares !== null">1</span>
+          </div>
+        </div>
+  
+        <!-- Comprobantes y documentación -->
+        <h3 class="mt-4">Comprobantes y Documentación</h3>
+        <div class="row">
+          <div class="col-md-6">
+            <label>Posee Recibo de Luz</label>
+            <select [(ngModel)]="encuesta.poseeReciboLuz" class="form-control">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+            <span class="completed-badge" *ngIf="encuesta.poseeReciboLuz !== null">1</span>
+  
+            <label class="mt-2">Posee Recibo de Agua</label>
+            <select [(ngModel)]="encuesta.poseeReciboAgua" class="form-control">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+            <span class="completed-badge" *ngIf="encuesta.poseeReciboAgua !== null">1</span>
+  
+            <label class="mt-2">Posee Recibo de Gas</label>
+            <select [(ngModel)]="encuesta.poseeReciboGas" class="form-control">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+            <span class="completed-badge" *ngIf="encuesta.poseeReciboGas !== null">1</span>
+          </div>
+          <div class="col-md-6">
+            <label>Tiene Sisben</label>
+            <select [(ngModel)]="encuesta.tieneSisben" class="form-control">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+            <span class="completed-badge" *ngIf="encuesta.tieneSisben !== null">1</span>
+  
+            <label class="mt-2">Tiene Seguro Médico</label>
+            <select [(ngModel)]="encuesta.tieneSeguroMedico" class="form-control">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+            <span class="completed-badge" *ngIf="encuesta.tieneSeguroMedico !== null">1</span>
+          </div>
+        </div>
+  
+        <div class="text-end mt-3">
+          <button class="btn btn-success me-2" (click)="guardarCambios()">
+            <i class="fas fa-save"></i> Guardar
+          </button>
+          <button class="btn btn-danger" (click)="editando = false">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+        </div>
       </div>
-      <div class="card-body">
-        <form [formGroup]="surveyForm" (ngSubmit)="guardarCambios()" class="needs-validation" novalidate>
-          <!-- Información emocional/personal -->
-          <h3>Información Emocional/Personal</h3>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label for="problemasPersonales" class="form-label text-muted small mb-1">Problemas Personales</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-exclamation-circle"></i></span>
-                <select
-                  id="problemasPersonales"
-                  class="form-select"
-                  formControlName="problemasPersonales"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('problemasPersonales')?.invalid && surveyForm.get('problemasPersonales')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option value="Ninguno">Ninguno</option>
-                  <option value="Leves">Leves</option>
-                  <option value="Graves">Graves</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Problemas Personales son requeridos</div>
-            </div>
-            <div class="col-md-6">
-              <label for="confianza" class="form-label text-muted small mb-1">Confianza</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-smile"></i></span>
-                <select
-                  id="confianza"
-                  class="form-select"
-                  formControlName="confianza"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('confianza')?.invalid && surveyForm.get('confianza')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option value="Alta">Alta</option>
-                  <option value="Media">Media</option>
-                  <option value="Baja">Baja</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Confianza es requerida</div>
-            </div>
-            <div class="col-md-6">
-              <label for="estadoEmocional" class="form-label text-muted small mb-1">Estado Emocional</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-heart"></i></span>
-                <select
-                  id="estadoEmocional"
-                  class="form-select"
-                  formControlName="estadoEmocional"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('estadoEmocional')?.invalid && surveyForm.get('estadoEmocional')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option value="Bueno">Bueno</option>
-                  <option value="Regular">Regular</option>
-                  <option value="Malo">Malo</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Estado Emocional es requerido</div>
-            </div>
-            <div class="col-md-6">
-              <label for="apoyoFamiliar" class="form-label text-muted small mb-1">Apoyo Familiar</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-home"></i></span>
-                <select
-                  id="apoyoFamiliar"
-                  class="form-select"
-                  formControlName="apoyoFamiliar"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('apoyoFamiliar')?.invalid && surveyForm.get('apoyoFamiliar')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option value="Alto">Alto</option>
-                  <option value="Medio">Medio</option>
-                  <option value="Bajo">Bajo</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Apoyo Familiar es requerido</div>
-            </div>
-            <div class="col-md-6">
-              <label for="nivelEstres" class="form-label text-muted small mb-1">Nivel de Estrés</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-burn"></i></span>
-                <select
-                  id="nivelEstres"
-                  class="form-select"
-                  formControlName="nivelEstres"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('nivelEstres')?.invalid && surveyForm.get('nivelEstres')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option value="Alto">Alto</option>
-                  <option value="Medio">Medio</option>
-                  <option value="Bajo">Bajo</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Nivel de Estrés es requerido</div>
-            </div>
-            <div class="col-md-6">
-              <label for="recibeAyudaPsicologica" class="form-label text-muted small mb-1">Recibe Ayuda Psicológica</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-hand-holding-heart"></i></span>
-                <select
-                  id="recibeAyudaPsicologica"
-                  class="form-select"
-                  formControlName="recibeAyudaPsicologica"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('recibeAyudaPsicologica')?.invalid && surveyForm.get('recibeAyudaPsicologica')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option [ngValue]="true">Sí</option>
-                  <option [ngValue]="false">No</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Este campo es requerido</div>
-            </div>
-          </div>
-
-          <!-- Información académica -->
-          <h3 class="mt-4">Información Académica</h3>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label for="horasEstudioSemanal" class="form-label text-muted small mb-1">Horas de Estudio Semanal</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-clock"></i></span>
-                <select
-                  id="horasEstudioSemanal"
-                  class="form-select"
-                  formControlName="horasEstudioSemanal"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('horasEstudioSemanal')?.invalid && surveyForm.get('horasEstudioSemanal')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option value="Menos de 10 horas">Menos de 10 horas</option>
-                  <option value="10 a 20 horas">10 a 20 horas</option>
-                  <option value="Más de 20 horas">Más de 20 horas</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Horas de Estudio son requeridas</div>
-            </div>
-            <div class="col-md-6">
-              <label for="asistencia" class="form-label text-muted small mb-1">Asistencia (%)</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-check-circle"></i></span>
-                <input
-                  id="asistencia"
-                  type="number"
-                  class="form-control"
-                  placeholder="Ej: 85"
-                  formControlName="asistencia"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('asistencia')?.invalid && surveyForm.get('asistencia')?.touched
-                  }"
-                />
-              </div>
-              <div class="invalid-feedback">Asistencia debe estar entre 0 y 100</div>
-            </div>
-            <div class="col-md-6">
-              <label for="participacionClases" class="form-label text-muted small mb-1">Participación en Clases</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-comments"></i></span>
-                <select
-                  id="participacionClases"
-                  class="form-select"
-                  formControlName="participacionClases"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('participacionClases')?.invalid && surveyForm.get('participacionClases')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option value="Alta">Alta</option>
-                  <option value="Media">Media</option>
-                  <option value="Baja">Baja</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Participación es requerida</div>
-            </div>
-            <div class="col-md-6">
-              <label for="usoPlataformaVirtual" class="form-label text-muted small mb-1">Uso de Plataforma Virtual</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-laptop"></i></span>
-                <select
-                  id="usoPlataformaVirtual"
-                  class="form-select"
-                  formControlName="usoPlataformaVirtual"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('usoPlataformaVirtual')?.invalid && surveyForm.get('usoPlataformaVirtual')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option value="Alto">Alto</option>
-                  <option value="Medio">Medio</option>
-                  <option value="Bajo">Bajo</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Uso de Plataforma es requerido</div>
-            </div>
-            <div class="col-md-6">
-              <label for="antecedentesPerdida" class="form-label text-muted small mb-1">Antecedentes de Pérdida</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-history"></i></span>
-                <select
-                  id="antecedentesPerdida"
-                  class="form-select"
-                  formControlName="antecedentesPerdida"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('antecedentesPerdida')?.invalid && surveyForm.get('antecedentesPerdida')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option value="Sí">Sí</option>
-                  <option value="No">No</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Antecedentes son requeridos</div>
-            </div>
-            <div class="col-md-6">
-              <label for="cargaAcademica" class="form-label text-muted small mb-1">Carga Académica</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-book"></i></span>
-                <select
-                  id="cargaAcademica"
-                  class="form-select"
-                  formControlName="cargaAcademica"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('cargaAcademica')?.invalid && surveyForm.get('cargaAcademica')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option value="Alta">Alta</option>
-                  <option value="Media">Media</option>
-                  <option value="Baja">Baja</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Carga Académica es requerida</div>
-            </div>
-          </div>
-
-          <!-- Información socioeconómica -->
-          <h3 class="mt-4">Información Socioeconómica</h3>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label for="estrato" class="form-label text-muted small mb-1">Estrato</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-city"></i></span>
-                <input
-                  id="estrato"
-                  type="text"
-                  class="form-control"
-                  placeholder="Estrato socioeconómico"
-                  formControlName="estrato"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('estrato')?.invalid && surveyForm.get('estrato')?.touched
-                  }"
-                />
-              </div>
-              <div class="invalid-feedback">Estrato es requerido</div>
-            </div>
-            <div class="col-md-6">
-              <label for="recibeSubsidio" class="form-label text-muted small mb-1">Recibe Subsidio</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-hand-holding-usd"></i></span>
-                <select
-                  id="recibeSubsidio"
-                  class="form-select"
-                  formControlName="recibeSubsidio"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('recibeSubsidio')?.invalid && surveyForm.get('recibeSubsidio')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option [ngValue]="true">Sí</option>
-                  <option [ngValue]="false">No</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Este campo es requerido</div>
-            </div>
-            <div class="col-md-6">
-              <label for="tieneAccesoInternet" class="form-label text-muted small mb-1">Tiene Acceso a Internet</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-wifi"></i></span>
-                <select
-                  id="tieneAccesoInternet"
-                  class="form-select"
-                  formControlName="tieneAccesoInternet"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('tieneAccesoInternet')?.invalid && surveyForm.get('tieneAccesoInternet')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option [ngValue]="true">Sí</option>
-                  <option [ngValue]="false">No</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Este campo es requerido</div>
-            </div>
-            <div class="col-md-6">
-              <label for="tieneComputador" class="form-label text-muted small mb-1">Tiene Computador</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-laptop"></i></span>
-                <select
-                  id="tieneComputador"
-                  class="form-select"
-                  formControlName="tieneComputador"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('tieneComputador')?.invalid && surveyForm.get('tieneComputador')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option [ngValue]="true">Sí</option>
-                  <option [ngValue]="false">No</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Este campo es requerido</div>
-            </div>
-            <div class="col-md-6">
-              <label for="viveConPadres" class="form-label text-muted small mb-1">Vive con Padres</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-home"></i></span>
-                <select
-                  id="viveConPadres"
-                  class="form-select"
-                  formControlName="viveConPadres"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('viveConPadres')?.invalid && surveyForm.get('viveConPadres')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option [ngValue]="true">Sí</option>
-                  <option [ngValue]="false">No</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Este campo es requerido</div>
-            </div>
-            <div class="col-md-6">
-              <label for="tieneTrabajo" class="form-label text-muted small mb-1">Tiene Trabajo</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
-                <select
-                  id="tieneTrabajo"
-                  class="form-select"
-                  formControlName="tieneTrabajo"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('tieneTrabajo')?.invalid && surveyForm.get('tieneTrabajo')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option [ngValue]="true">Sí</option>
-                  <option [ngValue]="false">No</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Este campo es requerido</div>
-            </div>
-            <div class="col-md-6">
-              <label for="ingresosFamiliares" class="form-label text-muted small mb-1">Ingresos Familiares</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                <input
-                  id="ingresosFamiliares"
-                  type="number"
-                  step="0.01"
-                  class="form-control"
-                  placeholder="Ingresos mensuales"
-                  formControlName="ingresosFamiliares"
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('ingresosFamiliares')?.invalid && surveyForm.get('ingresosFamiliares')?.touched
-                  }"
-                />
-              </div>
-              <div class="invalid-feedback">Ingresos deben ser un número positivo</div>
-            </div>
-          </div>
-
-          <!-- Comprobantes y documentación -->
-          <h3 class="mt-4">Comprobantes y Documentación</h3>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label for="poseeReciboLuz" class="form-label text-muted small mb-1">Posee Recibo de Luz</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-lightbulb"></i></span>
-                <select
-                  id="poseeReciboLuz"
-                  class="form-select"
-                  formControlName="poseeReciboLuz"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('poseeReciboLuz')?.invalid && surveyForm.get('poseeReciboLuz')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option [ngValue]="true">Sí</option>
-                  <option [ngValue]="false">No</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Este campo es requerido</div>
-            </div>
-            <div class="col-md-6">
-              <label for="poseeReciboAgua" class="form-label text-muted small mb-1">Posee Recibo de Agua</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-tint"></i></span>
-                <select
-                  id="poseeReciboAgua"
-                  class="form-select"
-                  formControlName="poseeReciboAgua"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('poseeReciboAgua')?.invalid && surveyForm.get('poseeReciboAgua')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option [ngValue]="true">Sí</option>
-                  <option [ngValue]="false">No</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Este campo es requerido</div>
-            </div>
-            <div class="col-md-6">
-              <label for="poseeReciboGas" class="form-label text-muted small mb-1">Posee Recibo de Gas</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-fire"></i></span>
-                <select
-                  id="poseeReciboGas"
-                  class="form-select"
-                  formControlName="poseeReciboGas"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('poseeReciboGas')?.invalid && surveyForm.get('poseeReciboGas')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option [ngValue]="true">Sí</option>
-                  <option [ngValue]="false">No</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Este campo es requerido</div>
-            </div>
-            <div class="col-md-6">
-              <label for="tieneSisben" class="form-label text-muted small mb-1">Tiene Sisben</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-file-medical"></i></span>
-                <select
-                  id="tieneSisben"
-                  class="form-select"
-                  formControlName="tieneSisben"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('tieneSisben')?.invalid && surveyForm.get('tieneSisben')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option [ngValue]="true">Sí</option>
-                  <option [ngValue]="false">No</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Este campo es requerido</div>
-            </div>
-            <div class="col-md-6">
-              <label for="tieneSeguroMedico" class="form-label text-muted small mb-1">Tiene Seguro Médico</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-shield-alt"></i></span>
-                <select
-                  id="tieneSeguroMedico"
-                  class="form-select"
-                  formControlName="tieneSeguroMedico"
-                  required
-                  [ngClass]="{
-                    'is-invalid': surveyForm.get('tieneSeguroMedico')?.invalid && surveyForm.get('tieneSeguroMedico')?.touched
-                  }"
-                >
-                  <option value="" disabled>Seleccione...</option>
-                  <option [ngValue]="true">Sí</option>
-                  <option [ngValue]="false">No</option>
-                </select>
-              </div>
-              <div class="invalid-feedback">Este campo es requerido</div>
-            </div>
-          </div>
-
-          <!-- Botones -->
-          <div class="text-center mt-4">
-            <button type="submit" class="btn btn-success btn-custom btn-lg" [disabled]="surveyForm.invalid">
-              <i class="fas fa-save me-2"></i> Guardar
-            </button>
-            <button type="button" class="btn btn-danger btn-custom btn-lg ms-2" (click)="editando = false">
-              <i class="fas fa-times me-2"></i> Cancelar
-            </button>
-          </div>
-        </form>
+  
+      <!-- Mensaje si no hay encuesta -->
+      <div class="alert alert-info" *ngIf="!encuesta && !editando">
+        No hay encuesta registrada para este estudiante.
+        <button class="btn btn-primary mt-2" (click)="habilitarEdicion()">Completar Encuesta</button>
       </div>
-    </div>
-
-    <!-- Mensaje si no hay encuesta -->
-    <div class="alert alert-info" *ngIf="!encuesta && !editando">
-      No hay encuesta registrada para este estudiante.
-      <button class="btn btn-primary mt-2" (click)="habilitarEdicion()">Completar Encuesta</button>
     </div>
   </div>
-</div>
