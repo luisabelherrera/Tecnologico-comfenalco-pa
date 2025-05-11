@@ -17,8 +17,6 @@ import { CalificacionService } from 'src/app/services/calificacion/calificacion.
 import { WekaEstudiantesComponent } from './estudiante-weka/weka-estudiantes/weka-estudiantes.component';
 import { MaterialDocenteComponent } from './docente-crea-material/material-docente/material-docente.component';
 import { EncuestaEstudianteService } from 'src/app/services/encuentasEstudiante/EncuestaEstudiante.service';
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
 
 interface EstudiantePrediccion {
   estudiante: Estudiante;
@@ -124,13 +122,14 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
     this.gradeChart?.destroy();
   }
 
-private getHeaders(): HttpHeaders {
-  const token = localStorage.getItem('accessToken');
-  return new HttpHeaders({
-    'Authorization': `Bearer ${token}`,
-    'Content-Type': 'application/json'
-  });
-}
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('accessToken');
+     return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
   loadDocenteYDatos(): void {
     this.docentePerfilService.getPerfilDocente().subscribe(
       (data) => {
@@ -299,53 +298,6 @@ private getHeaders(): HttpHeaders {
     }
   }
 
-  exportToExcel(): void {
-    if (!this.selectedCurricular || this.dataSource.data.length === 0) {
-      this.snackBar.open('No hay datos para exportar. Selecciona un curricular con estudiantes.', 'Cerrar', { duration: 5000 });
-      return;
-    }
-  
-    const exportData = this.dataSource.data.map((element) => ({
-      Estudiante: `${element.estudiante.nombres} ${element.estudiante.apellidos}`,
-      Documento: element.estudiante.documentoIdentidad,
-      Nota: element.nota !== undefined ? element.nota.toFixed(2) : 'N/A',
-      Predicción: element.prediccion === 'tested_positive' ? 'Necesita Ayuda' : 
-                  element.prediccion === 'tested_negative' ? 'Tiene Posibilidades de Ganar' : 'Sin predecir',
-      Confianza: element.confianza ? `${(element.confianza * 100).toFixed(1)}%` : '-',
-      Edad: element.inputData?.edad || 'N/A',
-      Género: element.inputData?.genero || 'N/A',
-      'Promedio Parciales': element.inputData?.promedioParciales !== undefined && element.inputData?.promedioParciales !== '' 
-        ? Number(element.inputData.promedioParciales).toFixed(2) : 'N/A',
-      'Horas de Estudio': element.inputData?.horasEstudioSemanal !== undefined && element.inputData?.horasEstudioSemanal !== '' 
-        ? element.inputData.horasEstudioSemanal : 'N/A',
-      Asistencia: element.inputData?.asistencia || 'N/A',
-      'Participación en Clases': element.inputData?.participacionClases || 'N/A',
-      'Uso de Plataforma Virtual': element.inputData?.usoPlataformaVirtual || 'N/A',
-      'Antecedentes de Pérdida': element.inputData?.antecedentesPerdida || 'N/A',
-      'Apoyo Familiar': element.inputData?.apoyoFamiliar || 'N/A',
-      'Carga Académica': element.inputData?.cargaAcademica || 'N/A',
-      'Problemas Personales': element.inputData?.problemasPersonales || 'N/A'
-    }));
-  
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
-  
-    worksheet['!cols'] = [
-      { wch: 30 }, { wch: 15 }, { wch: 10 }, { wch: 25 }, { wch: 12 },
-      { wch: 10 }, { wch: 15 }, { wch: 20 }, { wch: 20 }, { wch: 15 },
-      { wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 15 }, { wch: 15 }, { wch: 20 }
-    ];
-  
-    const workbook: XLSX.WorkBook = {
-      Sheets: { 'Predicciones': worksheet },
-      SheetNames: ['Predicciones']
-    };
-  
-    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  
-    const data: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(data, `Predicciones_${this.selectedCurricular?.descripcion || 'Curricular'}_${new Date().toISOString().split('T')[0]}.xlsx`);
-  }
-
   openStudentSelectionDialog(): void {
     if (!this.selectedCurricular) {
       this.snackBar.open('Por favor, selecciona un curricular primero.', 'Cerrar', { duration: 5000 });
@@ -381,19 +333,19 @@ private getHeaders(): HttpHeaders {
       edad: edad,
       genero: estudiante.sexo === 'M' ? 'Masculino' : estudiante.sexo === 'F' ? 'Femenino' : 'Otro',
       promedioParciales: estudiantePred?.nota !== undefined ? estudiantePred.nota : '',
-      horasEstudioSemanal: estudiante.encuesta?.horasEstudioSemanal || '',
-      asistencia: estudiante.encuesta?.asistencia || '',
-      participacionClases: estudiante.encuesta?.participacionClases || '',
-      usoPlataformaVirtual: estudiante.encuesta?.usoPlataformaVirtual || '',
-      antecedentesPerdida: estudiante.encuesta?.antecedentesPerdida || '',
+      horasEstudioSemanal: '',
+      asistencia: '',
+      participacionClases: '',
+      usoPlataformaVirtual: '',
+      antecedentesPerdida: '',
       apoyoFamiliar: estudiante.encuesta?.apoyoFamiliar || '',
-      cargaAcademica: estudiante.encuesta?.cargaAcademica || '',
+      cargaAcademica: '',
       problemasPersonales: estudiante.encuesta?.problemasPersonales || ''
     };
     this.studentForm.patchValue(formData);
     if (estudiantePred) {
       estudiantePred.inputData = { ...formData };
-      console.log('InputData set in populateForm:', estudiantePred.inputData);
+      console.log('InputData set in populateForm:', estudiantePred.inputData); // Debug
     }
   }
 
@@ -410,87 +362,71 @@ private getHeaders(): HttpHeaders {
   }
 
   enviarDatos(): void {
-  if (this.studentForm.valid && this.selectedCurricular) {
-    const formData = this.studentForm.value;
-    const headers = this.getHeaders().set('Content-Type', 'application/json');
+    if (this.studentForm.valid && this.selectedCurricular) {
+      const datos = this.studentForm.value;
+      const estudiantePred = this.estudiantesPorCurricular[this.selectedCurricular.idCurricular!].find(
+        (e) => e.estudiante.documentoIdentidad === datos.documento
+      );
+      const headers = this.getHeaders();
 
-    // Asegúrate de convertir todos los valores numéricos
-    const requestBody = {
-      documento: Number(formData.documento),
-      edad: Number(formData.edad),
-      genero: formData.genero,
-      horasEstudioSemanal: Number(formData.horasEstudioSemanal),
-      asistencia: Number(formData.asistencia),
-      promedioParciales: Number(formData.promedioParciales),
-      participacionClases: formData.participacionClases,
-      usoPlataformaVirtual: formData.usoPlataformaVirtual,
-      antecedentesPerdida: formData.antecedentesPerdida,
-      apoyoFamiliar: formData.apoyoFamiliar,
-      cargaAcademica: Number(formData.cargaAcademica),
-      problemasPersonales: formData.problemasPersonales
-    };
+      const datosCompletos = {
+        ...datos,
+        nota: estudiantePred?.nota !== undefined ? estudiantePred.nota : null
+      };
 
-    console.log('Enviando datos al backend:', requestBody); // Para depuración
-
-    this.http.post('https://just-tenderness-production.up.railway.app/api/predecir', requestBody, { headers })
-      .subscribe({
+      this.http.post('https://just-tenderness-production.up.railway.app/api/predecir', datosCompletos, { headers }).subscribe({
         next: (response: any) => {
-          console.log('Respuesta del backend:', response);
           this.resultado = `Resultado: ${response.prediccion} (Confianza: ${response.confianza})`;
-          
-          // Actualiza la interfaz con la respuesta
-          const estudiantePred = this.estudiantesPorCurricular[this.selectedCurricular!.idCurricular!]
-            .find(e => e.estudiante.documentoIdentidad === formData.documento);
-          
           if (estudiantePred) {
             estudiantePred.prediccion = response.prediccion;
-            estudiantePred.confianza = parseFloat(response.confianza) / 100;
+            estudiantePred.confianza = parseFloat(response.confianza.replace('%', '')) / 100;
+            // Preserve inputData from populateForm, update with non-empty form values
+            estudiantePred.inputData = estudiantePred.inputData || { ...datos };
+            Object.keys(datos).forEach((key) => {
+              if (datos[key] !== '' && datos[key] !== null && datos[key] !== undefined) {
+                estudiantePred.inputData![key] = datos[key];
+              }
+            });
+            console.log('InputData after prediction:', estudiantePred.inputData); // Debug
+
+            const existingPredictionIndex = this.historialPredicciones.findIndex(
+              (h) => String(h.documento) === String(datos.documento)
+            );
+            const prediccionData: DatosEstudiante = {
+              documento: datos.documento,
+              edad: estudiantePred.inputData.edad,
+              genero: estudiantePred.inputData.genero,
+              promedioParciales: estudiantePred.inputData.promedioParciales,
+              horasEstudioSemanal: estudiantePred.inputData.horasEstudioSemanal,
+              asistencia: estudiantePred.inputData.asistencia,
+              participacionClases: estudiantePred.inputData.participacionClases,
+              usoPlataformaVirtual: estudiantePred.inputData.usoPlataformaVirtual,
+              antecedentesPerdida: estudiantePred.inputData.antecedentesPerdida,
+              apoyoFamiliar: estudiantePred.inputData.apoyoFamiliar,
+              cargaAcademica: estudiantePred.inputData.cargaAcademica,
+              problemasPersonales: estudiantePred.inputData.problemasPersonales,
+              perderaAsignatura: response.prediccion,
+              confianza: response.confianza
+            };
+            if (existingPredictionIndex !== -1) {
+              this.historialPredicciones[existingPredictionIndex] = prediccionData;
+            } else {
+              this.historialPredicciones.push(prediccionData);
+            }
+
             this.updateTableData();
           }
         },
         error: (err) => {
-          console.error('Error completo:', err);
-          let errorMessage = 'Error desconocido';
-          if (err.error) {
-            errorMessage = typeof err.error === 'string' ? err.error : 
-                         err.error.message || JSON.stringify(err.error);
-          }
-          this.snackBar.open(`Error: ${errorMessage}`, 'Cerrar', { duration: 5000 });
+          console.error('Error al predecir:', err);
+          this.resultado = `Error: ${err.status} - ${err.error?.error || 'Error desconocido'}`;
         }
       });
-  } else {
-    this.snackBar.open('Por favor complete todos los campos requeridos', 'Cerrar', { duration: 5000 });
+    } else {
+      this.resultado = 'Formulario inválido o no se ha seleccionado un curricular.';
+    }
   }
-}
 
-private savePredictionToHistorial(datos: any, response: any): void {
-  const prediccionData: DatosEstudiante = {
-    documento: datos.documento,
-    edad: datos.edad,
-    genero: datos.genero,
-    promedioParciales: datos.promedio_parciales,
-    horasEstudioSemanal: datos.horas_estudio_semanal,
-    asistencia: datos.asistencia.toString(),
-    participacionClases: datos.participacion_clases,
-    usoPlataformaVirtual: datos.uso_plataforma_virtual,
-    antecedentesPerdida: datos.antecedentes_perdida,
-    apoyoFamiliar: datos.apoyo_familiar,
-    cargaAcademica: datos.carga_academica.toString(),
-    problemasPersonales: datos.problemas_personales,
-    perderaAsignatura: response.prediccion,
-    confianza: response.confianza
-  };
-
-  const existingIndex = this.historialPredicciones.findIndex(
-    h => String(h.documento) === String(datos.documento)
-  );
-
-  if (existingIndex !== -1) {
-    this.historialPredicciones[existingIndex] = prediccionData;
-  } else {
-    this.historialPredicciones.push(prediccionData);
-  }
-}
   openMaterialPanel(student: EstudiantePrediccion): void {
     const dialogRef = this.dialog.open(MaterialDocenteComponent, {
       width: 'min(1300px, 100vw)',
