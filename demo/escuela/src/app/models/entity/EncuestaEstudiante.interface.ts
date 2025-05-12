@@ -3,11 +3,11 @@ import { Estudiante } from "./Estudiante.interface";
 export interface EncuestaEstudiante {
   id?: number;
   estudiante?: Estudiante;
-  problemasPersonales?: string;
-  confianza?: string;
-  estadoEmocional?: string;
-  apoyoFamiliar?: string;
-  nivelEstres?: string;
+  problemasPersonales?: 'Ninguno' | 'Leves' | 'Graves';
+  confianza?: 'Alta' | 'Media' | 'Baja';
+  estadoEmocional?: 'Bueno' | 'Regular' | 'Malo';
+  apoyoFamiliar?: 'Bajo' | 'Medio' | 'Alto';
+  nivelEstres?: 'Alto' | 'Medio' | 'Bajo';
   estrato?: string;
   recibeSubsidio?: boolean;
   tieneAccesoInternet?: boolean;
@@ -21,12 +21,10 @@ export interface EncuestaEstudiante {
   poseeReciboGas?: boolean;
   tieneSisben?: boolean;
   tieneSeguroMedico?: boolean;
-
-  // Nuevos campos agregados
-  horasEstudioSemanal?: string;
-  asistencia?: string;
-  participacionClases?: string;
-  usoPlataformaVirtual?: string;
-  antecedentesPerdida?: string;
-  cargaAcademica?: string;
+  horasEstudioSemanal?: number; // Changed to number
+  asistencia?: number; // Changed to number
+  participacionClases?: 'Baja' | 'Media' | 'Alta';
+  usoPlataformaVirtual?: 'Bajo' | 'Medio' | 'Alto';
+  antecedentesPerdida?: 'Sí' | 'No';
+  cargaAcademica?: number; // Changed to number
 }

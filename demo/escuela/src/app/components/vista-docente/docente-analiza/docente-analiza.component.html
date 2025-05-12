@@ -31,14 +31,14 @@
       <div class="d-flex flex-wrap gap-3 justify-content-center">
         <div class="toggle-buttons">
           <button class="toggle-btn" [class.active]="showForm" (click)="toggleView(true)">
-            <i class="fas fa-plus-circle"></i>Registrar Datos
+            <i class="fas fa-plus-circle"></i> Registrar Datos
           </button>
           <button class="toggle-btn" [class.active]="!showForm" (click)="toggleView(false)">
-            <i class="fas fa-list"></i>Lista de Estudiantes
+            <i class="fas fa-list"></i> Lista de Estudiantes
           </button>
         </div>
         <button class="btn btn-outline-primary btn-custom" (click)="openStudentSelectionDialog()">
-          <i class="fas fa-user-plus me-2"></i>Seleccionar Estudiante
+          <i class="fas fa-user-plus me-2"></i> Seleccionar Estudiante
         </button>
       </div>
     </div>
@@ -46,7 +46,7 @@
     <!-- Tabla de estudiantes inscritos -->
     <div class="col-12 mb-4 fade-in" *ngIf="!showForm">
       <div class="card shadow-sm">
-        <div class="card-header bg-gradient-primary text-white">
+        <div class="card-header bg-gradient-primary text-white d-flex justify-content-between align-items-center">
           <h2 class="h5 mb-0">Estudiantes Inscritos</h2>
           <button class="btn btn-light btn-sm rounded-circle" (click)="toggleTable()">
             <i class="fas" [ngClass]="showTable ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
@@ -156,7 +156,7 @@
     <!-- Panel de detalles de predicción -->
     <div class="col-12 mb-4 fade-in" *ngIf="selectedPrediction">
       <div class="card shadow-sm prediction-details-panel">
-        <div class="card-header bg-gradient-info text-white">
+        <div class="card-header bg-gradient-info text-white d-flex justify-content-between align-items-center">
           <h2 class="h5 mb-0">Detalles de Predicción: {{ selectedPrediction.estudiante.nombres }} {{ selectedPrediction.estudiante.apellidos }}</h2>
           <button class="btn btn-light btn-sm rounded-circle" (click)="closePredictionDetails()">
             <i class="fas fa-times"></i>
@@ -232,15 +232,15 @@
                   </li>
                   <li class="d-flex justify-content-between">
                     <strong>Promedio Parciales:</strong>
-                    <span>{{ selectedPrediction.inputData?.promedioParciales || 'N/A' }}</span>
+                    <span>{{ selectedPrediction.inputData?.promedioParciales !== undefined ? (selectedPrediction.inputData.promedioParciales | number: '1.2-2') : 'N/A' }}</span>
                   </li>
                   <li class="d-flex justify-content-between">
                     <strong>Horas de Estudio:</strong>
-                    <span>{{ selectedPrediction.inputData?.horasEstudioSemanal || 'N/A' }}</span>
+                    <span>{{ selectedPrediction.inputData?.horasEstudioSemanal !== undefined ? (selectedPrediction.inputData.horasEstudioSemanal | number: '1.1-1') : 'N/A' }}</span>
                   </li>
                   <li class="d-flex justify-content-between">
                     <strong>Asistencia (%):</strong>
-                    <span>{{ selectedPrediction.inputData?.asistencia || 'N/A' }}</span>
+                    <span>{{ selectedPrediction.inputData?.asistencia !== undefined ? (selectedPrediction.inputData.asistencia | number: '1.1-1') : 'N/A' }}</span>
                   </li>
                 </ul>
               </div>
@@ -343,11 +343,14 @@
                   <span class="input-group-text"><i class="fas fa-id-card"></i></span>
                   <input
                     id="documento"
+                    type="text"
                     class="form-control"
                     placeholder="Documento"
                     formControlName="documento"
                     readonly
+                    [ngClass]="{'is-invalid': studentForm.get('documento')?.invalid && studentForm.get('documento')?.touched}"
                   />
+                  <div class="invalid-feedback">Documento debe ser un número de 7 a 10 dígitos</div>
                 </div>
               </div>
               <div class="col-12 col-md-6 col-lg-4">
@@ -357,41 +360,57 @@
                   <input
                     id="edad"
                     type="number"
+                    min="5"
+                    step="1"
                     class="form-control"
                     placeholder="Edad"
                     formControlName="edad"
                     required
+                    [ngClass]="{'is-invalid': studentForm.get('edad')?.invalid && studentForm.get('edad')?.touched}"
                   />
+                  <div class="invalid-feedback">
+                    Edad debe ser un número entero mayor o igual a 5
+                  </div>
                 </div>
-                <div class="invalid-feedback">Edad es requerida (mínimo 5)</div>
               </div>
               <div class="col-12 col-md-6 col-lg-4">
                 <label for="genero" class="form-label text-muted small mb-1">Género</label>
                 <div class="input-group">
                   <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
-                  <select id="genero" class="form-select" formControlName="genero" required>
-                    <option value="" disabled selected>Género</option>
+                  <select
+                    id="genero"
+                    class="form-select"
+                    formControlName="genero"
+                    required
+                    [ngClass]="{'is-invalid': studentForm.get('genero')?.invalid && studentForm.get('genero')?.touched}"
+                  >
+                    <option value="" disabled selected>Selecciona un género</option>
                     <option value="Masculino">Masculino</option>
                     <option value="Femenino">Femenino</option>
                     <option value="Otro">Otro</option>
                   </select>
+                  <div class="invalid-feedback">Género es requerido</div>
                 </div>
-                <div class="invalid-feedback">Género es requerido</div>
               </div>
               <div class="col-12 col-md-6 col-lg-4">
-                <label for="horasEstudio" class="form-label text-muted small mb-1">Horas de Estudio</label>
+                <label for="horasEstudio" class="form-label text-muted small mb-1">Horas de Estudio Semanal</label>
                 <div class="input-group">
                   <span class="input-group-text"><i class="fas fa-clock"></i></span>
                   <input
                     id="horasEstudio"
                     type="number"
+                    min="0"
+                    step="0.1"
                     class="form-control"
-                    placeholder="Horas de Estudio"
+                    placeholder="Ej: 10.5"
                     formControlName="horasEstudioSemanal"
                     required
+                    [ngClass]="{'is-invalid': studentForm.get('horasEstudioSemanal')?.invalid && studentForm.get('horasEstudioSemanal')?.touched}"
                   />
+                  <div class="invalid-feedback">
+                    Horas deben ser un número no negativo (ej. 10 o 10.5)
+                  </div>
                 </div>
-                <div class="invalid-feedback">Horas son requeridas (no negativas)</div>
               </div>
               <div class="col-12 col-md-6 col-lg-4">
                 <label for="asistencia" class="form-label text-muted small mb-1">Asistencia (%)</label>
@@ -400,80 +419,115 @@
                   <input
                     id="asistencia"
                     type="number"
+                    min="0"
+                    max="100"
+                    step="0.1"
                     class="form-control"
-                    placeholder="Asistencia (%)"
+                    placeholder="Ej: 85.5"
                     formControlName="asistencia"
                     required
+                    [ngClass]="{'is-invalid': studentForm.get('asistencia')?.invalid && studentForm.get('asistencia')?.touched}"
                   />
+                  <div class="invalid-feedback">
+                    Asistencia debe ser un número entre 0 y 100 (ej. 85 o 85.5)
+                  </div>
                 </div>
-                <div class="invalid-feedback">Asistencia debe estar entre 0 y 100</div>
               </div>
               <div class="col-12 col-md-6 col-lg-4">
-                <label for="promedioParciales" class="form-label text-muted small mb-1">Promedio (0-5)</label>
+                <label for="promedioParciales" class="form-label text-muted small mb-1">Promedio Parciales (0-5)</label>
                 <div class="input-group">
                   <span class="input-group-text"><i class="fas fa-star"></i></span>
                   <input
                     id="promedioParciales"
                     type="number"
+                    min="0"
+                    max="5"
                     step="0.01"
                     class="form-control"
-                    placeholder="Promedio (0-5)"
+                    placeholder="Ej: 3.75"
                     formControlName="promedioParciales"
                     required
+                    [ngClass]="{'is-invalid': studentForm.get('promedioParciales')?.invalid && studentForm.get('promedioParciales')?.touched}"
                   />
+                  <div class="invalid-feedback">
+                    Promedio debe ser un número entre 0 y 5 (ej. 3.75)
+                  </div>
                 </div>
-                <div class="invalid-feedback">Promedio debe estar entre 0 y 5</div>
               </div>
               <div class="col-12 col-md-6 col-lg-4">
-                <label for="participacion" class="form-label text-muted small mb-1">Participación</label>
+                <label for="participacion" class="form-label text-muted small mb-1">Participación en Clases</label>
                 <div class="input-group">
                   <span class="input-group-text"><i class="fas fa-comments"></i></span>
-                  <select id="participacion" class="form-select" formControlName="participacionClases" required>
-                    <option value="" disabled selected>Participación</option>
-                    <option value="Alta">Alta</option>
-                    <option value="Media">Media</option>
+                  <select
+                    id="participacion"
+                    class="form-select"
+                    formControlName="participacionClases"
+                    required
+                    [ngClass]="{'is-invalid': studentForm.get('participacionClases')?.invalid && studentForm.get('participacionClases')?.touched}"
+                  >
+                    <option value="" disabled selected>Selecciona una opción</option>
                     <option value="Baja">Baja</option>
+                    <option value="Media">Media</option>
+                    <option value="Alta">Alta</option>
                   </select>
+                  <div class="invalid-feedback">Participación es requerida</div>
                 </div>
-                <div class="invalid-feedback">Participación es requerida</div>
               </div>
               <div class="col-12 col-md-6 col-lg-4">
-                <label for="plataforma" class="form-label text-muted small mb-1">Plataforma Virtual</label>
+                <label for="plataforma" class="form-label text-muted small mb-1">Uso de Plataforma Virtual</label>
                 <div class="input-group">
                   <span class="input-group-text"><i class="fas fa-laptop"></i></span>
-                  <select id="plataforma" class="form-select" formControlName="usoPlataformaVirtual" required>
-                    <option value="" disabled selected>Plataforma Virtual</option>
-                    <option value="Alto">Alto</option>
-                    <option value="Medio">Medio</option>
+                  <select
+                    id="plataforma"
+                    class="form-select"
+                    formControlName="usoPlataformaVirtual"
+                    required
+                    [ngClass]="{'is-invalid': studentForm.get('usoPlataformaVirtual')?.invalid && studentForm.get('usoPlataformaVirtual')?.touched}"
+                  >
+                    <option value="" disabled selected>Selecciona una opción</option>
                     <option value="Bajo">Bajo</option>
+                    <option value="Medio">Medio</option>
+                    <option value="Alto">Alto</option>
                   </select>
+                  <div class="invalid-feedback">Uso de plataforma es requerido</div>
                 </div>
-                <div class="invalid-feedback">Uso es requerido</div>
               </div>
               <div class="col-12 col-md-6 col-lg-4">
-                <label for="antecedentes" class="form-label text-muted small mb-1">Antecedentes</label>
+                <label for="antecedentes" class="form-label text-muted small mb-1">Antecedentes de Pérdida</label>
                 <div class="input-group">
                   <span class="input-group-text"><i class="fas fa-history"></i></span>
-                  <select id="antecedentes" class="form-select" formControlName="antecedentesPerdida" required>
-                    <option value="" disabled selected>Antecedentes</option>
+                  <select
+                    id="antecedentes"
+                    class="form-select"
+                    formControlName="antecedentesPerdida"
+                    required
+                    [ngClass]="{'is-invalid': studentForm.get('antecedentesPerdida')?.invalid && studentForm.get('antecedentesPerdida')?.touched}"
+                  >
+                    <option value="" disabled selected>Selecciona una opción</option>
                     <option value="Sí">Sí</option>
                     <option value="No">No</option>
                   </select>
+                  <div class="invalid-feedback">Antecedentes son requeridos</div>
                 </div>
-                <div class="invalid-feedback">Antecedentes son requeridos</div>
               </div>
               <div class="col-12 col-md-6 col-lg-4">
                 <label for="apoyoFamiliar" class="form-label text-muted small mb-1">Apoyo Familiar</label>
                 <div class="input-group">
                   <span class="input-group-text"><i class="fas fa-home"></i></span>
-                  <select id="apoyoFamiliar" class="form-select" formControlName="apoyoFamiliar" required>
-                    <option value="" disabled selected>Apoyo Familiar</option>
-                    <option value="Alto">Alto</option>
-                    <option value="Medio">Medio</option>
+                  <select
+                    id="apoyoFamiliar"
+                    class="form-select"
+                    formControlName="apoyoFamiliar"
+                    required
+                    [ngClass]="{'is-invalid': studentForm.get('apoyoFamiliar')?.invalid && studentForm.get('apoyoFamiliar')?.touched}"
+                  >
+                    <option value="" disabled selected>Selecciona una opción</option>
                     <option value="Bajo">Bajo</option>
+                    <option value="Medio">Medio</option>
+                    <option value="Alto">Alto</option>
                   </select>
+                  <div class="invalid-feedback">Apoyo familiar es requerido</div>
                 </div>
-                <div class="invalid-feedback">Apoyo Familiar es requerido</div>
               </div>
               <div class="col-12 col-md-6 col-lg-4">
                 <label for="cargaAcademica" class="form-label text-muted small mb-1">Carga Académica</label>
@@ -482,34 +536,45 @@
                   <input
                     id="cargaAcademica"
                     type="number"
+                    min="1"
+                    step="1"
                     class="form-control"
-                    placeholder="Carga Académica (1-5)"
+                    placeholder="Ej: 5"
                     formControlName="cargaAcademica"
                     required
+                    [ngClass]="{'is-invalid': studentForm.get('cargaAcademica')?.invalid && studentForm.get('cargaAcademica')?.touched}"
                   />
+                  <div class="invalid-feedback">
+                    Carga debe ser un número entero mayor o igual a 1 (ej. 5)
+                  </div>
                 </div>
-                <div class="invalid-feedback">Carga debe estar entre 1 y 5</div>
               </div>
               <div class="col-12 col-md-6 col-lg-4">
                 <label for="problemasPersonales" class="form-label text-muted small mb-1">Problemas Personales</label>
                 <div class="input-group">
                   <span class="input-group-text"><i class="fas fa-exclamation-circle"></i></span>
-                  <select id="problemasPersonales" class="form-select" formControlName="problemasPersonales" required>
-                    <option value="" disabled selected>Problemas Personales</option>
+                  <select
+                    id="problemasPersonales"
+                    class="form-select"
+                    formControlName="problemasPersonales"
+                    required
+                    [ngClass]="{'is-invalid': studentForm.get('problemasPersonales')?.invalid && studentForm.get('problemasPersonales')?.touched}"
+                  >
+                    <option value="" disabled selected>Selecciona una opción</option>
                     <option value="Ninguno">Ninguno</option>
                     <option value="Leves">Leves</option>
                     <option value="Graves">Graves</option>
                   </select>
+                  <div class="invalid-feedback">Problemas personales son requeridos</div>
                 </div>
-                <div class="invalid-feedback">Problemas Personales son requeridos</div>
               </div>
               <div class="col-12 text-center mt-4">
                 <button
                   type="submit"
                   class="btn btn-success btn-custom btn-lg"
-                  [disabled]="!studentForm.valid"
+                  [disabled]="studentForm.invalid"
                 >
-                  <i class="fas fa-rocket me-2"></i>Predecir
+                  <i class="fas fa-rocket me-2"></i> Predecir
                 </button>
               </div>
             </div>

@@ -25,33 +25,33 @@ interface EstudiantePrediccion {
   nota?: number;
   showConfidence?: boolean;
   inputData?: {
-    documento: string;
-    edad: number | string;
+    documento: number; // Changed to number
+    edad: number;
     genero: string;
-    promedioParciales: number | string;
-    horasEstudioSemanal: string;
-    asistencia: string;
+    promedioParciales: number;
+    horasEstudioSemanal: number;
+    asistencia: number;
     participacionClases: string;
     usoPlataformaVirtual: string;
     antecedentesPerdida: string;
     apoyoFamiliar: string;
-    cargaAcademica: string;
+    cargaAcademica: number;
     problemasPersonales: string;
   };
 }
 
 interface DatosEstudiante {
-  documento: string;
-  edad?: number | string;
+  documento: number; // Changed to number
+  edad?: number;
   genero?: string;
-  promedioParciales?: number | string;
-  horasEstudioSemanal?: string;
-  asistencia?: string;
+  promedioParciales?: number;
+  horasEstudioSemanal?: number;
+  asistencia?: number;
   participacionClases?: string;
   usoPlataformaVirtual?: string;
   antecedentesPerdida?: string;
   apoyoFamiliar?: string;
-  cargaAcademica?: string;
+  cargaAcademica?: number;
   problemasPersonales?: string;
   perderaAsignatura: string;
   confianza: string;
@@ -93,16 +93,16 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
   ) {
     this.studentForm = this.fb.group({
       documento: ['', [Validators.required, Validators.pattern('^[0-9]{7,10}$')]],
-      edad: ['', [Validators.required, Validators.min(5)]],
+      edad: ['', [Validators.required, Validators.min(5), Validators.pattern('^[0-9]+$')]],
       genero: ['', Validators.required],
-      horasEstudioSemanal: ['', [Validators.required, Validators.min(0)]],
-      asistencia: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
-      promedioParciales: ['', [Validators.required, Validators.min(0), Validators.max(5)]],
+      horasEstudioSemanal: ['', [Validators.required, Validators.min(0), Validators.pattern('^[0-9]+(\.[0-9]+)?$')]], // Allow decimals
+      asistencia: ['', [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]+(\.[0-9]+)?$')]], // Allow decimals
+      promedioParciales: ['', [Validators.required, Validators.min(0), Validators.max(5), Validators.pattern('^[0-9]+(\.[0-9]+)?$')]], // Allow decimals
       participacionClases: ['', Validators.required],
       usoPlataformaVirtual: ['', Validators.required],
       antecedentesPerdida: ['', Validators.required],
       apoyoFamiliar: ['', Validators.required],
-      cargaAcademica: ['', [Validators.required, Validators.min(1), Validators.max(5)]],
+      cargaAcademica: ['', [Validators.required, Validators.min(1), Validators.pattern('^[0-9]+$')]], // Allow integers
       problemasPersonales: ['', Validators.required]
     });
   }
@@ -200,12 +200,12 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
               ).then((estudiantesConEncuesta) => {
                 this.estudiantesPorCurricular[curricular.idCurricular!] = estudiantesConEncuesta.map((est) => {
                   const prediccionGuardada = this.historialPredicciones.find(
-                    (h) => String(h.documento) === String(est.documentoIdentidad)
+                    (h) => h.documento === parseInt(est.documentoIdentidad, 10)
                   );
                   const calificacion = calificaciones.find((cal) => cal.estudiante.idEstudiante === est.idEstudiante);
                   return {
                     estudiante: est,
-                    prediccion: prediccionGuardada?.perderaAsignatura || undefined,
+                    prediccion: prediccionGuardada?.perderaAsignatura,
                     confianza: prediccionGuardada ? parseFloat(prediccionGuardada.confianza.replace('%', '')) / 100 : undefined,
                     nota: calificacion?.nota,
                     showConfidence: false,
@@ -214,15 +214,15 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
                           documento: prediccionGuardada.documento,
                           edad: prediccionGuardada.edad || this.calculateAge(est.fechaNacimiento),
                           genero: prediccionGuardada.genero || (est.sexo === 'M' ? 'Masculino' : est.sexo === 'F' ? 'Femenino' : 'Otro'),
-                          promedioParciales: prediccionGuardada.promedioParciales || (calificacion?.nota !== undefined ? calificacion.nota : ''),
-                          horasEstudioSemanal: prediccionGuardada.horasEstudioSemanal || '',
-                          asistencia: prediccionGuardada.asistencia || '',
-                          participacionClases: prediccionGuardada.participacionClases || '',
-                          usoPlataformaVirtual: prediccionGuardada.usoPlataformaVirtual || '',
-                          antecedentesPerdida: prediccionGuardada.antecedentesPerdida || '',
-                          apoyoFamiliar: prediccionGuardada.apoyoFamiliar || est.encuesta?.apoyoFamiliar || '',
-                          cargaAcademica: prediccionGuardada.cargaAcademica || '',
-                          problemasPersonales: prediccionGuardada.problemasPersonales || est.encuesta?.problemasPersonales || ''
+                          promedioParciales: prediccionGuardada.promedioParciales || (calificacion?.nota !== undefined ? calificacion.nota : 0),
+                          horasEstudioSemanal: prediccionGuardada.horasEstudioSemanal || (est.encuesta?.horasEstudioSemanal || 0),
+                          asistencia: prediccionGuardada.asistencia || (est.encuesta?.asistencia || 0),
+                          participacionClases: prediccionGuardada.participacionClases || (est.encuesta?.participacionClases || ''),
+                          usoPlataformaVirtual: prediccionGuardada.usoPlataformaVirtual || (est.encuesta?.usoPlataformaVirtual || ''),
+                          antecedentesPerdida: prediccionGuardada.antecedentesPerdida || (est.encuesta?.antecedentesPerdida || ''),
+                          apoyoFamiliar: prediccionGuardada.apoyoFamiliar || (est.encuesta?.apoyoFamiliar || ''),
+                          cargaAcademica: prediccionGuardada.cargaAcademica || (est.encuesta?.cargaAcademica || 0),
+                          problemasPersonales: prediccionGuardada.problemasPersonales || (est.encuesta?.problemasPersonales || '')
                         }
                       : undefined
                   };
@@ -327,27 +327,44 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
     const estudiantePred = this.estudiantesPorCurricular[this.selectedCurricular!.idCurricular!].find(
       (e) => e.estudiante.documentoIdentidad === estudiante.documentoIdentidad
     );
+
+    const encuesta = estudiante.encuesta || {};
     const formData = {
       documento: estudiante.documentoIdentidad,
-      edad: edad,
+      edad: edad || '',
       genero: estudiante.sexo === 'M' ? 'Masculino' : estudiante.sexo === 'F' ? 'Femenino' : 'Otro',
       promedioParciales: estudiantePred?.nota !== undefined ? estudiantePred.nota : '',
-      horasEstudioSemanal: estudiante.encuesta?.horasEstudioSemanal || '',
-      asistencia: estudiante.encuesta?.asistencia || '',
-      participacionClases: estudiante.encuesta?.participacionClases || '',
-      usoPlataformaVirtual: estudiante.encuesta?.usoPlataformaVirtual || '',
-      antecedentesPerdida: estudiante.encuesta?.antecedentesPerdida || '',
-      apoyoFamiliar: estudiante.encuesta?.apoyoFamiliar || '',
-      cargaAcademica: estudiante.encuesta?.cargaAcademica || '',
-      problemasPersonales: estudiante.encuesta?.problemasPersonales || ''
+      horasEstudioSemanal: encuesta.horasEstudioSemanal || '',
+      asistencia: encuesta.asistencia || '',
+      participacionClases: encuesta.participacionClases || '',
+      usoPlataformaVirtual: encuesta.usoPlataformaVirtual || '',
+      antecedentesPerdida: encuesta.antecedentesPerdida || '',
+      apoyoFamiliar: encuesta.apoyoFamiliar || '',
+      cargaAcademica: encuesta.cargaAcademica || '',
+      problemasPersonales: encuesta.problemasPersonales || ''
     };
+
     this.studentForm.patchValue(formData);
+    this.studentForm.markAllAsTouched();
+
     if (estudiantePred) {
-      estudiantePred.inputData = { ...formData };
+      estudiantePred.inputData = {
+        documento: parseInt(estudiante.documentoIdentidad, 10),
+        edad: edad || 0,
+        genero: formData.genero,
+        promedioParciales: parseFloat(formData.promedioParciales as string) || 0,
+        horasEstudioSemanal: parseFloat(formData.horasEstudioSemanal as string) || 0,
+        asistencia: parseFloat(formData.asistencia as string) || 0,
+        participacionClases: formData.participacionClases,
+        usoPlataformaVirtual: formData.usoPlataformaVirtual,
+        antecedentesPerdida: formData.antecedentesPerdida,
+        apoyoFamiliar: formData.apoyoFamiliar,
+        cargaAcademica: parseInt(formData.cargaAcademica as string, 10) || 0,
+        problemasPersonales: formData.problemasPersonales
+      };
       console.log('InputData set in populateForm:', estudiantePred.inputData);
     }
   }
-
 
   calculateAge(fechaNacimiento?: Date): number {
     if (!fechaNacimiento) return 0;
@@ -362,69 +379,76 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   enviarDatos(): void {
-    if (this.studentForm.valid && this.selectedCurricular) {
-      const datos = this.studentForm.value;
-      const estudiantePred = this.estudiantesPorCurricular[this.selectedCurricular.idCurricular!].find(
-        (e) => e.estudiante.documentoIdentidad === datos.documento
-      );
-      const headers = this.getHeaders();
-
-      const datosCompletos = {
-        ...datos,
-        nota: estudiantePred?.nota !== undefined ? estudiantePred.nota : null
-      };
-
-      this.http.post('https://just-tenderness-production.up.railway.app/api/predecir', datosCompletos, { headers }).subscribe({
-        next: (response: any) => {
-          this.resultado = `Resultado: ${response.prediccion} (Confianza: ${response.confianza})`;
-          if (estudiantePred) {
-            estudiantePred.prediccion = response.prediccion;
-            estudiantePred.confianza = parseFloat(response.confianza.replace('%', '')) / 100;
-            // Preserve inputData from populateForm, update with non-empty form values
-            estudiantePred.inputData = estudiantePred.inputData || { ...datos };
-            Object.keys(datos).forEach((key) => {
-              if (datos[key] !== '' && datos[key] !== null && datos[key] !== undefined) {
-                estudiantePred.inputData![key] = datos[key];
-              }
-            });
-            console.log('InputData after prediction:', estudiantePred.inputData); // Debug
-
-            const existingPredictionIndex = this.historialPredicciones.findIndex(
-              (h) => String(h.documento) === String(datos.documento)
-            );
-            const prediccionData: DatosEstudiante = {
-              documento: datos.documento,
-              edad: estudiantePred.inputData.edad,
-              genero: estudiantePred.inputData.genero,
-              promedioParciales: estudiantePred.inputData.promedioParciales,
-              horasEstudioSemanal: estudiantePred.inputData.horasEstudioSemanal,
-              asistencia: estudiantePred.inputData.asistencia,
-              participacionClases: estudiantePred.inputData.participacionClases,
-              usoPlataformaVirtual: estudiantePred.inputData.usoPlataformaVirtual,
-              antecedentesPerdida: estudiantePred.inputData.antecedentesPerdida,
-              apoyoFamiliar: estudiantePred.inputData.apoyoFamiliar,
-              cargaAcademica: estudiantePred.inputData.cargaAcademica,
-              problemasPersonales: estudiantePred.inputData.problemasPersonales,
-              perderaAsignatura: response.prediccion,
-              confianza: response.confianza
-            };
-            if (existingPredictionIndex !== -1) {
-              this.historialPredicciones[existingPredictionIndex] = prediccionData;
-            } else {
-              this.historialPredicciones.push(prediccionData);
-            }
-
-            this.updateTableData();
-          }
-        },
-        error: (err) => {
-          console.error('Error al predecir:', err);
-          this.resultado = `Error: ${err.status} - ${err.error?.error || 'Error desconocido'}`;
-        }
-      });
-    } else {
-      this.resultado = 'Formulario inválido o no se ha seleccionado un curricular.';
+    if (!this.selectedCurricular) {
+      this.resultado = 'Por favor, selecciona un curricular primero.';
+      this.snackBar.open(this.resultado, 'Cerrar', { duration: 5000 });
+      return;
     }
+
+    if (this.studentForm.invalid) {
+      this.resultado = 'Por favor, completa todos los campos correctamente.';
+      this.snackBar.open(this.resultado, 'Cerrar', { duration: 5000 });
+      this.studentForm.markAllAsTouched();
+      console.log('Form errors:', this.studentForm.errors);
+      return;
+    }
+
+    const datos = this.studentForm.value;
+    const estudiantePred = this.estudiantesPorCurricular[this.selectedCurricular.idCurricular!].find(
+      (e) => e.estudiante.documentoIdentidad === datos.documento
+    );
+
+    const datosCompletos = {
+      documento: parseInt(datos.documento, 10),
+      edad: parseInt(datos.edad, 10) || 0,
+      genero: datos.genero,
+      horasEstudioSemanal: parseFloat(datos.horasEstudioSemanal) || 0,
+      asistencia: parseFloat(datos.asistencia) || 0,
+      promedioParciales: parseFloat(datos.promedioParciales) || 0,
+      participacionClases: datos.participacionClases,
+      usoPlataformaVirtual: datos.usoPlataformaVirtual,
+      antecedentesPerdida: datos.antecedentesPerdida,
+      apoyoFamiliar: datos.apoyoFamiliar,
+      cargaAcademica: parseInt(datos.cargaAcademica, 10) || 0,
+      problemasPersonales: datos.problemasPersonales,
+      nota: estudiantePred?.nota !== undefined ? estudiantePred.nota : null
+    };
+
+    const headers = this.getHeaders();
+
+    this.http.post('https://just-tenderness-production.up.railway.app/api/predecir', datosCompletos, { headers }).subscribe({
+      next: (response: any) => {
+        this.resultado = `Resultado: ${response.prediccion} (Confianza: ${response.confianza})`;
+        if (estudiantePred) {
+          estudiantePred.prediccion = response.prediccion;
+          estudiantePred.confianza = parseFloat(response.confianza.replace('%', '')) / 100;
+          estudiantePred.inputData = { ...datosCompletos };
+          console.log('InputData after prediction:', estudiantePred.inputData);
+
+          const prediccionData: DatosEstudiante = {
+            ...datosCompletos,
+            perderaAsignatura: response.prediccion,
+            confianza: response.confianza
+          };
+          const existingPredictionIndex = this.historialPredicciones.findIndex(
+            (h) => h.documento === datosCompletos.documento
+          );
+          if (existingPredictionIndex !== -1) {
+            this.historialPredicciones[existingPredictionIndex] = prediccionData;
+          } else {
+            this.historialPredicciones.push(prediccionData);
+          }
+
+          this.updateTableData();
+        }
+        this.snackBar.open('Predicción realizada con éxito', 'Cerrar', { duration: 5000 });
+      },
+      error: (err) => {
+        console.error('Error al predecir:', err);
+        this.resultado = `Error: ${err.status} - ${err.error?.message || 'Error desconocido'}`;
+        this.snackBar.open(this.resultado, 'Cerrar', { duration: 5000 });
+      }
+    });
   }
 
   openMaterialPanel(student: EstudiantePrediccion): void {
