@@ -1,70 +1,18 @@
 <div class="encuesta-container" *ngIf="estudiante?.estudiante">
   <!-- Estilos inline (mover a .scss en producción) -->
   <style>
-    .encuesta-container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-      background: #f9f9f9;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    .encuesta-header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .encuesta-header h2 {
-      color: #2c3e50;
-      font-weight: bold;
-    }
-    .encuesta-body h3 {
-      color: #2980b9;
-      border-bottom: 2px solid #3498db;
-      padding-bottom: 5px;
-      margin-bottom: 15px;
-    }
-    .info {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-    }
-    .edit-mode {
-      border: 1px solid #ddd;
-      padding: 20px;
-      background: #fff;
-    }
-    .form-control {
-      border-radius: 5px;
-    }
-    .btn-dark,
-    .btn-success,
-    .btn-danger,
-    .btn-primary {
-      border-radius: 5px;
-      transition: all 0.3s;
-    }
-    .btn-dark:hover {
-      background: #34495e;
-    }
-    .btn-success:hover {
-      background: #27ae60;
-    }
-    .btn-danger:hover {
-      background: #c0392b;
-    }
-    .completed-badge {
-      display: inline-block;
-      margin-left: 5px;
-      font-size: 12px;
-      padding: 2px 6px;
-      background: #27ae60;
-      color: white;
-      border-radius: 10px;
-    }
-    .invalid-feedback {
-      color: #dc3545;
-      font-size: 0.875em;
-    }
+    .encuesta-container { max-width: 900px; margin: 0 auto; padding: 20px; background: #f9f9f9; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .encuesta-header { text-align: center; margin-bottom: 20px; }
+    .encuesta-header h2 { color: #2c3e50; font-weight: bold; }
+    .encuesta-body h3 { color: #2980b9; border-bottom: 2px solid #3498db; padding-bottom: 5px; margin-bottom: 15px; }
+    .info { background: white; padding: 20px; border-radius: 8px; }
+    .edit-mode { border: 1px solid #ddd; padding: 20px; background: #fff; }
+    .form-control { border-radius: 5px; }
+    .btn-dark, .btn-success, .btn-danger, .btn-primary { border-radius: 5px; transition: all 0.3s; }
+    .btn-dark:hover { background: #34495e; }
+    .btn-success:hover { background: #27ae60; }
+    .btn-danger:hover { background: #c0392b; }
+    .completed-badge { display: inline-block; margin-left: 5px; font-size: 12px; padding: 2px 6px; background: #27ae60; color: white; border-radius: 10px; }
   </style>
 
   <!-- Notification Area -->
@@ -100,6 +48,21 @@
         </div>
       </div>
 
+      <!-- Información académica -->
+      <h3 class="mt-4">Información Académica</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong>Horas de Estudio Semanal:</strong> {{ encuesta.horasEstudioSemanal || 'No especificado' }}</p>
+          <p><strong>Asistencia:</strong> {{ encuesta.asistencia || 'No especificado' }}</p>
+          <p><strong>Participación en Clases:</strong> {{ encuesta.participacionClases || 'No especificado' }}</p>
+          <p><strong>Uso de Plataforma Virtual:</strong> {{ encuesta.usoPlataformaVirtual || 'No especificado' }}</p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>Antecedentes de Pérdida:</strong> {{ encuesta.antecedentesPerdida || 'No especificado' }}</p>
+          <p><strong>Carga Académica:</strong> {{ encuesta.cargaAcademica || 'No especificado' }}</p>
+        </div>
+      </div>
+
       <!-- Información socioeconómica -->
       <h3 class="mt-4">Información Socioeconómica</h3>
       <div class="row">
@@ -130,127 +93,119 @@
         </div>
       </div>
 
-      <!-- Información Académica -->
-      <h3 class="mt-4">Información Académica</h3>
-      <div class="row">
-        <div class="col-md-6">
-          <p><strong>Horas de Estudio Semanal:</strong> {{ encuesta.horasEstudioSemanal || 'No especificado' }}</p>
-          <p><strong>Asistencia:</strong> {{ encuesta.asistencia || 'No especificado' }}</p>
-          <p><strong>Participación en Clases:</strong> {{ encuesta.participacionClases || 'No especificado' }}</p>
-        </div>
-        <div class="col-md-6">
-          <p><strong>Uso de Plataforma Virtual:</strong> {{ encuesta.usoPlataformaVirtual || 'No especificado' }}</p>
-          <p><strong>Antecedentes de Pérdida:</strong> {{ encuesta.antecedentesPerdida || 'No especificado' }}</p>
-          <p><strong>Carga Académica:</strong> {{ encuesta.cargaAcademica || 'No especificado' }}</p>
-        </div>
-      </div>
-
       <button class="btn btn-dark mt-3" (click)="habilitarEdicion()">
         <i class="fas fa-edit"></i> {{ encuesta.id ? 'Actualizar Encuesta' : 'Completar Encuesta' }}
       </button>
     </div>
 
     <!-- Modo edición -->
-    <form #encuestaForm="ngForm" class="info edit-mode" *ngIf="editando">
+    <div class="info edit-mode" *ngIf="editando">
       <!-- Información emocional/personal -->
       <h3>Información Emocional/Personal</h3>
       <div class="row">
         <div class="col-md-6">
           <label>Problemas Personales</label>
-          <select
-            [(ngModel)]="encuesta.problemasPersonales"
-            name="problemasPersonales"
-            class="form-control"
-            required
-          >
+          <select [(ngModel)]="encuesta.problemasPersonales" class="form-control">
             <option value="Ninguno">Ninguno</option>
             <option value="Leves">Leves</option>
             <option value="Graves">Graves</option>
           </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['problemasPersonales']?.invalid && encuestaForm.controls['problemasPersonales']?.touched">
-            Seleccione una opción válida.
-          </div>
           <span class="completed-badge" *ngIf="encuesta.problemasPersonales">1</span>
 
           <label class="mt-2">Confianza</label>
-          <select
-            [(ngModel)]="encuesta.confianza"
-            name="confianza"
-            class="form-control"
-            required
-          >
+          <select [(ngModel)]="encuesta.confianza" class="form-control">
             <option value="Alta">Alta</option>
             <option value="Media">Media</option>
             <option value="Baja">Baja</option>
           </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['confianza']?.invalid && encuestaForm.controls['confianza']?.touched">
-            Seleccione una opción válida.
-          </div>
           <span class="completed-badge" *ngIf="encuesta.confianza">1</span>
 
           <label class="mt-2">Estado Emocional</label>
-          <select
-            [(ngModel)]="encuesta.estadoEmocional"
-            name="estadoEmocional"
-            class="form-control"
-            required
-          >
+          <select [(ngModel)]="encuesta.estadoEmocional" class="form-control">
             <option value="Bueno">Bueno</option>
             <option value="Regular">Regular</option>
             <option value="Malo">Malo</option>
           </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['estadoEmocional']?.invalid && encuestaForm.controls['estadoEmocional']?.touched">
-            Seleccione una opción válida.
-          </div>
           <span class="completed-badge" *ngIf="encuesta.estadoEmocional">1</span>
         </div>
         <div class="col-md-6">
           <label>Apoyo Familiar</label>
-          <select
-            [(ngModel)]="encuesta.apoyoFamiliar"
-            name="apoyoFamiliar"
-            class="form-control"
-            required
-          >
+          <select [(ngModel)]="encuesta.apoyoFamiliar" class="form-control">
             <option value="Bajo">Bajo</option>
             <option value="Medio">Medio</option>
             <option value="Alto">Alto</option>
           </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['apoyoFamiliar']?.invalid && encuestaForm.controls['apoyoFamiliar']?.touched">
-            Seleccione una opción válida.
-          </div>
           <span class="completed-badge" *ngIf="encuesta.apoyoFamiliar">1</span>
 
           <label class="mt-2">Nivel de Estrés</label>
-          <select
-            [(ngModel)]="encuesta.nivelEstres"
-            name="nivelEstres"
-            class="form-control"
-            required
-          >
+          <select [(ngModel)]="encuesta.nivelEstres" class="form-control">
             <option value="Alto">Alto</option>
             <option value="Medio">Medio</option>
             <option value="Bajo">Bajo</option>
           </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['nivelEstres']?.invalid && encuestaForm.controls['nivelEstres']?.touched">
-            Seleccione una opción válida.
-          </div>
           <span class="completed-badge" *ngIf="encuesta.nivelEstres">1</span>
 
           <label class="mt-2">Recibe Ayuda Psicológica</label>
-          <select
-            [(ngModel)]="encuesta.recibeAyudaPsicologica"
-            name="recibeAyudaPsicologica"
-            class="form-control"
-            required
-          >
+          <select [(ngModel)]="encuesta.recibeAyudaPsicologica" class="form-control">
             <option [ngValue]="true">Sí</option>
             <option [ngValue]="false">No</option>
           </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['recibeAyudaPsicologica']?.invalid && encuestaForm.controls['recibeAyudaPsicologica']?.touched">
-            Seleccione una opción válida.
-          </div>
           <span class="completed-badge" *ngIf="encuesta.recibeAyudaPsicologica !== null">1</span>
+        </div>
+      </div>
+
+      <!-- Información académica -->
+      <h3 class="mt-4">Información Académica</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <label>Horas de Estudio Semanal</label>
+          <select [(ngModel)]="encuesta.horasEstudioSemanal" class="form-control">
+            <option value="Menos de 10">Menos de 10</option>
+            <option value="10-20">10-20</option>
+            <option value="Más de 20">Más de 20</option>
+          </select>
+          <span class="completed-badge" *ngIf="encuesta.horasEstudioSemanal">1</span>
+
+          <label class="mt-2">Asistencia</label>
+          <select [(ngModel)]="encuesta.asistencia" class="form-control">
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Baja">Baja</option>
+          </select>
+          <span class="completed-badge" *ngIf="encuesta.asistencia">1</span>
+
+          <label class="mt-2">Participación en Clases</label>
+          <select [(ngModel)]="encuesta.participacionClases" class="form-control">
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Baja">Baja</option>
+          </select>
+          <span class="completed-badge" *ngIf="encuesta.participacionClases">1</span>
+
+          <label class="mt-2">Uso de Plataforma Virtual</label>
+          <select [(ngModel)]="encuesta.usoPlataformaVirtual" class="form-control">
+            <option value="Frecuente">Frecuente</option>
+            <option value="Ocasional">Ocasional</option>
+            <option value="Nunca">Nunca</option>
+          </select>
+          <span class="completed-badge" *ngIf="encuesta.usoPlataformaVirtual">1</span>
+        </div>
+        <div class="col-md-6">
+          <label>Antecedentes de Pérdida</label>
+          <select [(ngModel)]="encuesta.antecedentesPerdida" class="form-control">
+            <option value="Ninguno">Ninguno</option>
+            <option value="Una asignatura">Una asignatura</option>
+            <option value="Varias asignaturas">Varias asignaturas</option>
+          </select>
+          <span class="completed-badge" *ngIf="encuesta.antecedentesPerdida">1</span>
+
+          <label class="mt-2">Carga Académica</label>
+          <select [(ngModel)]="encuesta.cargaAcademica" class="form-control">
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Baja">Baja</option>
+          </select>
+          <span class="completed-badge" *ngIf="encuesta.cargaAcademica">1</span>
         </div>
       </div>
 
@@ -259,107 +214,47 @@
       <div class="row">
         <div class="col-md-6">
           <label>Estrato</label>
-          <input
-            type="text"
-            [(ngModel)]="encuesta.estrato"
-            name="estrato"
-            class="form-control"
-            placeholder="Estrato socioeconómico"
-            required
-          />
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['estrato']?.invalid && encuestaForm.controls['estrato']?.touched">
-            Ingrese un estrato válido.
-          </div>
+          <input type="text" [(ngModel)]="encuesta.estrato" class="form-control" placeholder="Estrato socioeconómico">
           <span class="completed-badge" *ngIf="encuesta.estrato">1</span>
 
           <label class="mt-2">Recibe Subsidio</label>
-          <select
-            [(ngModel)]="encuesta.recibeSubsidio"
-            name="recibeSubsidio"
-            class="form-control"
-            required
-          >
+          <select [(ngModel)]="encuesta.recibeSubsidio" class="form-control">
             <option [ngValue]="true">Sí</option>
             <option [ngValue]="false">No</option>
           </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['recibeSubsidio']?.invalid && encuestaForm.controls['recibeSubsidio']?.touched">
-            Seleccione una opción válida.
-          </div>
           <span class="completed-badge" *ngIf="encuesta.recibeSubsidio !== null">1</span>
 
           <label class="mt-2">Tiene Acceso a Internet</label>
-          <select
-            [(ngModel)]="encuesta.tieneAccesoInternet"
-            name="tieneAccesoInternet"
-            class="form-control"
-            required
-          >
+          <select [(ngModel)]="encuesta.tieneAccesoInternet" class="form-control">
             <option [ngValue]="true">Sí</option>
             <option [ngValue]="false">No</option>
           </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['tieneAccesoInternet']?.invalid && encuestaForm.controls['tieneAccesoInternet']?.touched">
-            Seleccione una opción válida.
-          </div>
           <span class="completed-badge" *ngIf="encuesta.tieneAccesoInternet !== null">1</span>
 
           <label class="mt-2">Tiene Computador</label>
-          <select
-            [(ngModel)]="encuesta.tieneComputador"
-            name="tieneComputador"
-            class="form-control"
-            required
-          >
+          <select [(ngModel)]="encuesta.tieneComputador" class="form-control">
             <option [ngValue]="true">Sí</option>
             <option [ngValue]="false">No</option>
           </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['tieneComputador']?.invalid && encuestaForm.controls['tieneComputador']?.touched">
-            Seleccione una opción válida.
-          </div>
           <span class="completed-badge" *ngIf="encuesta.tieneComputador !== null">1</span>
         </div>
         <div class="col-md-6">
           <label>Vive con Padres</label>
-          <select
-            [(ngModel)]="encuesta.viveConPadres"
-            name="viveConPadres"
-            class="form-control"
-            required
-          >
+          <select [(ngModel)]="encuesta.viveConPadres" class="form-control">
             <option [ngValue]="true">Sí</option>
             <option [ngValue]="false">No</option>
           </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['viveConPadres']?.invalid && encuestaForm.controls['viveConPadres']?.touched">
-            Seleccione una opción válida.
-          </div>
           <span class="completed-badge" *ngIf="encuesta.viveConPadres !== null">1</span>
 
           <label class="mt-2">Tiene Trabajo</label>
-          <select
-            [(ngModel)]="encuesta.tieneTrabajo"
-            name="tieneTrabajo"
-            class="form-control"
-            required
-          >
+          <select [(ngModel)]="encuesta.tieneTrabajo" class="form-control">
             <option [ngValue]="true">Sí</option>
             <option [ngValue]="false">No</option>
           </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['tieneTrabajo']?.invalid && encuestaForm.controls['tieneTrabajo']?.touched">
-            Seleccione una opción válida.
-          </div>
           <span class="completed-badge" *ngIf="encuesta.tieneTrabajo !== null">1</span>
 
           <label class="mt-2">Ingresos Familiares</label>
-          <input
-            type="number"
-            [(ngModel)]="encuesta.ingresosFamiliares"
-            name="ingresosFamiliares"
-            class="form-control"
-            placeholder="Ingresos mensuales"
-            min="0"
-          />
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['ingresosFamiliares']?.invalid && encuestaForm.controls['ingresosFamiliares']?.touched">
-            Ingrese un valor numérico válido.
-          </div>
+          <input type="number" [(ngModel)]="encuesta.ingresosFamiliares" class="form-control" placeholder="Ingresos mensuales">
           <span class="completed-badge" *ngIf="encuesta.ingresosFamiliares !== null">1</span>
         </div>
       </div>
@@ -369,195 +264,52 @@
       <div class="row">
         <div class="col-md-6">
           <label>Posee Recibo de Luz</label>
-          <select
-            [(ngModel)]="encuesta.poseeReciboLuz"
-            name="poseeReciboLuz"
-            class="form-control"
-            required
-          >
+          <select [(ngModel)]="encuesta.poseeReciboLuz" class="form-control">
             <option [ngValue]="true">Sí</option>
             <option [ngValue]="false">No</option>
           </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['poseeReciboLuz']?.invalid && encuestaForm.controls['poseeReciboLuz']?.touched">
-            Seleccione una opción válida.
-          </div>
           <span class="completed-badge" *ngIf="encuesta.poseeReciboLuz !== null">1</span>
 
           <label class="mt-2">Posee Recibo de Agua</label>
-          <select
-            [(ngModel)]="encuesta.poseeReciboAgua"
-            name="poseeReciboAgua"
-            class="form-control"
-            required
-          >
+          <select [(ngModel)]="encuesta.poseeReciboAgua" class="form-control">
             <option [ngValue]="true">Sí</option>
             <option [ngValue]="false">No</option>
           </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['poseeReciboAgua']?.invalid && encuestaForm.controls['poseeReciboAgua']?.touched">
-            Seleccione una opción válida.
-          </div>
           <span class="completed-badge" *ngIf="encuesta.poseeReciboAgua !== null">1</span>
 
           <label class="mt-2">Posee Recibo de Gas</label>
-          <select
-            [(ngModel)]="encuesta.poseeReciboGas"
-            name="poseeReciboGas"
-            class="form-control"
-            required
-          >
+          <select [(ngModel)]="encuesta.poseeReciboGas" class="form-control">
             <option [ngValue]="true">Sí</option>
             <option [ngValue]="false">No</option>
           </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['poseeReciboGas']?.invalid && encuestaForm.controls['poseeReciboGas']?.touched">
-            Seleccione una opción válida.
-          </div>
           <span class="completed-badge" *ngIf="encuesta.poseeReciboGas !== null">1</span>
         </div>
         <div class="col-md-6">
           <label>Tiene Sisben</label>
-          <select
-            [(ngModel)]="encuesta.tieneSisben"
-            name="tieneSisben"
-            class="form-control"
-            required
-          >
+          <select [(ngModel)]="encuesta.tieneSisben" class="form-control">
             <option [ngValue]="true">Sí</option>
             <option [ngValue]="false">No</option>
           </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['tieneSisben']?.invalid && encuestaForm.controls['tieneSisben']?.touched">
-            Seleccione una opción válida.
-          </div>
           <span class="completed-badge" *ngIf="encuesta.tieneSisben !== null">1</span>
 
           <label class="mt-2">Tiene Seguro Médico</label>
-          <select
-            [(ngModel)]="encuesta.tieneSeguroMedico"
-            name="tieneSeguroMedico"
-            class="form-control"
-            required
-          >
+          <select [(ngModel)]="encuesta.tieneSeguroMedico" class="form-control">
             <option [ngValue]="true">Sí</option>
             <option [ngValue]="false">No</option>
           </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['tieneSeguroMedico']?.invalid && encuestaForm.controls['tieneSeguroMedico']?.touched">
-            Seleccione una opción válida.
-          </div>
           <span class="completed-badge" *ngIf="encuesta.tieneSeguroMedico !== null">1</span>
         </div>
       </div>
 
-      <!-- Información Académica -->
-      <h3 class="mt-4">Información Académica</h3>
-      <div class="row">
-        <div class="col-md-6">
-          <label>Horas de Estudio Semanal</label>
-          <input
-            type="number"
-            [(ngModel)]="encuesta.horasEstudioSemanal"
-            name="horasEstudioSemanal"
-            class="form-control"
-            placeholder="Ej: 10"
-            min="0"
-            step="0.1"
-            required
-          />
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['horasEstudioSemanal']?.invalid && encuestaForm.controls['horasEstudioSemanal']?.touched">
-            Ingrese un número válido (ej. 10 o 10.5).
-          </div>
-          <span class="completed-badge" *ngIf="encuesta.horasEstudioSemanal">1</span>
-
-          <label class="mt-2">Asistencia (%)</label>
-          <input
-            type="number"
-            [(ngModel)]="encuesta.asistencia"
-            name="asistencia"
-            class="form-control"
-            placeholder="Ej: 85"
-            min="0"
-            max="100"
-            step="0.1"
-            required
-          />
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['asistencia']?.invalid && encuestaForm.controls['asistencia']?.touched">
-            Ingrese un porcentaje entre 0 y 100 (ej. 85 o 85.5).
-          </div>
-          <span class="completed-badge" *ngIf="encuesta.asistencia">1</span>
-
-          <label class="mt-2">Participación en Clases</label>
-          <select
-            [(ngModel)]="encuesta.participacionClases"
-            name="participacionClases"
-            class="form-control"
-            required
-          >
-            <option value="Baja">Baja</option>
-            <option value="Media">Media</option>
-            <option value="Alta">Alta</option>
-          </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['participacionClases']?.invalid && encuestaForm.controls['participacionClases']?.touched">
-            Seleccione una opción válida.
-          </div>
-          <span class="completed-badge" *ngIf="encuesta.participacionClases">1</span>
-        </div>
-        <div class="col-md-6">
-          <label>Uso de Plataforma Virtual</label>
-          <select
-            [(ngModel)]="encuesta.usoPlataformaVirtual"
-            name="usoPlataformaVirtual"
-            class="form-control"
-            required
-          >
-            <option value="Bajo">Bajo</option>
-            <option value="Medio">Medio</option>
-            <option value="Alto">Alto</option>
-          </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['usoPlataformaVirtual']?.invalid && encuestaForm.controls['usoPlataformaVirtual']?.touched">
-            Seleccione una opción válida.
-          </div>
-          <span class="completed-badge" *ngIf="encuesta.usoPlataformaVirtual">1</span>
-
-          <label class="mt-2">Antecedentes de Pérdida</label>
-          <select
-            [(ngModel)]="encuesta.antecedentesPerdida"
-            name="antecedentesPerdida"
-            class="form-control"
-            required
-          >
-            <option value="Sí">Sí</option>
-            <option value="No">No</option>
-          </select>
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['antecedentesPerdida']?.invalid && encuestaForm.controls['antecedentesPerdida']?.touched">
-            Seleccione una opción válida.
-          </div>
-          <span class="completed-badge" *ngIf="encuesta.antecedentesPerdida">1</span>
-
-          <label class="mt-2">Carga Académica</label>
-          <input
-            type="number"
-            [(ngModel)]="encuesta.cargaAcademica"
-            name="cargaAcademica"
-            class="form-control"
-            placeholder="Ej: 5"
-            min="1"
-            step="1"
-            required
-          />
-          <div class="invalid-feedback" *ngIf="encuestaForm.controls['cargaAcademica']?.invalid && encuestaForm.controls['cargaAcademica']?.touched">
-            Ingrese un número entero mayor o igual a 1 (ej. 5).
-          </div>
-          <span class="completed-badge" *ngIf="encuesta.cargaAcademica">1</span>
-        </div>
-      </div>
-
       <div class="text-end mt-3">
-        <button class="btn btn-success me-2" (click)="guardarCambios()" [disabled]="encuestaForm.invalid">
+        <button class="btn btn-success me-2" (click)="guardarCambios()">
           <i class="fas fa-save"></i> Guardar
         </button>
         <button class="btn btn-danger" (click)="editando = false">
           <i class="fas fa-times"></i> Cancelar
         </button>
       </div>
-    </form>
+    </div>
 
     <!-- Mensaje si no hay encuesta -->
     <div class="alert alert-info" *ngIf="!encuesta && !editando">
