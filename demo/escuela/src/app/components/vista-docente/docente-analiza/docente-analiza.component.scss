@@ -296,6 +296,12 @@ body {
   animation: fadeIn 0.4s ease forwards;
 }
 
+/* Chart Container */
+.chart-container {
+  width: 100%;
+  position: relative;
+}
+
 /* Responsive Styles */
 @media (max-width: 992px) {
   .table th, .table td {
@@ -304,17 +310,16 @@ body {
   }
 
   .btn-custom {
-    width: 100%;
-    margin-bottom: 0.75rem;
-  }
-
-  .d-flex.gap-3 {
-    flex-direction: column;
-    align-items: center;
+    padding: 0.7rem 1.5rem;
   }
 
   .container-fluid {
     padding: 1.5rem;
+  }
+  
+  .toggle-buttons {
+    width: 100%;
+    margin-bottom: 1rem;
   }
 }
 
@@ -342,14 +347,23 @@ body {
   }
 
   .toggle-buttons {
+    flex-direction: column;
     width: 100%;
   }
 
   .toggle-btn {
-    flex: 1;
+    width: 100%;
     justify-content: center;
-    padding: 10px 16px;
-    font-size: 0.9rem;
+  }
+  
+  .d-flex.gap-3 {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn-custom {
+    width: 100%;
+    margin-bottom: 0.5rem;
   }
 }
 
@@ -374,5 +388,13 @@ body {
 
   .input-group-text {
     padding: 0.8rem 0.6rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .chart-container {
+    height: 250px !important;
   }
 }
