@@ -174,6 +174,10 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
       }
     );
   }
+
+
+
+  
  exportToExcel(): void {
     if (!this.selectedCurricular || this.dataSource.data.length === 0) {
       this.snackBar.open('No hay datos para exportar. Selecciona un curricular con estudiantes.', 'Cerrar', { duration: 5000 });

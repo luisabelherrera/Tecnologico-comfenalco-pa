@@ -26,22 +26,22 @@
 
   <!-- Contenido principal -->
   <div class="row" *ngIf="selectedCurricular">
-    <!-- Toggle Buttons -->
+    <!-- Toggle Buttons y Exportar -->
     <div class="col-12 mb-4 fade-in">
       <div class="d-flex flex-wrap gap-3 justify-content-center">
         <div class="toggle-buttons">
           <button class="toggle-btn" [class.active]="showForm" (click)="toggleView(true)">
-            <i class="fas fa-plus-circle"></i>Registrar Datos
+            <i class="fas fa-plus-circle me-1"></i><span>Registrar Datos</span>
           </button>
           <button class="toggle-btn" [class.active]="!showForm" (click)="toggleView(false)">
-            <i class="fas fa-list"></i>Lista de Estudiantes
+            <i class="fas fa-list me-1"></i><span>Lista de Estudiantes</span>
           </button>
+                  <button class="btn btn-outline-success btn-custom" (click)="exportToExcel()">
+          <i class="fas fa-file-excel me-2"></i>Exportar a Excel
+        </button>
         </div>
         <button class="btn btn-outline-primary btn-custom" (click)="openStudentSelectionDialog()">
           <i class="fas fa-user-plus me-2"></i>Seleccionar Estudiante
-        </button>
-          <button class="btn btn-outline-success btn-custom" (click)="exportToExcel()">
-          <i class="fas fa-file-excel me-2"></i>Exportar a Excel
         </button>
       </div>
     </div>
@@ -50,13 +50,18 @@
     <div class="col-12 mb-4 fade-in" *ngIf="!showForm">
       <div class="card shadow-sm">
         <div class="card-header bg-gradient-primary text-white">
-          <h2 class="h5 mb-0">Estudiantes Inscritos</h2>
-          <button class="btn btn-light btn-sm rounded-circle" (click)="toggleTable()">
-            <i class="fas" [ngClass]="showTable ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
-          </button>
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 class="h5 mb-0">Estudiantes Inscritos</h2>
+            <div class="d-flex gap-2">
+              <button class="btn btn-light btn-sm rounded-circle" (click)="toggleTable()">
+                <i class="fas" [ngClass]="showTable ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+              </button>
+            </div>
+          </div>
         </div>
         <div class="card-body p-0" *ngIf="showTable">
-          <div class="table-responsive">
+          <!-- Tabla para pantallas medianas y grandes -->
+          <div class="table-responsive d-none d-md-block">
             <table class="table table-hover m-0">
               <thead class="bg-light">
                 <tr>
@@ -152,6 +157,96 @@
               </tbody>
             </table>
           </div>
+
+          <!-- Vista de tarjetas para móviles -->
+          <div class="mobile-student-cards d-md-none">
+            <div class="student-card" *ngFor="let element of dataSource.data">
+              <div class="student-card-header">
+                <h6 class="mb-0">{{ element.estudiante.nombres }} {{ element.estudiante.apellidos }}</h6>
+                <span class="student-id">{{ element.estudiante.documentoIdentidad }}</span>
+              </div>
+              
+              <div class="student-card-body">
+                <div class="student-card-item">
+                  <span class="item-label">Nota:</span>
+                  <div class="item-value">
+                    <span class="badge bg-info text-dark">
+                      {{ element.nota !== undefined ? (element.nota | number: '1.2-2') : 'N/A' }}
+                    </span>
+                    <div class="progress mt-2" style="height: 6px;">
+                      <div
+                        class="progress-bar bg-info"
+                        role="progressbar"
+                        [style.width]="(element.nota ? (element.nota / 5) * 100 : 0) + '%'"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="student-card-item">
+                  <span class="item-label">Predicción:</span>
+                  <span
+                    class="badge"
+                    [ngClass]="{
+                      'bg-success': element.prediccion === 'tested_negative',
+                      'bg-danger': element.prediccion === 'tested_positive'
+                    }"
+                  >
+                    {{
+                      element.prediccion === 'tested_positive'
+                        ? 'Necesita Ayuda'
+                        : element.prediccion === 'tested_negative'
+                        ? 'Tiene Posibilidades de Ganar'
+                        : 'Sin predecir'
+                    }}
+                  </span>
+                </div>
+                
+                <div class="student-card-item">
+                  <span class="item-label">Confianza:</span>
+                  <button class="btn btn-sm btn-outline-info rounded-pill" (click)="toggleConfidence(element)">
+                    <i class="fas" [ngClass]="{'fa-eye-slash': element.showConfidence, 'fa-eye': !element.showConfidence}"></i>
+                    <span class="ms-1">{{ element.showConfidence ? 'Ocultar' : 'Ver' }}</span>
+                  </button>
+                </div>
+                
+                <div *ngIf="element.showConfidence" class="mt-2 fade-in">
+                  <span class="badge bg-warning text-dark me-2">
+                    {{ element.confianza ? (element.confianza * 100 | number: '1.0-1') + '%' : '-' }}
+                  </span>
+                  <div class="progress mt-2" style="height: 6px;">
+                    <div
+                      class="progress-bar"
+                      [ngClass]="{
+                        'bg-success': element.confianza >= 0.8,
+                        'bg-warning': element.confianza >= 0.5 && element.confianza < 0.8,
+                        'bg-danger': element.confianza < 0.5
+                      }"
+                      role="progressbar"
+                      [style.width]="(element.confianza ? element.confianza * 100 : 0) + '%'"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="student-card-footer">
+                <button
+                  *ngIf="element.prediccion === 'tested_positive'"
+                  class="btn btn-sm btn-outline-danger rounded-pill"
+                  (click)="openMaterialPanel(element)"
+                >
+                  <i class="fas fa-book me-1"></i> Enviar Material
+                </button>
+                <button
+                  *ngIf="element.prediccion"
+                  class="btn btn-sm btn-outline-info rounded-pill"
+                  (click)="showPredictionDetails(element)"
+                >
+                  <i class="fas fa-eye me-1"></i> Ver Detalles
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -160,17 +255,19 @@
     <div class="col-12 mb-4 fade-in" *ngIf="selectedPrediction">
       <div class="card shadow-sm prediction-details-panel">
         <div class="card-header bg-gradient-info text-white">
-          <h2 class="h5 mb-0">Detalles de Predicción: {{ selectedPrediction.estudiante.nombres }} {{ selectedPrediction.estudiante.apellidos }}</h2>
-          <button class="btn btn-light btn-sm rounded-circle" (click)="closePredictionDetails()">
-            <i class="fas fa-times"></i>
-          </button>
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 class="h5 mb-0 text-truncate">Detalles: {{ selectedPrediction.estudiante.nombres }} {{ selectedPrediction.estudiante.apellidos }}</h2>
+            <button class="btn btn-light btn-sm rounded-circle" (click)="closePredictionDetails()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
         </div>
         <div class="card-body p-4">
           <div class="row g-4">
             <div class="col-12 col-md-6">
               <div class="p-3 rounded-3 bg-light">
                 <h6 class="mb-3 text-primary fw-bold">Resultado de Predicción</h6>
-                <div class="d-flex align-items-center mb-3">
+                <div class="d-flex align-items-center mb-3 flex-wrap">
                   <strong class="me-2">Predicción:</strong>
                   <span
                     class="badge ms-2"
@@ -220,28 +317,28 @@
             <div class="col-12 col-md-6">
               <div class="p-3 rounded-3 bg-light h-100">
                 <h6 class="mb-3 text-primary fw-bold">Datos del Estudiante</h6>
-                <ul class="mt-2">
-                  <li class="d-flex justify-content-between">
+                <ul class="mt-2 student-details-list">
+                  <li>
                     <strong>Documento:</strong>
                     <span>{{ selectedPrediction.inputData?.documento || 'N/A' }}</span>
                   </li>
-                  <li class="d-flex justify-content-between">
+                  <li>
                     <strong>Edad:</strong>
                     <span>{{ selectedPrediction.inputData?.edad || 'N/A' }}</span>
                   </li>
-                  <li class="d-flex justify-content-between">
+                  <li>
                     <strong>Género:</strong>
                     <span>{{ selectedPrediction.inputData?.genero || 'N/A' }}</span>
                   </li>
-                  <li class="d-flex justify-content-between">
+                  <li>
                     <strong>Promedio Parciales:</strong>
                     <span>{{ selectedPrediction.inputData?.promedioParciales || 'N/A' }}</span>
                   </li>
-                  <li class="d-flex justify-content-between">
+                  <li>
                     <strong>Horas de Estudio:</strong>
                     <span>{{ selectedPrediction.inputData?.horasEstudioSemanal || 'N/A' }}</span>
                   </li>
-                  <li class="d-flex justify-content-between">
+                  <li>
                     <strong>Asistencia (%):</strong>
                     <span>{{ selectedPrediction.inputData?.asistencia || 'N/A' }}</span>
                   </li>
@@ -253,32 +350,32 @@
                 <h6 class="mb-3 text-primary fw-bold">Factores Adicionales</h6>
                 <div class="row">
                   <div class="col-md-6">
-                    <ul>
-                      <li class="d-flex justify-content-between">
+                    <ul class="student-details-list">
+                      <li>
                         <strong>Participación en Clases:</strong>
                         <span>{{ selectedPrediction.inputData?.participacionClases || 'N/A' }}</span>
                       </li>
-                      <li class="d-flex justify-content-between">
+                      <li>
                         <strong>Uso de Plataforma Virtual:</strong>
                         <span>{{ selectedPrediction.inputData?.usoPlataformaVirtual || 'N/A' }}</span>
                       </li>
-                      <li class="d-flex justify-content-between">
+                      <li>
                         <strong>Antecedentes de Pérdida:</strong>
                         <span>{{ selectedPrediction.inputData?.antecedentesPerdida || 'N/A' }}</span>
                       </li>
                     </ul>
                   </div>
                   <div class="col-md-6">
-                    <ul>
-                      <li class="d-flex justify-content-between">
+                    <ul class="student-details-list">
+                      <li>
                         <strong>Apoyo Familiar:</strong>
                         <span>{{ selectedPrediction.inputData?.apoyoFamiliar || 'N/A' }}</span>
                       </li>
-                      <li class="d-flex justify-content-between">
+                      <li>
                         <strong>Carga Académica:</strong>
                         <span>{{ selectedPrediction.inputData?.cargaAcademica || 'N/A' }}</span>
                       </li>
-                      <li class="d-flex justify-content-between">
+                      <li>
                         <strong>Problemas Personales:</strong>
                         <span>{{ selectedPrediction.inputData?.problemasPersonales || 'N/A' }}</span>
                       </li>
@@ -296,10 +393,17 @@
     <div class="col-12 mb-4 fade-in" *ngIf="!showForm && showTable && dataSource.data.length > 0">
       <div class="card shadow-sm">
         <div class="card-header bg-gradient-secondary text-white">
-          <h2 class="h5 mb-0">Análisis de Rendimiento</h2>
+          <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <h2 class="h5 mb-0">Análisis de Rendimiento</h2>
+            <button class="btn btn-light btn-sm mt-2 mt-sm-0">
+              <i class="fas fa-download me-1"></i> Exportar Excel
+            </button>
+          </div>
         </div>
-        <div class="card-body p-4">
-          <canvas id="gradeChart" style="max-height: 300px;"></canvas>
+        <div class="card-body p-3 p-md-4">
+          <div class="chart-container" style="position: relative; height: 300px;">
+            <canvas id="gradeChart"></canvas>
+          </div>
           <div class="mt-4 p-3 bg-light rounded-3">
             <div class="row text-center">
               <div class="col-md-4 mb-3 mb-md-0">
@@ -310,7 +414,7 @@
               </div>
               <div class="col-md-8">
                 <h6 class="text-primary mb-2">Estado del Curso</h6>
-                <div class="d-flex justify-content-center gap-3">
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
                   <div>
                     <span class="badge bg-success fs-6 d-block mb-1">{{ prediccionStats.aprobados }}</span>
                     <small>Aprobados</small>
@@ -337,7 +441,7 @@
         <div class="card-header bg-gradient-info text-white text-center">
           <h3 class="h5 mb-0">Datos del Estudiante</h3>
         </div>
-        <div class="card-body p-4">
+        <div class="card-body p-3 p-md-4">
           <form [formGroup]="studentForm" (ngSubmit)="enviarDatos()" class="needs-validation" novalidate>
             <div class="row g-3">
               <div class="col-12 col-md-6 col-lg-4">

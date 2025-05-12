@@ -9,7 +9,7 @@ body {
 .container-fluid {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 /* Card Styles */
@@ -28,7 +28,7 @@ body {
 }
 
 .card-header {
-  padding: 1.5rem;
+  padding: 1rem 1.25rem;
   border-bottom: none;
   display: flex;
   align-items: center;
@@ -38,7 +38,7 @@ body {
 /* Curricular Selector */
 .curricular-selector {
   background: #ffffff;
-  padding: 2.5rem;
+  padding: 1.5rem;
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
@@ -128,6 +128,119 @@ body {
 
 .table tbody tr:hover {
   background: #f8fafc;
+}
+
+/* Mobile Student Cards */
+.mobile-student-cards {
+  padding: 0.5rem;
+}
+
+.student-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1rem;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.student-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+.student-card-header {
+  padding: 1rem;
+  background: #f8fafc;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.student-card-header h6 {
+  font-weight: 600;
+  color: #1e40af;
+  margin-bottom: 0.25rem;
+}
+
+.student-id {
+  font-size: 0.85rem;
+  color: #64748b;
+  display: block;
+}
+
+.student-card-body {
+  padding: 1rem;
+}
+
+.student-card-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.item-label {
+  font-weight: 500;
+  color: #64748b;
+  margin-right: 0.5rem;
+  min-width: 80px;
+}
+
+.item-value {
+  flex: 1;
+  text-align: right;
+}
+
+.student-card-footer {
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.student-card-footer button {
+  flex: 1;
+  min-width: 120px;
+}
+
+/* Student Details List */
+.student-details-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.student-details-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+}
+
+.student-details-list li:last-child {
+  border-bottom: none;
+}
+
+.student-details-list li strong {
+  margin-right: 0.5rem;
+  color: #64748b;
+}
+
+.student-details-list li span {
+  font-weight: 500;
+}
+
+@media (max-width: 576px) {
+  .student-details-list li {
+    flex-direction: column;
+  }
+  
+  .student-details-list li strong {
+    margin-bottom: 0.25rem;
+  }
 }
 
 /* Progress Bars */
@@ -314,18 +427,22 @@ body {
   }
 
   .container-fluid {
-    padding: 1.5rem;
+    padding: 1rem;
   }
   
   .toggle-buttons {
     width: 100%;
     margin-bottom: 1rem;
   }
+  
+  .toggle-btn span {
+    font-size: 0.9rem;
+  }
 }
 
 @media (max-width: 768px) {
   .container-fluid {
-    padding: 1rem;
+    padding: 0.75rem;
   }
 
   .card-header h2, .card-header h3 {
@@ -354,6 +471,7 @@ body {
   .toggle-btn {
     width: 100%;
     justify-content: center;
+    padding: 10px 16px;
   }
   
   .d-flex.gap-3 {
@@ -365,11 +483,20 @@ body {
     width: 100%;
     margin-bottom: 0.5rem;
   }
+  
+  .card-body {
+    padding: 0.75rem !important;
+  }
+  
+  .badge {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.6rem;
+  }
 }
 
 @media (max-width: 576px) {
   .curricular-selector {
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
 
   .table th, .table td {
@@ -381,20 +508,47 @@ body {
     height: 6px;
   }
 
-  .badge {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.6rem;
-  }
-
   .input-group-text {
     padding: 0.8rem 0.6rem;
   }
   
   .card-body {
-    padding: 1rem;
+    padding: 0.75rem !important;
   }
   
   .chart-container {
     height: 250px !important;
+  }
+  
+  .toggle-btn {
+    padding: 8px 12px;
+  }
+  
+  .toggle-btn span {
+    font-size: 0.85rem;
+  }
+  
+  .card-header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .student-card-item {
+    margin-bottom: 1rem;
+  }
+  
+  .student-card-item .item-label,
+  .student-card-item .item-value {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 0.25rem;
+  }
+  
+  .student-card-footer button {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .student-card-footer {
+    flex-direction: column;
   }
 }
