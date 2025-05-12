@@ -17,8 +17,6 @@ import { CalificacionService } from 'src/app/services/calificacion/calificacion.
 import { WekaEstudiantesComponent } from './estudiante-weka/weka-estudiantes/weka-estudiantes.component';
 import { MaterialDocenteComponent } from './docente-crea-material/material-docente/material-docente.component';
 import { EncuestaEstudianteService } from 'src/app/services/encuentasEstudiante/EncuestaEstudiante.service';
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
 
 interface EstudiantePrediccion {
   estudiante: Estudiante;
@@ -299,53 +297,6 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
-  exportToExcel(): void {
-    if (!this.selectedCurricular || this.dataSource.data.length === 0) {
-      this.snackBar.open('No hay datos para exportar. Selecciona un curricular con estudiantes.', 'Cerrar', { duration: 5000 });
-      return;
-    }
-  
-    const exportData = this.dataSource.data.map((element) => ({
-      Estudiante: `${element.estudiante.nombres} ${element.estudiante.apellidos}`,
-      Documento: element.estudiante.documentoIdentidad,
-      Nota: element.nota !== undefined ? element.nota.toFixed(2) : 'N/A',
-      Predicción: element.prediccion === 'tested_positive' ? 'Necesita Ayuda' : 
-                  element.prediccion === 'tested_negative' ? 'Tiene Posibilidades de Ganar' : 'Sin predecir',
-      Confianza: element.confianza ? `${(element.confianza * 100).toFixed(1)}%` : '-',
-      Edad: element.inputData?.edad || 'N/A',
-      Género: element.inputData?.genero || 'N/A',
-      'Promedio Parciales': element.inputData?.promedioParciales !== undefined && element.inputData?.promedioParciales !== '' 
-        ? Number(element.inputData.promedioParciales).toFixed(2) : 'N/A',
-      'Horas de Estudio': element.inputData?.horasEstudioSemanal !== undefined && element.inputData?.horasEstudioSemanal !== '' 
-        ? element.inputData.horasEstudioSemanal : 'N/A',
-      Asistencia: element.inputData?.asistencia || 'N/A',
-      'Participación en Clases': element.inputData?.participacionClases || 'N/A',
-      'Uso de Plataforma Virtual': element.inputData?.usoPlataformaVirtual || 'N/A',
-      'Antecedentes de Pérdida': element.inputData?.antecedentesPerdida || 'N/A',
-      'Apoyo Familiar': element.inputData?.apoyoFamiliar || 'N/A',
-      'Carga Académica': element.inputData?.cargaAcademica || 'N/A',
-      'Problemas Personales': element.inputData?.problemasPersonales || 'N/A'
-    }));
-  
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
-  
-    worksheet['!cols'] = [
-      { wch: 30 }, { wch: 15 }, { wch: 10 }, { wch: 25 }, { wch: 12 },
-      { wch: 10 }, { wch: 15 }, { wch: 20 }, { wch: 20 }, { wch: 15 },
-      { wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 15 }, { wch: 15 }, { wch: 20 }
-    ];
-  
-    const workbook: XLSX.WorkBook = {
-      Sheets: { 'Predicciones': worksheet },
-      SheetNames: ['Predicciones']
-    };
-  
-    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  
-    const data: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(data, `Predicciones_${this.selectedCurricular?.descripcion || 'Curricular'}_${new Date().toISOString().split('T')[0]}.xlsx`);
-  }
-
   openStudentSelectionDialog(): void {
     if (!this.selectedCurricular) {
       this.snackBar.open('Por favor, selecciona un curricular primero.', 'Cerrar', { duration: 5000 });
@@ -381,19 +332,19 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
       edad: edad,
       genero: estudiante.sexo === 'M' ? 'Masculino' : estudiante.sexo === 'F' ? 'Femenino' : 'Otro',
       promedioParciales: estudiantePred?.nota !== undefined ? estudiantePred.nota : '',
-      horasEstudioSemanal: estudiante.encuesta?.horasEstudioSemanal || '',
-      asistencia: estudiante.encuesta?.asistencia || '',
-      participacionClases: estudiante.encuesta?.participacionClases || '',
-      usoPlataformaVirtual: estudiante.encuesta?.usoPlataformaVirtual || '',
-      antecedentesPerdida: estudiante.encuesta?.antecedentesPerdida || '',
+      horasEstudioSemanal: '',
+      asistencia: '',
+      participacionClases: '',
+      usoPlataformaVirtual: '',
+      antecedentesPerdida: '',
       apoyoFamiliar: estudiante.encuesta?.apoyoFamiliar || '',
-      cargaAcademica: estudiante.encuesta?.cargaAcademica || '',
+      cargaAcademica: '',
       problemasPersonales: estudiante.encuesta?.problemasPersonales || ''
     };
     this.studentForm.patchValue(formData);
     if (estudiantePred) {
       estudiantePred.inputData = { ...formData };
-      console.log('InputData set in populateForm:', estudiantePred.inputData);
+      console.log('InputData set in populateForm:', estudiantePred.inputData); // Debug
     }
   }
 
@@ -428,13 +379,14 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
           if (estudiantePred) {
             estudiantePred.prediccion = response.prediccion;
             estudiantePred.confianza = parseFloat(response.confianza.replace('%', '')) / 100;
+            // Preserve inputData from populateForm, update with non-empty form values
             estudiantePred.inputData = estudiantePred.inputData || { ...datos };
             Object.keys(datos).forEach((key) => {
               if (datos[key] !== '' && datos[key] !== null && datos[key] !== undefined) {
                 estudiantePred.inputData![key] = datos[key];
               }
             });
-            console.log('InputData after prediction:', estudiantePred.inputData);
+            console.log('InputData after prediction:', estudiantePred.inputData); // Debug
 
             const existingPredictionIndex = this.historialPredicciones.findIndex(
               (h) => String(h.documento) === String(datos.documento)
