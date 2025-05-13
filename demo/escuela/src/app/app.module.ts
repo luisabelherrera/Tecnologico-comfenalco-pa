@@ -103,6 +103,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { DashboardAdminComponent } from './components/dashboard-admin/dashboard-admin.component';
 @NgModule({
   imports: [
 
@@ -143,8 +144,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
     HttpClientModule,
     SharedModule,
     MatRadioModule,
+    
   ],
   declarations: [
+    
+    DashboardAdminComponent,
     MaterialStudioComponent,
     Live2dComponent,
     MaterialDocenteComponent,

@@ -39,7 +39,7 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
   institutionName: string = 'EduPortal';
   isNavHidden = false;
   isMobileNavHidden = false;
-
+ showBackToTop = false
   // Formulario
   contactData = {
     name: '',

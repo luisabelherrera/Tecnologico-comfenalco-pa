@@ -1,0 +1,327 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <h1>Panel de Administración Educativa</h1>
+    <div class="user-info">
+      <span>Administrador</span>
+      <div class="user-avatar">
+        <i class="material-icons">account_circle</i>
+      </div>
+    </div>
+  </header>
+
+  <!-- KPIs -->
+  <div class="kpi-container">
+    <div class="kpi-card">
+      <div class="kpi-icon">
+        <i class="material-icons">people</i>
+      </div>
+      <div class="kpi-content">
+        <h3>{{ totalEstudiantes }}</h3>
+        <p>Estudiantes</p>
+      </div>
+    </div>
+    
+    <div class="kpi-card">
+      <div class="kpi-icon">
+        <i class="material-icons">assignment</i>
+      </div>
+      <div class="kpi-content">
+        <h3>{{ totalInscripciones }}</h3>
+        <p>Inscripciones</p>
+      </div>
+    </div>
+    
+    <div class="kpi-card">
+      <div class="kpi-icon">
+        <i class="material-icons">school</i>
+      </div>
+      <div class="kpi-content">
+        <h3>{{ totalDocentes }}</h3>
+        <p>Docentes</p>
+      </div>
+    </div>
+    
+    <div class="kpi-card">
+      <div class="kpi-icon">
+        <i class="material-icons">grade</i>
+      </div>
+      <div class="kpi-content">
+        <h3>{{ promedioGeneral | number:'1.1-1' }}</h3>
+        <p>Promedio General</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters-container">
+    <div class="filter-item">
+      <label for="periodo">Período:</label>
+      <select id="periodo" [(ngModel)]="selectedPeriodo" (change)="applyFilter()">
+        <option [ngValue]="null">Todos</option>
+        <option *ngFor="let periodo of periodos" [ngValue]="periodo.idPeriodo">
+          {{ periodo.descripcion }}
+        </option>
+      </select>
+    </div>
+    
+    <div class="filter-actions">
+      <button class="btn-refresh" (click)="refreshData()">
+        <i class="material-icons">refresh</i> Actualizar
+      </button>
+    </div>
+  </div>
+
+  <!-- Gráficos -->
+  <div class="charts-grid">
+    <!-- Gráfico de Barras: Notas por Asignatura -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>Notas por Asignatura</h3>
+        <div class="chart-actions">
+          <button class="btn-chart-action">
+            <i class="material-icons">more_vert</i>
+          </button>
+        </div>
+      </div>
+      <div class="chart-body">
+        <div class="bar-chart">
+          <div class="chart-y-axis">
+            <span>5.0</span>
+            <span>4.0</span>
+            <span>3.0</span>
+            <span>2.0</span>
+            <span>1.0</span>
+            <span>0.0</span>
+          </div>
+          <div class="chart-content">
+            <div class="chart-bars">
+              <div class="bar-container" *ngFor="let item of promediosPorAsignatura">
+                <div class="bar-label">{{ item.nombre }}</div>
+                <div class="bar-wrapper">
+                  <div class="bar" [style.height.%]="item.porcentaje">
+                    <span class="bar-value">{{ item.valor | number:'1.1-1' }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="chart-x-axis">
+              <span *ngFor="let item of promediosPorAsignatura">{{ item.nombre }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Gráfico de Líneas: Inscripciones por Grado -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>Inscripciones por Grado</h3>
+        <div class="chart-actions">
+          <button class="btn-chart-action">
+            <i class="material-icons">more_vert</i>
+          </button>
+        </div>
+      </div>
+      <div class="chart-body">
+        <div class="line-chart">
+          <div class="chart-y-axis">
+            <span *ngFor="let n of [5, 4, 3, 2, 1, 0]">{{ n }}</span>
+          </div>
+          <div class="chart-content">
+            <div class="chart-lines">
+              <svg class="line-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <polyline
+                  class="line"
+                  [attr.points]="lineChartPoints"
+                ></polyline>
+                <g *ngFor="let point of lineChartPointsArray">
+                  <circle
+                    class="point"
+                    [attr.cx]="point.x"
+                    [attr.cy]="point.y"
+                    r="3"
+                  ></circle>
+                </g>
+              </svg>
+              <div class="line-labels">
+                <div class="line-point" *ngFor="let point of lineChartPointsArray"
+                     [style.left.%]="point.x"
+                     [style.top.%]="point.y">
+                  <div class="point-value">{{ point.valor }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="chart-x-axis">
+              <span *ngFor="let item of inscripcionesPorGrado">{{ item.grado }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Gráfico Circular: Estado de Pagos -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>Estado de Pagos</h3>
+        <div class="chart-actions">
+          <button class="btn-chart-action">
+            <i class="material-icons">more_vert</i>
+          </button>
+        </div>
+      </div>
+      <div class="chart-body">
+        <div class="pie-chart">
+          <div class="pie-container">
+            <div class="pie">
+              <div class="pie-slice" *ngFor="let item of estadosPago"
+                   [ngStyle]="getEstiloPieSlice(item)">
+              </div>
+            </div>
+          </div>
+          <div class="pie-legend">
+            <div class="legend-item" *ngFor="let item of estadosPago">
+              <div class="legend-color" [style.background-color]="item.color"></div>
+              <div class="legend-text">
+                <span>{{ item.nombre }}</span>
+                <span>{{ item.porcentaje | number:'1.0-0' }}% ({{ item.valor }})</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Gráfico Circular: Distribución por Género -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>Distribución por Género</h3>
+        <div class="chart-actions">
+          <button class="btn-chart-action">
+            <i class="material-icons">more_vert</i>
+          </button>
+        </div>
+      </div>
+      <div class="chart-body">
+        <div class="pie-chart">
+          <div class="pie-container">
+            <div class="pie">
+              <div class="pie-slice" *ngFor="let item of distribucionGenero"
+                   [ngStyle]="getEstiloPieSlice(item)">
+              </div>
+            </div>
+          </div>
+          <div class="pie-legend">
+            <div class="legend-item" *ngFor="let item of distribucionGenero">
+              <div class="legend-color" [style.background-color]="item.color"></div>
+              <div class="legend-text">
+                <span>{{ item.nombre }}</span>
+                <span>{{ item.porcentaje | number:'1.0-0' }}% ({{ item.valor }})</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Gráfico de Radar: Rendimiento por Asignatura -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>Rendimiento por Asignatura</h3>
+        <div class="chart-actions">
+          <button class="btn-chart-action">
+            <i class="material-icons">more_vert</i>
+          </button>
+        </div>
+      </div>
+      <div class="chart-body">
+        <div class="radar-chart">
+          <div class="radar-container">
+            <div class="radar-grid">
+              <div class="radar-circle" *ngFor="let n of [20, 40, 60, 80, 100]"></div>
+              <div class="radar-axis" *ngFor="let item of rendimientoEstudiantes[0]?.asignaturas; let i = index"
+                   [style.--angle]="i * (360 / rendimientoEstudiantes[0]?.asignaturas.length) + 'deg'">
+                <span class="axis-label">{{ item.nombre }}</span>
+              </div>
+            </div>
+            <div class="radar-data" *ngFor="let data of radarData; let idx = index">
+              <svg class="radar-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <polygon
+                  class="radar-polygon"
+                  [attr.points]="data.points"
+                  [style.fill]="data.color"
+                  [style.stroke]="data.strokeColor"
+                ></polygon>
+              </svg>
+            </div>
+          </div>
+          <div class="radar-legend">
+            <div class="legend-item" *ngFor="let data of radarData; let idx = index">
+              <div class="legend-color" [style.background-color]="data.strokeColor"></div>
+              <div class="legend-text">{{ data.estudiante }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Gráfico de Barras Apiladas: Asistencia Mensual -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>Asistencia Mensual</h3>
+        <div class="chart-actions">
+          <button class="btn-chart-action">
+            <i class="material-icons">more_vert</i>
+          </button>
+        </div>
+      </div>
+      <div class="chart-body">
+        <div class="stacked-bar-chart">
+          <div class="chart-y-axis">
+            <span>100%</span>
+            <span>80%</span>
+            <span>60%</span>
+            <span>40%</span>
+            <span>20%</span>
+            <span>0%</span>
+          </div>
+          <div class="chart-content">
+            <div class="chart-bars">
+              <div class="bar-container" *ngFor="let item of asistenciaMensual">
+                <div class="bar-label">{{ item.mes }}</div>
+                <div class="bar-wrapper">
+                  <div class="stacked-bar">
+                    <div class="bar-segment attendance" [style.height.%]="item.porcentajeAsistencia">
+                      <span class="segment-value">{{ item.porcentajeAsistencia }}%</span>
+                    </div>
+                    <div class="bar-segment absence" [style.height.%]="item.porcentajeInasistencia">
+                      <span class="segment-value">{{ item.porcentajeInasistencia }}%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="chart-x-axis">
+              <span *ngFor="let item of asistenciaMensual">{{ item.mes }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="stacked-legend">
+          <div class="legend-item">
+            <div class="legend-color attendance"></div>
+            <div class="legend-text">Asistencia</div>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color absence"></div>
+            <div class="legend-text">Inasistencia</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="dashboard-footer">
+    <p>© 2025 Sistema de Gestión Educativa</p>
+  </footer>
+</div>

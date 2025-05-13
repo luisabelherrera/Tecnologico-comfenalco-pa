@@ -60,6 +60,7 @@ export class AppComponent implements OnInit, OnDestroy {
     { path: '/matricula', icon: 'assignment_ind', title: 'Matrícula' },
   ];
   configuraciones = [
+   { path: '/dashboard-admin', icon: 'dashboard', title: 'Dashboard' },
     { path: '/periodo', icon: 'calendar_today', title: 'Crear Periodo' },
     { path: '/nivel', icon: 'school', title: 'Nivel Académico' },
     { path: '/grado-seccion', icon: 'groups', title: 'Grado y Sección' },

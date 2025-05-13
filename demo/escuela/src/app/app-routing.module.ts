@@ -56,6 +56,7 @@ import { SedesComponent } from './components/ventanas-para-invitados/sedes/sedes
 import { MaterialDocenteComponent } from './components/vista-docente/docente-analiza/docente-crea-material/material-docente/material-docente.component';
 import { Live2dComponent } from './components/ventanas-para-invitados/live2d/live2d.component';
 import { MaterialStudioComponent } from './components/vista-estudiante/material-studio/material-studio.component';
+import { DashboardAdminComponent } from './components/dashboard-admin/dashboard-admin.component';
 
 const routes: Routes = [
   {
@@ -324,6 +325,13 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Administracion'] },
   },
+ {
+    path: 'dashboard-admin',
+    component: DashboardAdminComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Administracion'] },
+  },
+  
   {
     path: 'matricula',
     component: MatriculaComponent,
