@@ -112,49 +112,10 @@
         <h3>Distribución por Género</h3>
         <canvas #genderChart id="genderChart" class="chart-canvas"></canvas>
       </div>
-      <div class="chart-card">
-        <h3>Tendencia de Notas</h3>
-        <p class="chart-note">Nota: Las líneas discontinuas indican predicciones para los próximos períodos.</p>
-        <canvas #trendChart id="trendChart" class="chart-canvas"></canvas>
-      </div>
+    
     </div>
 
-    <!-- AI Insights -->
-    <div class="ai-insights">
-      <h2>Insights de IA</h2>
-      <div *ngIf="aiLoading" class="loading">
-        <div class="spinner"></div>
-        <p>Generando insights...</p>
-      </div>
-      <div *ngIf="!aiLoading">
-        <div class="insight-section">
-          <h4>Notas por Asignatura</h4>
-          <p><strong>Resumen:</strong> {{ aiInsights.grades.summary }}</p>
-          <p><strong>Recomendación:</strong> {{ aiInsights.grades.recommendation }}</p>
-        </div>
-        <div class="insight-section">
-          <h4>Estado de Inscripciones</h4>
-          <p><strong>Resumen:</strong> {{ aiInsights.enrollment.summary }}</p>
-          <p><strong>Recomendación:</strong> {{ aiInsights.enrollment.recommendation }}</p>
-        </div>
-        <div class="insight-section">
-          <h4>Distribución por Género</h4>
-          <p><strong>Resumen:</strong> {{ aiInsights.gender.summary }}</p>
-          <p><strong>Recomendación:</strong> {{ aiInsights.gender.recommendation }}</p>
-        </div>
-        <div class="insight-section">
-          <h4>Tendencia de Notas</h4>
-          <p><strong>Resumen:</strong> {{ aiInsights.trend.summary }}</p>
-          <p><strong>Recomendación:</strong> {{ aiInsights.trend.recommendation }}</p>
-        </div>
-        <div class="insight-section">
-          <h4>Predicciones de Desempeño</h4>
-          <p><strong>Resumen:</strong> {{ aiInsights.prediction.summary }}</p>
-          <p><strong>Recomendación:</strong> {{ aiInsights.prediction.recommendation }}</p>
-        </div>
-      </div>
-    </div>
-
+   
     <!-- Footer -->
     <footer class="dashboard-footer">
       <p>© 2025 EduPortal - Todos los derechos reservados</p>

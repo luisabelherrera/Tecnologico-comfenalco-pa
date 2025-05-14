@@ -105,7 +105,7 @@ aiInsights: {
 };
   aiLoading = false;
 
-  private apiKey = 'AIzaSyB9HNN9nYfHK07TlZiCjMG-qVXZ2u70Rxc';
+  private apiKey = '';
   private url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${this.apiKey}`;
 
   constructor(
