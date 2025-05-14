@@ -1,764 +1,784 @@
-import { Component, OnInit } from "@angular/core"
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Chart, ChartConfiguration } from 'chart.js';
+import { registerables } from 'chart.js';
+import * as annotationPlugin from 'chartjs-plugin-annotation'; // Import the annotation plugin
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { Calificacion } from 'src/app/models/entity/Calificacion.interface';
+import { Inscripcion } from 'src/app/models/entity/Inscripcion.interface';
+import { Nivel } from 'src/app/models/entity/nivel.interface';
+import { NivelDetalle } from 'src/app/models/entity/NivelDetalle.interface';
+import { Periodo } from 'src/app/models/entity/Periodo.interface';
+import { CalificacionService } from 'src/app/services/calificacion/calificacion.service';
+import { InscripcionService } from 'src/app/services/matricula/matricula.service';
+import { NivelService } from 'src/app/services/nivel/Nivel.service';
+import { NivelDetalleService } from 'src/app/services/niveldetalle/NivelDetalle.service';
+import { PeriodoService } from 'src/app/services/periodo/periodo.service';
 
-// Interfaces
-interface Estudiante {
-  idEstudiante: number
-  nombres: string
-  apellidos: string
-  documentoIdentidad: string
-  sexo: string
-  activo: boolean
-}
+// Register Chart.js components and the annotation plugin
+Chart.register(...registerables, annotationPlugin);
 
-interface Curricular {
-  idCurricular?: number
-  descripcion: string
-  activo: boolean
-  fechaRegistro: Date
-  docenteNivelDetalleCurso?: any
-}
-
-interface Calificacion {
-  idCalificacion: number
-  curricular: Curricular
-  estudiante: Estudiante
-  nota: number
-  activo: boolean
-  fechaRegistro: Date
-}
-
-interface Periodo {
-  idPeriodo: number
-  descripcion: string
-  fechaInicio: Date
-  fechaFin: Date
-  activo: boolean
-}
-
-enum EstadoPago {
-  PAGADO = "PAGADO",
-  PENDIENTE = "PENDIENTE",
-  EN_PROCESO = "EN_PROCESO",
-}
-
-interface Inscripcion {
-  idInscripcion: number
-  valorCodigo: number
-  codigo: string
-  situacion: string
-  nivelDetalle: any
-  estudiante: Estudiante
-  acudiente: any
-  institucionProcedencia: string
-  esRepitente: boolean
-  activo: boolean
-  fechaRegistro: Date
-  montoPago: number
-  metodoPago: string
-  estadoPago: EstadoPago
+interface AsignaturaData {
+  asignatura: string;
+  nivel: string;
+  grado: string;
+  seccion: string;
+  promedio: number;
+  estudianteCount: number;
 }
 
 interface PieSlice {
-  nombre: string
-  valor: number
-  porcentaje: number
-  color: string
-  startAngle: number
-  endAngle: number
+  nombre: string;
+  valor: number;
+  porcentaje: number;
+  color: string;
 }
 
-interface RadarPoint {
-  x: number
-  y: number
+interface GradeTrend {
+  periodo: number;
+  descripcion: string;
+  promedio: number;
+  predictedAverage?: number;
+  confidenceLower?: number;
+  confidenceUpper?: number;
+  isPredicted?: boolean;
 }
 
-interface RadarData {
-  estudiante: string
-  color: string
-  strokeColor: string
-  points: string
+interface AIInsightDetail {
+  summary: string;
+  recommendation?: string;
 }
 
 @Component({
-  selector: "app-dashboard-admin",
-  templateUrl: "./dashboard-admin.component.html",
-  styleUrls: ["./dashboard-admin.component.scss"],
+  selector: 'app-dashboard-admin',
+  templateUrl: './dashboard-admin.component.html',
+  styleUrls: ['./dashboard-admin.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardAdminComponent implements OnInit {
-  // Datos
-  estudiantes: Estudiante[] = []
-  calificaciones: Calificacion[] = []
-  inscripciones: Inscripcion[] = []
-  curriculares: Curricular[] = []
-  periodos: Periodo[] = []
+export class DashboardAdminComponent implements OnInit, AfterViewInit {
+  @ViewChild('gradesChart') gradesChartCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('enrollmentChart') enrollmentChartCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('genderChart') genderChartCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('trendChart') trendChartCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('dashboardContent') dashboardContent!: ElementRef<HTMLDivElement>;
 
-  // Estadísticas
-  totalEstudiantes = 0
-  totalInscripciones = 0
-  totalDocentes = 0
-  promedioGeneral = 0
+  nivelesDetalles: NivelDetalle[] = [];
+  niveles: Nivel[] = [];
+  periodos: Periodo[] = [];
+  inscripciones: Inscripcion[] = [];
+  calificaciones: Calificacion[] = [];
 
-  // Filtros
-  selectedPeriodo: number | null = null
+  totalEstudiantes = 0;
+  totalInscripciones = 0;
+  totalNiveles = 0;
+  promedioGeneral = 0;
 
-  // Datos procesados para gráficos
-  promediosPorAsignatura: { nombre: string; valor: number; porcentaje: number }[] = []
-  inscripcionesPorGrado: { grado: string; cantidad: number; porcentaje: number }[] = []
-  estadosPago: PieSlice[] = []
-  distribucionGenero: PieSlice[] = []
-  rendimientoEstudiantes: {
-    estudiante: string
-    asignaturas: { nombre: string; valor: number; porcentaje: number }[]
-  }[] = []
-  radarData: RadarData[] = []
-  asistenciaMensual: {
-    mes: string
-    asistencia: number
-    inasistencia: number
-    porcentajeAsistencia: number
-    porcentajeInasistencia: number
-  }[] = []
+  selectedPeriodo: number | null = null;
+  selectedNivel: number | null = null;
+  selectedGrado: string | null = null;
 
-  // Puntos para el gráfico de línea
-  lineChartPoints = ""
-  lineChartPointsArray: { x: number; y: number; valor: number }[] = []
+  promediosPorAsignatura: AsignaturaData[] = [];
+  estadosInscripcion: PieSlice[] = [];
+  distribucionGenero: PieSlice[] = [];
+  gradeTrends: GradeTrend[] = [];
 
-  constructor() {}
+  loading = true;
+  error: string | null = null;
+  isDarkMode = false;
+  charts: { [key: string]: Chart } = {};
+
+aiInsights: {
+  grades: AIInsightDetail;
+  enrollment: AIInsightDetail;
+  gender: AIInsightDetail;
+  trend: AIInsightDetail;
+  prediction: AIInsightDetail;
+} = {
+  grades: { summary: '', recommendation: '' },
+  enrollment: { summary: '', recommendation: '' },
+  gender: { summary: '', recommendation: '' },
+  trend: { summary: '', recommendation: '' },
+  prediction: { summary: '', recommendation: '' },
+};
+  aiLoading = false;
+
+  private apiKey = 'AIzaSyB9HNN9nYfHK07TlZiCjMG-qVXZ2u70Rxc';
+  private url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${this.apiKey}`;
+
+  constructor(
+    private nivelDetalleService: NivelDetalleService,
+    private nivelService: NivelService,
+    private periodoService: PeriodoService,
+    private inscripcionService: InscripcionService,
+    private calificacionService: CalificacionService,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
-    this.cargarDatosEjemplo()
-    this.calcularEstadisticas()
-    this.procesarDatosParaGraficos()
+    this.loadData();
   }
 
-  cargarDatosEjemplo(): void {
-    // Periodos
-    this.periodos = [
-      {
-        idPeriodo: 1,
-        descripcion: "2025-1",
-        fechaInicio: new Date("2025-01-01"),
-        fechaFin: new Date("2025-06-30"),
-        activo: true,
-      },
-      {
-        idPeriodo: 2,
-        descripcion: "2025-2",
-        fechaInicio: new Date("2025-07-01"),
-        fechaFin: new Date("2025-12-31"),
-        activo: true,
-      },
-    ]
-
-    // Estudiantes
-    this.estudiantes = [
-      { idEstudiante: 1, nombres: "Juan", apellidos: "Pérez", documentoIdentidad: "123456", sexo: "M", activo: true },
-      { idEstudiante: 2, nombres: "María", apellidos: "Gómez", documentoIdentidad: "789012", sexo: "F", activo: true },
-      { idEstudiante: 3, nombres: "Carlos", apellidos: "López", documentoIdentidad: "345678", sexo: "M", activo: true },
-      { idEstudiante: 4, nombres: "Ana", apellidos: "Martínez", documentoIdentidad: "901234", sexo: "F", activo: true },
-      {
-        idEstudiante: 5,
-        nombres: "Pedro",
-        apellidos: "Rodríguez",
-        documentoIdentidad: "567890",
-        sexo: "M",
-        activo: true,
-      },
-      {
-        idEstudiante: 6,
-        nombres: "Laura",
-        apellidos: "Sánchez",
-        documentoIdentidad: "234567",
-        sexo: "F",
-        activo: true,
-      },
-      {
-        idEstudiante: 7,
-        nombres: "Diego",
-        apellidos: "Hernández",
-        documentoIdentidad: "890123",
-        sexo: "M",
-        activo: true,
-      },
-      { idEstudiante: 8, nombres: "Sofía", apellidos: "Torres", documentoIdentidad: "456789", sexo: "F", activo: true },
-    ]
-
-    // Curriculares
-    this.curriculares = [
-      { idCurricular: 1, descripcion: "Matemáticas", activo: true, fechaRegistro: new Date() },
-      { idCurricular: 2, descripcion: "Español", activo: true, fechaRegistro: new Date() },
-      { idCurricular: 3, descripcion: "Ciencias", activo: true, fechaRegistro: new Date() },
-      { idCurricular: 4, descripcion: "Historia", activo: true, fechaRegistro: new Date() },
-      { idCurricular: 5, descripcion: "Inglés", activo: true, fechaRegistro: new Date() },
-    ]
-
-    // Calificaciones
-    this.calificaciones = [
-      {
-        idCalificacion: 1,
-        curricular: this.curriculares[0],
-        estudiante: this.estudiantes[0],
-        nota: 4.5,
-        activo: true,
-        fechaRegistro: new Date(),
-      },
-      {
-        idCalificacion: 2,
-        curricular: this.curriculares[1],
-        estudiante: this.estudiantes[0],
-        nota: 3.8,
-        activo: true,
-        fechaRegistro: new Date(),
-      },
-      {
-        idCalificacion: 3,
-        curricular: this.curriculares[2],
-        estudiante: this.estudiantes[0],
-        nota: 4.2,
-        activo: true,
-        fechaRegistro: new Date(),
-      },
-      {
-        idCalificacion: 4,
-        curricular: this.curriculares[3],
-        estudiante: this.estudiantes[0],
-        nota: 3.9,
-        activo: true,
-        fechaRegistro: new Date(),
-      },
-      {
-        idCalificacion: 5,
-        curricular: this.curriculares[4],
-        estudiante: this.estudiantes[0],
-        nota: 4.7,
-        activo: true,
-        fechaRegistro: new Date(),
-      },
-
-      {
-        idCalificacion: 6,
-        curricular: this.curriculares[0],
-        estudiante: this.estudiantes[1],
-        nota: 4.0,
-        activo: true,
-        fechaRegistro: new Date(),
-      },
-      {
-        idCalificacion: 7,
-        curricular: this.curriculares[1],
-        estudiante: this.estudiantes[1],
-        nota: 4.3,
-        activo: true,
-        fechaRegistro: new Date(),
-      },
-      {
-        idCalificacion: 8,
-        curricular: this.curriculares[2],
-        estudiante: this.estudiantes[1],
-        nota: 3.5,
-        activo: true,
-        fechaRegistro: new Date(),
-      },
-      {
-        idCalificacion: 9,
-        curricular: this.curriculares[3],
-        estudiante: this.estudiantes[1],
-        nota: 4.1,
-        activo: true,
-        fechaRegistro: new Date(),
-      },
-      {
-        idCalificacion: 10,
-        curricular: this.curriculares[4],
-        estudiante: this.estudiantes[1],
-        nota: 3.9,
-        activo: true,
-        fechaRegistro: new Date(),
-      },
-
-      {
-        idCalificacion: 11,
-        curricular: this.curriculares[0],
-        estudiante: this.estudiantes[2],
-        nota: 3.2,
-        activo: true,
-        fechaRegistro: new Date(),
-      },
-      {
-        idCalificacion: 12,
-        curricular: this.curriculares[1],
-        estudiante: this.estudiantes[2],
-        nota: 3.7,
-        activo: true,
-        fechaRegistro: new Date(),
-      },
-      {
-        idCalificacion: 13,
-        curricular: this.curriculares[2],
-        estudiante: this.estudiantes[2],
-        nota: 4.0,
-        activo: true,
-        fechaRegistro: new Date(),
-      },
-      {
-        idCalificacion: 14,
-        curricular: this.curriculares[3],
-        estudiante: this.estudiantes[2],
-        nota: 3.5,
-        activo: true,
-        fechaRegistro: new Date(),
-      },
-      {
-        idCalificacion: 15,
-        curricular: this.curriculares[4],
-        estudiante: this.estudiantes[2],
-        nota: 3.8,
-        activo: true,
-        fechaRegistro: new Date(),
-      },
-    ]
-
-    // Inscripciones
-    this.inscripciones = [
-      {
-        idInscripcion: 1,
-        valorCodigo: 1001,
-        codigo: "INS001",
-        situacion: "Regular",
-        nivelDetalle: {
-          idNivelDetalle: 1,
-          nivel: {
-            idNivel: 1,
-            periodo: this.periodos[0],
-            descripcionNivel: "Bachillerato",
-            descripcionTurno: "Mañana",
-            horaInicio: "07:00",
-            horaFin: "13:00",
-            activo: true,
-          },
-          gradoSeccion: { idGradoSeccion: 1, descripcionGrado: "11", descripcionSeccion: "A", activo: true },
-          totalVacantes: 30,
-          vacantesDisponibles: 10,
-          vacantesOcupadas: 20,
-          activo: true,
-        },
-        estudiante: this.estudiantes[0],
-        acudiente: {
-          nombres: "Ana",
-          apellidos: "Pérez",
-          documentoIdentidad: "987654",
-          ciudad: "Bogotá",
-          direccion: "Calle 123",
-          estadoCivil: "Casada",
-          sexo: "F",
-          telefono: "3001234567",
-          activo: true,
-        },
-        institucionProcedencia: "Colegio XYZ",
-        esRepitente: false,
-        activo: true,
-        fechaRegistro: new Date(),
-        montoPago: 500000,
-        metodoPago: "Transferencia",
-        estadoPago: EstadoPago.PAGADO,
-      },
-      {
-        idInscripcion: 2,
-        valorCodigo: 1002,
-        codigo: "INS002",
-        situacion: "Regular",
-        nivelDetalle: {
-          idNivelDetalle: 1,
-          nivel: {
-            idNivel: 1,
-            periodo: this.periodos[0],
-            descripcionNivel: "Bachillerato",
-            descripcionTurno: "Mañana",
-            horaInicio: "07:00",
-            horaFin: "13:00",
-            activo: true,
-          },
-          gradoSeccion: { idGradoSeccion: 1, descripcionGrado: "11", descripcionSeccion: "A", activo: true },
-          totalVacantes: 30,
-          vacantesDisponibles: 10,
-          vacantesOcupadas: 20,
-          activo: true,
-        },
-        estudiante: this.estudiantes[1],
-        acudiente: {
-          nombres: "Luis",
-          apellidos: "Gómez",
-          documentoIdentidad: "654321",
-          ciudad: "Medellín",
-          direccion: "Carrera 456",
-          estadoCivil: "Soltero",
-          sexo: "M",
-          telefono: "3009876543",
-          activo: true,
-        },
-        institucionProcedencia: "Colegio ABC",
-        esRepitente: false,
-        activo: true,
-        fechaRegistro: new Date(),
-        montoPago: 500000,
-        metodoPago: "Efectivo",
-        estadoPago: EstadoPago.PENDIENTE,
-      },
-      {
-        idInscripcion: 3,
-        valorCodigo: 1003,
-        codigo: "INS003",
-        situacion: "Regular",
-        nivelDetalle: {
-          idNivelDetalle: 2,
-          nivel: {
-            idNivel: 1,
-            periodo: this.periodos[0],
-            descripcionNivel: "Bachillerato",
-            descripcionTurno: "Tarde",
-            horaInicio: "13:00",
-            horaFin: "19:00",
-            activo: true,
-          },
-          gradoSeccion: { idGradoSeccion: 2, descripcionGrado: "10", descripcionSeccion: "B", activo: true },
-          totalVacantes: 30,
-          vacantesDisponibles: 15,
-          vacantesOcupadas: 15,
-          activo: true,
-        },
-        estudiante: this.estudiantes[2],
-        acudiente: {
-          nombres: "Carmen",
-          apellidos: "López",
-          documentoIdentidad: "123789",
-          ciudad: "Cali",
-          direccion: "Avenida 789",
-          estadoCivil: "Casada",
-          sexo: "F",
-          telefono: "3005678901",
-          activo: true,
-        },
-        institucionProcedencia: "Colegio DEF",
-        esRepitente: true,
-        activo: true,
-        fechaRegistro: new Date(),
-        montoPago: 500000,
-        metodoPago: "Tarjeta",
-        estadoPago: EstadoPago.EN_PROCESO,
-      },
-      {
-        idInscripcion: 4,
-        valorCodigo: 1004,
-        codigo: "INS004",
-        situacion: "Regular",
-        nivelDetalle: {
-          idNivelDetalle: 2,
-          nivel: {
-            idNivel: 1,
-            periodo: this.periodos[0],
-            descripcionNivel: "Bachillerato",
-            descripcionTurno: "Tarde",
-            horaInicio: "13:00",
-            horaFin: "19:00",
-            activo: true,
-          },
-          gradoSeccion: { idGradoSeccion: 2, descripcionGrado: "10", descripcionSeccion: "B", activo: true },
-          totalVacantes: 30,
-          vacantesDisponibles: 15,
-          vacantesOcupadas: 15,
-          activo: true,
-        },
-        estudiante: this.estudiantes[3],
-        acudiente: {
-          nombres: "Roberto",
-          apellidos: "Martínez",
-          documentoIdentidad: "456123",
-          ciudad: "Barranquilla",
-          direccion: "Calle 456",
-          estadoCivil: "Casado",
-          sexo: "M",
-          telefono: "3002345678",
-          activo: true,
-        },
-        institucionProcedencia: "Colegio GHI",
-        esRepitente: false,
-        activo: true,
-        fechaRegistro: new Date(),
-        montoPago: 500000,
-        metodoPago: "Transferencia",
-        estadoPago: EstadoPago.PAGADO,
-      },
-      {
-        idInscripcion: 5,
-        valorCodigo: 1005,
-        codigo: "INS005",
-        situacion: "Regular",
-        nivelDetalle: {
-          idNivelDetalle: 3,
-          nivel: {
-            idNivel: 2,
-            periodo: this.periodos[1],
-            descripcionNivel: "Bachillerato",
-            descripcionTurno: "Mañana",
-            horaInicio: "07:00",
-            horaFin: "13:00",
-            activo: true,
-          },
-          gradoSeccion: { idGradoSeccion: 3, descripcionGrado: "9", descripcionSeccion: "A", activo: true },
-          totalVacantes: 30,
-          vacantesDisponibles: 20,
-          vacantesOcupadas: 10,
-          activo: true,
-        },
-        estudiante: this.estudiantes[4],
-        acudiente: {
-          nombres: "Marta",
-          apellidos: "Rodríguez",
-          documentoIdentidad: "789456",
-          ciudad: "Cartagena",
-          direccion: "Avenida 123",
-          estadoCivil: "Divorciada",
-          sexo: "F",
-          telefono: "3007890123",
-          activo: true,
-        },
-        institucionProcedencia: "Colegio JKL",
-        esRepitente: false,
-        activo: true,
-        fechaRegistro: new Date(),
-        montoPago: 500000,
-        metodoPago: "Efectivo",
-        estadoPago: EstadoPago.PENDIENTE,
-      },
-    ]
+  ngAfterViewInit(): void {
+    this.updateCharts();
   }
 
-  calcularEstadisticas(): void {
-    this.totalEstudiantes = this.estudiantes.length
-    this.totalInscripciones = this.inscripciones.length
-    this.totalDocentes = 5 // Ejemplo
+  loadData(): void {
+    this.loading = true;
+    this.error = null;
 
-    // Calcular promedio general
-    const notas = this.calificaciones.map((c) => c.nota)
-    this.promedioGeneral = notas.reduce((a, b) => a + b, 0) / notas.length
+    forkJoin({
+      nivelesDetalles: this.nivelDetalleService.getAll().pipe(catchError(() => of([]))),
+      niveles: this.nivelService.getAll().pipe(catchError(() => of([]))),
+      periodos: this.periodoService.getAll().pipe(catchError(() => of([]))),
+      inscripciones: this.inscripcionService.getAllInscripciones().pipe(catchError(() => of([]))),
+      calificaciones: this.calificacionService.getCalificaciones().pipe(catchError(() => of([]))),
+    }).subscribe({
+      next: (results) => {
+        this.nivelesDetalles = results.nivelesDetalles;
+        this.niveles = results.niveles;
+        this.periodos = results.periodos;
+        this.inscripciones = results.inscripciones;
+        this.calificaciones = results.calificaciones;
+
+        this.calculateStats();
+        this.processChartData();
+        this.processGradeTrends();
+        this.generateAIInsights();
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.error = 'Error al cargar los datos: ' + (err.message || 'Error desconocido');
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
 
-  procesarDatosParaGraficos(): void {
-    this.procesarPromediosPorAsignatura()
-    this.procesarInscripcionesPorGrado()
-    this.procesarEstadosPago()
-    this.procesarDistribucionGenero()
-    this.procesarRendimientoEstudiantes()
-    this.procesarAsistenciaMensual()
-    this.generarPuntosGraficoLinea()
-    this.generarDatosRadar()
+  calculateStats(): void {
+    const uniqueEstudiantes = new Set(this.inscripciones.map(ins => ins.estudiante.idEstudiante));
+    this.totalEstudiantes = uniqueEstudiantes.size;
+    this.totalInscripciones = this.inscripciones.length;
+    this.totalNiveles = this.niveles.length;
+    this.promedioGeneral = this.calificaciones.length
+      ? Number((this.calificaciones.reduce((sum, cal) => sum + cal.nota, 0) / this.calificaciones.length).toFixed(1))
+      : 0;
   }
 
-  procesarPromediosPorAsignatura(): void {
-    this.promediosPorAsignatura = this.curriculares.map((curricular) => {
-      const calificacionesAsignatura = this.calificaciones.filter(
-        (c) => c.curricular.idCurricular === curricular.idCurricular,
-      )
-      const promedio = calificacionesAsignatura.reduce((sum, c) => sum + c.nota, 0) / calificacionesAsignatura.length
-      return {
-        nombre: curricular.descripcion,
-        valor: promedio,
-        porcentaje: (promedio / 5) * 100, // Considerando que 5 es la nota máxima
+  processChartData(): void {
+    this.processGradesBySubject();
+    this.processEnrollmentStatus();
+    this.processGenderDistribution();
+  }
+
+  processGradesBySubject(): void {
+    const filteredCalificaciones = this.calificaciones.filter(cal => {
+      const inscripcion = this.inscripciones.find(ins => ins.estudiante.idEstudiante === cal.estudiante.idEstudiante);
+      if (!inscripcion) return false;
+      const nivelDetalle = this.nivelesDetalles.find(nd => nd.idNivelDetalle === inscripcion.nivelDetalle.idNivelDetalle);
+      if (!nivelDetalle || !nivelDetalle.nivel || !nivelDetalle.nivel.periodo || !nivelDetalle.gradoSeccion) return false;
+      return (
+        (this.selectedPeriodo ? nivelDetalle.nivel.periodo.idPeriodo === this.selectedPeriodo : true) &&
+        (this.selectedNivel ? nivelDetalle.nivel.idNivel === this.selectedNivel : true) &&
+        (this.selectedGrado ? nivelDetalle.gradoSeccion.descripcionGrado === this.selectedGrado : true)
+      );
+    });
+
+    const grouped = new Map<string, { notas: number[]; estudianteIds: Set<number> }>();
+    filteredCalificaciones.forEach(cal => {
+      const inscripcion = this.inscripciones.find(ins => ins.estudiante.idEstudiante === cal.estudiante.idEstudiante);
+      if (!inscripcion) return;
+      const nivelDetalle = this.nivelesDetalles.find(nd => nd.idNivelDetalle === inscripcion.nivelDetalle.idNivelDetalle);
+      if (!nivelDetalle || !nivelDetalle.nivel || !nivelDetalle.gradoSeccion) return;
+      const key = `${cal.curricular.descripcion}-${nivelDetalle.nivel.descripcionNivel}-${nivelDetalle.gradoSeccion.descripcionGrado}-${nivelDetalle.gradoSeccion.descripcionSeccion}`;
+      if (!grouped.has(key)) {
+        grouped.set(key, { notas: [], estudianteIds: new Set() });
       }
-    })
+      const group = grouped.get(key)!;
+      group.notas.push(cal.nota);
+      group.estudianteIds.add(cal.estudiante.idEstudiante);
+    });
+
+    this.promediosPorAsignatura = [];
+    grouped.forEach((group, key) => {
+      const [asignatura, nivel, grado, seccion] = key.split('-');
+      const promedio = group.notas.length ? group.notas.reduce((sum, nota) => sum + nota, 0) / group.notas.length : 0;
+      if (promedio > 0) {
+        this.promediosPorAsignatura.push({
+          asignatura,
+          nivel,
+          grado,
+          seccion,
+          promedio: Number(promedio.toFixed(1)),
+          estudianteCount: group.estudianteIds.size,
+        });
+      }
+    });
   }
 
-  procesarInscripcionesPorGrado(): void {
-    const inscripcionesPorGrado = new Map<string, number>()
+  processEnrollmentStatus(): void {
+    const filteredInscripciones = this.inscripciones.filter(ins => {
+      const nivelDetalle = this.nivelesDetalles.find(nd => nd.idNivelDetalle === ins.nivelDetalle.idNivelDetalle);
+      if (!nivelDetalle || !nivelDetalle.nivel || !nivelDetalle.nivel.periodo || !nivelDetalle.gradoSeccion) return false;
+      return (
+        (this.selectedPeriodo ? nivelDetalle.nivel.periodo.idPeriodo === this.selectedPeriodo : true) &&
+        (this.selectedNivel ? nivelDetalle.nivel.idNivel === this.selectedNivel : true) &&
+        (this.selectedGrado ? nivelDetalle.gradoSeccion.descripcionGrado === this.selectedGrado : true)
+      );
+    });
 
-    this.inscripciones.forEach((inscripcion) => {
-      const grado = inscripcion.nivelDetalle.gradoSeccion.descripcionGrado
-      if (inscripcionesPorGrado.has(grado)) {
-        inscripcionesPorGrado.set(grado, inscripcionesPorGrado.get(grado)! + 1)
-      } else {
-        inscripcionesPorGrado.set(grado, 1)
-      }
-    })
+    const estados = new Map<string, number>();
+    filteredInscripciones.forEach(ins => {
+      const estado = ins.estadoPago;
+      estados.set(estado, (estados.get(estado) || 0) + 1);
+    });
 
-    const totalInscripciones = this.inscripciones.length
-
-    this.inscripcionesPorGrado = Array.from(inscripcionesPorGrado.entries()).map(([grado, cantidad]) => {
-      return {
-        grado,
-        cantidad,
-        porcentaje: (cantidad / totalInscripciones) * 100,
-      }
-    })
+    const total = filteredInscripciones.length;
+    this.estadosInscripcion = [];
+    const allStates = ['PAGADO', 'PENDIENTE', 'EN_PROCESO'];
+    const colors = ['#f94144', '#f9c74f', '#90be6d'];
+    allStates.forEach((state, index) => {
+      const valor = estados.get(state) || 0;
+      const porcentaje = total ? Number(((valor / total) * 100).toFixed(1)) : 0;
+      this.estadosInscripcion.push({ nombre: state, valor, porcentaje, color: colors[index] });
+    });
   }
 
-  procesarEstadosPago(): void {
-    const estadosPago = new Map<string, number>()
+  processGenderDistribution(): void {
+    const filteredInscripciones = this.inscripciones.filter(ins => {
+      const nivelDetalle = this.nivelesDetalles.find(nd => nd.idNivelDetalle === ins.nivelDetalle.idNivelDetalle);
+      if (!nivelDetalle || !nivelDetalle.nivel || !nivelDetalle.nivel.periodo || !nivelDetalle.gradoSeccion) return false;
+      return (
+        (this.selectedPeriodo ? nivelDetalle.nivel.periodo.idPeriodo === this.selectedPeriodo : true) &&
+        (this.selectedNivel ? nivelDetalle.nivel.idNivel === this.selectedNivel : true) &&
+        (this.selectedGrado ? nivelDetalle.gradoSeccion.descripcionGrado === this.selectedGrado : true)
+      );
+    });
 
-    this.inscripciones.forEach((inscripcion) => {
-      const estado = inscripcion.estadoPago
-      if (estadosPago.has(estado)) {
-        estadosPago.set(estado, estadosPago.get(estado)! + 1)
-      } else {
-        estadosPago.set(estado, 1)
-      }
-    })
+    const estudianteIds = new Set<number>(filteredInscripciones.map(ins => ins.estudiante.idEstudiante));
+    const filteredEstudiantes = filteredInscripciones
+      .map(ins => ins.estudiante)
+      .filter(est => estudianteIds.has(est.idEstudiante));
 
-    const totalInscripciones = this.inscripciones.length
-    let acumulado = 0
-
-    this.estadosPago = Array.from(estadosPago.entries()).map(([estado, cantidad], index) => {
-      const porcentaje = (cantidad / totalInscripciones) * 100
-      let color = ""
-      switch (estado) {
-        case EstadoPago.PAGADO:
-          color = "#4CAF50" // Verde
-          break
-        case EstadoPago.PENDIENTE:
-          color = "#FF9800" // Naranja
-          break
-        case EstadoPago.EN_PROCESO:
-          color = "#2196F3" // Azul
-          break
-        default:
-          color = "#9E9E9E" // Gris
-      }
-
-      const startAngle = acumulado
-      acumulado += porcentaje / 100 * 360
-      const endAngle = acumulado
-
-      return {
-        nombre: estado,
-        valor: cantidad,
-        porcentaje,
-        color,
-        startAngle,
-        endAngle
-      }
-    })
-  }
-
-  procesarDistribucionGenero(): void {
-    const masculinos = this.estudiantes.filter((e) => e.sexo === "M").length
-    const femeninos = this.estudiantes.filter((e) => e.sexo === "F").length
-    const total = this.estudiantes.length
-
-    const porcentajeMasculino = (masculinos / total) * 100
-    const porcentajeFemenino = (femeninos / total) * 100
+    const masculinos = filteredEstudiantes.filter(est => est.sexo === 'M').length;
+    const femeninos = filteredEstudiantes.filter(est => est.sexo === 'F').length;
+    const total = filteredEstudiantes.length;
 
     this.distribucionGenero = [
-      {
-        nombre: "Masculino",
-        valor: masculinos,
-        porcentaje: porcentajeMasculino,
-        color: "#2196F3", // Azul
-        startAngle: 0,
-        endAngle: porcentajeMasculino / 100 * 360
-      },
-      {
-        nombre: "Femenino",
-        valor: femeninos,
-        porcentaje: porcentajeFemenino,
-        color: "#E91E63", // Rosa
-        startAngle: porcentajeMasculino / 100 * 360,
-        endAngle: 360
-      },
-    ]
+      { nombre: 'Masculino', valor: masculinos, porcentaje: total ? Number(((masculinos / total) * 100).toFixed(1)) : 0, color: '#277da1' },
+      { nombre: 'Femenino', valor: femeninos, porcentaje: total ? Number(((femeninos / total) * 100).toFixed(1)) : 0, color: '#f9c74f' },
+    ];
   }
 
-  procesarRendimientoEstudiantes(): void {
-    // Tomamos solo los primeros 2 estudiantes para el ejemplo
-    this.rendimientoEstudiantes = this.estudiantes.slice(0, 2).map((estudiante) => {
-      const asignaturas = this.curriculares.map((curricular) => {
-        const calificacion = this.calificaciones.find(
-          (c) =>
-            c.estudiante.idEstudiante === estudiante.idEstudiante &&
-            c.curricular.idCurricular === curricular.idCurricular,
-        )
-        const valor = calificacion ? calificacion.nota : 0
-        return {
-          nombre: curricular.descripcion,
-          valor,
-          porcentaje: (valor / 5) * 100, // Considerando que 5 es la nota máxima
+  processGradeTrends(): void {
+    const filteredCalificaciones = this.calificaciones.filter(cal => {
+      const inscripcion = this.inscripciones.find(ins => ins.estudiante.idEstudiante === cal.estudiante.idEstudiante);
+      if (!inscripcion) return false;
+      const nivelDetalle = this.nivelesDetalles.find(nd => nd.idNivelDetalle === inscripcion.nivelDetalle.idNivelDetalle);
+      if (!nivelDetalle || !nivelDetalle.nivel || !nivelDetalle.nivel.periodo || !nivelDetalle.gradoSeccion) return false;
+      return (
+        (this.selectedPeriodo ? nivelDetalle.nivel.periodo.idPeriodo === this.selectedPeriodo : true) &&
+        (this.selectedNivel ? nivelDetalle.nivel.idNivel === this.selectedNivel : true) &&
+        (this.selectedGrado ? nivelDetalle.gradoSeccion.descripcionGrado === this.selectedGrado : true)
+      );
+    });
+
+    const groupedByPeriodo = new Map<number, { notas: number[]; descripcion: string }>();
+    filteredCalificaciones.forEach(cal => {
+      const inscripcion = this.inscripciones.find(ins => ins.estudiante.idEstudiante === cal.estudiante.idEstudiante);
+      if (!inscripcion) return;
+      const nivelDetalle = this.nivelesDetalles.find(nd => nd.idNivelDetalle === inscripcion.nivelDetalle.idNivelDetalle);
+      if (!nivelDetalle || !nivelDetalle.nivel || !nivelDetalle.nivel.periodo) return;
+      const periodoId = nivelDetalle.nivel.periodo.idPeriodo;
+      const periodo = this.periodos.find(p => p.idPeriodo === periodoId);
+      if (!periodo) return;
+      if (!groupedByPeriodo.has(periodoId)) {
+        groupedByPeriodo.set(periodoId, { notas: [], descripcion: periodo.descripcion });
+      }
+      groupedByPeriodo.get(periodoId)!.notas.push(cal.nota);
+    });
+
+    this.gradeTrends = [];
+    groupedByPeriodo.forEach((group, periodoId) => {
+      const promedio = group.notas.length ? group.notas.reduce((sum, nota) => sum + nota, 0) / group.notas.length : 0;
+      this.gradeTrends.push({
+        periodo: periodoId,
+        descripcion: group.descripcion,
+        promedio: Number(promedio.toFixed(1)),
+        isPredicted: false,
+      });
+    });
+    this.gradeTrends.sort((a, b) => a.periodo - b.periodo);
+
+    // Generar predicciones para los próximos 2 períodos
+    this.generateGradePredictions();
+  }
+
+  generateGradePredictions(): void {
+    if (this.gradeTrends.length < 2) {
+      this.aiInsights.prediction.summary = 'No hay suficientes datos históricos para generar predicciones.';
+      return;
+    }
+
+    const prompt = `
+      Analiza los datos históricos de tendencias de notas: ${JSON.stringify(this.gradeTrends.filter(trend => !trend.isPredicted))}.
+      Contexto: Los filtros aplicados son Período=${this.selectedPeriodo || 'Todos'}, Nivel=${this.selectedNivel || 'Todos'}, Grado=${this.selectedGrado || 'Todos'}.
+      Tarea: Predecir el promedio de notas para los próximos 2 períodos basándote en los datos históricos y el contexto proporcionado.
+      Proporciona:
+      1. Un razonamiento paso a paso de cómo llegas a las predicciones (por ejemplo, análisis de tendencias, factores considerados).
+      2. Los promedios predichos para los próximos 2 períodos con un rango de confianza (límite inferior y superior) para cada predicción.
+      3. Una recomendación específica basada en las predicciones (por ejemplo, áreas de mejora o intervenciones).
+      4. Un resumen breve (2-3 oraciones) sobre las predicciones.
+      Formato de respuesta esperado:
+      Razonamiento: [Paso 1: ...; Paso 2: ...; etc.]
+      Predicción Período X: Y (Rango de confianza: [A, B])
+      Predicción Período Y: Z (Rango de confianza: [C, D])
+      Recomendación: [Texto]
+      Resumen: [Texto]
+    `;
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.7, topK: 40, topP: 0.95, maxOutputTokens: 2048 } };
+
+    this.http.post<any>(this.url, body, { headers }).pipe(
+      catchError(err => {
+        console.error('Error calling Gemini API for predictions:', err);
+        return of({ candidates: [{ content: { parts: [{ text: 'Error al generar predicciones.' }] } }] });
+      }),
+    ).subscribe({
+      next: (response) => {
+        if (response && response.candidates && response.candidates[0] && response.candidates[0].content) {
+          const text = response.candidates[0].content.parts[0].text;
+          const lines = text.split('\n');
+          const reasoning = lines.find(line => line.startsWith('Razonamiento:'))?.replace('Razonamiento: ', '');
+          const prediction1 = lines.find(line => line.startsWith('Predicción Período'))?.match(/Predicción Período (\d+): (\d+\.\d+) \(Rango de confianza: \[(\d+\.\d+), (\d+\.\d+)\]\)/);
+          const prediction2 = lines[lines.indexOf(lines.find(line => line.startsWith('Predicción Período')) || '') + 1]?.match(/Predicción Período (\d+): (\d+\.\d+) \(Rango de confianza: \[(\d+\.\d+), (\d+\.\d+)\]\)/);
+          const recommendation = lines.find(line => line.startsWith('Recomendación:'))?.replace('Recomendación: ', '');
+          const summary = lines.find(line => line.startsWith('Resumen:'))?.replace('Resumen: ', '');
+
+          if (prediction1 && prediction2) {
+            const lastPeriodo = this.gradeTrends[this.gradeTrends.length - 1].periodo;
+            this.gradeTrends.push({
+              periodo: lastPeriodo + 1,
+              descripcion: `Período ${lastPeriodo + 1} (Predicho)`,
+              promedio: 0,
+              predictedAverage: Number(prediction1[2]),
+              confidenceLower: Number(prediction1[3]),
+              confidenceUpper: Number(prediction1[4]),
+              isPredicted: true,
+            });
+            this.gradeTrends.push({
+              periodo: lastPeriodo + 2,
+              descripcion: `Período ${lastPeriodo + 2} (Predicho)`,
+              promedio: 0,
+              predictedAverage: Number(prediction2[2]),
+              confidenceLower: Number(prediction2[3]),
+              confidenceUpper: Number(prediction2[4]),
+              isPredicted: true,
+            });
+            this.aiInsights.prediction = {
+              summary: summary || 'No se pudo generar el resumen de predicciones.',
+              recommendation: recommendation || 'No se pudo generar una recomendación.',
+            };
+          } else {
+            this.aiInsights.prediction = {
+              summary: 'No se pudo parsear las predicciones de la IA.',
+              recommendation: '',
+            };
+          }
+        } else {
+          this.aiInsights.prediction = {
+            summary: 'Error al generar predicciones.',
+            recommendation: '',
+          };
         }
-      })
+        this.updateCharts();
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error processing prediction response:', err);
+        this.aiInsights.prediction = {
+          summary: 'Error al generar predicciones.',
+          recommendation: '',
+        };
+        this.cdr.detectChanges();
+      },
+    });
+  }
 
-      return {
-        estudiante: `${estudiante.nombres} ${estudiante.apellidos}`,
-        asignaturas,
+  private createGeminiPrompt(): string {
+    const context = `Contexto: Filtros aplicados - Período=${this.selectedPeriodo || 'Todos'}, Nivel=${this.selectedNivel || 'Todos'}, Grado=${this.selectedGrado || 'Todos'}.`;
+    return `
+      ${context}
+      Analiza los siguientes datos educativos con un enfoque detallado y razonado:
+
+      1. Promedios por Asignatura: ${JSON.stringify(this.promediosPorAsignatura)}
+      2. Estado de Inscripciones: ${JSON.stringify(this.estadosInscripcion)}
+      3. Distribución por Género: ${JSON.stringify(this.distribucionGenero)}
+      4. Tendencias de Notas (Históricas): ${JSON.stringify(this.gradeTrends.filter(trend => !trend.isPredicted))}
+
+      Tarea: Para cada categoría (1-4), realiza lo siguiente:
+      - Proporciona un razonamiento paso a paso sobre cómo interpretas los datos (por ejemplo, identifica tendencias, anomalías o patrones).
+      - Ofrece un resumen breve (2-3 oraciones) basado en el análisis.
+      - Sugiere una recomendación accionable específica para mejorar o actuar sobre los datos (por ejemplo, enfocarse en asignaturas con bajo rendimiento o gestionar pagos pendientes).
+      Formato de respuesta esperado para cada categoría (ejemplo para 1):
+      Razonamiento: [Paso 1: ...; Paso 2: ...; etc.]
+      Resumen: [Texto]
+      Recomendación: [Texto]
+      Repite este formato para las categorías 2, 3 y 4.
+    `;
+  }
+
+  generateAIInsights(): void {
+    this.aiLoading = true;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { contents: [{ parts: [{ text: this.createGeminiPrompt() }] }], generationConfig: { temperature: 0.7, topK: 40, topP: 0.95, maxOutputTokens: 2048 } };
+
+    this.http.post<any>(this.url, body, { headers }).pipe(
+      catchError(err => {
+        console.error('Error calling Gemini API:', err);
+        return of({ candidates: [{ content: { parts: [{ text: 'No se pudieron generar los insights debido a un error en la API.' }] } }] });
+      }),
+    ).subscribe({
+      next: (response) => {
+        if (response && response.candidates && response.candidates[0] && response.candidates[0].content) {
+          const text = response.candidates[0].content.parts[0].text;
+          const sections = text.split('\n\n');
+          this.aiInsights = {
+            grades: this.parseInsightSection(sections[0] || 'Razonamiento: No hay datos.\nResumen: No se pudo generar el resumen.\nRecomendación: No disponible.'),
+            enrollment: this.parseInsightSection(sections[1] || 'Razonamiento: No hay datos.\nResumen: No se pudo generar el resumen.\nRecomendación: No disponible.'),
+            gender: this.parseInsightSection(sections[2] || 'Razonamiento: No hay datos.\nResumen: No se pudo generar el resumen.\nRecomendación: No disponible.'),
+            trend: this.parseInsightSection(sections[3] || 'Razonamiento: No hay datos.\nResumen: No se pudo generar el resumen.\nRecomendación: No disponible.'),
+            prediction: this.aiInsights.prediction,
+          };
+        } else {
+          this.aiInsights = {
+            grades: { summary: 'Error al generar el resumen de notas.', recommendation: '' },
+            enrollment: { summary: 'Error al generar el resumen de inscripciones.', recommendation: '' },
+            gender: { summary: 'Error al generar el resumen de género.', recommendation: '' },
+            trend: { summary: 'Error al generar el resumen de tendencias.', recommendation: '' },
+            prediction: { summary: 'Error al generar predicciones.', recommendation: '' },
+          };
+        }
+        this.aiLoading = false;
+        this.updateCharts();
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error processing AI response:', err);
+        this.aiInsights = {
+          grades: { summary: 'Error al generar el resumen de notas.', recommendation: '' },
+          enrollment: { summary: 'Error al generar el resumen de inscripciones.', recommendation: '' },
+          gender: { summary: 'Error al generar el resumen de género.', recommendation: '' },
+          trend: { summary: 'Error al generar el resumen de tendencias.', recommendation: '' },
+          prediction: { summary: 'Error al generar predicciones.', recommendation: '' },
+        };
+        this.aiLoading = false;
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  private parseInsightSection(section: string): AIInsightDetail {
+    const lines = section.split('\n');
+    return {
+      summary: lines.find(line => line.startsWith('Resumen:'))?.replace('Resumen: ', '') || 'No se pudo generar el resumen.',
+      recommendation: lines.find(line => line.startsWith('Recomendación:'))?.replace('Recomendación: ', '') || '',
+    };
+  }
+
+  updateCharts(): void {
+    const createChart = (canvas: ElementRef<HTMLCanvasElement> | undefined, config: ChartConfiguration): void => {
+      if (!canvas || !canvas.nativeElement) return;
+      if (this.charts[canvas.nativeElement.id]) {
+        this.charts[canvas.nativeElement.id].destroy();
       }
-    })
-  }
+      const chart = new Chart(canvas.nativeElement, config);
+      this.charts[canvas.nativeElement.id] = chart;
+    };
 
-  generarDatosRadar(): void {
-    const colores = ["rgba(33, 150, 243, 0.3)", "rgba(233, 30, 99, 0.3)"]
-    const strokeColores = ["rgba(33, 150, 243, 0.8)", "rgba(233, 30, 99, 0.8)"]
+    // Gráfico de Notas por Asignatura
+    createChart(this.gradesChartCanvas, {
+      type: 'bar',
+      data: {
+        labels: this.promediosPorAsignatura.map(item => `${item.asignatura} (${item.nivel} - ${item.grado} ${item.seccion})`),
+        datasets: [{
+          label: 'Promedio',
+          data: this.promediosPorAsignatura.map(item => item.promedio),
+          backgroundColor: 'rgba(249, 65, 68, 0.7)',
+          borderColor: '#f94144',
+          borderWidth: 1,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: { beginAtZero: true, max: 5, title: { display: true, text: 'Nota', font: { family: 'Inter', size: 14 } } },
+          x: { ticks: { font: { family: 'Inter', size: 12 }, maxRotation: 45, minRotation: 45 } },
+        },
+        plugins: {
+          tooltip: {
+            backgroundColor: 'rgba(39, 125, 161, 0.9)',
+            titleFont: { family: 'Inter' },
+            bodyFont: { family: 'Inter' },
+            callbacks: {
+              label: (context) => {
+                const item = this.promediosPorAsignatura[context.dataIndex];
+                return `${item.asignatura}: ${item.promedio} (Estudiantes: ${item.estudianteCount})\n${this.aiInsights.grades.recommendation || ''}`;
+              },
+            },
+          },
+          annotation: {
+            annotations: this.promediosPorAsignatura.length > 0 ? [{
+              type: 'label',
+              xValue: 0,
+              yValue: 5,
+              content: this.aiInsights.grades.summary.split(' ').slice(0, 10).join(' ') + '...', // Limitar longitud para mejor visualización
+              backgroundColor: 'rgba(39, 125, 161, 0.7)',
+              color: '#fff',
+              font: { size: 12 },
+              padding: 5,
+              borderRadius: 4,
+              position: 'start',
+            }] : [],
+          },
+        },
+      },
+    });
 
-    this.radarData = this.rendimientoEstudiantes.map((estudiante, idx) => {
-      const points = this.calcularPuntosRadar(estudiante.asignaturas)
-      return {
-        estudiante: estudiante.estudiante,
-        color: colores[idx],
-        strokeColor: strokeColores[idx],
-        points
-      }
-    })
-  }
+    // Gráfico de Estado de Inscripciones
+    createChart(this.enrollmentChartCanvas, {
+      type: 'pie',
+      data: {
+        labels: this.estadosInscripcion.map(slice => slice.nombre),
+        datasets: [{
+          data: this.estadosInscripcion.map(slice => slice.valor),
+          backgroundColor: this.estadosInscripcion.map(slice => slice.color),
+          borderColor: '#ffffff',
+          borderWidth: 2,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 12 } } },
+          tooltip: {
+            backgroundColor: 'rgba(39, 125, 161, 0.9)',
+            titleFont: { family: 'Inter' },
+            bodyFont: { family: 'Inter' },
+            callbacks: {
+              label: (context) => {
+                const slice = this.estadosInscripcion[context.dataIndex];
+                return `${slice.nombre}: ${slice.valor} (${slice.porcentaje}%)\n${this.aiInsights.enrollment.recommendation || ''}`;
+              },
+            },
+          },
+          annotation: {
+            annotations: this.estadosInscripcion.length > 0 ? [{
+              type: 'label',
+              xValue: 'center',
+              yValue: 'center',
+              content: this.aiInsights.enrollment.summary.split(' ').slice(0, 10).join(' ') + '...',
+              backgroundColor: 'rgba(39, 125, 161, 0.7)',
+              color: '#fff',
+              font: { size: 12 },
+              padding: 5,
+              borderRadius: 4,
+            }] : [],
+          },
+        },
+      },
+    });
 
-  calcularPuntosRadar(asignaturas: { nombre: string; valor: number; porcentaje: number }[]): string {
-    const puntos: string[] = []
-    
-    asignaturas.forEach((item, i) => {
-      const angle = i * (2 * Math.PI / asignaturas.length)
-      const r = item.porcentaje / 2
-      puntos.push(`${50 + r * Math.sin(angle)},${50 - r * Math.cos(angle)}`)
-    })
-    
-    return puntos.join(' ')
-  }
+    // Gráfico de Distribución por Género
+    createChart(this.genderChartCanvas, {
+      type: 'doughnut',
+      data: {
+        labels: this.distribucionGenero.map(slice => slice.nombre),
+        datasets: [{
+          data: this.distribucionGenero.map(slice => slice.valor),
+          backgroundColor: this.distribucionGenero.map(slice => slice.color),
+          borderColor: '#ffffff',
+          borderWidth: 2,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 12 } } },
+          tooltip: {
+            backgroundColor: 'rgba(39, 125, 161, 0.9)',
+            titleFont: { family: 'Inter' },
+            bodyFont: { family: 'Inter' },
+            callbacks: {
+              label: (context) => {
+                const slice = this.distribucionGenero[context.dataIndex];
+                return `${slice.nombre}: ${slice.valor} (${slice.porcentaje}%)\n${this.aiInsights.gender.recommendation || ''}`;
+              },
+            },
+          },
+          annotation: {
+            annotations: this.distribucionGenero.length > 0 ? [{
+              type: 'label',
+              xValue: 'center',
+              yValue: 'center',
+              content: this.aiInsights.gender.summary.split(' ').slice(0, 10).join(' ') + '...',
+              backgroundColor: 'rgba(39, 125, 161, 0.7)',
+              color: '#fff',
+              font: { size: 12 },
+              padding: 5,
+              borderRadius: 4,
+            }] : [],
+          },
+        },
+      },
+    });
 
-  procesarAsistenciaMensual(): void {
-    // Datos de ejemplo para asistencia mensual
-    this.asistenciaMensual = [
-      { mes: "Enero", asistencia: 95, inasistencia: 5, porcentajeAsistencia: 95, porcentajeInasistencia: 5 },
-      { mes: "Febrero", asistencia: 92, inasistencia: 8, porcentajeAsistencia: 92, porcentajeInasistencia: 8 },
-      { mes: "Marzo", asistencia: 88, inasistencia: 12, porcentajeAsistencia: 88, porcentajeInasistencia: 12 },
-      { mes: "Abril", asistencia: 90, inasistencia: 10, porcentajeAsistencia: 90, porcentajeInasistencia: 10 },
-      { mes: "Mayo", asistencia: 93, inasistencia: 7, porcentajeAsistencia: 93, porcentajeInasistencia: 7 },
-    ]
-  }
-
-  generarPuntosGraficoLinea(): void {
-    const puntos: { x: number; y: number; valor: number }[] = []
-    
-    this.inscripcionesPorGrado.forEach((item, index) => {
-      const x = index * (100 / (this.inscripcionesPorGrado.length - 1))
-      const y = 100 - (item.cantidad / 5) * 100
-      puntos.push({ x, y, valor: item.cantidad })
-    })
-    
-    this.lineChartPointsArray = puntos
-    
-    // Generar string de puntos para el polyline
-    this.lineChartPoints = puntos.map(p => `${p.x},${p.y}`).join(' ')
+    // Gráfico de Tendencias de Notas
+    createChart(this.trendChartCanvas, {
+      type: 'line',
+      data: {
+        labels: this.gradeTrends.map(trend => trend.descripcion),
+        datasets: [
+          {
+            label: 'Promedio de Notas',
+            data: this.gradeTrends.map(trend => trend.isPredicted ? trend.predictedAverage : trend.promedio),
+            borderColor: '#f9c74f',
+            backgroundColor: 'rgba(249, 199, 79, 0.2)',
+            fill: false,
+            tension: 0.4,
+            borderDash: (context) => {
+              const index = context.dataIndex;
+              return this.gradeTrends[index].isPredicted ? [5, 5] : [];
+            },
+          },
+          {
+            label: 'Rango de Confianza (Superior)',
+            data: this.gradeTrends.map(trend => trend.confidenceUpper || null),
+            borderColor: 'rgba(144, 190, 109, 0.5)',
+            backgroundColor: 'transparent',
+            fill: '-1',
+            tension: 0.4,
+            borderDash: [5, 5],
+            pointRadius: 0,
+          },
+          {
+            label: 'Rango de Confianza (Inferior)',
+            data: this.gradeTrends.map(trend => trend.confidenceLower || null),
+            borderColor: 'rgba(144, 190, 109, 0.5)',
+            backgroundColor: 'rgba(144, 190, 109, 0.1)',
+            fill: '0',
+            tension: 0.4,
+            borderDash: [5, 5],
+            pointRadius: 0,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: { beginAtZero: true, max: 5, title: { display: true, text: 'Nota', font: { family: 'Inter', size: 14 } } },
+          x: { ticks: { font: { family: 'Inter', size: 12 } } },
+        },
+        plugins: {
+          tooltip: {
+            backgroundColor: 'rgba(39, 125, 161, 0.9)',
+            titleFont: { family: 'Inter' },
+            bodyFont: { family: 'Inter' },
+            callbacks: {
+              label: (context) => {
+                const trend = this.gradeTrends[context.dataIndex];
+                if (trend.isPredicted) {
+                  return `Predicción: ${trend.predictedAverage} (Rango: ${trend.confidenceLower} - ${trend.confidenceUpper})\n${this.aiInsights.prediction.recommendation || ''}`;
+                }
+                return `Promedio: ${trend.promedio}\n${this.aiInsights.trend.recommendation || ''}`;
+              },
+            },
+          },
+          annotation: {
+            annotations: this.gradeTrends.length > 0 ? [{
+              type: 'label',
+              xValue: this.gradeTrends.length - 1,
+              yValue: 5,
+              content: this.aiInsights.trend.summary.split(' ').slice(0, 10).join(' ') + '...',
+              backgroundColor: 'rgba(39, 125, 161, 0.7)',
+              color: '#fff',
+              font: { size: 12 },
+              padding: 5,
+              borderRadius: 4,
+              position: 'end',
+            }] : [],
+          },
+          legend: {
+            labels: {
+              filter: (legendItem, chartData) => {
+                return !legendItem.text.includes('Rango de Confianza');
+              },
+            },
+          },
+        },
+      },
+    });
   }
 
   applyFilter(): void {
-    console.log("Filtrando por período:", this.selectedPeriodo)
-    // Aquí iría la lógica para filtrar los datos según el período seleccionado
-    // Luego actualizar los gráficos
-    this.procesarDatosParaGraficos()
+    this.processChartData();
+    this.processGradeTrends();
+    this.updateCharts();
+    this.generateAIInsights();
+    this.cdr.detectChanges();
   }
 
   refreshData(): void {
-    // Simular recarga de datos
-    this.procesarDatosParaGraficos()
+    this.selectedPeriodo = null;
+    this.selectedNivel = null;
+    this.selectedGrado = null;
+    this.loadData();
   }
 
-  getEstiloPieSlice(slice: PieSlice): object {
-    return {
-      'background': `conic-gradient(${slice.color} ${slice.startAngle}deg, ${slice.color} ${slice.endAngle}deg, transparent ${slice.endAngle}deg)`,
-      'opacity': '1'
-    }
+  exportPDF(): void {
+    const doc = new jsPDF();
+    const content = this.dashboardContent.nativeElement;
+
+    html2canvas(content).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const imgProps = doc.getImageProperties(imgData);
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      doc.addPage();
+      doc.text('Resumen de Insights:', 10, 10);
+      doc.text(`Notas por Asignatura: ${this.aiInsights.grades.summary}`, 10, 20);
+      doc.text(`Estado de Inscripciones: ${this.aiInsights.enrollment.summary}`, 10, 30);
+      doc.text(`Distribución por Género: ${this.aiInsights.gender.summary}`, 10, 40);
+      doc.text(`Tendencia de Notas: ${this.aiInsights.trend.summary}`, 10, 50);
+      doc.text(`Predicciones: ${this.aiInsights.prediction.summary}`, 10, 60);
+      doc.save(`EduPortal_Dashboard_${new Date().toLocaleString()}.pdf`);
+    });
+  }
+
+  toggleDarkMode(): void {
+    this.isDarkMode = !this.isDarkMode;
+    document.body.classList.toggle('dark-mode', this.isDarkMode);
+    this.cdr.detectChanges();
+  }
+
+  ngOnDestroy(): void {
+    Object.values(this.charts).forEach(ch => ch.destroy());
+  }
+
+  get uniqueGrados(): string[] {
+    const grados = this.nivelesDetalles
+      .filter(nd => nd.gradoSeccion && nd.gradoSeccion.descripcionGrado)
+      .map(nd => nd.gradoSeccion.descripcionGrado);
+    return [...new Set(grados)].sort();
   }
 }

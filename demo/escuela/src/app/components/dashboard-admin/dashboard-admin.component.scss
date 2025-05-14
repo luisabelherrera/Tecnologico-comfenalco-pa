@@ -1,1023 +1,420 @@
-// Variables
-$primary-color: #2c5282;
-$secondary-color: #4299e1;
-$accent-color: #63b3ed;
-$success-color: #48bb78;
-$warning-color: #ecc94b;
-$danger-color: #f56565;
-$text-color: #2d3748;
-$light-text: #f7fafc;
-$border-color: #e2e8f0;
-$card-bg: #ffffff;
-$bg-color: #f7fafc;
-$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-$transition: all 0.3s ease;
+// Color Palette
+$primary: #1a3c5a; // Dark navy
+$secondary: #f94144; // Coral red
+$accent: #f9c74f; // Golden yellow
+$background: #e5e7eb; // Light gray
+$card-bg: rgba(255, 255, 255, 0.8); // Glassmorphism white
+$text: #1f2937; // Dark gray
+$border: rgba(255, 255, 255, 0.2);
+$shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 
-// Mixins
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+// Dark Mode
+$dark-bg: #111827;
+$dark-card: rgba(31, 41, 55, 0.8);
+$dark-text: #d1d5db;
+
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, $background 0%, darken($background, 10%) 100%);
+  color: $text;
+  margin: 0;
+  padding: 0;
 }
 
-@mixin flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+body.dark-mode {
+  background: linear-gradient(135deg, $dark-bg 0%, lighten($dark-bg, 10%) 100%);
+  color: $dark-text;
 
-@mixin card {
-  background-color: $card-bg;
-  border-radius: 8px;
-  box-shadow: $shadow-md;
-  transition: $transition;
-  
-  &:hover {
-    box-shadow: $shadow-lg;
+  .dashboard-header {
+    background: linear-gradient(135deg, darken($primary, 20%) 0%, $primary 100%);
+  }
+
+  .kpi-card, .filter-bar, .chart-card, .ai-insights, .dashboard-footer {
+    background: $dark-card;
+    color: $dark-text;
+    border: 1px solid $border;
+  }
+
+  select, button {
+    background: $dark-card;
+    color: $dark-text;
+    border-color: $border;
+  }
+
+  .chart-canvas {
+    background: $dark-card;
+  }
+
+  .chart-note {
+    color: $dark-text;
   }
 }
 
-// Estilos generales
-.dashboard-container {
-  padding: 1.5rem;
-  background-color: $bg-color;
-  min-height: 100vh;
-  font-family: 'Roboto', 'Segoe UI', sans-serif;
+// Dashboard Wrapper
+.dashboard-wrapper {
+  padding: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 }
 
 // Header
 .dashboard-header {
-  @include flex-between;
-  padding: 1rem 2rem;
-  background-color: $primary-color;
-  color: white;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-  box-shadow: $shadow-md;
-  
-  h1 {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-  }
-  
-  .user-info {
+  background: linear-gradient(135deg, $primary 0%, lighten($primary, 10%) 100%);
+  padding: 1.5rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  box-shadow: $shadow;
+  backdrop-filter: blur(10px);
+  border: 1px solid $border;
+  color: #fff;
+
+  .header-content {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    
-    span {
-      margin-right: 1rem;
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin: 0;
     }
-    
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: rgba(255, 255, 255, 0.2);
-      @include flex-center;
-      
-      i {
-        font-size: 24px;
+
+    .subtitle {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .action-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid $border;
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+          transform: translateY(-2px);
+        }
+
+        i {
+          font-size: 1.25rem;
+        }
       }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        span {
+          font-size: 0.9rem;
+        }
+
+        i {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+}
+
+// Loading
+.loading {
+  text-align: center;
+  padding: 3rem 0;
+
+  .spinner {
+    width: 3rem;
+    height: 3rem;
+    border: 4px solid $secondary;
+    border-top: 4px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+  }
+
+  p {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: $text;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Error
+.error {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(255, 75, 75, 0.1);
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 75, 75, 0.3);
+
+  i {
+    font-size: 2rem;
+    color: $secondary;
+  }
+
+  p {
+    font-size: 1rem;
+    color: $secondary;
+    margin: 1rem 0;
+  }
+
+  .action-btn {
+    background: $secondary;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: darken($secondary, 10%);
+      transform: translateY(-2px);
     }
   }
 }
 
 // KPIs
-.kpi-container {
+.kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
-}
 
-.kpi-card {
-  @include card;
-  padding: 1.5rem;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  position: relative;
-  animation: fadeIn 0.5s ease-out forwards;
-  
-  @for $i from 1 through 4 {
-    &:nth-child(#{$i}) {
-      animation-delay: #{$i * 0.1}s;
-    }
-  }
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background-color: $primary-color;
-  }
-  
-  .kpi-icon {
-    @include flex-center;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: rgba($primary-color, 0.1);
-    margin-right: 1rem;
-    
-    i {
-      font-size: 24px;
-      color: $primary-color;
-    }
-  }
-  
-  .kpi-content {
-    h3 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      margin: 0;
-      color: $text-color;
-    }
-    
-    p {
-      margin: 0;
-      color: lighten($text-color, 20%);
-      font-size: 0.9rem;
-    }
-  }
-  
-  &:nth-child(2) {
-    &::before {
-      background-color: $secondary-color;
-    }
-    
-    .kpi-icon {
-      background-color: rgba($secondary-color, 0.1);
-      
-      i {
-        color: $secondary-color;
-      }
-    }
-  }
-  
-  &:nth-child(3) {
-    &::before {
-      background-color: $success-color;
-    }
-    
-    .kpi-icon {
-      background-color: rgba($success-color, 0.1);
-      
-      i {
-        color: $success-color;
-      }
-    }
-  }
-  
-  &:nth-child(4) {
-    &::before {
-      background-color: $warning-color;
-    }
-    
-    .kpi-icon {
-      background-color: rgba($warning-color, 0.1);
-      
-      i {
-        color: $warning-color;
-      }
-    }
-  }
-}
-
-// Filtros
-.filters-container {
-  @include flex-between;
-  background-color: $card-bg;
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  box-shadow: $shadow-sm;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-  gap: 1rem;
-  
-  .filter-item {
+  .kpi-card {
+    background: $card-bg;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: $shadow;
+    backdrop-filter: blur(10px);
+    border: 1px solid $border;
     display: flex;
     align-items: center;
-    
-    label {
-      margin-right: 0.5rem;
-      font-weight: 500;
-      color: $text-color;
+    gap: 1rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
     }
-    
+
+    i {
+      font-size: 2rem;
+      color: $secondary;
+    }
+
+    div {
+      h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0;
+      }
+
+      p {
+        font-size: 0.9rem;
+        color: lighten($text, 20%);
+        margin: 0;
+      }
+    }
+  }
+}
+
+// Filters
+.filter-bar {
+  background: $card-bg;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: $shadow;
+  backdrop-filter: blur(10px);
+  border: 1px solid $border;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  align-items: center;
+
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    label {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
     select {
       padding: 0.5rem 1rem;
-      border: 1px solid $border-color;
-      border-radius: 4px;
-      background-color: white;
-      color: $text-color;
+      border: 1px solid $border;
+      border-radius: 8px;
       font-size: 0.9rem;
-      min-width: 150px;
-      
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: all 0.3s ease;
+
       &:focus {
         outline: none;
-        border-color: $primary-color;
-        box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+        border-color: $secondary;
+        box-shadow: 0 0 0 3px rgba($secondary, 0.2);
       }
     }
   }
-  
-  .filter-actions {
-    .btn-refresh {
-      @include flex-center;
-      background-color: $primary-color;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: $transition;
-      
-      i {
-        margin-right: 0.25rem;
-        font-size: 18px;
-      }
-      
-      &:hover {
-        background-color: darken($primary-color, 10%);
-      }
+
+  .action-btn {
+    background: $primary;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:hover {
+      background: lighten($primary, 10%);
+      transform: translateY(-2px);
     }
   }
 }
 
-// Gráficos
-.charts-grid {
+// Charts
+.chart-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
-  
-  @media (max-width: 576px) {
-    grid-template-columns: 1fr;
-  }
-}
+  margin-bottom: 2rem;
 
-.chart-card {
-  @include card;
-  overflow: hidden;
-  animation: fadeIn 0.5s ease-out forwards;
-  
-  @for $i from 1 through 6 {
-    &:nth-child(#{$i}) {
-      animation-delay: #{0.3 + $i * 0.1}s;
-    }
-  }
-  
-  .chart-header {
-    @include flex-between;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid $border-color;
-    
-    h3 {
-      margin: 0;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: $text-color;
-    }
-    
-    .chart-actions {
-      .btn-chart-action {
-        background: none;
-        border: none;
-        color: lighten($text-color, 20%);
-        cursor: pointer;
-        padding: 0.25rem;
-        border-radius: 4px;
-        transition: $transition;
-        
-        &:hover {
-          background-color: rgba($text-color, 0.1);
-          color: $text-color;
-        }
-      }
-    }
-  }
-  
-  .chart-body {
+  .chart-card {
+    background: $card-bg;
     padding: 1.5rem;
-    height: 300px;
-    position: relative;
-  }
-}
+    border-radius: 16px;
+    box-shadow: $shadow;
+    backdrop-filter: blur(10px);
+    border: 1px solid $border;
+    transition: all 0.3s ease;
 
-// Gráfico de Barras
-.bar-chart {
-  display: flex;
-  height: 100%;
-  
-  .chart-y-axis {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding-right: 0.5rem;
-    font-size: 0.8rem;
-    color: lighten($text-color, 20%);
-    
-    span {
-      transform: translateY(50%);
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
     }
-  }
-  
-  .chart-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    
-    .chart-bars {
-      flex: 1;
-      display: flex;
-      align-items: flex-end;
-      border-bottom: 1px solid $border-color;
-      border-left: 1px solid $border-color;
-      position: relative;
-      
-      &::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(to top, 
-          rgba($border-color, 0.1) 0%, 
-          rgba($border-color, 0.1) 20%, 
-          transparent 20%, 
-          transparent 40%, 
-          rgba($border-color, 0.1) 40%, 
-          rgba($border-color, 0.1) 60%, 
-          transparent 60%, 
-          transparent 80%, 
-          rgba($border-color, 0.1) 80%, 
-          rgba($border-color, 0.1) 100%
-        );
-        pointer-events: none;
-      }
-      
-      .bar-container {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 0 0.5rem;
-        
-        .bar-label {
-          font-size: 0.8rem;
-          color: $text-color;
-          margin-bottom: 0.5rem;
-          text-align: center;
-          display: none;
-        }
-        
-        .bar-wrapper {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: flex-end;
-          justify-content: center;
-          
-          .bar {
-            width: 70%;
-            background: linear-gradient(to top, $secondary-color, $primary-color);
-            border-radius: 4px 4px 0 0;
-            position: relative;
-            transition: height 1s cubic-bezier(0.34, 1.56, 0.64, 1);
-            
-            .bar-value {
-              position: absolute;
-              top: -20px;
-              left: 50%;
-              transform: translateX(-50%);
-              background-color: $primary-color;
-              color: white;
-              padding: 0.2rem 0.4rem;
-              border-radius: 4px;
-              font-size: 0.8rem;
-              opacity: 0;
-              transition: opacity 0.3s ease;
-            }
-            
-            &:hover .bar-value {
-              opacity: 1;
-            }
-          }
-        }
-      }
-    }
-    
-    .chart-x-axis {
-      display: flex;
-      justify-content: space-around;
-      padding-top: 0.5rem;
-      font-size: 0.8rem;
-      color: $text-color;
-      
-      span {
-        text-align: center;
-        max-width: 80px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-    }
-  }
-}
 
-// Gráfico de Líneas
-.line-chart {
-  display: flex;
-  height: 100%;
-  
-  .chart-y-axis {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding-right: 0.5rem;
-    font-size: 0.8rem;
-    color: lighten($text-color, 20%);
-    
-    span {
-      transform: translateY(50%);
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
     }
-  }
-  
-  .chart-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    
-    .chart-lines {
-      flex: 1;
-      border-bottom: 1px solid $border-color;
-      border-left: 1px solid $border-color;
-      position: relative;
-      
-      &::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(to top, 
-          rgba($border-color, 0.1) 0%, 
-          rgba($border-color, 0.1) 20%, 
-          transparent 20%, 
-          transparent 40%, 
-          rgba($border-color, 0.1) 40%, 
-          rgba($border-color, 0.1) 60%, 
-          transparent 60%, 
-          transparent 80%, 
-          rgba($border-color, 0.1) 80%, 
-          rgba($border-color, 0.1) 100%
-        );
-        pointer-events: none;
-      }
-      
-      .line-svg {
-        width: 100%;
-        height: 100%;
-        
-        .line {
-          fill: none;
-          stroke: $primary-color;
-          stroke-width: 2;
-          stroke-linecap: round;
-          stroke-linejoin: round;
-          stroke-dasharray: 1000;
-          stroke-dashoffset: 1000;
-          animation: drawLine 2s ease-out forwards;
-        }
-        
-        .point {
-          fill: white;
-          stroke: $primary-color;
-          stroke-width: 2;
-          opacity: 0;
-          animation: fadeInPoint 0.3s ease-out forwards;
-          animation-delay: 2s;
-        }
-      }
-      
-      .line-labels {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        
-        .line-point {
-          position: absolute;
-          transform: translate(-50%, -50%);
-          
-          .point-value {
-            position: absolute;
-            top: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: $primary-color;
-            color: white;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-          }
-          
-          &:hover .point-value {
-            opacity: 1;
-          }
-        }
-      }
-    }
-    
-    .chart-x-axis {
-      display: flex;
-      justify-content: space-around;
-      padding-top: 0.5rem;
-      font-size: 0.8rem;
-      color: $text-color;
-      
-      span {
-        text-align: center;
-      }
-    }
-  }
-}
 
-// Gráfico Circular
-.pie-chart {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  
-  .pie-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    .pie {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      position: relative;
-      overflow: hidden;
-      
-      .pie-slice {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        transform-origin: 50% 50%;
-        opacity: 0;
-        animation: fadeInSlice 0.5s ease-out forwards;
-        
-        @for $i from 1 through 4 {
-          &:nth-child(#{$i}) {
-            animation-delay: #{$i * 0.2}s;
-          }
-        }
-      }
+    .chart-note {
+      font-size: 0.85rem;
+      color: $text;
+      margin-bottom: 0.5rem;
+      opacity: 0.8;
     }
-  }
-  
-  .pie-legend {
-    margin-top: 1rem;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem;
-    
-    .legend-item {
-      display: flex;
-      align-items: center;
-      
-      .legend-color {
-        width: 16px;
-        height: 16px;
-        border-radius: 4px;
-        margin-right: 0.5rem;
-      }
-      
-      .legend-text {
-        font-size: 0.9rem;
-        
-        span {
-          display: block;
-          
-          &:first-child {
-            font-weight: 500;
-            color: $text-color;
-          }
-          
-          &:last-child {
-            font-size: 0.8rem;
-            color: lighten($text-color, 20%);
-          }
-        }
-      }
-    }
-  }
-}
 
-// Gráfico de Radar
-.radar-chart {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  
-  .radar-container {
-    flex: 1;
-    position: relative;
-    
-    .radar-grid {
-      position: absolute;
-      top: 0;
-      left: 0;
+    .chart-canvas {
+      max-height: 350px; // Aumentamos el tamaño para las anotaciones
       width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      
-      .radar-circle {
-        position: absolute;
-        border: 1px dashed $border-color;
-        border-radius: 50%;
-        
-        &:nth-child(1) {
-          width: 20%;
-          height: 20%;
-        }
-        
-        &:nth-child(2) {
-          width: 40%;
-          height: 40%;
-        }
-        
-        &:nth-child(3) {
-          width:   {
-          width: 40%;
-          height: 40%;
-        }
-        
-        &:nth-child(3) {
-          width: 60%;
-          height: 60%;
-        }
-        
-        &:nth-child(4) {
-          width: 80%;
-          height: 80%;
-        }
-        
-        &:nth-child(5) {
-          width: 100%;
-          height: 100%;
-        }
-      }
-      
-      .radar-axis {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 50%;
-        height: 1px;
-        background-color: $border-color;
-        transform-origin: left center;
-        transform: rotate(var(--angle));
-        
-        .axis-label {
-          position: absolute;
-          right: -5px;
-          transform: translateX(100%) rotate(calc(var(--angle) * -1));
-          font-size: 0.8rem;
-          color: $text-color;
-          white-space: nowrap;
-        }
-      }
-    }
-    
-    .radar-data {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      
-      .radar-svg {
-        width: 100%;
-        height: 100%;
-        
-        .radar-polygon {
-          fill-opacity: 0.5;
-          stroke-width: 2;
-          stroke-opacity: 0.8;
-          animation: fadeInPolygon 1s ease-out forwards;
-        }
-      }
-    }
-  }
-  
-  .radar-legend {
-    margin-top: 1rem;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem;
-    
-    .legend-item {
-      display: flex;
-      align-items: center;
-      
-      .legend-color {
-        width: 16px;
-        height: 16px;
-        border-radius: 4px;
-        margin-right: 0.5rem;
-      }
-      
-      .legend-text {
-        font-size: 0.9rem;
-        color: $text-color;
-      }
-    }
-  }
-}
-
-// Gráfico de Barras Apiladas
-.stacked-bar-chart {
-  display: flex;
-  height: 100%;
-  
-  .chart-y-axis {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding-right: 0.5rem;
-    font-size: 0.8rem;
-    color: lighten($text-color, 20%);
-    
-    span {
-      transform: translateY(50%);
-    }
-  }
-  
-  .chart-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    
-    .chart-bars {
-      flex: 1;
-      display: flex;
-      align-items: flex-end;
-      border-bottom: 1px solid $border-color;
-      border-left: 1px solid $border-color;
       position: relative;
-      
-      &::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(to top, 
-          rgba($border-color, 0.1) 0%, 
-          rgba($border-color, 0.1) 20%, 
-          transparent 20%, 
-          transparent 40%, 
-          rgba($border-color, 0.1) 40%, 
-          rgba($border-color, 0.1) 60%, 
-          transparent 60%, 
-          transparent 80%, 
-          rgba($border-color, 0.1) 80%, 
-          rgba($border-color, 0.1) 100%
-        );
-        pointer-events: none;
-      }
-      
-      .bar-container {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 0 0.5rem;
-        
-        .bar-label {
-          font-size: 0.8rem;
-          color: $text-color;
-          margin-bottom: 0.5rem;
-          text-align: center;
-          display: none;
-        }
-        
-        .bar-wrapper {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: flex-end;
-          justify-content: center;
-          
-          .stacked-bar {
-            width: 70%;
-            height: 100%;
-            display: flex;
-            flex-direction: column-reverse;
-            
-            .bar-segment {
-              width: 100%;
-              transition: height 1s cubic-bezier(0.34, 1.56, 0.64, 1);
-              position: relative;
-              
-              &.attendance {
-                background-color: $success-color;
-                border-radius: 4px 4px 0 0;
-              }
-              
-              &.absence {
-                background-color: $danger-color;
-              }
-              
-              .segment-value {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                color: white;
-                font-size: 0.8rem;
-                font-weight: 500;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-              }
-              
-              &:hover .segment-value {
-                opacity: 1;
-              }
-            }
-          }
-        }
-      }
-    }
-    
-    .chart-x-axis {
-      display: flex;
-      justify-content: space-around;
-      padding-top: 0.5rem;
-      font-size: 0.8rem;
-      color: $text-color;
-      
-      span {
-        text-align: center;
-      }
     }
   }
 }
 
-.stacked-legend {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-top: 1rem;
-  
-  .legend-item {
-    display: flex;
-    align-items: center;
-    
-    .legend-color {
-      width: 16px;
-      height: 16px;
-      border-radius: 4px;
-      margin-right: 0.5rem;
-      
-      &.attendance {
-        background-color: $success-color;
-      }
-      
-      &.absence {
-        background-color: $danger-color;
-      }
+// AI Insights
+.ai-insights {
+  background: $card-bg;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: $shadow;
+  backdrop-filter: blur(10px);
+  border: 1px solid $border;
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  .insight-section {
+    margin-bottom: 1.5rem;
+
+    h4 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: $secondary;
     }
-    
-    .legend-text {
+
+    p {
       font-size: 0.9rem;
-      color: $text-color;
+      line-height: 1.6;
+      margin: 0;
     }
   }
 }
 
 // Footer
 .dashboard-footer {
-  text-align: center;
+  background: $card-bg;
   padding: 1rem;
-  color: #718096;
-  font-size: 0.9rem;
-  border-top: 1px solid #e2e8f0;
-  margin-top: 2rem;
-}
+  border-radius: 16px;
+  box-shadow: $shadow;
+  backdrop-filter: blur(10px);
+  border: 1px solid $border;
+  text-align: center;
 
-// Animaciones
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes drawLine {
-  to { stroke-dashoffset: 0; }
-}
-
-@keyframes fadeInPoint {
-  to { opacity: 1; }
-}
-
-@keyframes fadeInSlice {
-  to { opacity: 1; }
-}
-
-@keyframes fadeInPolygon {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  p {
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+  }
 }
 
 // Responsive
-@media (max-width: 992px) {
-  .kpi-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .charts-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .dashboard-header {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    
-    h1 {
-      font-size: 1.25rem;
-    }
-  }
-  
-  .filters-container {
-    flex-direction: column;
-    align-items: flex-start;
-    
-    .filter-item {
-      width: 100%;
-      
-      select {
-        width: 100%;
-      }
-    }
-    
-    .filter-actions {
-      width: 100%;
-      
-      .btn-refresh {
-        width: 100%;
-      }
-    }
-  }
-  
-  .chart-body {
-    height: 250px;
-  }
-}
-
 @media (max-width: 576px) {
-  .kpi-container {
-    grid-template-columns: 1fr;
-  }
-  
-  .chart-body {
-    height: 200px;
+  .dashboard-wrapper {
     padding: 1rem;
   }
-  
-  .pie-chart .pie-container .pie {
-    width: 120px;
-    height: 120px;
+
+  .kpi-grid, .chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+
+    .filter-group {
+      width: 100%;
+    }
+
+    .action-btn {
+      width: 100%;
+      justify-content: center;
+    }
   }
 }
-    
-        }
-        
-       

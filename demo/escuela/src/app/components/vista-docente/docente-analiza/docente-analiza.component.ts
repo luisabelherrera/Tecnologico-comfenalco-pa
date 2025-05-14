@@ -381,18 +381,18 @@ export class DocenteAnalizaComponent implements OnInit, OnDestroy, AfterViewInit
     const estudiantePred = this.estudiantesPorCurricular[this.selectedCurricular!.idCurricular!].find(
       (e) => e.estudiante.documentoIdentidad === estudiante.documentoIdentidad
     );
-    const formData = {
+  const formData = {
       documento: estudiante.documentoIdentidad,
       edad: edad,
       genero: estudiante.sexo === 'M' ? 'Masculino' : estudiante.sexo === 'F' ? 'Femenino' : 'Otro',
       promedioParciales: estudiantePred?.nota !== undefined ? estudiantePred.nota : '',
-      horasEstudioSemanal: '',
-      asistencia: '',
-      participacionClases: '',
-      usoPlataformaVirtual: '',
-      antecedentesPerdida: '',
+      horasEstudioSemanal: estudiante.encuesta?.horasEstudioSemanal || '',
+      asistencia: estudiante.encuesta?.asistencia || '',
+      participacionClases: estudiante.encuesta?.participacionClases || '',
+      usoPlataformaVirtual: estudiante.encuesta?.usoPlataformaVirtual || '',
+      antecedentesPerdida: estudiante.encuesta?.antecedentesPerdida || '',
       apoyoFamiliar: estudiante.encuesta?.apoyoFamiliar || '',
-      cargaAcademica: '',
+      cargaAcademica: estudiante.encuesta?.cargaAcademica || '',
       problemasPersonales: estudiante.encuesta?.problemasPersonales || ''
     };
     this.studentForm.patchValue(formData);
