@@ -1,97 +1,178 @@
 .historial-container {
-    padding: 16px;
-    max-height: 80vh;
-    display: flex;
-    flex-direction: column;
+  padding: 2vw;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3vw;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+h2 {
+  margin: 0;
+  font-size: clamp(1rem, 5vw, 1.25rem);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filtro {
+  width: clamp(150px, 40vw, 250px);
+  margin-right: 0.5rem;
+  font-size: clamp(0.875rem, 3vw, 1rem);
+}
+
+.close-btn {
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  background-color: #f44336;
+  color: white;
+  border-radius: 50%;
+  padding: 0;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.close-btn:hover {
+  background-color: #d32f2f;
+}
+
+.table-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 60vh;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 300px;
+}
+
+th, td {
+  padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.75rem, 2vw, 1rem);
+  text-align: left;
+  font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+}
+
+.asistio {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.falto {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.no-data {
+  text-align: center;
+  padding: 3vw;
+  color: #666;
+  font-style: italic;
+  font-size: clamp(0.875rem, 3vw, 1rem);
+}
+
+.footer {
+  margin-top: 3vw;
+  padding-top: 1.5vw;
+  border-top: 1px solid #e0e0e0;
+}
+
+.contadores {
+  display: flex;
+  justify-content: space-between;
+  font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.contadores span {
+  margin-right: 1rem;
+}
+
+.contadores strong {
+  margin-right: 0.25rem;
+}
+
+button {
+  margin-right: 0.25rem;
+  font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+  padding: clamp(0.25rem, 1vw, 0.5rem) clamp(0.5rem, 2vw, 0.75rem);
+}
+
+/* Mobile styles (up to 767px) */
+@media screen and (max-width: 767px) {
+  .historial-container {
+    padding: 3vw;
   }
-  
+
   .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  h2 {
-    margin: 0;
-    font-size: 20px;
+
+  .filtro {
+    width: 100%;
+    margin-bottom: 1rem;
   }
-  
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px; /* Espacio entre el filtro y el botón */
+
+  .table-wrapper {
+    max-height: 50vh;
   }
-  
+
+  th, td {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .contadores {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Tablet styles (768px to 1024px) */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .historial-container {
+    padding: 2.5vw;
+  }
+
+  .filtro {
+    width: 35vw;
+  }
+
+  th, td {
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* PC styles (above 1024px) */
+@media screen and (min-width: 1025px) {
+  .historial-container {
+    padding: 16px;
+  }
+
   .filtro {
     width: 300px;
-    margin-right: 8px;
   }
-  
-  .close-btn {
-    width: 32px;
-    height: 32px;
-    line-height: 32px;
-    background-color: #f44336; /* Rojo similar a navegadores */
-    color: white;
-    border-radius: 50%;
-    padding: 0;
-    &:hover {
-      background-color: #d32f2f;
-    }
-  }
-  
-  .table-wrapper {
-    flex: 1;
-    overflow-y: auto;
-    max-height: 60vh;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
+
   th, td {
     padding: 8px 12px;
-    text-align: left;
+    font-size: 0.875rem;
   }
-  
-  .asistio {
-    color: #28a745;
-    font-weight: bold;
-  }
-  
-  .falto {
-    color: #dc3545;
-    font-weight: bold;
-  }
-  
-  .no-data {
-    text-align: center;
-    padding: 20px;
-    color: #666;
-    font-style: italic;
-  }
-  
-  .footer {
-    margin-top: 16px;
-    padding-top: 8px;
-    border-top: 1px solid #e0e0e0;
-  }
-  
-  .contadores {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    span {
-      margin-right: 16px;
-      strong {
-        margin-right: 4px;
-      }
-    }
-  }
-  
-  button {
-    margin-right: 4px;
-  }
+}
