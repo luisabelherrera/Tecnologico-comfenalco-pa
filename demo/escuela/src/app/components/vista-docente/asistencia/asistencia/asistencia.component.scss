@@ -1,4 +1,3 @@
-// Variables - Refined color palette
 $primary: #4d7cfe;
 $primary-light: #6b8eff;
 $primary-dark: #3a6ae8;
@@ -23,23 +22,22 @@ $border-radius-sm: 6px;
 $box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 $transition: all 0.25s ease;
 
-// Imports
-// @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
 // Base styles
 body {
-  background-color: #f8f9fa;
+  background-color: $light;
   font-family: 'Inter', sans-serif;
   color: $gray-800;
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
 }
 
 .container {
-  padding: 1.5rem;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
   max-width: 1280px;
   margin: 0 auto;
   background: #ffffff;
   border-radius: $border-radius;
   box-shadow: $box-shadow;
+  box-sizing: border-box;
 }
 
 // Header
@@ -47,12 +45,14 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
+  margin-bottom: clamp(1rem, 3vw, 1.5rem);
+  padding-bottom: clamp(0.5rem, 2vw, 0.75rem);
   border-bottom: 1px solid $gray-200;
+  flex-wrap: wrap;
+  gap: 1rem;
 
   h2 {
-    font-size: 1.5rem;
+    font-size: clamp(1.25rem, 4vw, 1.5rem);
     font-weight: 600;
     color: $gray-800;
     margin: 0;
@@ -66,24 +66,24 @@ body {
       top: 50%;
       transform: translateY(-50%);
       width: 4px;
-      height: 24px;
+      height: clamp(20px, 5vw, 24px);
       background: $accent;
       border-radius: 2px;
     }
   }
 }
 
-// Course list - ENHANCED STYLING
+// Course list
 .curso-list {
-  margin-bottom: 1.5rem;
+  margin-bottom: clamp(1rem, 3vw, 1.5rem);
 
   mat-list {
     background: white;
     border-radius: $border-radius;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    overflow: hidden;
     border: 1px solid $gray-200;
-    padding: 0.5rem;
+    padding: clamp(0.25rem, 1vw, 0.5rem);
+    overflow: hidden;
 
     mat-list-item {
       position: relative;
@@ -91,8 +91,8 @@ body {
       cursor: pointer;
       margin-bottom: 0.5rem;
       border-radius: $border-radius-sm;
-      overflow: hidden;
       background: $gray-100;
+      min-height: clamp(60px, 15vw, 80px);
 
       &:last-child {
         margin-bottom: 0;
@@ -123,27 +123,27 @@ body {
 
       ::ng-deep {
         .mat-list-item-content {
-          padding: 1rem 1.25rem;
+          padding: clamp(0.75rem, 2vw, 1rem) clamp(1rem, 3vw, 1.25rem);
         }
 
         span[matListItemTitle] {
           font-weight: 600;
           color: $gray-800;
           margin-bottom: 0.25rem;
-          font-size: 1rem;
+          font-size: clamp(0.875rem, 2.5vw, 1rem);
           display: flex;
           align-items: center;
 
           &::before {
             content: '📋';
             margin-right: 0.75rem;
-            font-size: 1.125rem;
+            font-size: clamp(1rem, 3vw, 1.125rem);
           }
         }
 
         span[matListItemLine] {
           color: $accent;
-          font-size: 0.875rem;
+          font-size: clamp(0.75rem, 2vw, 0.875rem);
           font-weight: 500;
           padding-left: 2rem;
           display: block;
@@ -158,17 +158,17 @@ body {
   background: white;
   border-radius: $border-radius;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  padding: 1.25rem;
-  animation: fadeIn 0.3s ease;
+  padding: clamp(0.75rem, 2vw, 1.25rem);
   border: 1px solid $gray-200;
-  margin-top: 1.5rem;
+  margin-top: clamp(1rem, 3vw, 1.5rem);
+  animation: fadeIn 0.3s ease;
 
   h3 {
-    font-size: 1.125rem;
+    font-size: clamp(1rem, 3vw, 1.125rem);
     font-weight: 600;
     color: $gray-800;
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.5rem;
+    margin-bottom: clamp(0.75rem, 2vw, 1.25rem);
+    padding-bottom: clamp(0.25rem, 1vw, 0.5rem);
     border-bottom: 1px solid $gray-200;
     display: flex;
     align-items: center;
@@ -176,7 +176,7 @@ body {
     &::before {
       content: '👥';
       margin-right: 0.75rem;
-      font-size: 1.25rem;
+      font-size: clamp(1.125rem, 3.5vw, 1.25rem);
     }
   }
 
@@ -184,15 +184,16 @@ body {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
+    min-width: 300px;
 
     th {
       background: $gray-100;
       color: $gray-700;
       font-weight: 600;
-      font-size: 0.75rem;
+      font-size: clamp(0.625rem, 2vw, 0.75rem);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      padding: 0.75rem 1rem;
+      padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.75rem, 2vw, 1rem);
       text-align: left;
       border-bottom: 1px solid $gray-200;
 
@@ -207,9 +208,9 @@ body {
     }
 
     td {
-      padding: 0.75rem 1rem;
+      padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.75rem, 2vw, 1rem);
       border-bottom: 1px solid $gray-200;
-      font-size: 0.875rem;
+      font-size: clamp(0.75rem, 2.5vw, 0.875rem);
       color: $gray-800;
       vertical-align: middle;
 
@@ -239,6 +240,7 @@ body {
         .mat-checkbox-frame {
           border-color: $gray-400;
           border-radius: 4px;
+          transform: scale(1.2);
         }
 
         .mat-checkbox-background {
@@ -248,9 +250,9 @@ body {
     }
 
     button[mat-icon-button] {
-      width: 36px;
-      height: 36px;
-      line-height: 36px;
+      width: clamp(32px, 8vw, 36px);
+      height: clamp(32px, 8vw, 36px);
+      line-height: clamp(32px, 8vw, 36px);
 
       &[color="primary"] {
         color: $primary;
@@ -265,43 +267,46 @@ body {
       }
 
       mat-icon {
-        font-size: 1.25rem;
-        width: 1.25rem;
-        height: 1.25rem;
+        font-size: clamp(1rem, 3vw, 1.25rem);
+        width: clamp(1rem, 3vw, 1.25rem);
+        height: clamp(1rem, 3vw, 1.25rem);
       }
     }
   }
 
   mat-paginator {
-    margin-top: 0.75rem;
+    margin-top: clamp(0.5rem, 2vw, 0.75rem);
     background: transparent;
 
     ::ng-deep {
       .mat-paginator-container {
-        min-height: 48px;
-        padding: 0 0.5rem;
+        min-height: clamp(40px, 10vw, 48px);
+        padding: 0 clamp(0.25rem, 1vw, 0.5rem);
       }
 
       .mat-paginator-range-label,
       .mat-paginator-page-size-label {
-        font-size: 0.75rem;
+        font-size: clamp(0.625rem, 2vw, 0.75rem);
         color: $gray-600;
       }
 
       .mat-icon-button {
         color: $gray-700;
+        width: clamp(32px, 8vw, 40px);
+        height: clamp(32px, 8vw, 40px);
       }
     }
   }
 
   .no-students {
-    padding: 2rem 1rem;
+    padding: clamp(1.5rem, 4vw, 2rem) clamp(0.75rem, 2vw, 1rem);
     text-align: center;
     color: $gray-500;
     font-style: italic;
     background: $gray-100;
     border-radius: $border-radius-sm;
-    margin-top: 1rem;
+    margin-top: clamp(0.75rem, 2vw, 1rem);
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
 
     p {
       margin: 0;
@@ -312,7 +317,7 @@ body {
       &::before {
         content: '🔍';
         margin-right: 0.5rem;
-        font-size: 1.5rem;
+        font-size: clamp(1.25rem, 4vw, 1.5rem);
       }
     }
   }
@@ -325,42 +330,6 @@ body {
   }
   to {
     opacity: 1;
-  }
-}
-
-// Responsive styles
-@media (max-width: 768px) {
-  .container {
-    padding: 1rem;
-  }
-
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-
-  .students-table {
-    padding: 1rem;
-
-    table {
-      display: block;
-      overflow-x: auto;
-
-      th, td {
-        padding: 0.5rem;
-      }
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 0.75rem;
-  }
-
-  .header h2 {
-    font-size: 1.25rem;
   }
 }
 
@@ -383,3 +352,136 @@ body {
   background: $gray-400;
 }
 
+// Responsive styles
+// Mobile (up to 767px)
+@media screen and (max-width: 767px) {
+  .container {
+    padding: 0.75rem;
+    margin: 0.5rem;
+    border-radius: $border-radius-sm;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .curso-list {
+    mat-list {
+      padding: 0.25rem;
+
+      mat-list-item {
+        margin-bottom: 0.25rem;
+
+        ::ng-deep {
+          .mat-list-item-content {
+            padding: 0.5rem 0.75rem;
+          }
+
+          span[matListItemTitle] {
+            font-size: 0.875rem;
+          }
+
+          span[matListItemLine] {
+            font-size: 0.75rem;
+            padding-left: 1.5rem;
+          }
+        }
+      }
+    }
+  }
+
+  .students-table {
+    padding: 0.75rem;
+    overflow-x: auto;
+
+    table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+
+      th, td {
+        padding: 0.5rem;
+        font-size: 0.75rem;
+      }
+
+      button[mat-icon-button] {
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+      }
+    }
+
+    mat-paginator {
+      ::ng-deep {
+        .mat-paginator-container {
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+      }
+    }
+
+    .no-students {
+      padding: 1rem 0.5rem;
+    }
+  }
+}
+
+// Tablet (768px to 1024px)
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .container {
+    padding: 1rem;
+    margin: 0 1rem;
+  }
+
+  .header {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .curso-list {
+    mat-list {
+      mat-list-item {
+        ::ng-deep {
+          .mat-list-item-content {
+            padding: 0.75rem 1rem;
+          }
+        }
+      }
+    }
+  }
+
+  .students-table {
+    padding: 1rem;
+
+    table {
+      th, td {
+        padding: 0.75rem;
+        font-size: 0.875rem;
+      }
+    }
+  }
+}
+
+// PC (above 1024px)
+@media screen and (min-width: 1025px) {
+  .container {
+    padding: 1.5rem;
+    margin: 0 auto;
+  }
+
+  .header {
+    flex-wrap: nowrap;
+  }
+
+  .students-table {
+    padding: 1.25rem;
+
+    table {
+      th, td {
+        padding: 0.75rem 1rem;
+      }
+    }
+  }
+}
