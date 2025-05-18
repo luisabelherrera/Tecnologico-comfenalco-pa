@@ -12,13 +12,13 @@ export class NotificacionService {
 
   constructor(private http: HttpClient) {}
 
-  private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('accessToken'); // Adjust key based on your auth system
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    });
-  }
+ private getHeaders(): HttpHeaders {
+        const token = localStorage.getItem('accessToken');
+        return new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token || ''}` // Handle null token
+        });
+    }
 
   notificarAdministrador(mensaje: string): Observable<any> {
     return this.http.post<any>(this.apiUrl, { mensaje }, { headers: this.getHeaders() })
