@@ -1,584 +1,90 @@
-$primary: #4d7cfe;
-$primary-light: #6b8eff;
-$primary-dark: #3a6ae8;
-$secondary: #6c757d;
-$accent: #20c997;
-$warning: #fcc419;
-$danger: #fa5252;
-$light: #f8f9fa;
-$dark: #343a40;
-$gray-100: #f8f9fa;
-$gray-200: #e9ecef;
-$gray-300: #dee2e6;
-$gray-400: #ced4da;
-$gray-500: #adb5bd;
-$gray-600: #868e96;
-$gray-700: #495057;
-$gray-800: #343a40;
-$gray-900: #212529;
-
-$border-radius: 8px;
-$border-radius-sm: 6px;
-$box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-$transition: all 0.25s ease;
-
-// Base styles
-body {
-  background-color: $light;
-  font-family: 'Inter', sans-serif;
-  color: $gray-800;
-  font-size: clamp(0.875rem, 2.5vw, 1rem);
-}
-
 .container {
-  padding: clamp(0.75rem, 2vw, 1.5rem);
-  max-width: 1280px;
+  padding: 16px;
+  max-width: 1200px;
   margin: 0 auto;
-  background: #ffffff;
-  border-radius: $border-radius;
-  box-shadow: $box-shadow;
-  box-sizing: border-box;
 }
 
-// Header
 .header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.curso-list {
+  margin-bottom: 24px;
+}
+
+.students-table {
+  width: 100%;
+}
+
+.desktop-table {
+  width: 100%;
+  display: table;
+}
+
+.mobile-cards {
+  display: none;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: clamp(1rem, 3vw, 1.5rem);
-  padding-bottom: clamp(0.5rem, 2vw, 0.75rem);
-  border-bottom: 1px solid $gray-200;
-  flex-wrap: wrap;
-  gap: 1rem;
-
-  h2 {
-    font-size: clamp(1.25rem, 4vw, 1.5rem);
-    font-weight: 600;
-    color: $gray-800;
-    margin: 0;
-    position: relative;
-    padding-left: 1rem;
-
-    &::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 4px;
-      height: clamp(20px, 5vw, 24px);
-      background: $accent;
-      border-radius: 2px;
-    }
-  }
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-// Course list
-.curso-list {
-  margin-bottom: clamp(1rem, 3vw, 1.5rem);
-
-  mat-list {
-    background: white;
-    border-radius: $border-radius;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    border: 1px solid $gray-200;
-    padding: clamp(0.25rem, 1vw, 0.5rem);
-    overflow: hidden;
-
-    mat-list-item {
-      position: relative;
-      transition: $transition;
-      cursor: pointer;
-      margin-bottom: 0.5rem;
-      border-radius: $border-radius-sm;
-      background: $gray-100;
-      min-height: clamp(60px, 15vw, 80px);
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-
-      &:hover {
-        background: rgba($accent, 0.1);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-
-        &::before {
-          opacity: 1;
-          height: 100%;
-        }
-      }
-
-      &::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 4px;
-        height: 0;
-        background: $accent;
-        opacity: 0;
-        transition: all 0.3s ease;
-      }
-
-      ::ng-deep {
-        .mat-list-item-content {
-          padding: clamp(0.75rem, 2vw, 1rem) clamp(1rem, 3vw, 1.25rem);
-        }
-
-        span[matListItemTitle] {
-          font-weight: 600;
-          color: $gray-800;
-          margin-bottom: 0.25rem;
-          font-size: clamp(0.875rem, 2.5vw, 1rem);
-          display: flex;
-          align-items: center;
-
-          &::before {
-            content: '📋';
-            margin-right: 0.75rem;
-            font-size: clamp(1rem, 3vw, 1.125rem);
-          }
-        }
-
-        span[matListItemLine] {
-          color: $accent;
-          font-size: clamp(0.75rem, 2vw, 0.875rem);
-          font-weight: 500;
-          padding-left: 2rem;
-          display: block;
-        }
-      }
-    }
-  }
+.card-row:last-child {
+  border-bottom: none;
 }
 
-// Students table
-.students-table {
-  background: white;
-  border-radius: $border-radius;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  padding: clamp(0.75rem, 2vw, 1.25rem);
-  border: 1px solid $gray-200;
-  margin-top: clamp(1rem, 3vw, 1.5rem);
-  animation: fadeIn 0.3s ease;
-
-  h3 {
-    font-size: clamp(1rem, 3vw, 1.125rem);
-    font-weight: 600;
-    color: $gray-800;
-    margin-bottom: clamp(0.75rem, 2vw, 1.25rem);
-    padding-bottom: clamp(0.25rem, 1vw, 0.5rem);
-    border-bottom: 1px solid $gray-200;
-    display: flex;
-    align-items: center;
-
-    &::before {
-      content: '👥';
-      margin-right: 0.75rem;
-      font-size: clamp(1.125rem, 3.5vw, 1.25rem);
-    }
-  }
-
-  table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    min-width: 100%;
-    table-layout: auto;
-
-    th {
-      background: $gray-100;
-      color: $gray-700;
-      font-weight: 600;
-      font-size: clamp(0.625rem, 2vw, 0.75rem);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.5rem, 2vw, 1rem);
-      text-align: left;
-      border-bottom: 1px solid $gray-200;
-      white-space: nowrap;
-
-      &:first-child {
-        border-top-left-radius: $border-radius-sm;
-      }
-
-      &:last-child {
-        border-top-right-radius: $border-radius-sm;
-        text-align: center;
-      }
-    }
-
-    td {
-      padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.5rem, 2vw, 1rem);
-      border-bottom: 1px solid $gray-200;
-      font-size: clamp(0.75rem, 2.5vw, 0.875rem);
-      color: $gray-800;
-      vertical-align: middle;
-      white-space: nowrap;
-
-      &:nth-child(3), &:nth-child(4), &:nth-child(5) {
-        text-align: center;
-      }
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-
-      &:first-child {
-        border-bottom-left-radius: $border-radius-sm;
-      }
-
-      &:last-child {
-        border-bottom-right-radius: $border-radius-sm;
-      }
-    }
-
-    tr:hover td {
-      background: rgba($gray-200, 0.5);
-    }
-
-    mat-checkbox {
-      ::ng-deep {
-        .mat-checkbox-frame {
-          border-color: $gray-400;
-          border-radius: 4px;
-        }
-
-        .mat-checkbox-background {
-          background-color: $accent;
-        }
-
-        .mat-checkbox-inner-container {
-          transform: scale(clamp(1.1, 1.2, 1.3));
-        }
-      }
-    }
-
-    button[mat-icon-button] {
-      width: clamp(36px, 10vw, 40px);
-      height: clamp(36px, 10vw, 40px);
-      line-height: clamp(36px, 10vw, 40px);
-
-      &[color="primary"] {
-        color: $primary;
-      }
-
-      &[color="accent"] {
-        color: $accent;
-      }
-
-      &:hover {
-        background: rgba($gray-200, 0.8);
-      }
-
-      mat-icon {
-        font-size: clamp(1.125rem, 3.5vw, 1.25rem);
-        width: clamp(1.125rem, 3.5vw, 1.25rem);
-        height: clamp(1.125rem, 3.5vw, 1.25rem);
-      }
-    }
-  }
-
-  mat-paginator {
-    margin-top: clamp(0.5rem, 2vw, 0.75rem);
-    background: transparent;
-
-    ::ng-deep {
-      .mat-paginator-container {
-        min-height: clamp(40px, 10vw, 48px);
-        padding: 0 clamp(0.25rem, 1vw, 0.5rem);
-        flex-wrap: wrap;
-      }
-
-      .mat-paginator-range-label,
-      .mat-paginator-page-size-label {
-        font-size: clamp(0.625rem, 2vw, 0.75rem);
-        color: $gray-600;
-      }
-
-      .mat-icon-button {
-        color: $gray-700;
-        width: clamp(36px, 10vw, 40px);
-        height: clamp(36px, 10vw, 40px);
-      }
-    }
-  }
-
-  .no-students {
-    padding: clamp(1.5rem, 4vw, 2rem) clamp(0.75rem, 2vw, 1rem);
-    text-align: center;
-    color: $gray-500;
-    font-style: italic;
-    background: $gray-100;
-    border-radius: $border-radius-sm;
-    margin-top: clamp(0.75rem, 2vw, 1rem);
-    font-size: clamp(0.875rem, 2.5vw, 1rem);
-
-    p {
-      margin: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      &::before {
-        content: '🔍';
-        margin-right: 0.5rem;
-        font-size: clamp(1.25rem, 4vw, 1.5rem);
-      }
-    }
-  }
+.label {
+  font-weight: bold;
+  color: #333;
+  width: 40%;
 }
 
-// Animations
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.actions {
+  justify-content: flex-end;
+  gap: 8px;
 }
 
-// Custom scrollbar
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+.no-students {
+  text-align: center;
+  padding: 16px;
+  color: #666;
 }
 
-::-webkit-scrollbar-track {
-  background: $gray-100;
-}
-
-::-webkit-scrollbar-thumb {
-  background: $gray-300;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: $gray-400;
-}
-
-// Responsive styles
-// Mobile (up to 767px)
-@media screen and (max-width: 767px) {
-  .container {
-    padding: 0.5rem;
-    margin: 0.25rem;
-    border-radius: $border-radius-sm;
+@media (max-width: 600px) {
+  .desktop-table {
+    display: none;
   }
 
-  .header {
+  .mobile-cards {
+    display: block;
+  }
+
+  .card-row {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: 8px;
   }
 
-  .curso-list {
-    mat-list {
-      padding: 0.25rem;
-
-      mat-list-item {
-        margin-bottom: 0.25rem;
-
-        ::ng-deep {
-          .mat-list-item-content {
-            padding: 0.5rem 0.75rem;
-          }
-
-          span[matListItemTitle] {
-            font-size: 0.875rem;
-          }
-
-          span[matListItemLine] {
-            font-size: 0.75rem;
-            padding-left: 1.5rem;
-          }
-        }
-      }
-    }
+  .label {
+    width: auto;
   }
 
-  .students-table {
-    padding: 0.5rem;
-
-    table {
-      display: flex;
-      flex-direction: column;
-      min-width: unset;
-      border-spacing: 0;
-
-      thead {
-        display: none; // Hide table headers on mobile
-      }
-
-      tr {
-        display: flex;
-        flex-direction: column;
-        border: 1px solid $gray-200;
-        margin-bottom: 1rem;
-        border-radius: $border-radius-sm;
-        background: $gray-100;
-        padding: 0.75rem;
-        box-shadow: 0 2px 4px rgbaseat(0, 0, 0, 0.05);
-      }
-
-      td {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: clamp(0.5rem, 1.5vw, 0.75rem) 0.25rem;
-        border-bottom: none;
-        font-size: clamp(0.75rem, 2.5vw, 0.875rem);
-        white-space: normal;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-
-        &:before {
-          content: attr(data-label);
-          font-weight: 600;
-          color: $gray-700;
-          margin-right: 0.5rem;
-          min-width: 120px;
-        }
-
-        &[matColumnDef="estudiante"] {
-          font-size: clamp(0.875rem, 3vw, 1rem);
-          font-weight: 700;
-          background: $gray-200;
-          padding: 0.75rem;
-          border-radius: $border-radius-sm $border-radius-sm 0 0;
-          margin-bottom: 0.5rem;
-        }
-
-        &[matColumnDef="asistenciaHoy"],
-        &[matColumnDef="acciones"],
-        &[matColumnDef="historial"] {
-          justify-content: flex-start;
-          gap: 0.75rem;
-        }
-
-        &[matColumnDef="asistenciaHoy"] {
-          flex-direction: row;
-          align-items: center;
-          padding: 0.5rem 0.25rem;
-        }
-      }
-
-      tr:last-child td {
-        border-bottom: none;
-      }
-
-      mat-checkbox {
-        ::ng-deep {
-          .mat-checkbox-inner-container {
-            transform: scale(clamp(1.2, 1.3, 1.4)); // Larger for mobile
-          }
-        }
-      }
-
-      button[mat-icon-button] {
-        width: clamp(40px, 12vw, 44px);
-        height: clamp(40px, 12vw, 44px);
-        line-height: clamp(40px, 12vw, 44px);
-      }
-    }
-
-    mat-paginator {
-      ::ng-deep {
-        .mat-paginator-container {
-          flex-wrap: wrap;
-          gap: 0.5rem;
-          justify-content: center;
-        }
-
-        .mat-paginator-page-size {
-          display: none; // Simplify paginator on mobile
-        }
-
-        .mat-icon-button {
-          width: clamp(40px, 12vw, 44px);
-          height: clamp(40px, 12vw, 44px);
-        }
-      }
-    }
-
-    .no-students {
-      padding: 1rem 0.5rem;
-      font-size: 0.875rem;
-    }
-  }
-}
-
-// Tablet (768px to 1024px)
-@media screen and (min-width: 768px) and (max-width: 1024px) {
-  .container {
-    padding: 1rem;
-    margin: 0 1rem;
-  }
-
-  .header {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .curso-list {
-    mat-list {
-      mat-list-item {
-        ::ng-deep {
-          .mat-list-item-content {
-            padding: 0.75rem 1rem;
-          }
-        }
-      }
-    }
-  }
-
-  .students-table {
-    padding: 1rem;
-    overflow-x: auto;
-
-    table {
-      min-width: 500px;
-
-      th, td {
-        padding: clamp(0.5rem, 1.5vw, 0.75rem);
-        font-size: clamp(0.75rem, 2vw, 0.875rem);
-        min-width: 100px;
-      }
-
-      th[mat-header-cell][matColumnDef="estudiante"],
-      td[mat-cell][matColumnDef="estudiante"] {
-        min-width: 150px;
-      }
-    }
-  }
-}
-
-// PC (above 1024px)
-@media screen and (min-width: 1025px) {
-  .container {
-    padding: 1.5rem;
-    margin: 0 auto;
-  }
-
-  .header {
-    flex-wrap: nowrap;
-  }
-
-  .students-table {
-    padding: 1.25rem;
-
-    table {
-      th, td {
-        padding: 0.75rem 1rem;
-        min-width: 120px;
-      }
-
-      th[mat-header-cell][matColumnDef="estudiante"],
-      td[mat-cell][matColumnDef="estudiante"] {
-        min-width: 200px;
-      }
-    }
+  .actions {
+    width: 100%;
+    justify-content: flex-end;
   }
 }

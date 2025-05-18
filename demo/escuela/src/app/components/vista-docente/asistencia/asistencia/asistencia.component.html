@@ -14,7 +14,7 @@
 
   <div class="students-table" *ngIf="selectedCurso">
     <h3>Asistencia - {{ selectedCurso.nivelDetalleCurso.curso?.descripcion }} ({{ today | date: 'dd/MM/yyyy' }})</h3>
-    <table mat-table [dataSource]="dataSource">
+    <table mat-table [dataSource]="dataSource" class="desktop-table">
       <ng-container matColumnDef="estudiante" data-label="Estudiante">
         <th mat-header-cell *matHeaderCellDef>Estudiante</th>
         <td mat-cell *matCellDef="let element">{{ element.estudiante.nombres }} {{ element.estudiante.apellidos }}</td>
@@ -26,13 +26,13 @@
       <ng-container matColumnDef="asistenciaHoy" data-label="Asistencia Hoy">
         <th mat-header-cell *matHeaderCellDef>Asistencia Hoy</th>
         <td mat-cell *matCellDef="let element">
-          <mat-checkbox [(ngModel)]="element.asistio">Asistió</mat-checkbox>
+          <mat-checkbox [(ngModel)]="element.asistio" aria-label="Marcar asistencia">Asistió</mat-checkbox>
         </td>
       </ng-container>
       <ng-container matColumnDef="historial" data-label="Historial">
         <th mat-header-cell *matHeaderCellDef>Historial</th>
         <td mat-cell *matCellDef="let element">
-          <button mat-icon-button color="accent" (click)="verHistorial(element.estudiante.idEstudiante)">
+          <button mat-icon-button color="accent" (click)="verHistorial(element.estudiante.idEstudiante)" aria-label="Ver historial">
             <mat-icon>visibility</mat-icon>
           </button>
         </td>
@@ -40,7 +40,7 @@
       <ng-container matColumnDef="acciones" data-label="Acciones">
         <th mat-header-cell *matHeaderCellDef>Acciones</th>
         <td mat-cell *matCellDef="let element">
-          <button mat-icon-button color="primary" (click)="guardarAsistencia(element)">
+          <button mat-icon-button color="primary" (click)="guardarAsistencia(element)" aria-label="Guardar asistencia">
             <mat-icon>save</mat-icon>
           </button>
         </td>
@@ -48,6 +48,32 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+
+    <div class="mobile-cards">
+      <div class="card" *ngFor="let element of dataSource.data">
+        <div class="card-row">
+          <span class="label">Estudiante:</span>
+          <span>{{ element.estudiante.nombres }} {{ element.estudiante.apellidos }}</span>
+        </div>
+        <div class="card-row">
+          <span class="label">Documento:</span>
+          <span>{{ element.estudiante.documentoIdentidad }}</span>
+        </div>
+        <div class="card-row">
+          <span class="label">Asistencia Hoy:</span>
+          <mat-checkbox [(ngModel)]="element.asistio" aria-label="Marcar asistencia">Asistió</mat-checkbox>
+        </div>
+        <div class="card-row actions">
+          <button mat-icon-button color="accent" (click)="verHistorial(element.estudiante.idEstudiante)" aria-label="Ver historial">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button color="primary" (click)="guardarAsistencia(element)" aria-label="Guardar asistencia">
+            <mat-icon>save</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     <div class="no-students" *ngIf="dataSource.data.length === 0">
       <p>No hay estudiantes registrados en este curso.</p>
