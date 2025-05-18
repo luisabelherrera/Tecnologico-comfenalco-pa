@@ -1,18 +1,40 @@
-<h2 mat-dialog-title>{{ data.title }}</h2>
+<h2 mat-dialog-title class="dialog-title">
+  📩 {{ data.title || 'Detalle de notificación' }}
+</h2>
 
 <mat-dialog-content class="dialog-content">
   <p class="full-message">{{ data.message }}</p>
-  <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <mat-error *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </mat-error>
 </mat-dialog-content>
 
-<mat-dialog-actions>
-  <button mat-raised-button color="warn" (click)="deleteNotification()" aria-label="Eliminar notificación">
-    Eliminar
+<mat-dialog-actions class="dialog-actions">
+  <button
+    mat-stroked-button
+    color="warn"
+    (click)="deleteNotification()"
+    aria-label="Eliminar notificación"
+  >
+    <mat-icon>delete</mat-icon> Eliminar
   </button>
-  <button mat-stroked-button color="primary" (click)="markAsRead()" aria-label="Marcar como leída">
-    Marcar como leída
+
+  <button
+    mat-stroked-button
+    color="primary"
+    (click)="markAsRead()"
+    aria-label="Marcar como leída"
+  >
+    <mat-icon>done</mat-icon> Marcar como leída
   </button>
-  <button mat-raised-button color="accent" (click)="close()" aria-label="Cerrar diálogo">
-    Cerrar
+
+  <button
+    mat-raised-button
+    color="accent"
+    (click)="close()"
+    aria-label="Cerrar diálogo"
+  >
+    <mat-icon>close</mat-icon> Cerrar
   </button>
 </mat-dialog-actions>

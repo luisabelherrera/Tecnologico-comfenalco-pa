@@ -1,25 +1,44 @@
- .dialog-content {
-    padding: 16px 0;
-  }
+.dialog-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-  .full-message {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    margin: 12px 0;
-    line-height: 1.6;
-    font-size: 14px;
-    color: #333;
-  }
+.dialog-content {
+  padding: 12px 0;
+  font-family: 'Segoe UI', sans-serif;
+}
 
-  .error-message {
-    color: #dc3545;
-    font-size: 13px;
-    margin-top: 8px;
-  }
+.full-message {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 16px 0;
+  line-height: 1.7;
+  font-size: 15px;
+  color: #444;
+  border-left: 4px solid #90caf9;
+  padding-left: 12px;
+  background-color: #f5f9ff;
+  border-radius: 4px;
+}
 
-  mat-dialog-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    padding-top: 12px;
+.error-message {
+  color: #f44336;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 16px;
+
+  button mat-icon {
+    margin-right: 6px;
   }
+}
