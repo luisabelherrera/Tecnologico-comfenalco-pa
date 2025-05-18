@@ -4,6 +4,14 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
+export interface Notificacion {
+    id?: string;
+    titulo: string;
+    mensaje: string;
+    leida: boolean;
+    fechaHora: string;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -13,43 +21,51 @@ export class NotificacionService {
     constructor(private http: HttpClient) {}
 
     private getHeaders(): HttpHeaders {
-        return new HttpHeaders({
-            'Content-Type': 'application/json'
-        });
+        const token = localStorage.getItem('accessToken');
+        let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        if (token) {
+            headers = headers.set('Authorization', `Bearer ${token}`);
+        }
+        return headers;
     }
 
-    notificarAdministrador(titulo: string, mensaje: string): Observable<any> {
-        const payload = {
-            titulo: titulo,
-            mensaje: mensaje,
-            leida: false,
-            fechaHora: new Date().toISOString().slice(0, 19) // e.g., "2025-05-18T17:55:00"
+    notificarAdministrador(notificacion: Partial<Notificacion>): Observable<Notificacion> {
+        const payload: Partial<Notificacion> = {
+            titulo: notificacion.titulo || 'Notificación',
+            mensaje: notificacion.mensaje,
+            leida: notificacion.leida ?? false,
+            fechaHora: notificacion.fechaHora || new Date().toISOString()
         };
-        console.log('Sending notification:', payload);
-        return this.http.post<any>(this.apiUrl, payload, { headers: this.getHeaders() })
+        return this.http.post<Notificacion>(this.apiUrl, payload, { headers: this.getHeaders() })
             .pipe(
-                map(response => {
-                    console.log('Response:', response);
-                    return response;
-                }),
+                map(response => ({
+                    ...response,
+                    id: String(response.id) // Convertir Long a string
+                })),
                 catchError(this.handleError)
             );
     }
 
-    marcarComoLeida(id: string): Observable<any> {
+    obtenerNotificaciones(): Observable<Notificacion[]> {
+        return this.http.get<Notificacion[]>(this.apiUrl, { headers: this.getHeaders() })
+            .pipe(
+                map(notificaciones => notificaciones.map(n => ({
+                    ...n,
+                    id: String(n.id) // Convertir Long a string
+                }))),
+                catchError(this.handleError)
+            );
+    }
+
+    marcarComoLeida(id: string): Observable<void> {
         const url = `${this.apiUrl}/${id}/marcar-como-leida`;
-        return this.http.patch<any>(url, null, { headers: this.getHeaders() })
+        return this.http.patch<void>(url, null, { headers: this.getHeaders() })
             .pipe(catchError(this.handleError));
     }
 
-    eliminarNotificacion(id: string): Observable<any> {
+    eliminarNotificacion(id: string): Observable<void> {
         const url = `${this.apiUrl}/${id}`;
-        return this.http.delete<any>(url, { headers: this.getHeaders() })
-            .pipe(catchError(this.handleError));
-    }
-
-    obtenerNotificaciones(): Observable<any[]> {
-        return this.http.get<any[]>(this.apiUrl, { headers: this.getHeaders() })
+        return this.http.delete<void>(url, { headers: this.getHeaders() })
             .pipe(catchError(this.handleError));
     }
 
@@ -58,13 +74,13 @@ export class NotificacionService {
         if (error.status === 401) {
             errorMessage = 'No autorizado. Por favor, inicia sesión nuevamente.';
         } else if (error.status === 400) {
-            errorMessage = `Error de validación: ${error.error}`;
+            errorMessage = 'Datos inválidos. Verifica los campos enviados.';
         } else if (error.error instanceof ErrorEvent) {
             errorMessage += error.error.message;
         } else {
             errorMessage += `Código ${error.status}: ${error.message}`;
         }
-        console.error('Error:', errorMessage, error);
+        console.error('Error:', errorMessage);
         return throwError(() => new Error(errorMessage));
     }
 }
