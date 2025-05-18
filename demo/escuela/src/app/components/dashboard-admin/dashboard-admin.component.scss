@@ -16,12 +16,18 @@ $dark-text: #d1d5db;
 // Fonts
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
+// Fluid Typography Base
+html {
+  font-size: clamp(14px, 2vw, 16px); // Scales between 14px and 16px
+}
+
 body {
   font-family: 'Inter', sans-serif;
   background: linear-gradient(135deg, $background 0%, darken($background, 10%) 100%);
   color: $text;
   margin: 0;
   padding: 0;
+  line-height: 1.5;
 }
 
 body.dark-mode {
@@ -55,21 +61,17 @@ body.dark-mode {
 
 // Dashboard Wrapper
 .dashboard-wrapper {
-  padding: 2rem;
+  padding: clamp(1rem, 3vw, 2rem);
   max-width: 1600px;
   margin: 0 auto;
-
-  @media (max-width: 768px) {
-    padding: 1rem;
-  }
 }
 
 // Header
 .dashboard-header {
   background: linear-gradient(135deg, $primary 0%, lighten($primary, 10%) 100%);
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   border-radius: 16px;
-  margin-bottom: 2rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
   box-shadow: $shadow;
   backdrop-filter: blur(10px);
   border: 1px solid $border;
@@ -79,34 +81,37 @@ body.dark-mode {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
 
     h1 {
-      font-size: 1.75rem;
+      font-size: clamp(1.25rem, 4vw, 1.75rem);
       font-weight: 600;
       margin: 0;
     }
 
     .subtitle {
-      font-size: 0.9rem;
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
       opacity: 0.8;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: clamp(0.5rem, 2vw, 1rem);
 
       .action-btn {
         background: rgba(255, 255, 255, 0.1);
         border: 1px solid $border;
         color: #fff;
-        padding: 0.5rem 1rem;
+        padding: clamp(0.4rem, 1.5vw, 0.5rem) clamp(0.8rem, 2vw, 1rem);
         border-radius: 8px;
         cursor: pointer;
         transition: all 0.3s ease;
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        font-size: clamp(0.85rem, 2vw, 0.9rem);
 
         &:hover {
           background: rgba(255, 255, 255, 0.2);
@@ -114,7 +119,7 @@ body.dark-mode {
         }
 
         i {
-          font-size: 1.25rem;
+          font-size: clamp(1rem, 3vw, 1.25rem);
         }
       }
 
@@ -124,11 +129,11 @@ body.dark-mode {
         gap: 0.5rem;
 
         span {
-          font-size: 0.9rem;
+          font-size: clamp(0.8rem, 2vw, 0.9rem);
         }
 
         i {
-          font-size: 1.5rem;
+          font-size: clamp(1.25rem, 3vw, 1.5rem);
         }
       }
     }
@@ -138,11 +143,11 @@ body.dark-mode {
 // Loading
 .loading {
   text-align: center;
-  padding: 3rem 0;
+  padding: clamp(2rem, 5vw, 3rem) 0;
 
   .spinner {
-    width: 3rem;
-    height: 3rem;
+    width: clamp(2rem, 6vw, 3rem);
+    height: clamp(2rem, 6vw, 3rem);
     border: 4px solid $secondary;
     border-top: 4px solid transparent;
     border-radius: 50%;
@@ -151,8 +156,8 @@ body.dark-mode {
   }
 
   p {
-    margin-top: 1rem;
-    font-size: 1rem;
+    margin-top: clamp(0.5rem, 2vw, 1rem);
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
     color: $text;
   }
 }
@@ -165,31 +170,32 @@ body.dark-mode {
 // Error
 .error {
   text-align: center;
-  padding: 2rem;
+  padding: clamp(1.5rem, 3vw, 2rem);
   background: rgba(255, 75, 75, 0.1);
   border-radius: 16px;
-  margin-bottom: 2rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
   border: 1px solid rgba(255, 75, 75, 0.3);
 
   i {
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 4vw, 2rem);
     color: $secondary;
   }
 
   p {
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
     color: $secondary;
-    margin: 1rem 0;
+    margin: clamp(0.5rem, 2vw, 1rem) 0;
   }
 
   .action-btn {
     background: $secondary;
     color: #fff;
     border: none;
-    padding: 0.5rem 1.5rem;
+    padding: clamp(0.4rem, 1.5vw, 0.5rem) clamp(1rem, 2vw, 1.5rem);
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
+    font-size: clamp(0.85rem, 2vw, 0.9rem);
 
     &:hover {
       background: darken($secondary, 10%);
@@ -201,13 +207,13 @@ body.dark-mode {
 // KPIs
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(180px, 25vw, 200px), 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
 
   .kpi-card {
     background: $card-bg;
-    padding: 1.5rem;
+    padding: clamp(1rem, 2vw, 1.5rem);
     border-radius: 16px;
     box-shadow: $shadow;
     backdrop-filter: blur(10px);
@@ -223,19 +229,19 @@ body.dark-mode {
     }
 
     i {
-      font-size: 2rem;
+      font-size: clamp(1.5rem, 4vw, 2rem);
       color: $secondary;
     }
 
     div {
       h3 {
-        font-size: 1.5rem;
+        font-size: clamp(1.25rem, 3vw, 1.5rem);
         font-weight: 600;
         margin: 0;
       }
 
       p {
-        font-size: 0.9rem;
+        font-size: clamp(0.8rem, 2vw, 0.9rem);
         color: lighten($text, 20%);
         margin: 0;
       }
@@ -246,32 +252,33 @@ body.dark-mode {
 // Filters
 .filter-bar {
   background: $card-bg;
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   border-radius: 16px;
   box-shadow: $shadow;
   backdrop-filter: blur(10px);
   border: 1px solid $border;
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
   align-items: center;
 
   .filter-group {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    flex: 1 1 clamp(150px, 45%, 200px);
 
     label {
-      font-size: 0.9rem;
+      font-size: clamp(0.85rem, 2vw, 0.9rem);
       font-weight: 500;
     }
 
     select {
-      padding: 0.5rem 1rem;
+      padding: clamp(0.4rem, 1.5vw, 0.5rem) clamp(0.8rem, 2vw, 1rem);
       border: 1px solid $border;
       border-radius: 8px;
-      font-size: 0.9rem;
+      font-size: clamp(0.85rem, 2vw, 0.9rem);
       background: rgba(255, 255, 255, 0.5);
       cursor: pointer;
       transition: all 0.3s ease;
@@ -288,13 +295,14 @@ body.dark-mode {
     background: $primary;
     color: #fff;
     border: none;
-    padding: 0.5rem 1.5rem;
+    padding: clamp(0.4rem, 1.5vw, 0.5rem) clamp(1rem, 2vw, 1.5rem);
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    font-size: clamp(0.85rem, 2vw, 0.9rem);
 
     &:hover {
       background: lighten($primary, 10%);
@@ -306,13 +314,13 @@ body.dark-mode {
 // Charts
 .chart-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(280px, 45vw, 300px), 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
 
   .chart-card {
     background: $card-bg;
-    padding: 1.5rem;
+    padding: clamp(1rem, 2vw, 1.5rem);
     border-radius: 16px;
     box-shadow: $shadow;
     backdrop-filter: blur(10px);
@@ -325,20 +333,20 @@ body.dark-mode {
     }
 
     h3 {
-      font-size: 1.25rem;
+      font-size: clamp(1rem, 3vw, 1.25rem);
       font-weight: 500;
       margin-bottom: 1rem;
     }
 
     .chart-note {
-      font-size: 0.85rem;
+      font-size: clamp(0.75rem, 2vw, 0.85rem);
       color: $text;
       margin-bottom: 0.5rem;
       opacity: 0.8;
     }
 
     .chart-canvas {
-      max-height: 350px; // Aumentamos el tamaño para las anotaciones
+      max-height: clamp(250px, 40vw, 350px);
       width: 100%;
       position: relative;
     }
@@ -348,30 +356,30 @@ body.dark-mode {
 // AI Insights
 .ai-insights {
   background: $card-bg;
-  padding: 2rem;
+  padding: clamp(1.5rem, 3vw, 2rem);
   border-radius: 16px;
   box-shadow: $shadow;
   backdrop-filter: blur(10px);
   border: 1px solid $border;
-  margin-bottom: 2rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
 
   h2 {
-    font-size: 1.5rem;
+    font-size: clamp(1.25rem, 3vw, 1.5rem);
     font-weight: 600;
-    margin-bottom: 1.5rem;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
   }
 
   .insight-section {
-    margin-bottom: 1.5rem;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
 
     h4 {
-      font-size: 1.1rem;
+      font-size: clamp(1rem, 2.5vw, 1.1rem);
       font-weight: 500;
       color: $secondary;
     }
 
     p {
-      font-size: 0.9rem;
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
       line-height: 1.6;
       margin: 0;
     }
@@ -381,7 +389,7 @@ body.dark-mode {
 // Footer
 .dashboard-footer {
   background: $card-bg;
-  padding: 1rem;
+  padding: clamp(0.8rem, 2vw, 1rem);
   border-radius: 16px;
   box-shadow: $shadow;
   backdrop-filter: blur(10px);
@@ -389,18 +397,34 @@ body.dark-mode {
   text-align: center;
 
   p {
-    font-size: 0.9rem;
-    margin: 0.5rem 0;
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
+    margin: clamp(0.3rem, 1vw, 0.5rem) 0;
   }
 }
 
-// Responsive
+// Responsive Breakpoints
 @media (max-width: 576px) {
   .dashboard-wrapper {
-    padding: 1rem;
+    padding: 0.5rem;
   }
 
-  .kpi-grid, .chart-grid {
+  .dashboard-header {
+    .header-content {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-grid {
     grid-template-columns: 1fr;
   }
 
@@ -415,6 +439,67 @@ body.dark-mode {
     .action-btn {
       width: 100%;
       justify-content: center;
+    }
+  }
+
+  .loading {
+    padding: 2rem 0;
+  }
+
+  .error {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+  .dashboard-wrapper {
+    padding: 1rem;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .chart-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .filter-bar {
+    flex-wrap: wrap;
+
+    .filter-group {
+      flex: 1 1 45%;
+    }
+  }
+
+  .dashboard-header {
+    .header-content {
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      .header-actions {
+        gap: 0.75rem;
+      }
+    }
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+  .dashboard-wrapper {
+    padding: 1.5rem;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .chart-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .filter-bar {
+    .filter-group {
+      flex: 1 1 200px;
     }
   }
 }
