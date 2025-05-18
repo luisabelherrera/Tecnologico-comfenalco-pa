@@ -98,6 +98,16 @@
     </div>
     <div class="modal-body">
       <p>Envía un mensaje al administrador para recuperar tu cuenta:</p>
+
+      <!-- Campo de Título -->
+      <input
+        type="text"
+        [(ngModel)]="tituloUsuario"
+        name="tituloUsuario"
+        placeholder="Título del mensaje"
+      />
+
+      <!-- Campo de Mensaje -->
       <textarea
         [(ngModel)]="mensajeUsuario"
         name="mensajeUsuario"
@@ -112,6 +122,8 @@
   </div>
 </div>
 
+
+<!-- Modal de Información -->
 <!-- Modal de Información -->
 <div class="modal-overlay" *ngIf="mostrarModalInformacion" [@fadeSlideInOut]>
   <div class="modal-container">
@@ -123,6 +135,16 @@
     </div>
     <div class="modal-body">
       <p>Envía un mensaje para más información o para crear una cuenta:</p>
+
+      <!-- Campo de Título -->
+      <input
+        type="text"
+        [(ngModel)]="tituloInformacion"
+        name="tituloInformacion"
+        placeholder="Título del mensaje"
+      />
+
+      <!-- Campo de Mensaje -->
       <textarea
         [(ngModel)]="mensajeInformacion"
         name="mensajeInformacion"

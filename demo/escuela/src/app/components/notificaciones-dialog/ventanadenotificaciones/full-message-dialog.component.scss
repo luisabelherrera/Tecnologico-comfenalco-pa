@@ -1,16 +1,25 @@
-.full-message {
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  margin: 10px 0;
-  line-height: 1.5;
-}
+ .dialog-content {
+    padding: 16px 0;
+  }
 
-.error-message {
-  color: #dc3545;
-  font-size: 12px;
-  margin-top: 10px;
-}
+  .full-message {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 12px 0;
+    line-height: 1.6;
+    font-size: 14px;
+    color: #333;
+  }
 
-mat-dialog-actions {
-  gap: 10px;
-}
+  .error-message {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+
+  mat-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 12px;
+  }
