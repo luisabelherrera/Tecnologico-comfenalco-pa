@@ -26,6 +26,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   tituloUsuario: string = ''
+   tituloInformacion: string = '';
   mensajeUsuario: string = '';
   mensajeInformacion: string = '';
   mostrarModal: boolean = false;
