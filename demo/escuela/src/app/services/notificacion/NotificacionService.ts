@@ -12,19 +12,17 @@ export class NotificacionService {
 
   constructor(private http: HttpClient) {}
 
- private getHeaders(): HttpHeaders {
+private getHeaders(): HttpHeaders {
         const token = localStorage.getItem('accessToken');
         return new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token || ''}` // Handle null token
+            'Authorization': `Bearer ${token}`
         });
     }
 
-  notificarAdministrador(mensaje: string): Observable<any> {
+notificarAdministrador(mensaje: string): Observable<any> {
     return this.http.post<any>(this.apiUrl, { mensaje }, { headers: this.getHeaders() })
-      .pipe(catchError(this.handleError));
-  }
-
+        .pipe(catchError(this.handleError));
+}
   marcarComoLeida(id: string): Observable<any> {
     const url = `${this.apiUrl}/${id}/marcar-como-leida`;
     return this.http.patch<any>(url, null, { headers: this.getHeaders() })
