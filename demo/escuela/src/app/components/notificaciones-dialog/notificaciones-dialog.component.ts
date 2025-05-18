@@ -57,7 +57,7 @@ export class NotificacionesDialogComponent {
 
   openFullMessage(notification: Notificacion): void {
     const dialogRef = this.dialog.open(FullMessageDialogComponent, {
-      width: '400px',
+      width: '800px',
       data: {
         message: notification.mensaje,
         title: notification.titulo,

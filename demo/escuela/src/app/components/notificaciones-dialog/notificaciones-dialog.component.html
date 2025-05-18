@@ -5,29 +5,35 @@
     <mat-list-item
       *ngFor="let notification of notifications"
       class="notification-item"
-      [ngClass]="{'read': notification.leida}"
+      [ngClass]="{ 'read': notification.leida }"
       (click)="openFullMessage(notification)"
       role="button"
       tabindex="0"
       (keyup.enter)="openFullMessage(notification)"
     >
-      <mat-icon mat-list-icon [color]="notification.leida ? 'accent' : 'primary'">
-        {{notification.leida ? 'notifications_active' : 'notifications'}}
+      <mat-icon
+        mat-list-icon
+        [color]="notification.leida ? 'accent' : 'primary'"
+      >
+        {{ notification.leida ? 'notifications_active' : 'notifications' }}
       </mat-icon>
-      <p mat-line class="notification-text">
-        <strong>{{ notification.titulo || 'Sin título' }}</strong>: {{ notification.mensaje | slice:0:50 }}...
-        <!-- Debug output -->
-        <br>Debug: {{ notification.titulo ? notification.titulo : 'No title' }}
-      </p>
+
+      <div class="notification-text" matLine>
+        <strong>{{ notification.titulo || 'Sin título' }}</strong>:
+        {{ notification.mensaje | slice: 0:60 }}{{ notification.mensaje.length > 60 ? '...' : '' }}
+      </div>
+
       <button
         mat-icon-button
         (click)="markAsRead(notification.id); $event.stopPropagation()"
         *ngIf="!notification.leida"
         aria-label="Marcar como leída"
+        class="mark-read-btn"
       >
         <mat-icon>done</mat-icon>
       </button>
     </mat-list-item>
+
     <mat-list-item *ngIf="notifications.length === 0">
       <p mat-line>No hay notificaciones disponibles</p>
     </mat-list-item>
