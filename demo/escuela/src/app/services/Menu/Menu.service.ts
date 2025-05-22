@@ -88,7 +88,7 @@ darLike(noticiaId: string): Observable<Noticia> {
 
   // Método para actualizar los likes de una noticia
   actualizarLikes(noticiaId: string, likedBy: string[]): Observable<Noticia> {
-    return this.http.put<Noticia>(`${this.apiUrl}/${noticiaId}/likes`, { likedBy }, { headers: this.getHeaders() });
+    return this.http.post<Noticia>(`${this.apiUrl}/${noticiaId}/likes`, { likedBy }, { headers: this.getHeaders() });
   }
 
   // Método para eliminar una noticia
