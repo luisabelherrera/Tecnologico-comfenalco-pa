@@ -81,9 +81,10 @@ export class NoticiaService {
   }
 
   // Método para dar like a una noticia
-  darLike(id: string): Observable<Noticia> {
-    return this.http.post<Noticia>(`${this.apiUrl}/${id}/likes`, {}, { headers: this.getHeaders() });
-  }
+darLike(noticiaId: string): Observable<Noticia> {
+  return this.http.post<Noticia>(`${this.apiUrl}/${noticiaId}/likes`, {}, { headers: this.getHeaders() });
+}
+
 
   // Método para actualizar los likes de una noticia
   actualizarLikes(noticiaId: string, likedBy: string[]): Observable<Noticia> {
