@@ -112,44 +112,50 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  darLike(noticia: Noticia): void {
-    if (!this.isAuthenticated || !noticia.id || !this.mensaje.username) return;
+ darLike(noticia: Noticia): void {
+  if (!this.isAuthenticated || !noticia.id || !this.mensaje.username) return;
 
-    if (!noticia.likedBy) {
-      noticia.likedBy = [];
-    }
-
-    const userIndex = noticia.likedBy.indexOf(this.mensaje.username);
-    let optimisticLikesCount = noticia.likesCount || 0;
-
-    if (userIndex === -1) {
-      noticia.likedBy.push(this.mensaje.username);
-      noticia.likesCount = optimisticLikesCount + 1;
-    } else {
-      noticia.likedBy.splice(userIndex, 1);
-      noticia.likesCount = optimisticLikesCount - 1;
-    }
-
-    this.noticias = [...this.noticias];
-
-    this.noticiaService.actualizarLikes(noticia.id, noticia.likedBy).subscribe({
-      next: (updatedNoticia) => {
-        noticia.likesCount = updatedNoticia.likesCount;
-        noticia.likedBy = updatedNoticia.likedBy;
-      },
-      error: (error) => {
-        console.error('Error al actualizar likes', error);
-        if (userIndex === -1) {
-          noticia.likedBy.splice(noticia.likedBy.indexOf(this.mensaje.username), 1);
-          noticia.likesCount = optimisticLikesCount;
-        } else {
-          noticia.likedBy.push(this.mensaje.username);
-          noticia.likesCount = optimisticLikesCount;
-        }
-        this.noticias = [...this.noticias];
-      }
-    });
+  if (!noticia.likedBy) {
+    noticia.likedBy = [];
   }
+
+  const userIndex = noticia.likedBy.indexOf(this.mensaje.username);
+  let optimisticLikesCount = noticia.likesCount || 0;
+
+  // Optimistic update
+  if (userIndex === -1) {
+    noticia.likedBy.push(this.mensaje.username);
+    noticia.likesCount = optimisticLikesCount + 1;
+  } else {
+    noticia.likedBy.splice(userIndex, 1);
+    noticia.likesCount = optimisticLikesCount - 1;
+  }
+
+  // Update the noticias array to trigger UI refresh
+  this.noticias = [...this.noticias];
+
+  // Call the darLike service method
+  this.noticiaService.darLike(noticia.id).subscribe({
+    next: (updatedNoticia) => {
+      // Update with server response
+      noticia.likesCount = updatedNoticia.likesCount;
+      noticia.likedBy = updatedNoticia.likedBy;
+      this.noticias = [...this.noticias]; // Refresh UI
+    },
+    error: (error) => {
+      console.error('Error al dar like', error);
+      // Revert optimistic update on error
+      if (userIndex === -1) {
+        noticia.likedBy.splice(noticia.likedBy.indexOf(this.mensaje.username), 1);
+        noticia.likesCount = optimisticLikesCount;
+      } else {
+        noticia.likedBy.push(this.mensaje.username);
+        noticia.likesCount = optimisticLikesCount;
+      }
+      this.noticias = [...this.noticias]; // Refresh UI
+    }
+  });
+}
 
   hasLiked(noticia: Noticia): boolean {
     return this.isAuthenticated && noticia.likedBy?.includes(this.mensaje.username) || false;
