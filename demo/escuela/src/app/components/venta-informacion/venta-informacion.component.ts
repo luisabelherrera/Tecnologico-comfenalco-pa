@@ -39,26 +39,51 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
   institutionName: string = 'EduPortal';
   isNavHidden = false;
   isMobileNavHidden = false;
- showBackToTop = false
+  showBackToTop = false;
+
   // Formulario
   contactData = {
     name: '',
     email: '',
     subject: '',
-    message: '',
+    message: ''
   };
   formEnviado = false;
 
   featureCards: FeatureCard[] = [
-    { icon: 'menu_book', emoji: '📚', title: 'Educación Integral', description: 'Programas adaptados al mundo actual.' },
-    { icon: 'lightbulb', emoji: '💡', title: 'Innovación y Tecnología', description: 'Salones modernos y educación digital.' },
-    { icon: 'public', emoji: '🌎', title: 'Formación en Valores', description: 'Preparamos a los estudiantes con principios sólidos.' },
+    { icon: 'menu_book', emoji: '📋', title: 'Gestión Académica Eficiente', description: 'Centraliza matrículas, cursos y horarios en una plataforma intuitiva.' },
+    { icon: 'schedule', emoji: '⏰', title: 'Optimización de Horarios', description: 'Organiza y asigna cursos de manera efectiva, ahorrando tiempo.' },
+    { icon: 'chat', emoji: '💬', title: 'Mejor Comunicación', description: 'Facilita la interacción entre estudiantes y profesores con herramientas integradas.' }
   ];
 
   staticNews: Noticia[] = [
-    { id: '1', titulo: 'Semana Cultural 2024', fechaCreacion: '2024-09-15', contenido: 'Disfruta de una semana llena de arte, música y tradición con presentaciones, concursos y mucho más.', imagen: 'assets/img/cdc-GDokEYnOfnE-unsplash.jpg', action: 'Leer más', likedBy: [] },
-    { id: '2', titulo: 'Concurso de Lectura', fechaCreacion: '2024-10-01', contenido: 'Fomenta tu amor por la lectura participando en nuestro concurso anual. Premios y reconocimiento para los mejores.', imagen: 'assets/img/cdc-GDokEYnOfnE-unsplash.jpg', action: 'Participa aquí', likedBy: [] },
-    { id: '3', titulo: 'Feria de Ciencias 2024', fechaCreacion: '2024-11-01', contenido: 'Explora los proyectos innovadores de nuestros estudiantes en tecnología, medio ambiente y ciencias aplicadas.', imagen: 'assets/img/cdc-GDokEYnOfnE-unsplash.jpg', action: 'Ver detalles', likedBy: [] },
+    {
+      id: '1',
+      titulo: 'Semana Cultural 2024',
+      fechaCreacion: '2024-09-15',
+      contenido: 'Disfruta de una semana llena de arte, música y tradición con presentaciones, concursos y mucho más.',
+      imagen: 'assets/img/image1.png',
+      action: 'Leer más',
+      likedBy: []
+    },
+    {
+      id: '2',
+      titulo: 'Concurso de Lectura',
+      fechaCreacion: '2024-10-01',
+      contenido: 'Fomenta tu amor por la lectura participando en nuestro concurso anual. Premios y reconocimiento para los mejores.',
+      imagen: 'assets/img/image2.png',
+      action: 'Participa aquí',
+      likedBy: []
+    },
+    {
+      id: '3',
+      titulo: 'Feria de Ciencias 2024',
+      fechaCreacion: '2024-11-01',
+      contenido: 'Explora los proyectos innovadores de nuestros estudiantes en tecnología, medio ambiente y ciencias aplicadas.',
+      imagen: 'assets/img/image3.png',
+      action: 'Ver detalles',
+      likedBy: []
+    }
   ];
 
   constructor(
@@ -73,6 +98,7 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
   @HostListener('window:scroll', [])
   onWindowScroll() {
     this.isScrolled = window.scrollY > 50;
+    this.showBackToTop = window.scrollY > 200;
   }
 
   ngOnInit(): void {
@@ -152,7 +178,7 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
         error: (error) => {
           console.error('Error al cargar noticias', error);
           this.newsError = true;
-        },
+        }
       });
   }
 
@@ -183,7 +209,7 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
             noticia.likedBy = updatedNoticia.likedBy;
           }
         },
-        error: (error) => console.error('Error al dar like', error),
+        error: (error) => console.error('Error al dar like', error)
       });
   }
 
@@ -196,7 +222,7 @@ export class VentaInformacionComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   handleImageError(event: Event): void {
-    (event.target as HTMLImageElement).src = 'assets/img/cdc-GDokEYnOfnE-unsplash.jpg';
+    (event.target as HTMLImageElement).src = 'assets/img/pexels-panditwiguna-3401403.jpg';
   }
 
   submitContactForm(): void {
@@ -223,7 +249,7 @@ Mensaje: ${this.contactData.message}
           name: '',
           email: '',
           subject: '',
-          message: '',
+          message: ''
         };
         this.formEnviado = false;
       }, 3000);
@@ -256,46 +282,36 @@ Mensaje: ${this.contactData.message}
             const objectURL = URL.createObjectURL(blob);
             noticia.imagen = this.sanitizer.bypassSecurityTrustUrl(objectURL);
           },
-          error: (error) => console.error('Error al cargar la imagen de la noticia', error),
+          error: (error) => console.error('Error al cargar la imagen de la noticia', error)
         });
     }
   }
 
   mostrarImagen(noticia: Noticia): void {
     this.dialog.open(ImagenDialogComponent, {
-      data: { titulo: noticia.titulo, contenido: noticia.contenido, imagen: noticia.imagen, fechaCreacion: noticia.fechaCreacion },
+      data: { titulo: noticia.titulo, contenido: noticia.contenido, imagen: noticia.imagen, fechaCreacion: noticia.fechaCreacion }
     });
   }
 
   scrollToFeatures(): void {
-    console.log('scrollToFeatures called');
     const featuresSection = document.querySelector('#features');
     if (featuresSection) {
-      console.log('Features section found:', featuresSection);
       const headerHeight = document.querySelector('.header')?.getBoundingClientRect().height || 80;
       const offsetTop = featuresSection.getBoundingClientRect().top + window.scrollY - headerHeight;
-      window.scrollTo({
-        top: offsetTop,
-        behavior: 'smooth'
-      });
+      window.scrollTo({ top: offsetTop, behavior: 'smooth' });
     } else {
-      console.error('Features section not found. Check if #features exists in the DOM.');
+      console.error('Features section not found.');
     }
   }
 
   scrollToNews(): void {
-    console.log('scrollToNews called');
     const newsSection = document.querySelector('#news');
     if (newsSection) {
-      console.log('News section found:', newsSection);
       const headerHeight = document.querySelector('.header')?.getBoundingClientRect().height || 80;
       const offsetTop = newsSection.getBoundingClientRect().top + window.scrollY - headerHeight;
-      window.scrollTo({
-        top: offsetTop,
-        behavior: 'smooth'
-      });
+      window.scrollTo({ top: offsetTop, behavior: 'smooth' });
     } else {
-      console.error('News section not found. Check if #news exists in the DOM.');
+      console.error('News section not found.');
     }
   }
 
@@ -304,9 +320,10 @@ Mensaje: ${this.contactData.message}
     return dateObj.toLocaleDateString('es-ES', {
       day: 'numeric',
       month: 'long',
-      year: 'numeric',
+      year: 'numeric'
     });
   }
+
 
   getCurrentYear(): number {
     return new Date().getFullYear();
@@ -321,11 +338,11 @@ Mensaje: ${this.contactData.message}
   }
 
   libro() {
-    this.router.navigate(['/libros-api']);
+    this.router.navigate(['/Explora']).then(() => this.smoothScrollToTop());
   }
 
   victor() {
-    this.router.navigate(['/live2']);
+    this.router.navigate(['/live2']).then(() => this.smoothScrollToTop());
   }
 
   accion1(): void {

@@ -46,19 +46,20 @@
               Inicio
             </a>
           </li>
+        
           <li>
-            <a [routerLink]="'/ventana-informacion-public'" [class.active]="selectedSection === 'noticias'"(click)="smoothScrollToTop()">
-              Institución
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="'/sedes'" (click)="smoothScrollToTop()">
-              Instalaciones
+            <a [routerLink]="'/Explora'" (click)="smoothScrollToTop()">
+              Explora
             </a>
           </li>
           <li>
             <a [routerLink]="'/consultar-precios'" (click)="smoothScrollToTop()">
               Precios
+            </a>
+          </li>
+            <li>
+            <a [routerLink]="'/ventana-informacion-public'" [class.active]="selectedSection === 'noticias'"(click)="smoothScrollToTop()">
+              Institución
             </a>
           </li>
           <li class="auth-button">
@@ -82,9 +83,10 @@
     <nav>
       <ul class="mobile-nav-list">
         <li><a [routerLink]="'/inicio'" (click)="toggleMobileMenu()">Inicio</a></li>
-        <li><a [routerLink]="'/ventana-informacion-public'" (click)="toggleMobileMenu()">Institución</a></li>
-        <li><a [routerLink]="'/sedes'" (click)="toggleMobileMenu()">Instalaciones</a></li>
+       <li><a [routerLink]="'/Explora'" (click)="toggleMobileMenu()">Explora</a></li>
         <li><a [routerLink]="'/consultar-precios'" (click)="toggleMobileMenu()">Precios</a></li>
+       <li><a [routerLink]="'/ventana-informacion-public'" (click)="toggleMobileMenu()">Institución</a></li>
+        
         <li><a (click)="irAOtraVentana(); toggleMobileMenu()" class="btn-login">Iniciar Sesión</a></li>
       </ul>
     </nav>

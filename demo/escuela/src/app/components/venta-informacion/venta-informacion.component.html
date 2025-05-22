@@ -46,19 +46,20 @@
               Inicio
             </a>
           </li>
+         
           <li>
-            <a [routerLink]="'/ventana-informacion-public'" (click)="smoothScrollToTop()">
-              Institución
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="'/sedes'" (click)="smoothScrollToTop()">
-              Instalaciones
+            <a [routerLink]="'/Explora'" (click)="smoothScrollToTop()">
+              Explora
             </a>
           </li>
           <li>
             <a [routerLink]="'/consultar-precios'" (click)="smoothScrollToTop()">
               Precios
+            </a>
+          </li> 
+          <li>
+            <a [routerLink]="'/ventana-informacion-public'" (click)="smoothScrollToTop()">
+              Institución
             </a>
           </li>
           <li class="auth-button">
@@ -116,9 +117,9 @@
     <nav>
      <ul class="mobile-nav-list">
         <li><a [routerLink]="'/inicio'" (click)="toggleMobileMenu()">Inicio</a></li>
-        <li><a [routerLink]="'/ventana-informacion-public'" (click)="scrollToFeatures(); toggleMobileMenu()">Institución</a></li>
-        <li><a [routerLink]="'/sedes'"  (click)="libro(); toggleMobileMenu()">Instalaciones</a></li>
+        <li><a [routerLink]="'/Explora'"  (click)="libro(); toggleMobileMenu()">Explora</a></li>
         <li><a [routerLink]="'/consultar-precios'" (click)="accion4(); toggleMobileMenu()">Precios</a></li>
+        <li><a [routerLink]="'/ventana-informacion-public'" (click)="scrollToFeatures(); toggleMobileMenu()">Institución</a></li>
         <li><a (click)="irAOtraVentana(); toggleMobileMenu()" class="btn-login">Iniciar Sesión</a></li>
       </ul>
     </nav>
@@ -131,7 +132,7 @@
         <h1>¡Bienvenidos a {{ institutionName }}! <span class="emoji">📚✨</span></h1>
         <p>Tu aventura escolar comienza aquí</p>
         <div class="hero-buttons">
-          <a class="btn btn-primary" (click)="scrollToFeatures()" onclick="document.querySelector('#features')?.scrollIntoView({ behavior: 'smooth' })">¡Explora! <span class="emoji">🚀</span></a>
+          <a class="btn btn-primary" (click)="scrollToFeatures()" onclick="document.querySelector('#features')?.scrollIntoView({ behavior: 'smooth' })">¡Lo que ofrecemos! <span class="emoji">🚀</span></a>
           <a class="btn btn-secondary" (click)="scrollToNews()" onclick="document.querySelector('#news')?.scrollIntoView({ behavior: 'smooth' })">Noticias <span class="emoji">📰</span></a>
         </div>
       </div>
@@ -220,21 +221,67 @@
     <div class="container">
       <div class="about-content">
         <div class="about-text">
-          <h2>¿Quiénes Somos? <span class="emoji">👩‍🏫</span></h2>
-          <p>Somos una institución comprometida con la formación integral de nuestros estudiantes, combinando educación de calidad con valores sólidos.</p>
-          <ul>
-            <li>Excelencia académica.</li>
-            <li>Innovación tecnológica.</li>
-            <li>Desarrollo personal y social.</li>
-          </ul>
-        </div>
+  <h2>¿Qué es EduPortal? <span class="emoji">👩‍🏫</span></h2>
+  <p>EduPortal es una plataforma innovadora creada por estudiantes para transformar la gestión académica.</p>
+  <h3>Nuestros Recursos</h3>
+  <p>Contamos con un equipo de desarrollo estudiantil, infraestructura tecnológica avanzada (servidores y bases de datos) y la colaboración de instituciones educativas.</p>
+  <ul>
+    <li>Gestión centralizada de matrículas, cursos y horarios.</li>
+    <li>Comunicación fluida entre estudiantes y profesores.</li>
+    <li>Desarrollo continuo basado en tu feedback.</li>
+  </ul>
+</div>
         <div class="about-image">
-          <img src="assets/img/school-298680.jpg" alt="Sobre Nosotros" />
+          <img src="assets/img/IEI_PIC_780p.png" alt="Sobre Nosotros" />
         </div>
       </div>
     </div>
   </section>
-<!-- Contact Us Section -->
+<section class="partners-section" id="partners">
+  <div class="container">
+    <h2 class="section-title">Nuestros Socios <span class="emoji">🤝</span></h2>
+    <p class="section-subtitle">Colaboramos con instituciones educativas y expertos para ofrecer la mejor experiencia.</p>
+    <div class="partners-grid">
+      <div class="partner-card">
+        <h3>Colegios</h3>
+        <p>Instituciones educativas que implementan EduPortal para optimizar la gestión académica.</p>
+      </div>
+      <div class="partner-card">
+        <h3>Equipo de Desarrollo</h3>
+        <p>Estudiantes innovadores que diseñan y mantienen la plataforma con pasión y expertise.</p>
+      </div>
+      <div class="partner-card">
+        <h3>Mentores Académicos</h3>
+        <p>Profesores y administrativos que guían la implementación y promueven la adopción.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="activities-section" id="activities">
+  <div class="container">
+    <h2 class="section-title">Lo Que Hacemos <span class="emoji">⚙️</span></h2>
+    <p class="section-subtitle">Nuestras actividades clave para garantizar una experiencia excepcional.</p>
+    <div class="activities-list">
+      <div class="activity-item">
+        <i class="material-icons">code</i>
+        <h3>Desarrollo de la Plataforma</h3>
+        <p>Creando una solución tecnológica intuitiva y confiable.</p>
+      </div>
+      <div class="activity-item">
+        <i class="material-icons">school</i>
+        <h3>Capacitación y Soporte</h3>
+        <p>Formación personalizada para administradores y profesores.</p>
+      </div>
+      <div class="activity-item">
+        <i class="material-icons">feedback</i>
+        <h3>Mejora Continua</h3>
+        <p>Escuchamos tus comentarios para optimizar la plataforma.</p>
+      </div>
+    </div>
+  </div>
+</section>
+  <!-- Contact Us Section -->
 <section class="contact-section" id="contact">
   <div class="container">
     <h2 class="section-title">¡Contáctanos! <span class="emoji">📬</span></h2>
@@ -303,6 +350,8 @@
     </div>
   </div>
 </section>
+
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
@@ -346,21 +395,8 @@
           <p>¡Explora, aprende y crece con nosotros! 🌟</p>
         </div>
         <div class="footer-links">
-          <div class="footer-column">
-            <h4>Explora</h4>
-            <ul>
-              <li><a href="#" (click)="scrollToTop()">Inicio</a></li>
-              <li><a href="#features" (click)="scrollToFeatures()">Nosotros</a></li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h4>Aventuras</h4>
-            <ul>
-              <li><a href="#" (click)="libro()">Biblioteca</a></li>
-              <li><a href="#" (click)="accion4()">Juegos</a></li>
-              <li><a href="#" (click)="victor()">Recursos</a></li>
-            </ul>
-          </div>
+         
+         
           <div class="footer-column">
             <h4>Contáctanos</h4>
             <ul class="contact-info">
@@ -374,10 +410,10 @@
       <div class="footer-bottom">
         <p>© {{ getCurrentYear() }} {{ institutionName }} - Todos los derechos reservados 🌈</p>
         <div class="social-links">
-          <a href="#" aria-label="Facebook" class="social-icon"><i class="fa-brands fa-facebook-f"></i></a>
-          <a href="#" aria-label="Twitter" class="social-icon"><i class="fa-brands fa-x-twitter"></i></a>
-          <a href="#" aria-label="Instagram" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
-          <a href="#" aria-label="YouTube" class="social-icon"><i class="fa-brands fa-youtube"></i></a>
+          <a href="https://www.facebook.com/share/167YekEgUj/" aria-label="Facebook" class="social-icon"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://x.com/herrera_ar42843?t=h2JZQp9OzfWyd04gEED4sg&s=09" aria-label="Twitter" class="social-icon"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="https://www.instagram.com/luisabyzou?utm_source=qr&igsh=MXVnaW9jN3M3a25pbQ==" aria-label="Instagram" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://www.youtube.com/@springAby" aria-label="YouTube" class="social-icon"><i class="fa-brands fa-youtube"></i></a>
         </div>
       </div>
     </div>

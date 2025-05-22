@@ -44,15 +44,17 @@
           <li>
             <a [routerLink]="'/inicio'" (click)="smoothScrollToTop()">Inicio</a>
           </li>
+        
           <li>
-            <a [routerLink]="'/ventana-informacion-public'" (click)="smoothScrollToTop()">Institución</a>
-          </li>
-          <li>
-            <a [routerLink]="'/sedes'" [class.active]="true" (click)="smoothScrollToTop()">Instalaciones</a>
+            <a [routerLink]="'/Explora'" [class.active]="true" (click)="smoothScrollToTop()">Explora</a>
           </li>
           <li>
             <a [routerLink]="'/consultar-precios'" (click)="smoothScrollToTop()">Precios</a>
           </li>
+            <li>
+            <a [routerLink]="'/ventana-informacion-public'" (click)="smoothScrollToTop()">Institución</a>
+          </li>
+          
           <li class="auth-button">
             <a (click)="irAOtraVentana()" class="btn-login">Iniciar Sesión</a>
           </li>
@@ -77,9 +79,11 @@
     <nav>
       <ul class="mobile-nav-list">
         <li><a [routerLink]="'/inicio'" (click)="toggleMobileMenu(); smoothScrollToTop()">Inicio</a></li>
-        <li><a [routerLink]="'/ventana-informacion-public'" (click)="toggleMobileMenu(); smoothScrollToTop()">Institución</a></li>
-        <li><a [routerLink]="'/sedes'" (click)="toggleMobileMenu(); smoothScrollToTop()">Instalaciones</a></li>
+       <li><a [routerLink]="'/Explora'" (click)="toggleMobileMenu(); smoothScrollToTop()">Explora</a></li>
         <li><a [routerLink]="'/consultar-precios'" (click)="toggleMobileMenu(); smoothScrollToTop()">Precios</a></li>
+        <li><a [routerLink]="'/ventana-informacion-public'" (click)="toggleMobileMenu(); smoothScrollToTop()">Institución</a></li>
+       
+      
         <li><a (click)="irAOtraVentana(); toggleMobileMenu()" class="btn-login">Iniciar Sesión</a></li>
       </ul>
     </nav>
@@ -89,17 +93,18 @@
   <main class="main-content">
     <div class="hero-section">
       <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <h1>Nuestras Instalaciones</h1>
-        <p>Conoce los espacios donde formamos el futuro</p>
-      </div>
+   <div class="hero-content">
+  <h1>Transformamos la Gestión Académica</h1>
+  <p>Explora cómo {{ institutionName }} moderniza los procesos escolares con tecnología y eficiencia</p>
+</div>
+
     </div>
 
-    <div class="container">
+<div class="container">
       <!-- Introducción -->
       <section class="intro-section">
         <div class="section-header">
-          <h2>{{ institutionName }}</h2>
+          <h2>¿Qué es {{ institutionName }}?</h2>
           <div class="section-divider">
             <span></span>
             <i class="material-icons">school</i>
@@ -107,225 +112,106 @@
           </div>
         </div>
         <p class="intro-text">
-          <strong>{{ institutionName }}</strong> es una institución educativa de excelencia ubicada en Cartagena. Nuestras modernas instalaciones están diseñadas para crear un ambiente óptimo de aprendizaje, donde cada espacio ha sido pensado para inspirar la creatividad, fomentar la colaboración y potenciar el conocimiento de nuestros estudiantes.
+          {{ institutionName }} es un software educativo diseñado para modernizar los procesos administrativos y académicos de los colegios. Ofrecemos soluciones a medida que centralizan la gestión de matrículas, horarios, calificaciones, comunicación institucional y mucho más. Nos adaptamos a tu colegio, no al revés.
         </p>
       </section>
 
       <!-- Galería de Instalaciones -->
-      <section class="facilities-section">
-        <div class="section-header">
-          <h2>Galería de Instalaciones</h2>
-          <div class="section-divider">
-            <span></span>
-            <i class="material-icons">photo_library</i>
-            <span></span>
-          </div>
+<section class="facilities-section">
+  <div class="section-header">
+    <h2>Vista de la Plataforma</h2>
+    <div class="section-divider">
+      <span></span>
+      <i class="material-icons">dashboard_customize</i>
+      <span></span>
+    </div>
+  </div>
+
+  <div class="facilities-grid">
+    <div class="facility-card">
+      <div class="facility-image">
+        <img src="assets/img/administracion.jpg" alt="Panel de Administración" />
+        <div class="facility-overlay">
+          <i class="material-icons">admin_panel_settings</i>
         </div>
+      </div>
+      <div class="facility-content">
+        <h3>Panel de Administración</h3>
+        <p>Gestión de matrículas, horarios, asignación de cursos y control de usuarios en tiempo real.</p>
+      </div>
+    </div>
 
-        <div class="facilities-grid">
-          <div class="facility-card" (click)="openGallery('aulas')">
-            <div class="facility-image">
-              <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Aulas modernas" />
-              <div class="facility-overlay">
-                <i class="material-icons">zoom_in</i>
-              </div>
-            </div>
-            <div class="facility-content">
-              <h3>Aulas Modernas</h3>
-              <p>Espacios diseñados para optimizar la ventilación natural y el ingreso controlado de luz.</p>
-            </div>
-          </div>
-
-          <div class="facility-card" (click)="openGallery('biblioteca')">
-            <div class="facility-image">
-              <img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Biblioteca" />
-              <div class="facility-overlay">
-                <i class="material-icons">zoom_in</i>
-              </div>
-            </div>
-            <div class="facility-content">
-              <h3>Biblioteca</h3>
-              <p>Centro de recursos educativos con amplia colección de libros y espacios de estudio.</p>
-            </div>
-          </div>
-
-          <div class="facility-card" (click)="openGallery('laboratorio')">
-            <div class="facility-image">
-              <img src="https://images.unsplash.com/photo-1581093588401-fbb62a02f120?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Laboratorio" />
-              <div class="facility-overlay">
-                <i class="material-icons">zoom_in</i>
-              </div>
-            </div>
-            <div class="facility-content">
-              <h3>Laboratorio</h3>
-              <p>Equipado con tecnología moderna para experimentos y prácticas científicas.</p>
-            </div>
-          </div>
-
-          <div class="facility-card" (click)="openGallery('deportes')">
-            <div class="facility-image">
-              <img src="https://images.unsplash.com/photo-1577741314755-048d8525d31e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Áreas deportivas" />
-              <div class="facility-overlay">
-                <i class="material-icons">zoom_in</i>
-              </div>
-            </div>
-            <div class="facility-content">
-              <h3>Áreas Deportivas</h3>
-              <p>Espacios para actividades físicas y deportivas que promueven el desarrollo integral.</p>
-            </div>
-          </div>
-
-          <div class="facility-card" (click)="openGallery('comedor')">
-            <div class="facility-image">
-              <img src="https://images.unsplash.com/photo-1544427920-c49ccfb85579?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Comedor escolar" />
-              <div class="facility-overlay">
-                <i class="material-icons">zoom_in</i>
-              </div>
-            </div>
-            <div class="facility-content">
-              <h3>Comedor Escolar</h3>
-              <p>Ambiente acogedor donde los estudiantes disfrutan de alimentación balanceada.</p>
-            </div>
-          </div>
-
-          <div class="facility-card" (click)="openGallery('tecnologia')">
-            <div class="facility-image">
-              <img src="https://images.unsplash.com/photo-1593642532973-d31b97d0e6b1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Aula de tecnología" />
-              <div class="facility-overlay">
-                <i class="material-icons">zoom_in</i>
-              </div>
-            </div>
-            <div class="facility-content">
-              <h3>Aula de Tecnología</h3>
-              <p>Espacio equipado con computadoras y herramientas digitales para el aprendizaje tecnológico.</p>
-            </div>
-          </div>
+    <div class="facility-card">
+      <div class="facility-image">
+        <img src="assets/img/docente.jpg" alt="Vista del Profesor" />
+        <div class="facility-overlay">
+          <i class="material-icons">person</i>
         </div>
-      </section>
+      </div>
+      <div class="facility-content">
+        <h3>Vista del Profesor</h3>
+        <p>Acceso a planificación de clases, carga de calificaciones, asistencia y comunicación con estudiantes.</p>
+      </div>
+    </div>
 
-      <!-- Mejoras en Infraestructura -->
-      <section class="improvements-section">
-        <div class="section-header">
-          <h2>Mejoras en Infraestructura</h2>
-          <div class="section-divider">
-            <span></span>
-            <i class="material-icons">construction</i>
-            <span></span>
-          </div>
+    <div class="facility-card">
+      <div class="facility-image">
+        <img src="assets/img/estudiante.jpg" alt="Vista del Estudiante" />
+        <div class="facility-overlay">
+          <i class="material-icons">school</i>
         </div>
+      </div>
+      <div class="facility-content">
+        <h3>Vista del Estudiante</h3>
+        <p>Consulta de horarios, calificaciones, mensajes institucionales y descarga de recursos.</p>
+      </div>
+    </div>
 
-        <div class="timeline">
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-date">2019</div>
-            <div class="timeline-content">
-              <h3>Ampliación de Instalaciones</h3>
-              <p>
-                Inauguramos nuevos bloques de aulas diseñados para optimizar la ventilación natural y el ingreso controlado de luz, adaptándose perfectamente al clima de nuestra región.
-              </p>
-              <div class="timeline-image">
-                <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Ampliación 2019" />
-              </div>
-            </div>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-date">2020</div>
-            <div class="timeline-content">
-              <h3>Renovación de Espacios Comunes</h3>
-              <p>
-                Modernizamos las áreas comunes y zonas de recreación para mejorar la experiencia educativa de los estudiantes y promover la interacción social.
-              </p>
-              <div class="timeline-image">
-                <img src="https://images.unsplash.com/photo-1517164850305-99a3e65bb47e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Espacios comunes" />
-              </div>
-            </div>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-date">2021</div>
-            <div class="timeline-content">
-              <h3>Implementación de Tecnología</h3>
-              <p>
-                Equipamos las aulas con recursos tecnológicos para facilitar el aprendizaje digital y preparar a los estudiantes para los retos del futuro.
-              </p>
-              <div class="timeline-image">
-                <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Tecnología educativa" />
-              </div>
-            </div>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-date">2022</div>
-            <div class="timeline-content">
-              <h3>Proyecto de Sostenibilidad</h3>
-              <p>
-                Implementamos sistemas de recolección de agua lluvia y paneles solares para reducir el impacto ambiental y enseñar a los estudiantes sobre sostenibilidad.
-              </p>
-              <div class="timeline-image">
-                <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Proyecto sostenible" />
-              </div>
-            </div>
-          </div>
+    <div class="facility-card">
+      <div class="facility-image">
+        <img src="assets/img/reporte.jpg" alt="Reportes Institucionales" />
+        <div class="facility-overlay">
+          <i class="material-icons">bar_chart</i>
         </div>
-      </section>
+      </div>
+      <div class="facility-content">
+        <h3>Reportes Institucionales</h3>
+        <p>Panel de indicadores clave para la dirección académica y administrativa del colegio.</p>
+      </div>
+    </div>
+
+    <div class="facility-card">
+      <div class="facility-image">
+        <img src="assets/img/capacitaciones-13.webp" alt="Soporte y Capacitación" />
+        <div class="facility-overlay">
+          <i class="material-icons">support_agent</i>
+        </div>
+      </div>
+      <div class="facility-content">
+        <h3>Soporte y Capacitación</h3>
+        <p>Acompañamiento continuo para asegurar una implementación efectiva y adaptación al cambio.</p>
+      </div>
+    </div>
+
+    <div class="facility-card">
+      <div class="facility-image">
+        <img src="assets/img/OIP (6).jpg" alt="Acceso Multiplataforma" />
+        <div class="facility-overlay">
+          <i class="material-icons">devices</i>
+        </div>
+      </div>
+      <div class="facility-content">
+        <h3>Acceso Multiplataforma</h3>
+        <p>Disponible desde navegadores web, tablets o dispositivos móviles, con interfaz adaptada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 
       <!-- Video y Recursos -->
-      <section class="resources-section">
-        <div class="section-header">
-          <h2>Video y Recursos</h2>
-          <div class="section-divider">
-            <span></span>
-            <i class="material-icons">play_circle</i>
-            <span></span>
-          </div>
-        </div>
-
-        <div class="resources-container">
-          <div class="video-container">
-            <div class="video-wrapper">
-              <iframe
-                width="560"
-                height="315"
-                src="https://www.youtube.com/embed/gXmsPo_m11E"
-                title="Video sobre nuestras instalaciones"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-              ></iframe>
-            </div>
-            <h3>Video sobre nuestras instalaciones</h3>
-          </div>
-
-          <div class="resources-links">
-            <h3>Enlaces de Interés</h3>
-            <ul>
-              <li>
-                <a href="#" target="_blank">
-                  <i class="material-icons">article</i>
-                  <span>Noticias sobre nuestras instalaciones</span>
-                </a>
-              </li>
-              <li>
-                <a href="#" target="_blank">
-                  <i class="material-icons">language</i>
-                  <span>Sitio web oficial</span>
-                </a>
-              </li>
-              <li>
-                <a href="#" (click)="downloadBrochure($event)">
-                  <i class="material-icons">download</i>
-                  <span>Descargar folleto informativo</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
+     
       <!-- Contacto -->
       <section class="contact-section">
         <div class="section-header">
@@ -350,14 +236,14 @@
               <i class="material-icons">phone</i>
               <div>
                 <h3>Teléfono</h3>
-                <p>(+57) 605-672-7200</p>
+                <p>(+57) 3218344569</p>
               </div>
             </div>
             <div class="contact-item">
               <i class="material-icons">email</i>
               <div>
                 <h3>Correo Electrónico</h3>
-                <p>info@eduportal.edu.co</p>
+                <p>luisabel_26@hotmail.com</p>
               </div>
             </div>
             <div class="contact-item">

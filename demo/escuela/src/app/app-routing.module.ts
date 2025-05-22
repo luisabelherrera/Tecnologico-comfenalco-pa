@@ -351,7 +351,7 @@ const routes: Routes = [
   },
 
 
-  { path: 'sedes', component: SedesComponent },
+  { path: 'Explora', component: SedesComponent },
   { path: 'consultar-precios', component: ConsultarPreciosComponent },
   { path: 'login', component: LoginComponent },
   { path: 'libros-api', component: LibrosApiComponent },
