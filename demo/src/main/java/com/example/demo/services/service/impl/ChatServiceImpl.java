@@ -24,4 +24,10 @@ public class ChatServiceImpl implements ChatService {
 		return chatDao.save(mensaje);
 	}
 
+	@Override
+	public List<Mensaje> obtenerHistorialEntre(String user1, String user2) {
+		return chatDao.findByUsernameAndDestinatarioOrUsernameAndDestinatarioOrderByFechaAsc(
+			user1, user2, user2, user1
+		);
+	}
 }

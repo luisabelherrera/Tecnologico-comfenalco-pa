@@ -8,12 +8,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection="mensajes")
 public class Mensaje implements Serializable {
 	
+
 	@Id
 	private String id;
-
 	private String texto;
 	private Long fecha;
+
 	private String username;
+	private String destinatario;
 	private String tipo;
 	private String color;
 
@@ -47,6 +49,14 @@ public class Mensaje implements Serializable {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getDestinatario() {
+		return destinatario;
+	}
+
+	public void setDestinatario(String destinatario) {
+		this.destinatario = destinatario;
 	}
 
 	public String getTipo() {
