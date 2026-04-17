@@ -275,6 +275,20 @@ class ApiService {
     }
   }
 
+  // ── CURSOS ──────────────────────────────────────────────────────────────
+  Future<List<dynamic>> getAllCursos() async {
+    try {
+      final url = Uri.parse('${ApiConstants.baseUrl}/cursos');
+      final headers = await _getHeaders();
+      final response = await http.get(url, headers: headers);
+      if (response.statusCode == 200) return jsonDecode(response.body);
+      return [];
+    } catch (e) {
+      dev.log('ApiService.getAllCursos error: $e');
+      return [];
+    }
+  }
+
   // ── PERIODO ACTIVO ────────────────────────────────────────────────────────
   Future<dynamic> getPeriodoActivo() async {
     try {

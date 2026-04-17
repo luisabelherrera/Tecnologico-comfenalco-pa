@@ -7,6 +7,7 @@ import com.example.demo.model.login.Rol;
 
 public interface RolService {
     Optional<Rol> findByname(String name);
+    Optional<Rol> findById(Long id);
 
     List<Rol> findAll();
 

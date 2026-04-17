@@ -23,6 +23,11 @@ public class RolServiceImple implements RolService {
     }
 
     @Override
+    public Optional<Rol> findById(Long id) {
+        return roleRepository.findById(id);
+    }
+
+    @Override
     public List<Rol> findAll() {
         return roleRepository.findAll();
     }

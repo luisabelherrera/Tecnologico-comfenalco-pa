@@ -83,8 +83,17 @@ public class UserServiceImpl implements UserService {
     
         // Asignar roles
         Set<Rol> roles = registerDto.getRoles().stream()
-                .map(rol -> rolService.findByname(rol.getName())
-                        .orElseThrow(() -> new NotFoundException("Rol no encontrado: " + rol.getName())))
+                .map(rol -> {
+                    if (rol.getName() != null) {
+                        return rolService.findByname(rol.getName())
+                                .orElseThrow(() -> new NotFoundException("Rol no encontrado con nombre: " + rol.getName()));
+                    } else if (rol.getId() != null) {
+                        return rolService.findById(rol.getId())
+                                .orElseThrow(() -> new NotFoundException("Rol no encontrado con ID: " + rol.getId()));
+                    } else {
+                        throw new NotFoundException("Debe proporcionar el ID o el nombre del rol");
+                    }
+                })
                 .collect(Collectors.toSet());
         user.setRoles(roles);
     
@@ -143,8 +152,17 @@ public class UserServiceImpl implements UserService {
         }
 
         Set<Rol> roles = updateDto.getRoles().stream()
-                .map(rol -> rolService.findByname(rol.getName())
-                        .orElseThrow(() -> new NotFoundException("Rol no encontrado: " + rol.getName())))
+                .map(rol -> {
+                    if (rol.getName() != null) {
+                        return rolService.findByname(rol.getName())
+                                .orElseThrow(() -> new NotFoundException("Rol no encontrado con nombre: " + rol.getName()));
+                    } else if (rol.getId() != null) {
+                        return rolService.findById(rol.getId())
+                                .orElseThrow(() -> new NotFoundException("Rol no encontrado con ID: " + rol.getId()));
+                    } else {
+                        throw new NotFoundException("Debe proporcionar el ID o el nombre del rol");
+                    }
+                })
                 .collect(Collectors.toSet());
         user.setRoles(roles);
 
