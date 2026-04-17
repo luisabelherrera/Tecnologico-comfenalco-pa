@@ -138,7 +138,8 @@ class _GradesScreenState extends State<GradesScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF4F46E5)),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Color(0xFF4F46E5)),
                         ),
                         SizedBox(height: 16),
                         Text(

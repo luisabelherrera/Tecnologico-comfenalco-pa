@@ -13,14 +13,16 @@ class ParentHomeScreen extends StatefulWidget {
   State<ParentHomeScreen> createState() => _ParentHomeScreenState();
 }
 
-class _ParentHomeScreenState extends State<ParentHomeScreen> with SingleTickerProviderStateMixin {
+class _ParentHomeScreenState extends State<ParentHomeScreen>
+    with SingleTickerProviderStateMixin {
   final _authService = AuthService();
   late AnimationController _animController;
 
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
+    _animController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 800));
     _animController.forward();
   }
 
@@ -37,7 +39,8 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> with SingleTickerPr
         context,
         PageRouteBuilder(
           pageBuilder: (_, __, ___) => const LoginScreen(),
-          transitionsBuilder: (_, anim, __, child) => FadeTransition(opacity: anim, child: child),
+          transitionsBuilder: (_, anim, __, child) =>
+              FadeTransition(opacity: anim, child: child),
         ),
       );
     }
@@ -48,11 +51,15 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> with SingleTickerPr
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Portal Acudiente', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Portal Acudiente',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          IconButton(icon: const Icon(Icons.logout), onPressed: _logout, tooltip: 'Cerrar Sesión'),
+          IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: _logout,
+              tooltip: 'Cerrar Sesión'),
         ],
       ),
       body: Container(
@@ -75,20 +82,49 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> with SingleTickerPr
                   child: CircleAvatar(
                     radius: 40,
                     backgroundColor: Colors.white.withOpacity(0.2),
-                    child: const Icon(Icons.family_restroom, size: 50, color: Colors.white),
+                    child: const Icon(Icons.family_restroom,
+                        size: 50, color: Colors.white),
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Text('¡Hola, Acudiente!', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white)),
-                Text('Sigue de cerca el desarrollo escolar', style: TextStyle(fontSize: 18, color: Colors.white.withOpacity(0.9))),
+                const Text('¡Hola, Acudiente!',
+                    style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
+                Text('Sigue de cerca el desarrollo escolar',
+                    style: TextStyle(
+                        fontSize: 18, color: Colors.white.withOpacity(0.9))),
                 const SizedBox(height: 40),
                 Expanded(
                   child: ListView(
                     physics: const BouncingScrollPhysics(),
                     children: [
-                      _buildAnimatedMenuCard(Icons.face, 'Mis Acudidos', Colors.limeAccent, () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ParentStudentsScreen()))),
-                      _buildAnimatedMenuCard(Icons.article, 'Noticias Escolares', Colors.white, () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NewsScreen()))),
-                      _buildAnimatedMenuCard(Icons.chat_bubble, 'Chat Institucional', Colors.orangeAccent, () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ChatListScreen()))),
+                      _buildAnimatedMenuCard(
+                          Icons.face,
+                          'Mis Acudidos',
+                          Colors.limeAccent,
+                          () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) =>
+                                      const ParentStudentsScreen()))),
+                      _buildAnimatedMenuCard(
+                          Icons.article,
+                          'Noticias Escolares',
+                          Colors.white,
+                          () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const NewsScreen()))),
+                      _buildAnimatedMenuCard(
+                          Icons.chat_bubble,
+                          'Chat Institucional',
+                          Colors.orangeAccent,
+                          () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const ChatListScreen()))),
                     ],
                   ),
                 ),
@@ -98,14 +134,16 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> with SingleTickerPr
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AiAssistantScreen())),
+        onPressed: () => Navigator.push(context,
+            MaterialPageRoute(builder: (_) => const AiAssistantScreen())),
         backgroundColor: Colors.deepPurple,
         child: const Icon(Icons.auto_awesome, color: Colors.white),
       ),
     );
   }
 
-  Widget _buildAnimatedMenuCard(IconData icon, String title, Color accentColor, VoidCallback onTap) {
+  Widget _buildAnimatedMenuCard(
+      IconData icon, String title, Color accentColor, VoidCallback onTap) {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
       duration: const Duration(milliseconds: 600),
@@ -135,11 +173,18 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> with SingleTickerPr
                 children: [
                   Container(
                     padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(color: accentColor.withOpacity(0.2), shape: BoxShape.circle),
+                    decoration: BoxDecoration(
+                        color: accentColor.withOpacity(0.2),
+                        shape: BoxShape.circle),
                     child: Icon(icon, color: accentColor, size: 30),
                   ),
                   const SizedBox(width: 20),
-                  Expanded(child: Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white))),
+                  Expanded(
+                      child: Text(title,
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: accentColor.withOpacity(0.2)))),
                   const Icon(Icons.arrow_forward_ios, color: Colors.white54),
                 ],
               ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../services/api_service.dart';
+
 
 class TeacherGradesScreen extends StatefulWidget {
   const TeacherGradesScreen({super.key});
@@ -8,6 +10,19 @@ class TeacherGradesScreen extends StatefulWidget {
 }
 
 class _TeacherGradesScreenState extends State<TeacherGradesScreen> {
+  final ApiService _apiService = ApiService();
+  late Future<List<dynamic>> _studentsFuture;
+
+  // We maintain a map of controllers. Key = idEstudiante
+  final Map<int, TextEditingController> _gradeControllers = {};
+  bool _isSaving = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _studentsFuture = _apiService.getAllEstudiantes();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,90 +37,145 @@ class _TeacherGradesScreenState extends State<TeacherGradesScreen> {
         foregroundColor: Colors.white,
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          // Header con gradiente
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFF4F46E5), Color(0xFF6366F1)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(24),
-                bottomRight: Radius.circular(24),
-              ),
-            ),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Seleccione un estudiante',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+      body: FutureBuilder<List<dynamic>>(
+        future: _studentsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          
+          final students = snapshot.data ?? [];
+          
+          return Column(
+            children: [
+              // Header con gradiente
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF4F46E5), Color(0xFF6366F1)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24),
                   ),
                 ),
-                SizedBox(height: 4),
-                Text(
-                  'Ingrese las notas correspondientes',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white70,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      students.isEmpty ? 'Sin estudiantes' : 'Seleccione un estudiante',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Ingrese las notas correspondientes',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          // Lista de estudiantes
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(16.0),
-              children: [
-                _buildStudentListCard('Juan Pérez', '10°A - Matemáticas', 'JP'),
-                _buildStudentListCard('María Rodríguez', '10°A - Matemáticas', 'MR'),
-                _buildStudentListCard('Carlos Martínez', '10°B - Matemáticas', 'CM'),
-              ],
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Row(
-                children: [
-                  Icon(Icons.check_circle, color: Colors.white),
-                  SizedBox(width: 12),
-                  Text('Guardando cambios...'),
-                ],
               ),
-              backgroundColor: const Color(0xFF22C55E),
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+              // Lista de estudiantes
+              Expanded(
+                child: students.isEmpty
+                    ? Center(
+                        child: Text('No hay estudiantes disponibles', style: TextStyle(color: Colors.grey.shade600)),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.all(16.0),
+                        itemCount: students.length,
+                        itemBuilder: (context, index) {
+                          final student = students[index];
+                          final nombres = student['nombres'] ?? '';
+                          final apellidos = student['apellidos'] ?? '';
+                          final initials = (nombres.isNotEmpty && apellidos.isNotEmpty) 
+                              ? '${nombres[0]}${apellidos[0]}'.toUpperCase()
+                              : 'ST';
+                          final idEstudiante = student['idEstudiante'] ?? student['id'] ?? 0;
+                          
+                          if (!_gradeControllers.containsKey(idEstudiante)) {
+                            _gradeControllers[idEstudiante] = TextEditingController();
+                          }
+
+                          return _buildStudentListCard(
+                            '$nombres $apellidos'.trim(),
+                            student['codigo'] ?? 'Sin código',
+                            initials,
+                            _gradeControllers[idEstudiante]!,
+                          );
+                        },
+                      ),
               ),
-              margin: const EdgeInsets.all(16),
-            ),
+            ],
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _isSaving ? null : _saveGrades,
         backgroundColor: const Color(0xFF4F46E5),
         elevation: 4,
-        icon: const Icon(Icons.save_rounded, color: Colors.white),
-        label: const Text(
-          'Guardar Notas',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+        icon: _isSaving ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)) : const Icon(Icons.save_rounded, color: Colors.white),
+        label: Text(
+          _isSaving ? 'Guardando...' : 'Guardar Notas',
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
       ),
     );
   }
 
-  Widget _buildStudentListCard(String studentName, String course, String initials) {
+  Future<void> _saveGrades() async {
+    setState(() => _isSaving = true);
+    int savedCount = 0;
+    
+    try {
+      for (var entry in _gradeControllers.entries) {
+        final text = entry.value.text;
+        if (text.isNotEmpty) {
+          final nota = double.tryParse(text);
+          if (nota != null) {
+            final data = {
+              "curricular": { "idCurricular": 1 }, // Default o mock curricular
+              "estudiante": { "idEstudiante": entry.key },
+              "nota": nota,
+              "activo": true
+            };
+            await _apiService.createEntity('/calificaciones', data);
+            savedCount++;
+          }
+        }
+      }
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+           SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.check_circle, color: Colors.white),
+                const SizedBox(width: 12),
+                Text('Se guardaron $savedCount calificaciones'),
+              ],
+            ),
+            backgroundColor: const Color(0xFF22C55E),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
+  }
+
+  Widget _buildStudentListCard(String studentName, String course, String initials, TextEditingController controller) {
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16.0),
       decoration: BoxDecoration(
@@ -185,11 +255,7 @@ class _TeacherGradesScreenState extends State<TeacherGradesScreen> {
             // Inputs de notas
             Row(
               children: [
-                Expanded(child: _buildGradeInput('Nota 1', Icons.looks_one_outlined)),
-                const SizedBox(width: 10),
-                Expanded(child: _buildGradeInput('Nota 2', Icons.looks_two_outlined)),
-                const SizedBox(width: 10),
-                Expanded(child: _buildGradeInput('Nota 3', Icons.looks_3_outlined)),
+                Expanded(child: _buildGradeInput('Nota', Icons.looks_one_outlined, controller: controller)),
               ],
             ),
           ],
@@ -198,9 +264,11 @@ class _TeacherGradesScreenState extends State<TeacherGradesScreen> {
     );
   }
 
-  Widget _buildGradeInput(String label, IconData icon) {
+  Widget _buildGradeInput(String label, IconData icon, {TextEditingController? controller}) {
     return TextField(
-      keyboardType: TextInputType.number,
+      controller: controller,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+
       textAlign: TextAlign.center,
       style: const TextStyle(
         fontWeight: FontWeight.w600,

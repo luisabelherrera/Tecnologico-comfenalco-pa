@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import '../utils/api_constants.dart';
 import '../models/noticia_model.dart';
 import 'auth_service.dart';
+import 'dart:developer' as dev;
 
 class ApiService {
   final AuthService _authService = AuthService();
@@ -27,7 +28,7 @@ class ApiService {
       }
       throw Exception('Error al cargar noticias: ${response.statusCode}');
     } catch (e) {
-      print('ApiService.getNoticias error: $e');
+      dev.log('ApiService.getNoticias error: $e');
       return <Noticia>[];
     }
   }
@@ -44,7 +45,7 @@ class ApiService {
       if (response.statusCode == 200) return jsonDecode(response.body);
       return null;
     } catch (e) {
-      print('ApiService.getUserProfile error: $e');
+      dev.log('ApiService.getUserProfile error: $e');
       return null;
     }
   }
@@ -58,7 +59,7 @@ class ApiService {
       if (response.statusCode == 200) return jsonDecode(response.body);
       return [];
     } catch (e) {
-      print('ApiService.getCalificaciones error: $e');
+      dev.log('ApiService.getCalificaciones error: $e');
       return [];
     }
   }
@@ -72,7 +73,7 @@ class ApiService {
       if (response.statusCode == 200) return jsonDecode(response.body);
       return [];
     } catch (e) {
-      print('ApiService.getAllHorarios error: $e');
+      dev.log('ApiService.getAllHorarios error: $e');
       return [];
     }
   }
@@ -86,7 +87,7 @@ class ApiService {
       if (response.statusCode == 200) return jsonDecode(response.body);
       return [];
     } catch (e) {
-      print('ApiService.getAllEstudiantes error: $e');
+      dev.log('ApiService.getAllEstudiantes error: $e');
       return [];
     }
   }
@@ -100,20 +101,20 @@ class ApiService {
       if (response.statusCode == 200) return jsonDecode(response.body);
       return [];
     } catch (e) {
-      print('ApiService.getUsers error: $e');
+      dev.log('ApiService.getUsers error: $e');
       return [];
     }
   }
-
 
   Future<bool> createUser(Map<String, dynamic> userData) async {
     try {
       final url = Uri.parse('${ApiConstants.baseUrl}/register');
       final headers = await _getHeaders();
-      final response = await http.post(url, headers: headers, body: jsonEncode(userData));
+      final response =
+          await http.post(url, headers: headers, body: jsonEncode(userData));
       return response.statusCode == 200 || response.statusCode == 201;
     } catch (e) {
-      print('ApiService.createUser error: $e');
+      dev.log('ApiService.createUser error: $e');
       return false;
     }
   }
@@ -122,10 +123,11 @@ class ApiService {
     try {
       final url = Uri.parse('${ApiConstants.baseUrl}/register/users/$id');
       final headers = await _getHeaders();
-      final response = await http.put(url, headers: headers, body: jsonEncode(userData));
+      final response =
+          await http.put(url, headers: headers, body: jsonEncode(userData));
       return response.statusCode == 200;
     } catch (e) {
-      print('ApiService.updateUser error: $e');
+      dev.log('ApiService.updateUser error: $e');
       return false;
     }
   }
@@ -137,7 +139,7 @@ class ApiService {
       final response = await http.delete(url, headers: headers);
       return response.statusCode == 200;
     } catch (e) {
-      print('ApiService.deleteUser error: $e');
+      dev.log('ApiService.deleteUser error: $e');
       return false;
     }
   }
@@ -150,7 +152,7 @@ class ApiService {
       if (response.statusCode == 200) return jsonDecode(response.body);
       return [];
     } catch (e) {
-      print('ApiService.getRoles error: $e');
+      dev.log('ApiService.getRoles error: $e');
       return [];
     }
   }
@@ -165,23 +167,26 @@ class ApiService {
     try {
       final url = Uri.parse('${ApiConstants.baseUrl}/noticias/crear');
       final token = await _authService.getToken();
-      
+
       var request = http.MultipartRequest('POST', url);
       request.headers['Authorization'] = 'Bearer $token';
       request.fields['titulo'] = titulo;
       request.fields['contenido'] = contenido;
 
       if (imagenPath != null && imagenPath.isNotEmpty) {
-        request.files.add(await http.MultipartFile.fromPath('imagen', imagenPath));
+        request.files
+            .add(await http.MultipartFile.fromPath('imagen', imagenPath));
       }
       if (videoPath != null && videoPath.isNotEmpty) {
-        request.files.add(await http.MultipartFile.fromPath('video', videoPath));
+        request.files
+            .add(await http.MultipartFile.fromPath('video', videoPath));
       }
 
       final streamedResponse = await request.send();
-      return streamedResponse.statusCode == 201 || streamedResponse.statusCode == 200;
+      return streamedResponse.statusCode == 201 ||
+          streamedResponse.statusCode == 200;
     } catch (e) {
-      print('ApiService.createNoticia error: $e');
+      dev.log('ApiService.createNoticia error: $e');
       return false;
     }
   }
@@ -193,7 +198,7 @@ class ApiService {
       final response = await http.delete(url, headers: headers);
       return response.statusCode == 200 || response.statusCode == 204;
     } catch (e) {
-      print('ApiService.deleteNoticia error: $e');
+      dev.log('ApiService.deleteNoticia error: $e');
       return false;
     }
   }
@@ -207,7 +212,7 @@ class ApiService {
       if (response.statusCode == 200) return jsonDecode(response.body);
       return [];
     } catch (e) {
-      print('ApiService.getAllDocentes error: $e');
+      dev.log('ApiService.getAllDocentes error: $e');
       return [];
     }
   }
@@ -215,13 +220,14 @@ class ApiService {
   // ── ASISTENCIA POR CURSO ──────────────────────────────────────────────────
   Future<List<dynamic>> getAsistenciasPorCurso(int idNivelDetalleCurso) async {
     try {
-      final url = Uri.parse('${ApiConstants.baseUrl}/asistencia/curso/$idNivelDetalleCurso');
+      final url = Uri.parse(
+          '${ApiConstants.baseUrl}/asistencia/curso/$idNivelDetalleCurso');
       final headers = await _getHeaders();
       final response = await http.get(url, headers: headers);
       if (response.statusCode == 200) return jsonDecode(response.body);
       return [];
     } catch (e) {
-      print('ApiService.getAsistenciasPorCurso error: $e');
+      dev.log('ApiService.getAsistenciasPorCurso error: $e');
       return [];
     }
   }
@@ -231,10 +237,11 @@ class ApiService {
     try {
       final url = Uri.parse('${ApiConstants.baseUrl}/asistencia/registrar');
       final headers = await _getHeaders();
-      final response = await http.post(url, headers: headers, body: jsonEncode(asistencia));
+      final response =
+          await http.post(url, headers: headers, body: jsonEncode(asistencia));
       return response.statusCode == 200;
     } catch (e) {
-      print('ApiService.registrarAsistencia error: $e');
+      dev.log('ApiService.registrarAsistencia error: $e');
       return false;
     }
   }
@@ -248,7 +255,7 @@ class ApiService {
       if (response.statusCode == 200) return jsonDecode(response.body);
       return [];
     } catch (e) {
-      print('ApiService.getHistorialPredicciones error: $e');
+      dev.log('ApiService.getHistorialPredicciones error: $e');
       return [];
     }
   }
@@ -256,13 +263,14 @@ class ApiService {
   // ── CURSOS (DocenteNivelDetalleCurso) ─────────────────────────────────────
   Future<List<dynamic>> getDocenteNivelDetalleCursos() async {
     try {
-      final url = Uri.parse('${ApiConstants.baseUrl}/docente-nivel-detalle-curso');
+      final url =
+          Uri.parse('${ApiConstants.baseUrl}/docente-nivel-detalle-curso');
       final headers = await _getHeaders();
       final response = await http.get(url, headers: headers);
       if (response.statusCode == 200) return jsonDecode(response.body);
       return [];
     } catch (e) {
-      print('ApiService.getDocenteNivelDetalleCursos error: $e');
+      dev.log('ApiService.getDocenteNivelDetalleCursos error: $e');
       return [];
     }
   }
@@ -276,7 +284,7 @@ class ApiService {
       if (response.statusCode == 200) return jsonDecode(response.body);
       return null;
     } catch (e) {
-      print('ApiService.getPeriodoActivo error: $e');
+      dev.log('ApiService.getPeriodoActivo error: $e');
       return null;
     }
   }
@@ -290,7 +298,7 @@ class ApiService {
       if (response.statusCode == 200) return jsonDecode(response.body);
       return [];
     } catch (e) {
-      print('ApiService.getAllInscripciones error: $e');
+      dev.log('ApiService.getAllInscripciones error: $e');
       return [];
     }
   }
@@ -298,14 +306,52 @@ class ApiService {
   // ── PERIODOS ──────────────────────────────────────────────────────────────
   Future<List<dynamic>> getAllPeriodos() async {
     try {
-      final url = Uri.parse('${ApiConstants.baseUrl}/periodos');
+      final url = Uri.parse('${ApiConstants.baseUrl}/periodo');
       final headers = await _getHeaders();
       final response = await http.get(url, headers: headers);
       if (response.statusCode == 200) return jsonDecode(response.body);
       return [];
     } catch (e) {
-      print('ApiService.getAllPeriodos error: $e');
+      dev.log('ApiService.getAllPeriodos error: $e');
       return [];
+    }
+  }
+
+  Future<bool> createPeriodo(Map<String, dynamic> data) async {
+    try {
+      final url = Uri.parse('${ApiConstants.baseUrl}/periodo');
+      final headers = await _getHeaders();
+      final response =
+          await http.post(url, headers: headers, body: jsonEncode(data));
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (e) {
+      dev.log('ApiService.createPeriodo error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> updatePeriodo(int id, Map<String, dynamic> data) async {
+    try {
+      final url = Uri.parse('${ApiConstants.baseUrl}/periodo/$id');
+      final headers = await _getHeaders();
+      final response =
+          await http.put(url, headers: headers, body: jsonEncode(data));
+      return response.statusCode == 200;
+    } catch (e) {
+      dev.log('ApiService.updatePeriodo error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> deletePeriodo(int id) async {
+    try {
+      final url = Uri.parse('${ApiConstants.baseUrl}/periodo/$id');
+      final headers = await _getHeaders();
+      final response = await http.delete(url, headers: headers);
+      return response.statusCode == 200 || response.statusCode == 204;
+    } catch (e) {
+      dev.log('ApiService.deletePeriodo error: $e');
+      return false;
     }
   }
 
@@ -318,7 +364,7 @@ class ApiService {
       if (response.statusCode == 200) return jsonDecode(response.body);
       return [];
     } catch (e) {
-      print('ApiService.getAllNiveles error: $e');
+      dev.log('ApiService.getAllNiveles error: $e');
       return [];
     }
   }
@@ -331,8 +377,48 @@ class ApiService {
       if (response.statusCode == 200) return jsonDecode(response.body);
       return [];
     } catch (e) {
-      print('ApiService.getAllNivelesDetalles error: $e');
+      dev.log('ApiService.getAllNivelesDetalles error: $e');
       return [];
+    }
+  }
+
+  // ── GENERIC CRUD ──────────────────────────────────────────────────────────
+  Future<bool> createEntity(String endpoint, Map<String, dynamic> data) async {
+    try {
+      final url = Uri.parse('${ApiConstants.baseUrl}$endpoint');
+      final headers = await _getHeaders();
+      final response =
+          await http.post(url, headers: headers, body: jsonEncode(data));
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (e) {
+      dev.log('ApiService.createEntity error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> updateEntity(
+      String endpoint, int id, Map<String, dynamic> data) async {
+    try {
+      final url = Uri.parse('${ApiConstants.baseUrl}$endpoint/$id');
+      final headers = await _getHeaders();
+      final response =
+          await http.put(url, headers: headers, body: jsonEncode(data));
+      return response.statusCode == 200;
+    } catch (e) {
+      dev.log('ApiService.updateEntity error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> deleteEntity(String endpoint, int id) async {
+    try {
+      final url = Uri.parse('${ApiConstants.baseUrl}$endpoint/$id');
+      final headers = await _getHeaders();
+      final response = await http.delete(url, headers: headers);
+      return response.statusCode == 200 || response.statusCode == 204;
+    } catch (e) {
+      dev.log('ApiService.deleteEntity error: $e');
+      return false;
     }
   }
 
@@ -345,9 +431,8 @@ class ApiService {
       if (response.statusCode == 200) return jsonDecode(response.body);
       return [];
     } catch (e) {
-      print('ApiService.getChatHistory error: $e');
+      dev.log('ApiService.getChatHistory error: $e');
       return [];
     }
   }
-
 }

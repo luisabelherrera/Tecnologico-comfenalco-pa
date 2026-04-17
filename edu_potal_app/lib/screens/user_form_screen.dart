@@ -24,12 +24,14 @@ class _UserFormScreenState extends State<UserFormScreen> {
   @override
   void initState() {
     super.initState();
-    _usernameController = TextEditingController(text: widget.user?['username'] ?? '');
+    _usernameController =
+        TextEditingController(text: widget.user?['username'] ?? '');
     _emailController = TextEditingController(text: widget.user?['email'] ?? '');
     _passwordController = TextEditingController();
 
     if (widget.user != null && widget.user['roles'] != null) {
-      _selectedRoleIds = (widget.user['roles'] as List).map((r) => r['id'] as int).toList();
+      _selectedRoleIds =
+          (widget.user['roles'] as List).map((r) => r['id'] as int).toList();
     }
 
     _loadRoles();
@@ -51,13 +53,27 @@ class _UserFormScreenState extends State<UserFormScreen> {
       return;
     }
 
+    // Validar que los roles seleccionados existan en la lista de roles disponibles
+    final validRoleIds = _availableRoles.map((role) => role['id']).toSet();
+    final invalidRoles =
+        _selectedRoleIds.where((id) => !validRoleIds.contains(id)).toList();
+
+    if (invalidRoles.isNotEmpty) {
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Rol no válido: ${invalidRoles.join(', ')}')),
+      );
+      return;
+    }
+
     setState(() => _isLoading = true);
 
     final userData = {
       'username': _usernameController.text,
       'email': _emailController.text,
-      'password': _passwordController.text.isNotEmpty ? _passwordController.text : null,
-      'roles': _selectedRoleIds,
+      'password':
+          _passwordController.text.isNotEmpty ? _passwordController.text : null,
+      'roles': _selectedRoleIds.map((id) => {'id': id}).toList(),
     };
 
     bool success;
@@ -90,71 +106,81 @@ class _UserFormScreenState extends State<UserFormScreen> {
         backgroundColor: const Color(0xFF203A43),
         foregroundColor: Colors.white,
       ),
-      body: _isLoading 
-        ? const Center(child: CircularProgressIndicator())
-        : Padding(
-            padding: const EdgeInsets.all(20),
-            child: Form(
-              key: _formKey,
-              child: ListView(
-                children: [
-                  TextFormField(
-                    controller: _usernameController,
-                    decoration: const InputDecoration(labelText: 'Nombre de Usuario', border: OutlineInputBorder()),
-                    validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(labelText: 'Email', border: OutlineInputBorder()),
-                    validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      labelText: isEditing ? 'Nueva Contraseña (opcional)' : 'Contraseña',
-                      border: const OutlineInputBorder(),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(20),
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  children: [
+                    TextFormField(
+                      controller: _usernameController,
+                      decoration: const InputDecoration(
+                          labelText: 'Nombre de Usuario',
+                          border: OutlineInputBorder()),
+                      validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
                     ),
-                    obscureText: true,
-                    validator: (v) => (!isEditing && v!.isEmpty) ? 'Campo obligatorio' : null,
-                  ),
-                  const SizedBox(height: 24),
-                  const Text('Roles:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  ..._availableRoles.map((role) {
-                    final roleId = role['id'];
-                    final roleName = role['nombre'] ?? role['name'] ?? 'Rol';
-                    return CheckboxListTile(
-                      title: Text(roleName),
-                      value: _selectedRoleIds.contains(roleId),
-                      onChanged: (val) {
-                        setState(() {
-                          if (val == true) {
-                            _selectedRoleIds.add(roleId);
-                          } else {
-                            _selectedRoleIds.remove(roleId);
-                          }
-                        });
-                      },
-                    );
-                  }),
-                  const SizedBox(height: 32),
-                  ElevatedButton(
-                    onPressed: _save,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF2C5364),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: const InputDecoration(
+                          labelText: 'Email', border: OutlineInputBorder()),
+                      validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
+                      keyboardType: TextInputType.emailAddress,
                     ),
-                    child: Text(isEditing ? 'Actualizar' : 'Crear Usuario'),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        labelText: isEditing
+                            ? 'Nueva Contraseña (opcional)'
+                            : 'Contraseña',
+                        border: const OutlineInputBorder(),
+                      ),
+                      obscureText: true,
+                      validator: (v) => (!isEditing && v!.isEmpty)
+                          ? 'Campo obligatorio'
+                          : null,
+                    ),
+                    const SizedBox(height: 24),
+                    const Text('Roles:',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    ..._availableRoles.map((role) {
+                      final roleId = role['id'];
+                      final roleName = role['nombre'] ?? role['name'] ?? 'Rol';
+                      return CheckboxListTile(
+                        title: Text(roleName),
+                        value: _selectedRoleIds.contains(roleId),
+                        onChanged: (val) {
+                          setState(() {
+                            if (val == true) {
+                              _selectedRoleIds.add(roleId);
+                            } else {
+                              _selectedRoleIds.remove(roleId);
+                            }
+                          });
+                        },
+                      );
+                    }),
+                    const SizedBox(height: 32),
+                    ElevatedButton(
+                      onPressed: _save,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF2C5364),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                      child: Text(isEditing ? 'Actualizar' : 'Crear Usuario'),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
     );
   }
 }

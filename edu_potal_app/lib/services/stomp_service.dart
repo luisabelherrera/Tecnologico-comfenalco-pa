@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 import '../utils/api_constants.dart';
+import 'dart:developer' as dev;
 
 class StompService {
   static final StompService _instance = StompService._internal();
@@ -10,16 +11,18 @@ class StompService {
 
   StompClient? _client;
   final _messageController = StreamController<Map<String, dynamic>>.broadcast();
-  final _privateMessageController = StreamController<Map<String, dynamic>>.broadcast();
+  final _privateMessageController =
+      StreamController<Map<String, dynamic>>.broadcast();
   final _typingController = StreamController<Map<String, dynamic>>.broadcast();
   final _connectionController = StreamController<bool>.broadcast();
-  
+
   Timer? _reconnectTimer;
   bool _isManualDisconnect = false;
   String? _lastUsername;
 
   Stream<Map<String, dynamic>> get messages => _messageController.stream;
-  Stream<Map<String, dynamic>> get privateMessages => _privateMessageController.stream;
+  Stream<Map<String, dynamic>> get privateMessages =>
+      _privateMessageController.stream;
   Stream<Map<String, dynamic>> get typingStream => _typingController.stream;
   Stream<bool> get connectionStatus => _connectionController.stream;
 
@@ -28,26 +31,27 @@ class StompService {
   void connect(String username) {
     _lastUsername = username;
     _isManualDisconnect = false;
-    
+
     // Si ya hay un cliente activo, no hacer nada o desactivar primero
     if (_client != null && _client!.isActive) return;
 
-    final wsUrl = ApiConstants.baseUrl.replaceFirst('http', 'ws') + '/chat-websocket/websocket';
+    final wsUrl =
+        '${ApiConstants.baseUrl.replaceFirst('http', 'ws')}/chat-websocket/websocket';
 
     _client = StompClient(
       config: StompConfig(
         url: wsUrl,
         onConnect: (frame) => _onConnect(frame, username),
         onWebSocketError: (dynamic error) {
-          print('WebSocket Error: $error');
+          dev.log('WebSocket Error: $error');
           _handleDisconnect();
         },
         onStompError: (frame) {
-          print('STOMP Error: ${frame.body}');
+          dev.log('STOMP Error: ${frame.body}');
           _handleDisconnect();
         },
         onDisconnect: (frame) {
-          print('STOMP Disconnected');
+          dev.log('STOMP Disconnected');
           _handleDisconnect();
         },
       ),
@@ -67,7 +71,7 @@ class StompService {
     _reconnectTimer?.cancel();
     _reconnectTimer = Timer(const Duration(seconds: 5), () {
       if (!_isManualDisconnect && _lastUsername != null) {
-        print('Attempting to reconnect STOMP...');
+        dev.log('Attempting to reconnect STOMP...');
         connect(_lastUsername!);
       }
     });
@@ -76,7 +80,7 @@ class StompService {
   void _onConnect(StompFrame frame, String username) {
     _reconnectTimer?.cancel();
     _connectionController.add(true);
-    print('STOMP Connected as $username');
+    dev.log('STOMP Connected as $username');
 
     _client?.subscribe(
       destination: '/chat/mensaje',
@@ -88,7 +92,8 @@ class StompService {
     _client?.subscribe(
       destination: '/user/$username/queue/messages',
       callback: (frame) {
-        if (frame.body != null) _privateMessageController.add(jsonDecode(frame.body!));
+        if (frame.body != null)
+          _privateMessageController.add(jsonDecode(frame.body!));
       },
     );
 
@@ -125,7 +130,8 @@ class StompService {
       };
 
       if (to != null) {
-        _client?.send(destination: '/app/mensaje-privado', body: jsonEncode(msg));
+        _client?.send(
+            destination: '/app/mensaje-privado', body: jsonEncode(msg));
       } else {
         _client?.send(destination: '/app/mensaje', body: jsonEncode(msg));
       }
