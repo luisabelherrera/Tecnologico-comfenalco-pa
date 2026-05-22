@@ -71,17 +71,24 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future<void> _loadRealData() async {
     try {
       final profile = await _apiService.getUserProfile();
-      final calificaciones = await _apiService.getAllCalificaciones();
+      final isEstudiante = profile != null && profile['estudiante'] != null;
+      final idEstudiante = isEstudiante ? profile['estudiante']['idEstudiante'] : null;
+
+      List calificaciones = await _apiService.getAllCalificaciones();
+      if (idEstudiante != null) {
+        calificaciones = calificaciones.where((c) => c['estudiante'] != null && c['estudiante']['idEstudiante'] == idEstudiante).toList();
+      }
+
       final horarios = await _apiService.getAllHorarios();
 
       if (!mounted) return;
 
-      // Compute real stats
       final nombre = profile != null
-          ? '${profile['nombres'] ?? ''} ${profile['apellidos'] ?? ''}'.trim()
+          ? (isEstudiante 
+              ? '${profile['estudiante']['nombres'] ?? ''} ${profile['estudiante']['apellidos'] ?? ''}'.trim()
+              : '${profile['nombres'] ?? ''} ${profile['apellidos'] ?? ''}'.trim())
           : 'Estudiante';
 
-      // Compute average grade
       double promTotal = 0;
       int promCount = 0;
       for (final c in calificaciones) {
@@ -97,9 +104,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
       setState(() {
         _userName = nombre.isNotEmpty ? nombre : 'Estudiante';
-        _numCursos = horarios.length.toString();
+        _numCursos = horarios.length.toString(); // Pendiente de filtrar por inscripcion
         _promedio = promedio;
-        _asistencia = '—'; // No endpoint de asistencia personal disponible aún
+        _asistencia = '—';
       });
     } catch (e) {
       // Keep defaults on error

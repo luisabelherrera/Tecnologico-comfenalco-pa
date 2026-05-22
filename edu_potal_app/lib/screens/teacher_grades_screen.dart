@@ -32,7 +32,21 @@ class _TeacherGradesScreenState extends State<TeacherGradesScreen> {
   @override
   void initState() {
     super.initState();
-    _studentsFuture = _apiService.getAllEstudiantes();
+    _studentsFuture = _getFilteredStudents();
+  }
+
+  Future<List<dynamic>> _getFilteredStudents() async {
+    final profile = await _apiService.getUserProfile();
+    final idDocente = (profile != null && profile['docente'] != null)
+        ? profile['docente']['idDocente'] as int?
+        : null;
+
+    if (idDocente == null) {
+      return [];
+    }
+
+    // Usar método filtrado por seguridad
+    return _apiService.getEstudiantesByDocente(idDocente);
   }
 
   @override

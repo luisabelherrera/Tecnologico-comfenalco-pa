@@ -31,6 +31,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
   String _statEstudiantes = '—';
   String _statNoticias = '—';
   String _statDocentes = '—';
+  bool _iaIsOnline = false;
 
   late AnimationController _headerAnim;
   late AnimationController _menuAnim;
@@ -56,7 +57,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
-    _headerFade = CurvedAnimation(parent: _headerAnim, curve: Curves.easeOutCubic);
+    _headerFade =
+        CurvedAnimation(parent: _headerAnim, curve: Curves.easeOutCubic);
 
     _menuAnim = AnimationController(
       vsync: this,
@@ -74,12 +76,14 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
         _apiService.getAllEstudiantes(),
         _apiService.getNoticias(),
         _apiService.getAllDocentes(),
+        _apiService.checkHealthFastAPI(),
       ]);
       if (!mounted) return;
       final profile = results[0];
       final estudiantes = results[1] as List;
       final noticias = results[2] as List;
       final docentes = results[3] as List;
+      final iaStatus = results[4] as bool;
       final nombre = profile != null
           ? '${profile['nombres'] ?? ''} ${profile['apellidos'] ?? ''}'.trim()
           : 'Administrador';
@@ -88,6 +92,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
         _statEstudiantes = estudiantes.length.toString();
         _statNoticias = noticias.length.toString();
         _statDocentes = docentes.length.toString();
+        _iaIsOnline = iaStatus;
       });
     } catch (_) {}
   }
@@ -119,18 +124,21 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
             const Text('Cerrar Sesion'),
           ],
         ),
-        content: const Text('Estas seguro que deseas cerrar la sesion de administrador?'),
+        content: const Text(
+            'Estas seguro que deseas cerrar la sesion de administrador?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('Cancelar', style: TextStyle(color: Colors.grey.shade600)),
+            child:
+                Text('Cancelar', style: TextStyle(color: Colors.grey.shade600)),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
             ),
             child: const Text('Cerrar Sesion'),
           ),
@@ -150,6 +158,73 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
           ),
         );
       }
+    }
+  }
+
+  void _reentrenarModelo() async {
+    if (!_iaIsOnline) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text(
+                'El servicio de IA está desconectado. Revise el servidor.'),
+            backgroundColor: Colors.red),
+      );
+      return;
+    }
+
+    // Mostrar diálogo de carga
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(color: Color(0xFF9575CD)),
+            SizedBox(height: 20),
+            Text('Reentrenando modelo...',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            SizedBox(height: 8),
+            Text(
+                'Esto puede tardar unos minutos mientras se leen los datos de MySQL.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 12, color: Colors.grey)),
+          ],
+        ),
+      ),
+    );
+
+    try {
+      final result = await _apiService.reentrenarModeloIA();
+      if (!mounted) return;
+      Navigator.pop(context); // Cerrar diálogo de carga
+
+      // Mostrar éxito con las nuevas métricas
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Row(
+            children: [
+              Icon(Icons.check_circle_rounded, color: Colors.green),
+              SizedBox(width: 8),
+              Text('Modelo Actualizado'),
+            ],
+          ),
+          content: Text(
+              'Precisión actual: ${result['metricas']['accuracy']}\nEl modelo ahora usa los datos más recientes.'),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'))
+          ],
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      Navigator.pop(context); // Cerrar diálogo
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
     }
   }
 
@@ -207,46 +282,94 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                       _colorConfig,
                       0,
                       [
-                        _menuItem(Icons.dashboard_rounded, 'Dashboard', 'Predicciones IA',
-                            const Color(0xFFBA68C8), () => _nav(const PredictionsDashboardScreen())),
-                        _menuItem(Icons.calendar_today_rounded, 'Periodo', 'Gestionar periodos',
-                            const Color(0xFF4FC3F7), () => _nav(AdminManagementListScreen(
-                                title: 'Periodos',
-                                fetchData: _apiService.getAllPeriodos,
-                                icon: Icons.calendar_today,
-                                themeColor: const Color(0xFF4FC3F7),
-                                endpoint: '/periodo',
-                                formFields: const [
-                                  {'key': 'descripcion', 'label': 'Descripcion', 'type': 'text'},
-                                  {'key': 'fechaInicio', 'label': 'Fecha Inicio', 'type': 'date'},
-                                  {'key': 'fechaFin', 'label': 'Fecha Fin', 'type': 'date'},
-                                  {'key': 'activo', 'label': 'Activo', 'type': 'bool'}
-                                ]))),
-                        _menuItem(Icons.school_rounded, 'Niveles', 'Grados academicos',
-                            const Color(0xFF81C784), () => _nav(AdminManagementListScreen(
-                                title: 'Niveles',
-                                fetchData: _apiService.getAllNiveles,
-                                icon: Icons.school,
-                                themeColor: const Color(0xFF81C784),
-                                endpoint: '/nivel',
-                                formFields: const [
-                                  {'key': 'nombre', 'label': 'Nombre del Nivel', 'type': 'text'},
-                                  {'key': 'estado', 'label': 'Estado Activo', 'type': 'bool'}
-                                ]))),
-                        _menuItem(Icons.group_rounded, 'Secciones', 'Cursos y secciones',
-                            const Color(0xFFFFB74D), () => _nav(AdminManagementListScreen(
+                        _menuItem(
+                            Icons.dashboard_rounded,
+                            'Dashboard',
+                            'Predicciones IA',
+                            const Color(0xFFBA68C8),
+                            () => _nav(const PredictionsDashboardScreen())),
+                        _menuItem(
+                            Icons.calendar_today_rounded,
+                            'Periodo',
+                            'Gestionar periodos',
+                            const Color(0xFF4FC3F7),
+                            () => _nav(AdminManagementListScreen(
+                                    title: 'Periodos',
+                                    fetchData: _apiService.getAllPeriodos,
+                                    icon: Icons.calendar_today,
+                                    themeColor: const Color(0xFF4FC3F7),
+                                    endpoint: '/periodo',
+                                    formFields: const [
+                                      {
+                                        'key': 'descripcion',
+                                        'label': 'Descripcion',
+                                        'type': 'text'
+                                      },
+                                      {
+                                        'key': 'fechaInicio',
+                                        'label': 'Fecha Inicio',
+                                        'type': 'date'
+                                      },
+                                      {
+                                        'key': 'fechaFin',
+                                        'label': 'Fecha Fin',
+                                        'type': 'date'
+                                      },
+                                      {
+                                        'key': 'activo',
+                                        'label': 'Activo',
+                                        'type': 'bool'
+                                      }
+                                    ]))),
+                        _menuItem(
+                            Icons.school_rounded,
+                            'Niveles',
+                            'Grados academicos',
+                            const Color(0xFF81C784),
+                            () => _nav(AdminManagementListScreen(
+                                    title: 'Niveles',
+                                    fetchData: _apiService.getAllNiveles,
+                                    icon: Icons.school,
+                                    themeColor: const Color(0xFF81C784),
+                                    endpoint: '/nivel',
+                                    formFields: const [
+                                      {
+                                        'key': 'nombre',
+                                        'label': 'Nombre del Nivel',
+                                        'type': 'text'
+                                      },
+                                      {
+                                        'key': 'estado',
+                                        'label': 'Estado Activo',
+                                        'type': 'bool'
+                                      }
+                                    ]))),
+                        _menuItem(
+                            Icons.group_rounded,
+                            'Secciones',
+                            'Cursos y secciones',
+                            const Color(0xFFFFB74D),
+                            () => _nav(AdminManagementListScreen(
                                 title: 'Secciones',
                                 fetchData: _apiService.getAllNivelesDetalles,
                                 icon: Icons.group,
                                 themeColor: const Color(0xFFFFB74D)))),
-                        _menuItem(Icons.schedule_rounded, 'Horarios', 'Gestionar horarios',
-                            const Color(0xFFF06292), () => _nav(AdminManagementListScreen(
+                        _menuItem(
+                            Icons.schedule_rounded,
+                            'Horarios',
+                            'Gestionar horarios',
+                            const Color(0xFFF06292),
+                            () => _nav(AdminManagementListScreen(
                                 title: 'Horarios',
                                 fetchData: _apiService.getAllHorarios,
                                 icon: Icons.schedule,
                                 themeColor: const Color(0xFFF06292)))),
-                        _menuItem(Icons.psychology_rounded, 'Weka', 'Analisis inteligente',
-                            const Color(0xFF9575CD), () => _nav(const PredictionsDashboardScreen())),
+                        _menuItem(
+                            Icons.model_training_rounded,
+                            'Reentrenar IA',
+                            'Actualizar datos',
+                            const Color(0xFFEF5350),
+                            _reentrenarModelo),
                       ],
                     ),
                     _buildAnimatedCategory(
@@ -255,18 +378,34 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                       _colorUsers,
                       1,
                       [
-                        _menuItem(Icons.person_add_rounded, 'Registrar', 'Nuevo usuario',
-                            const Color(0xFF4DD0E1), () => _nav(const UserFormScreen())),
-                        _menuItem(Icons.manage_accounts_rounded, 'Usuarios', 'Gestionar cuentas',
-                            const Color(0xFF64B5F6), () => _nav(const UserManagementScreen())),
-                        _menuItem(Icons.face_rounded, 'Estudiantes', 'Listado general',
-                            const Color(0xFF81C784), () => _nav(AdminManagementListScreen(
+                        _menuItem(
+                            Icons.person_add_rounded,
+                            'Registrar',
+                            'Nuevo usuario',
+                            const Color(0xFF4DD0E1),
+                            () => _nav(const UserFormScreen())),
+                        _menuItem(
+                            Icons.manage_accounts_rounded,
+                            'Usuarios',
+                            'Gestionar cuentas',
+                            const Color(0xFF64B5F6),
+                            () => _nav(const UserManagementScreen())),
+                        _menuItem(
+                            Icons.face_rounded,
+                            'Estudiantes',
+                            'Listado general',
+                            const Color(0xFF81C784),
+                            () => _nav(AdminManagementListScreen(
                                 title: 'Estudiantes',
                                 fetchData: _apiService.getAllEstudiantes,
                                 icon: Icons.face,
                                 themeColor: const Color(0xFF81C784)))),
-                        _menuItem(Icons.family_restroom_rounded, 'Acudientes', 'Padres de familia',
-                            const Color(0xFFFF8A65), () => _nav(const PlaceholderManagementScreen(
+                        _menuItem(
+                            Icons.family_restroom_rounded,
+                            'Acudientes',
+                            'Padres de familia',
+                            const Color(0xFFFF8A65),
+                            () => _nav(const PlaceholderManagementScreen(
                                 title: 'Acudientes',
                                 icon: Icons.family_restroom,
                                 themeColor: Color(0xFFFF8A65)))),
@@ -278,45 +417,105 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                       _colorTeachers,
                       2,
                       [
-                        _menuItem(Icons.supervisor_account_rounded, 'Docentes', 'Listado docentes',
-                            const Color(0xFF4DB6AC), () => _nav(AdminManagementListScreen(
-                                title: 'Docente',
-                                fetchData: _apiService.getAllDocentes,
-                                icon: Icons.supervisor_account,
-                                themeColor: const Color(0xFF4DB6AC),
-                                endpoint: '/docentes',
-                                formFields: const [
-                                  {'key': 'codigo', 'label': 'Codigo', 'type': 'text'},
-                                  {'key': 'documentoIdentidad', 'label': 'Documento', 'type': 'text'},
-                                  {'key': 'nombres', 'label': 'Nombres', 'type': 'text'},
-                                  {'key': 'apellidos', 'label': 'Apellidos', 'type': 'text'},
-                                  {'key': 'email', 'label': 'Email', 'type': 'text'},
-                                  {'key': 'activo', 'label': 'Activo', 'type': 'bool'}
-                                ]))),
-                        _menuItem(Icons.grade_rounded, 'Notas', 'Calificaciones globales',
-                            const Color(0xFFFFD54F), () => _nav(AdminManagementListScreen(
-                                title: 'Notas / Calificaciones',
-                                fetchData: _apiService.getAllCalificaciones,
-                                icon: Icons.grade_rounded,
-                                themeColor: const Color(0xFFFFD54F),
-                                endpoint: '/calificaciones',
-                                formFields: const [
-                                  {'key': 'nota', 'label': 'Nota (ej. 4.5)', 'type': 'text'},
-                                  {'key': 'estudiante.idEstudiante', 'label': 'ID Estudiante', 'type': 'text'},
-                                  {'key': 'curricular.idCurricular', 'label': 'ID Curricular', 'type': 'text'},
-                                  {'key': 'activo', 'label': 'Activo', 'type': 'bool'}
-                                ]))),
-                        _menuItem(Icons.class_rounded, 'Cursos', 'Asignacion academica',
-                            const Color(0xFF7986CB), () => _nav(AdminManagementListScreen(
-                                title: 'Cursos',
-                                fetchData: _apiService.getAllCursos,
-                                icon: Icons.class_rounded,
-                                themeColor: const Color(0xFF7986CB),
-                                endpoint: '/cursos',
-                                formFields: const [
-                                  {'key': 'descripcion', 'label': 'Descripcion del Curso', 'type': 'text'},
-                                  {'key': 'activo', 'label': 'Activo', 'type': 'bool'}
-                                ]))),
+                        _menuItem(
+                            Icons.supervisor_account_rounded,
+                            'Docentes',
+                            'Listado docentes',
+                            const Color(0xFF4DB6AC),
+                            () => _nav(AdminManagementListScreen(
+                                    title: 'Docente',
+                                    fetchData: _apiService.getAllDocentes,
+                                    icon: Icons.supervisor_account,
+                                    themeColor: const Color(0xFF4DB6AC),
+                                    endpoint: '/docentes',
+                                    formFields: const [
+                                      {
+                                        'key': 'codigo',
+                                        'label': 'Codigo',
+                                        'type': 'text'
+                                      },
+                                      {
+                                        'key': 'documentoIdentidad',
+                                        'label': 'Documento',
+                                        'type': 'text'
+                                      },
+                                      {
+                                        'key': 'nombres',
+                                        'label': 'Nombres',
+                                        'type': 'text'
+                                      },
+                                      {
+                                        'key': 'apellidos',
+                                        'label': 'Apellidos',
+                                        'type': 'text'
+                                      },
+                                      {
+                                        'key': 'email',
+                                        'label': 'Email',
+                                        'type': 'text'
+                                      },
+                                      {
+                                        'key': 'activo',
+                                        'label': 'Activo',
+                                        'type': 'bool'
+                                      }
+                                    ]))),
+                        _menuItem(
+                            Icons.grade_rounded,
+                            'Notas',
+                            'Calificaciones globales',
+                            const Color(0xFFFFD54F),
+                            () => _nav(AdminManagementListScreen(
+                                    title: 'Notas / Calificaciones',
+                                    fetchData: _apiService.getAllCalificaciones,
+                                    icon: Icons.grade_rounded,
+                                    themeColor: const Color(0xFFFFD54F),
+                                    endpoint: '/calificaciones',
+                                    formFields: const [
+                                      {
+                                        'key': 'nota',
+                                        'label': 'Nota (ej. 4.5)',
+                                        'type': 'text'
+                                      },
+                                      {
+                                        'key': 'estudiante.idEstudiante',
+                                        'label': 'ID Estudiante',
+                                        'type': 'text'
+                                      },
+                                      {
+                                        'key': 'curricular.idCurricular',
+                                        'label': 'ID Curricular',
+                                        'type': 'text'
+                                      },
+                                      {
+                                        'key': 'activo',
+                                        'label': 'Activo',
+                                        'type': 'bool'
+                                      }
+                                    ]))),
+                        _menuItem(
+                            Icons.class_rounded,
+                            'Cursos',
+                            'Asignacion academica',
+                            const Color(0xFF7986CB),
+                            () => _nav(AdminManagementListScreen(
+                                    title: 'Cursos',
+                                    fetchData: _apiService.getAllCursos,
+                                    icon: Icons.class_rounded,
+                                    themeColor: const Color(0xFF7986CB),
+                                    endpoint: '/cursos',
+                                    formFields: const [
+                                      {
+                                        'key': 'descripcion',
+                                        'label': 'Descripcion del Curso',
+                                        'type': 'text'
+                                      },
+                                      {
+                                        'key': 'activo',
+                                        'label': 'Activo',
+                                        'type': 'bool'
+                                      }
+                                    ]))),
                       ],
                     ),
                     _buildAnimatedCategory(
@@ -325,20 +524,40 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                       _colorInstitution,
                       3,
                       [
-                        _menuItem(Icons.newspaper_rounded, 'Noticias', 'Publicar novedades',
-                            const Color(0xFFFFB74D), () => _nav(const NewsManagementScreen())),
-                        _menuItem(Icons.chat_bubble_rounded, 'Chat', 'Comunicacion real',
-                            const Color(0xFFF06292), () => _nav(const ChatListScreen())),
-                        _menuItem(Icons.app_registration_rounded, 'Matricula', 'Inscripciones',
-                            const Color(0xFF4DB6AC), () => _nav(AdminManagementListScreen(
+                        _menuItem(
+                            Icons.newspaper_rounded,
+                            'Noticias',
+                            'Publicar novedades',
+                            const Color(0xFFFFB74D),
+                            () => _nav(const NewsManagementScreen())),
+                        _menuItem(
+                            Icons.chat_bubble_rounded,
+                            'Chat',
+                            'Comunicacion real',
+                            const Color(0xFFF06292),
+                            () => _nav(const ChatListScreen())),
+                        _menuItem(
+                            Icons.app_registration_rounded,
+                            'Matricula',
+                            'Inscripciones',
+                            const Color(0xFF4DB6AC),
+                            () => _nav(AdminManagementListScreen(
                                 title: 'Matriculas',
                                 fetchData: _apiService.getAllInscripciones,
                                 icon: Icons.app_registration,
                                 themeColor: const Color(0xFF4DB6AC)))),
-                        _menuItem(Icons.analytics_rounded, 'Reportes', 'Estadisticas',
-                            const Color(0xFF64B5F6), () => _nav(const ReportsScreen())),
-                        _menuItem(Icons.attach_money_rounded, 'Tarifas', 'Costos educativos',
-                            const Color(0xFF81C784), () => _nav(const PlaceholderManagementScreen(
+                        _menuItem(
+                            Icons.analytics_rounded,
+                            'Reportes',
+                            'Estadisticas',
+                            const Color(0xFF64B5F6),
+                            () => _nav(const ReportsScreen())),
+                        _menuItem(
+                            Icons.attach_money_rounded,
+                            'Tarifas',
+                            'Costos educativos',
+                            const Color(0xFF81C784),
+                            () => _nav(const PlaceholderManagementScreen(
                                 title: 'Tarifas Educativas',
                                 icon: Icons.attach_money,
                                 themeColor: Color(0xFF81C784)))),
@@ -377,18 +596,26 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: Colors.white.withOpacity(0.15)),
+                        border:
+                            Border.all(color: Colors.white.withOpacity(0.15)),
                       ),
-                      child: const Icon(Icons.menu_rounded, color: Colors.white, size: 22),
+                      child: const Icon(Icons.menu_rounded,
+                          color: Colors.white, size: 22),
                     ),
                   ),
                 ),
               ),
+
+              // --- INICIO DEL BADGE MODIFICADO ---
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [_accentGold.withOpacity(0.25), _accentAmber.withOpacity(0.1)],
+                    colors: [
+                      _accentGold.withOpacity(0.25),
+                      _accentAmber.withOpacity(0.1)
+                    ],
                   ),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: _accentGold.withOpacity(0.3)),
@@ -396,23 +623,59 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.shield_rounded, color: _accentGold, size: 16),
+                    const Icon(Icons.shield_rounded,
+                        color: _accentGold, size: 16),
                     const SizedBox(width: 8),
-                    Text(
+                    const Text(
                       'Admin',
-                      style: TextStyle(color: _accentGold, fontSize: 13, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        color: _accentGold,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    // Indicador visual de la IA
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color:
+                            _iaIsOnline ? Colors.greenAccent : Colors.redAccent,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                              color: (_iaIsOnline ? Colors.green : Colors.red)
+                                  .withOpacity(0.5),
+                              blurRadius: 4)
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    const Text(
+                      'IA',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),
               ),
+              // --- FIN DEL BADGE MODIFICADO ---
+
               Row(
                 children: [
-                  _buildIconButton(Icons.notifications_rounded, badge: true, onTap: () {
+                  _buildIconButton(Icons.notifications_rounded, badge: true,
+                      onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: const Text('Sin notificaciones nuevas'),
                         behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     );
                   }),
@@ -433,7 +696,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     );
   }
 
-  Widget _buildIconButton(IconData icon, {required VoidCallback onTap, bool badge = false}) {
+  Widget _buildIconButton(IconData icon,
+      {required VoidCallback onTap, bool badge = false}) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -478,7 +742,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: const LinearGradient(colors: [_accentGold, _accentAmber]),
+              gradient:
+                  const LinearGradient(colors: [_accentGold, _accentAmber]),
               boxShadow: [
                 BoxShadow(
                   color: _accentGold.withOpacity(0.4),
@@ -490,7 +755,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
             child: const CircleAvatar(
               radius: 32,
               backgroundColor: _primaryMid,
-              child: Icon(Icons.admin_panel_settings_rounded, size: 36, color: Colors.white),
+              child: Icon(Icons.admin_panel_settings_rounded,
+                  size: 36, color: Colors.white),
             ),
           ),
         ),
@@ -529,21 +795,31 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
   Widget _buildStatsRow() {
     return Row(
       children: [
-        Expanded(child: _buildStatCard('Estudiantes', _statEstudiantes, Icons.people_rounded, const Color(0xFF4FC3F7))),
+        Expanded(
+            child: _buildStatCard('Estudiantes', _statEstudiantes,
+                Icons.people_rounded, const Color(0xFF4FC3F7))),
         const SizedBox(width: 10),
-        Expanded(child: _buildStatCard('Noticias', _statNoticias, Icons.article_rounded, const Color(0xFFFFB74D))),
+        Expanded(
+            child: _buildStatCard('Noticias', _statNoticias,
+                Icons.article_rounded, const Color(0xFFFFB74D))),
         const SizedBox(width: 10),
-        Expanded(child: _buildStatCard('Docentes', _statDocentes, Icons.school_rounded, const Color(0xFF81C784))),
+        Expanded(
+            child: _buildStatCard('Docentes', _statDocentes,
+                Icons.school_rounded, const Color(0xFF81C784))),
       ],
     );
   }
 
-  Widget _buildStatCard(String label, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+      String label, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Colors.white.withOpacity(0.15), Colors.white.withOpacity(0.05)],
+          colors: [
+            Colors.white.withOpacity(0.15),
+            Colors.white.withOpacity(0.05)
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -563,19 +839,22 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
           const SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Colors.white),
+            style: const TextStyle(
+                fontSize: 18, fontWeight: FontWeight.w800, color: Colors.white),
           ),
           const SizedBox(height: 2),
           Text(
             label,
-            style: TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.7)),
+            style:
+                TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.7)),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildAnimatedCategory(String title, IconData icon, Color color, int index, List<Widget> items) {
+  Widget _buildAnimatedCategory(
+      String title, IconData icon, Color color, int index, List<Widget> items) {
     return AnimatedBuilder(
       animation: _menuAnim,
       builder: (context, child) {
@@ -632,7 +911,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
             ),
             child: Text(
               '${(6).toString()} items',
-              style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                  fontSize: 10, color: color, fontWeight: FontWeight.w600),
             ),
           ),
         ],
@@ -652,7 +932,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     );
   }
 
-  Widget _menuItem(IconData icon, String title, String subtitle, Color color, VoidCallback onTap) {
+  Widget _menuItem(IconData icon, String title, String subtitle, Color color,
+      VoidCallback onTap) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -663,7 +944,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.white.withOpacity(0.12), Colors.white.withOpacity(0.05)],
+              colors: [
+                Colors.white.withOpacity(0.12),
+                Colors.white.withOpacity(0.05)
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -677,10 +961,14 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [color, color.withOpacity(0.7)]),
+                  gradient:
+                      LinearGradient(colors: [color, color.withOpacity(0.7)]),
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
-                    BoxShadow(color: color.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 3)),
+                    BoxShadow(
+                        color: color.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3)),
                   ],
                 ),
                 child: Icon(icon, color: Colors.white, size: 20),
@@ -688,13 +976,17 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
               const SizedBox(height: 10),
               Text(
                 title,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white),
+                style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white),
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 2),
               Text(
                 subtitle,
-                style: TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.55)),
+                style: TextStyle(
+                    fontSize: 10, color: Colors.white.withOpacity(0.55)),
                 overflow: TextOverflow.ellipsis,
               ),
             ],
@@ -724,25 +1016,42 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                 children: [
                   const SizedBox(height: 20),
                   _drawerSection('CONFIGURACIONES', [
-                    _drawerItem(Icons.dashboard, 'Dashboard', () => _nav(const PredictionsDashboardScreen())),
-                    _drawerItem(Icons.calendar_today, 'Periodo', () => _nav(AdminManagementListScreen(
-                        title: 'Periodos', fetchData: _apiService.getAllPeriodos, icon: Icons.calendar_today))),
-                    _drawerItem(Icons.school, 'Nivel Academico', () => _nav(AdminManagementListScreen(
-                        title: 'Niveles', fetchData: _apiService.getAllNiveles, icon: Icons.school))),
+                    _drawerItem(Icons.dashboard, 'Dashboard',
+                        () => _nav(const PredictionsDashboardScreen())),
+                    _drawerItem(
+                        Icons.calendar_today,
+                        'Periodo',
+                        () => _nav(AdminManagementListScreen(
+                            title: 'Periodos',
+                            fetchData: _apiService.getAllPeriodos,
+                            icon: Icons.calendar_today))),
+                    _drawerItem(
+                        Icons.school,
+                        'Nivel Academico',
+                        () => _nav(AdminManagementListScreen(
+                            title: 'Niveles',
+                            fetchData: _apiService.getAllNiveles,
+                            icon: Icons.school))),
                   ]),
                   _drawerSection('USUARIOS', [
-                    _drawerItem(Icons.person_add, 'Registrar', () => _nav(const UserFormScreen())),
-                    _drawerItem(Icons.group, 'Usuarios', () => _nav(const UserManagementScreen())),
+                    _drawerItem(Icons.person_add, 'Registrar',
+                        () => _nav(const UserFormScreen())),
+                    _drawerItem(Icons.group, 'Usuarios',
+                        () => _nav(const UserManagementScreen())),
                   ]),
                   _drawerSection('GESTION', [
-                    _drawerItem(Icons.newspaper, 'Noticias', () => _nav(const NewsManagementScreen())),
-                    _drawerItem(Icons.chat_bubble, 'Chat', () => _nav(const ChatListScreen())),
-                    _drawerItem(Icons.analytics, 'Reportes', () => _nav(const ReportsScreen())),
+                    _drawerItem(Icons.newspaper, 'Noticias',
+                        () => _nav(const NewsManagementScreen())),
+                    _drawerItem(Icons.chat_bubble, 'Chat',
+                        () => _nav(const ChatListScreen())),
+                    _drawerItem(Icons.analytics, 'Reportes',
+                        () => _nav(const ReportsScreen())),
                   ]),
                   const SizedBox(height: 20),
                   Divider(color: Colors.white.withOpacity(0.1)),
                   const SizedBox(height: 10),
-                  _drawerItem(Icons.logout, 'Cerrar Sesion', _logout, color: const Color(0xFFFF6B6B)),
+                  _drawerItem(Icons.logout, 'Cerrar Sesion', _logout,
+                      color: const Color(0xFFFF6B6B)),
                 ],
               ),
             ),
@@ -770,18 +1079,21 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
             padding: const EdgeInsets.all(3),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: const LinearGradient(colors: [_accentGold, _accentAmber]),
+              gradient:
+                  const LinearGradient(colors: [_accentGold, _accentAmber]),
             ),
             child: const CircleAvatar(
               radius: 32,
               backgroundColor: _primaryMid,
-              child: Icon(Icons.admin_panel_settings_rounded, color: Colors.white, size: 32),
+              child: Icon(Icons.admin_panel_settings_rounded,
+                  color: Colors.white, size: 32),
             ),
           ),
           const SizedBox(height: 16),
           Text(
             _adminName,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 18),
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.w700, fontSize: 18),
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 4),
@@ -793,7 +1105,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
             ),
             child: const Text(
               'Administrador',
-              style: TextStyle(color: _accentGold, fontSize: 11, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                  color: _accentGold,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600),
             ),
           ),
         ],
@@ -822,7 +1137,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     );
   }
 
-  Widget _drawerItem(IconData icon, String title, VoidCallback onTap, {Color color = Colors.white}) {
+  Widget _drawerItem(IconData icon, String title, VoidCallback onTap,
+      {Color color = Colors.white}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 6),
       child: Material(
@@ -845,7 +1161,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                 const SizedBox(width: 14),
                 Text(
                   title,
-                  style: TextStyle(color: color.withOpacity(0.9), fontSize: 14, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                      color: color.withOpacity(0.9),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500),
                 ),
               ],
             ),

@@ -68,25 +68,33 @@ class _TeacherHomeScreenState extends State<TeacherHomeScreen>
 
   Future<void> _loadRealStats() async {
     try {
+      final profile = await _apiService.getUserProfile();
+      if (!mounted) return;
+
+      final isDocente = profile != null && profile['docente'] != null;
+      final idDocente = isDocente ? profile['docente']['idDocente'] : null;
+
       final results = await Future.wait([
-        _apiService.getUserProfile(),
-        _apiService.getAllHorarios(),
-        _apiService.getAllEstudiantes(),
-        _apiService.getAllCalificaciones(),
+        _apiService.getDocenteNivelDetalleCursos(),
       ]);
       if (!mounted) return;
-      final profile = results[0];
-      final horarios = results[1] as List;
-      final estudiantes = results[2] as List;
-      final calificaciones = results[3] as List;
+
+      List cursos = results[0] as List;
+      if (idDocente != null) {
+        cursos = cursos.where((c) => c['docente'] != null && c['docente']['idDocente'] == idDocente).toList();
+      }
+
       final nombre = profile != null
-          ? '${profile['nombres'] ?? ''} ${profile['apellidos'] ?? ''}'.trim()
+          ? (isDocente 
+              ? '${profile['docente']['nombres'] ?? ''} ${profile['docente']['apellidos'] ?? ''}'.trim() 
+              : '${profile['nombres'] ?? ''} ${profile['apellidos'] ?? ''}'.trim())
           : 'Docente';
+
       setState(() {
         _teacherName = nombre.isNotEmpty ? nombre : 'Docente';
-        _statCursos = horarios.length.toString();
-        _statEstudiantes = estudiantes.length.toString();
-        _statCalificaciones = calificaciones.length.toString();
+        _statCursos = cursos.length.toString();
+        _statEstudiantes = '—'; 
+        _statCalificaciones = '—';
       });
     } catch (_) {}
   }

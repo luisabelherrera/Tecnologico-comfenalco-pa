@@ -3,6 +3,10 @@ class ApiConstants {
   // Use http://10.0.2.2:9098/api for Android Emulator
   // Use real IP (e.g., http://192.168.1.X:9098/api) for Physical Devices
   //static const String baseUrl = 'http://localhost:9098/api';
-  static const String baseUrl = 'https://eduportal-backend-737538680402.us-east1.run.app/api';
+  //static const String baseUrl = 'https://eduportal-backend-737538680402.us-east1.run.app/api';
+  static const String baseUrl =
+      'https://eduportal-backend-fgi475ndjq-ue.a.run.app/api';
+  static const String baseUrlFastAPI = 'https://ml-eduportal-737538680402.us-central1.run.app';
+
   static const String loginEndpoint = '/login';
 }

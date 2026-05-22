@@ -416,8 +416,19 @@ class _AdminManagementListScreenState extends State<AdminManagementListScreen>
   }
 
   Widget _buildItemCard(dynamic item, int index) {
-    final String title =
-        item['nombre'] ?? item['titulo'] ?? item['descripcion'] ?? 'Sin titulo';
+    String title = 'Sin titulo';
+    if (item['nombres'] != null && item['apellidos'] != null) {
+      title = '${item['nombres']} ${item['apellidos']}';
+    } else if (item['nombre'] != null) {
+      title = item['nombre'];
+    } else if (item['titulo'] != null) {
+      title = item['titulo'];
+    } else if (item['descripcion'] != null) {
+      title = item['descripcion'];
+    } else if (item['username'] != null) {
+      title = item['username'];
+    }
+    
     final String subtitle = _getSubtitle(item);
     final bool isActive = item['activo'] ?? item['estado'] ?? true;
 
@@ -536,12 +547,21 @@ class _AdminManagementListScreenState extends State<AdminManagementListScreen>
   }
 
   String _getSubtitle(dynamic item) {
+    if (item['documentoIdentidad'] != null) return 'Documento: ${item['documentoIdentidad']}';
     if (item['codigo'] != null) return 'Codigo: ${item['codigo']}';
     if (item['email'] != null) return item['email'];
     if (item['fechaInicio'] != null) {
       return 'Inicio: ${item['fechaInicio'].toString().split('T').first}';
     }
-    if (item['roles'] != null) return 'Roles: ${item['roles']}';
+    if (item['roles'] != null) {
+      if (item['roles'] is List && (item['roles'] as List).isNotEmpty) {
+        final firstRole = (item['roles'] as List)[0];
+        if (firstRole is Map && firstRole.containsKey('nombre')) {
+          return 'Rol: ${firstRole['nombre']}';
+        }
+      }
+      return 'Roles: ${item['roles']}';
+    }
     return '';
   }
 
@@ -582,8 +602,18 @@ class _AdminManagementListScreenState extends State<AdminManagementListScreen>
   }
 
   void _confirmDelete(dynamic item) {
-    final String title =
-        item['nombre'] ?? item['titulo'] ?? item['descripcion'] ?? 'este registro';
+    String title = 'este registro';
+    if (item['nombres'] != null && item['apellidos'] != null) {
+      title = '${item['nombres']} ${item['apellidos']}';
+    } else if (item['nombre'] != null) {
+      title = item['nombre'];
+    } else if (item['titulo'] != null) {
+      title = item['titulo'];
+    } else if (item['descripcion'] != null) {
+      title = item['descripcion'];
+    } else if (item['username'] != null) {
+      title = item['username'];
+    }
 
     showDialog(
       context: context,

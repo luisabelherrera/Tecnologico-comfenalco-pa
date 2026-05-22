@@ -44,7 +44,17 @@ class _TeacherAttendanceScreenState extends State<TeacherAttendanceScreen> {
   }
 
   Future<List<Map<String, dynamic>>> _loadStudents() async {
-    final data = await _apiService.getAllEstudiantes();
+    final profile = await _apiService.getUserProfile();
+    final idDocente = (profile != null && profile['docente'] != null)
+        ? profile['docente']['idDocente'] as int?
+        : null;
+
+    if (idDocente == null) {
+      return [];
+    }
+
+    // Obtener solo estudiantes del docente autenticado
+    final data = await _apiService.getEstudiantesByDocente(idDocente);
     return data.map<Map<String, dynamic>>((e) {
       final nombres = e['nombres'] ?? '';
       final apellidos = e['apellidos'] ?? '';

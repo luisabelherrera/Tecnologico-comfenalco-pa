@@ -52,12 +52,26 @@ class _TeacherCoursesScreenState extends State<TeacherCoursesScreen> {
   @override
   void initState() {
     super.initState();
-    _coursesFuture = _apiService.getDocenteNivelDetalleCursos();
+    _coursesFuture = _fetchAndFilterCourses();
+  }
+
+  Future<List<dynamic>> _fetchAndFilterCourses() async {
+    final profile = await _apiService.getUserProfile();
+    final idDocente = (profile != null && profile['docente'] != null)
+        ? profile['docente']['idDocente'] as int?
+        : null;
+
+    if (idDocente == null) {
+      return [];
+    }
+
+    // Usar el nuevo método filtrado (seguro y eficiente)
+    return _apiService.getDocenteCursos(idDocente);
   }
 
   void _refreshCourses() {
     setState(() {
-      _coursesFuture = _apiService.getDocenteNivelDetalleCursos();
+      _coursesFuture = _fetchAndFilterCourses();
     });
   }
 

@@ -20,7 +20,14 @@ class _GradesScreenState extends State<GradesScreen> {
   }
 
   Future<List<CalificacionModel>> _fetchGrades() async {
+    final profile = await _apiService.getUserProfile();
+    final idEstudiante = profile != null && profile['estudiante'] != null ? profile['estudiante']['idEstudiante'] : null;
+
     final data = await _apiService.getAllCalificaciones();
+    if (idEstudiante != null) {
+      final filteredData = data.where((c) => c['estudiante'] != null && c['estudiante']['idEstudiante'] == idEstudiante).toList();
+      return filteredData.map((json) => CalificacionModel.fromJson(json)).toList();
+    }
     return data.map((json) => CalificacionModel.fromJson(json)).toList();
   }
 
